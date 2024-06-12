@@ -1,12 +1,13 @@
 import BookPreview from "@/components/BookPreview";
 import Image from "next/image";
-
+import NavBar from "@/components/navbar/Navbar";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
       <header style={{height: '200px'}}>
-      <div style={{height: '200px'}}>
-        <Image src='/img/books.jpg' alt='uvodni obrazek' width={600} height={300}/>
+      <div   className="w-full h-64">
+        {/* <Image src='/img/books.jpg' alt='uvodni obrazek' layout="fill" objectFit="cover" /> */}
+        <NavBar activeButton="home"/>
       </div>
       </header>
         <div>
