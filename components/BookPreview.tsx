@@ -6,7 +6,7 @@ const BookPreview = () => {
   return (
     <Paper>
        <Box >
-         <Image src={''} alt={'prebal knihy'} height={50} width={50}/>
+         <Image src={'/x'} alt={'prebal knihy'} height={50} width={50}/>
          <Typography>Název</Typography>
          <Typography>Zanr</Typography>
        </Box>

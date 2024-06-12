@@ -1,25 +1,26 @@
-"use client";
-/////////////////////////////font awesmome
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import Link from "next/link";
-import NavList from "@/components/navbar/NavList";
-import HamburgerNavList from "@/components/navbar/Hamburger";
-import { useMediaQuery } from "react-responsive";
+'use client'
+import React, { useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
 
+
 interface NavButton {
-  name: string;
+  URL: string;
   label: string;
 }
 
 interface NavListProps {
-//   handleButtonClick: (buttonName: string) => void;
-  activeButton: string;
+  // handleButtonClick: (buttonName: string) => void;
+  // activeButton: string;
 }
+const navButtons: NavButton[] = [
+  { URL: "/", label: "Home" },
+  { URL: "about", label: "O Peřince" },
+  { URL: "aktualni-cislo", label: "Aktuální Číslo" },
+  { URL: "archiv", label: "Archiv" },
+  { URL: "bonus", label: "Bonus" },
+];
 
-const NavBar: React.FC<NavListProps> = ({  activeButton }) => {
-    //handleButtonClick,
+const NavList: React.FC<NavListProps> = ({      }) => {
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
   const handleMouseEnter = () => {
@@ -30,34 +31,28 @@ const NavBar: React.FC<NavListProps> = ({  activeButton }) => {
     setIsHovered(false);
   };
 
-  const navButtons: NavButton[] = [
-    { name: "home", label: "Home" },
-    { name: "about", label: "O Peřince" },
-    { name: "aktualni-cislo", label: "Aktuální Číslo" },
-    { name: "archiv", label: "Archiv" },
-    { name: "bonus", label: "Bonus" },
-  ];
-
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleCustomButtonClick = (buttonName: string) => {
+  const handleClick = (URL: string) => {
     // Extract the current directory from the pathname (e.g., "/x")
-    if (buttonName === "home") {
-      router.push("/");
-    } else {
-      router.push(`/${buttonName}`);
-    }
-    // handleButtonClick(buttonName);
+    // if (buttonName === "home") {
+    //   router.push("/");
+    // } else {
+    console.log(URL)
+      router.push(`${URL}`);
+    // }
+    // handleButtonClick(URL);
   };
 
   return (
     <div className="btn-row flex m-4">
+      {pathname}
       {navButtons.map((button) => (
         <button
-          key={button.name}
-          className={`nav-btn ${activeButton === button.name ? "btn-clicked" : ""}`}
-          onClick={() => handleCustomButtonClick(button.name)}
+          key={button.URL}
+          className={`nav-btn   ${pathname === button.URL ? "btn-clicked" : ""}`}
+          onClick={() => handleClick(button.URL)}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
@@ -68,4 +63,4 @@ const NavBar: React.FC<NavListProps> = ({  activeButton }) => {
   );
 };
 
-export default NavBar;
+export default NavList;

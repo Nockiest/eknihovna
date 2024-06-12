@@ -4,12 +4,7 @@ import NavBar from "@/components/navbar/Navbar";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <header style={{height: '200px'}}>
-      <div   className="w-full h-64">
-        {/* <Image src='/img/books.jpg' alt='uvodni obrazek' layout="fill" objectFit="cover" /> */}
-        <NavBar activeButton="home"/>
-      </div>
-      </header>
+    <NavBar  />
         <div>
           <BookPreview/>
           <BookPreview/>
@@ -18,6 +13,13 @@ export default function Home() {
     </main>
   );
 }
+   {/* <header style={{height: '200px'}}>
+      <div   className="w-full h-64">
+          <Image src='/img/books.jpg' alt='uvodni obrazek' layout="fill" objectFit="cover" /> *
+        <NavBar activeButton="home"/>
+      </div>
+      </header> */}
+
 //className="h-64"
 // width='fill' height='fill'
 
