@@ -23,6 +23,7 @@ export const SecondaryButton = styled(Button)(({ theme }) => ({
 export const NavbarButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.light,
     color: theme.palette.secondary.contrastText,
+    padding: '16px 24px',
     '&:hover': {
       backgroundColor: theme.palette.secondary.dark,
     },
