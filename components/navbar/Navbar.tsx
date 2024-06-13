@@ -1,66 +1,82 @@
-'use client'
-import React, { useState } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import { useRouter, usePathname } from "next/navigation";
-
+import Link from "next/link";
+import { NavbarButton } from "@/theme/Buttons";
 
 interface NavButton {
   URL: string;
   label: string;
 }
 
-interface NavListProps {
-  // handleButtonClick: (buttonName: string) => void;
-  // activeButton: string;
-}
-const navButtons: NavButton[] = [
-  { URL: "/", label: "Home" },
-  { URL: "about", label: "O Peřince" },
-  { URL: "aktualni-cislo", label: "Aktuální Číslo" },
-  { URL: "archiv", label: "Archiv" },
-  { URL: "bonus", label: "Bonus" },
-];
+interface NavListProps {}
 
-const NavList: React.FC<NavListProps> = ({      }) => {
-  const [isHovered, setIsHovered] = useState<boolean>(false);
+const NavList: React.FC<NavListProps> = ({}) => {
+  const [navButtons, setNavButtons] = useState<NavButton[]>([
+    { URL: "/", label: "Home" },
+    { URL: "/about", label: "O Peřince" },
+    { URL: "/aktualni-cislo", label: "Aktuální Číslo" },
+    { URL: "/archiv", label: "Archiv" },
+    { URL: "/bonus", label: "Bonus" },
+  ]);
 
-  const handleMouseEnter = () => {
-    setIsHovered(true);
-  };
-
-  const handleMouseLeave = () => {
-    setIsHovered(false);
-  };
 
   const router = useRouter();
   const pathname = usePathname();
 
-  const handleClick = (URL: string) => {
-    // Extract the current directory from the pathname (e.g., "/x")
-    // if (buttonName === "home") {
-    //   router.push("/");
-    // } else {
-    console.log(URL)
-      router.push(`${URL}`);
-    // }
-    // handleButtonClick(URL);
-  };
-
   return (
     <div className="btn-row flex m-4">
-      {pathname}
+      {/* {pathname} */}
       {navButtons.map((button) => (
-        <button
+        <NavbarButton
           key={button.URL}
-          className={`nav-btn   ${pathname === button.URL ? "btn-clicked" : ""}`}
-          onClick={() => handleClick(button.URL)}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          variant="contained"
+          className={`   ${
+            pathname === button.URL ? "MuiButton-containedPrimary" : ""
+          }`}
         >
-          {button.label}
-        </button>
+          <Link href={button.URL}>{button.label}</Link>
+        </NavbarButton>
       ))}
     </div>
   );
 };
 
 export default NavList;
+
+// useEffect(() => {
+//   const fetchRoutes = async () => {
+//     try {
+//       const res = await fetch('/api/routeList');
+//       console.log(res)
+//       if (!res.ok) {
+//         throw new Error(`Failed to fetch routes: ${res.statusText}`);
+//       }
+//       const routes: NavButton[] = await res.json();
+//       console.log(routes)
+//       setNavButtons(routes);
+//     } catch (error) {
+//       console.error('Failed to fetch routes:', error);
+//     }
+//   };
+
+//   fetchRoutes();
+// }, []);
+
+
+// onClick={() => handleClick(button.URL)}
+// onMouseEnter={handleMouseEnter}
+// onMouseLeave={handleMouseLeave}
+// const [isHovered, setIsHovered] = useState<boolean>(false);
+// const handleMouseEnter = () => {
+//   setIsHovered(true);
+// };
+
+// const handleMouseLeave = () => {
+//   setIsHovered(false);
+// };
+// if (buttonName === "home") {
+//   router.push("/");
+// } else {
+// }
+// handleButtonClick(URL);
