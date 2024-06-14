@@ -41,7 +41,7 @@ export const NavbarButton = styled(Button)(({ theme }) => ({
 
 const ThemedButtons = () => {
   return (
-    <div className="space-x-4">
+    <div className="space-x-4 z-0">
       <PrimaryButton variant="contained">Primary Button</PrimaryButton>
       <SecondaryButton variant="contained">Secondary Button</SecondaryButton>
       <NavbarButton variant="contained" className='MuiButton-containedPrimary' >Navbar</NavbarButton>

@@ -22,9 +22,9 @@ const NavList: React.FC<NavListProps> = ({}) => {
       elevation={3}
       className="p-2 h-full bg-primary-600 w-full mx-0 flex flex-col items-center"
     >
-      <div className="wraper">
+      <div className="wraper z-3">
         <button
-          className=" nav-toggle bg-transparent border-0 cursor-pointer absolute right-10 top-4 z-1000 m-4 p-4"
+          className=" nav-toggle bg-transparent border-0 cursor-pointer absolute right-10 top-4 z-3 m-4 p-4"
           onClick={toggleNav}
           aria-label="toggle navigation"
         >
