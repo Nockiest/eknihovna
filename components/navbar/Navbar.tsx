@@ -1,68 +1,85 @@
-'use client'
-import React, { useEffect, useState } from "react";
-// import { useRouter, usePathname } from "next/navigation";
+"use client";
+
 import Link from "next/link";
 import { NavbarButton } from "@/theme/Buttons";
-import { Box, Paper, Typography,   } from "@mui/material";
-// import HamburgerNavList from "./Hamburger";
+import { Box, Paper, Typography } from "@mui/material";
+import HamburgerNavList from "./Hamburger";
+import { navRoutes } from "@/data/routeNames";
+import { useEffect, useState } from "react";
 // import { useMediaQuery } from "react-responsive";
-interface NavButton {
-  URL: string;
-  label: string;
-}
 
 interface NavListProps {}
 
 const NavList: React.FC<NavListProps> = ({}) => {
-  const [navButtons, setNavButtons] = useState<NavButton[]>([
-    { URL: "/", label: "Home" },
-    { URL: "/about", label: "O Knihovně" },
-    { URL: "/katalog", label: "katalog" },
-    { URL: "/news", label: "Zprávy" },
-    { URL: "/contact", label: "Kontakt" },
-  ]);
-  // const isMobile = true
-  // useMediaQuery({ maxWidth: 858 });
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
+  const toggleNav = () => {
+    setIsOpen(!isOpen);
+  };
 
   return (
-    <Paper elevation={3} className="p-2 h-full bg-primary-600 w-full mx-0 flex flex-col items-center">
-      <Typography variant="h1" className="mb-4 text-center" style={{ textAlign: 'center' }}>
+    <Paper
+      elevation={3}
+      className="p-2 h-full bg-primary-600 w-full mx-0 flex flex-col items-center"
+    >
+      <div className="wraper">
+        <button
+          className=" nav-toggle bg-transparent border-0 cursor-pointer absolute right-10 top-4 z-1000 m-4 p-4"
+          onClick={toggleNav}
+          aria-label="toggle navigation"
+        >
+          <span className={`hamburger`} />
+        </button>
+        <HamburgerNavList isOpen={isOpen} toggleNav={toggleNav} />
+      </div>
+      <Typography
+        variant="h1"
+        className="mb-4 text-center"
+        style={{ textAlign: "center" }}
+      >
         ŠKOLNÍ KNIHOVNA
       </Typography>
-      <Box className="flex flex-row justify-center align-center    space-x-4">
-
-      {/* {isMobile ? (
-        <div>
-          <button className="nav-toggle mt-0" aria-label="toggle navigation">
-           <span className={`hamburger`} />
-          </button>
-          <div className="right-nav nav">
-            <HamburgerNavList />
-          </div>
-        </div>
-      ) : ( */}
-        {/* <>  */}
-        {navButtons.map((button) => (
-          <NavbarButton
-            key={button.URL}
-            variant="contained"
-          >
+      <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
+        {navRoutes.map((button) => (
+          <NavbarButton key={button.URL} variant="contained">
             <Link href={button.URL}>{button.label}</Link>
           </NavbarButton>
         ))}
-        {/* </>
-      )*/}
-
-      }
-
-
       </Box>
     </Paper>
   );
 };
 
 export default NavList;
+
+// const NavComponent = () => {
+//   const [isOpen, setIsOpen] = useState(false);
+
+//   const toggleNav = () => {
+//     setIsOpen(!isOpen);
+//   };
+
+//   useEffect(() => {
+//     const navToggle = document.querySelector(".nav-toggle");
+//     navToggle?.addEventListener("click", toggleNav);
+
+//     return () => {
+//       navToggle?.removeEventListener("click", toggleNav);
+//     };
+//   }, []);
+
+//   return (
+//     <div>
+//       <button className="nav-toggle bg-transparent border-0 cursor-pointer absolute right-10 top-4 z-1000 m-4 p-4" aria-label="toggle navigation">
+//         <span className="hamburger" />
+//       </button>
+//       <HamburgerNavList isOpen={isOpen} toggleNav={toggleNav} />
+//     </div>
+//   );
+// };
+
+// export default NavComponent;
+
 
 // useEffect(() => {
 //   const fetchRoutes = async () => {

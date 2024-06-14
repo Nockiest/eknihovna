@@ -3,7 +3,7 @@
 @tailwind utilities;
 @import url("variables.css");
 @import url("tailwind.css");
-
+@import url("hamburger.css");
 
 
 @layer utilities {

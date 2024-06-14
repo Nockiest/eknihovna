@@ -9,3 +9,8 @@ export type Book = {
     forMaturita: boolean
     bookCoverURL?: string
 }
+
+export type NavButton = {
+    URL: string;
+    label: string;
+  }
