@@ -7,6 +7,7 @@ import { styled } from '@mui/material/styles';
 export const PrimaryButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
   color: theme.palette.primary.contrastText,
+  zIndex: 0,
   '&:hover': {
     backgroundColor: theme.palette.primary.dark,
   },
@@ -15,6 +16,7 @@ export const PrimaryButton = styled(Button)(({ theme }) => ({
 export const SecondaryButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.main,
   color: theme.palette.secondary.contrastText,
+  zIndex: 0,
   '&:hover': {
     backgroundColor: theme.palette.secondary.dark,
   },
@@ -23,6 +25,7 @@ export const SecondaryButton = styled(Button)(({ theme }) => ({
 export const NavbarButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.secondary.light,
     color: theme.palette.secondary.contrastText,
+    zIndex: 0,
     padding: '16px 24px',
     '&:hover': {
       backgroundColor: theme.palette.secondary.dark,

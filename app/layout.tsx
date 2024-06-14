@@ -5,6 +5,7 @@ import theme from "@/theme/theme";
 import { ThemeProvider } from "@mui/material";
 import Hero from "@/components/hero/Hero";
 import dynamic from "next/dynamic";
+import Footer from "@/components/footer/Footer";
 // import NavBar from "@/components/navbar/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -27,6 +28,7 @@ export default function RootLayout({
           <NoSSRHero />
 
           {children}
+          <Footer />
         </ThemeProvider>
       </body>
     </html>
