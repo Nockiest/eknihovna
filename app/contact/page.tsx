@@ -1,4 +1,4 @@
-import { PrimaryButton } from '@/theme/Buttons'
+import { PrimaryButton } from '@/theme/buttons/Buttons'
 import React from 'react'
 
 const page = () => {

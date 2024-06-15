@@ -1,11 +1,10 @@
 import BookPreview from "@/components/BookPreview";
-import NavBar from "@/components/navbar/Navbar";
-import ThemedButtons from "@/theme/Buttons";
+// import ThemedButtons from "@/theme/buttons/Buttons";
 import { Typography } from "@mui/material";
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">
-    <ThemedButtons />
+    {/* <ThemedButtons /> */}
         <div>
           <BookPreview/>
           <BookPreview/>

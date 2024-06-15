@@ -1,25 +1,43 @@
-import { Box, Paper, Typography } from '@mui/material'
-import Image from 'next/image'
-import React from 'react'
+import { Book } from "@/types/types";
+import { Box, Paper, Typography } from "@mui/material";
+import Image from "next/image";
+import React from "react";
 
-const BookPreview = () => {
+
+const BookPreview: React.FC<Book> = ({book}) => {
+  const {
+    bookCoverURL,
+    available,
+    author,
+    name,
+    genre,
+    formaturita,
+    rating,
+  } = book;
+  console.log( book)
   return (
     <Paper>
-       <Box >
-         <Image src={'/img/books.jpg'} alt={'prebal knihy'} height={50} width={50}/>
-         <Typography>Název</Typography>
-         <Typography>Zanr</Typography>
-       </Box>
+      <Box>
+        <Image
+          src={bookCoverURL ? bookCoverURL : "/img/books.jpg"}
+          alt={name}
+          height={50}
+          width={50}
+        />
+        <Typography>Název: {name}</Typography>< br />
+        <Typography>Žánr:{genre ? genre : "nema zanr"}</Typography>< br />
+        <Typography>Autor: {author ? genre : "nema zanr"}</Typography>< br />
+        <Typography>Dostupnost: {available? 'dostupna':'nedostupná'}</Typography>< br />
+        <Typography>{formaturita? 'maturitni':''}</Typography>< br />
+        <Typography>Hodnocení:{rating}/100 </Typography>< br />
+      </Box>
 
-       <Typography>Název</Typography>
 
     </Paper>
-  )
-}
+  );
+};
 
-export default BookPreview
-
-
+export default BookPreview;
 
 // const BioCard = ({ title, index }) => {
 //   return (

@@ -3,7 +3,6 @@ import { Inter } from "next/font/google";
 import "./styling/globals.css";
 import theme from "@/theme/theme";
 import { ThemeProvider } from "@mui/material";
-import Hero from "@/components/hero/Hero";
 import dynamic from "next/dynamic";
 import Footer from "@/components/footer/Footer";
 // import NavBar from "@/components/navbar/Navbar";
@@ -26,8 +25,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider theme={theme}>
           <NoSSRHero />
-
+          <main className="min-h-screen">
           {children}
+
+          </main>
           <Footer />
         </ThemeProvider>
       </body>
