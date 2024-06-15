@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const page = () => {
+const Katalog = () => {
   const [shownBooks, setShownBooks] = useState<Books[]>([]);
 
   useEffect(() => {
@@ -47,4 +47,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Katalog;
