@@ -1,11 +1,12 @@
 "use client";
 import BookPreview from "@/components/BookPreview";
+import { Book } from "@/types/types";
 import { Box, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const Katalog = () => {
-  const [shownBooks, setShownBooks] = useState<Books[]>([]);
+  const [shownBooks, setShownBooks] = useState<Book[]>([]);
 
   useEffect(() => {
     axios

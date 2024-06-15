@@ -3,8 +3,10 @@ import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import React from "react";
 
-
-const BookPreview: React.FC<Book> = ({book}) => {
+type BookPreviewProps = {
+  book: Book
+}
+const BookPreview: React.FC<BookPreviewProps> = ({book}) => {
   const {
     bookCoverURL,
     available,
