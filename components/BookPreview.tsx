@@ -8,30 +8,30 @@ type BookPreviewProps = {
 }
 const BookPreview: React.FC<BookPreviewProps> = ({book}) => {
   const {
-    bookCoverURL,
-    available,
-    author,
-    name,
-    genre,
-    formaturita,
-    rating,
+    bookCoverURL = '',
+    available = false,
+    author = 'Unknown Author',
+    name = 'Unknown Name',
+    genre = 'Unknown Genre',
+    formaturita = false,
+    rating = 0,
   } = book;
-  console.log( book)
+
   return (
     <Paper>
       <Box>
         <Image
-          src={bookCoverURL ? bookCoverURL : "/img/books.jpg"}
+          src={ bookCoverURL}
           alt={name}
           height={50}
           width={50}
         />
         <Typography>Název: {name}</Typography>< br />
-        <Typography>Žánr:{genre ? genre : "nema zanr"}</Typography>< br />
-        <Typography>Autor: {author ? genre : "nema zanr"}</Typography>< br />
-        <Typography>Dostupnost: {available? 'dostupna':'nedostupná'}</Typography>< br />
+        <Typography>Žánr:{genre  }</Typography>< br />
+        <Typography>Autor: {author  }</Typography>< br />
+        <Typography>Dostupnost: {available }</Typography>< br />
         <Typography>{formaturita? 'maturitni':''}</Typography>< br />
-        <Typography>Hodnocení:{rating}/100 </Typography>< br />
+        <Typography>Hodnocení: {rating}/100 </Typography>< br />
       </Box>
 
 
@@ -40,6 +40,13 @@ const BookPreview: React.FC<BookPreviewProps> = ({book}) => {
 };
 
 export default BookPreview;
+  //  const bookCoverURL = book.bookCoverURL? book.bookCoverURL: ''
+  // const available =book.available? book.available: false
+  // const author =book.author? book.author: 'Unknown Author'
+  // const name = book.name? book.name:'Unknown Name'
+  // const genre =book.genre? book.genre: 'Unknown Genre'
+  // const formaturita = book.formaturita? book.formaturita:false
+  // const rating =book.rating? book.rating: 0
 
 // const BioCard = ({ title, index }) => {
 //   return (

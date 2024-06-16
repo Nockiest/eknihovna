@@ -20,6 +20,7 @@ const BookCatalog : React.FC<CatalogPageProps> = ({shownBooks}) => {
           }}
         >
           <tbody>
+
             {shownBooks.map((shownBook, key) => {
               return <BookPreview key={key}  book={shownBook} />;
             })}

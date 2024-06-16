@@ -9,15 +9,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-4">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-        {/* Logo */}
-        {/* <div className="mb-4 md:mb-0">
-          <Link href="/">
-            <a className="flex items-center space-x-2">
-              <Image src="/logo.svg" alt="Logo" width={40} height={40} />
-              <span className="font-bold text-xl">Your Logo</span>
-            </a>
-          </Link>
-        </div> */}
+         
         <Box className="flex flex-wrap space-x-4">
           {navRoutes.map((button,key) => (
             <Link className="hover:text-gray-400" key={key} href={button.URL}>
