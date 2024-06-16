@@ -1,16 +1,16 @@
 "use client";
-import BookPreview from "@/components/BookPreview";
+import BookCatalog from "@/components/Catalog";
 import { Book } from "@/types/types";
 import { Box, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
-const Katalog = () => {
+const CatalogPage = () => {
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
 
   useEffect(() => {
     axios
-      .get("http://localhost:3002/bookList", { params: { query: '' } })
+      .get("http://localhost:3002/bookList", { params: { query: "" } })
       .then((response: any) => {
         const data = response.data;
         if (data === null) {
@@ -26,26 +26,10 @@ const Katalog = () => {
 
   return (
     <Box>
-      <Typography variant={'h2'}>Katalog</Typography>
-      {shownBooks.length > 0 && (
-        <table
-          style={{
-            width: "100%",
-            zIndex: -1,
-            backgroundColor: "#f7f6f2",
-            padding: "0.25em",
-            maxHeight: "500px",
-          }}
-        >
-          <tbody>
-            {shownBooks.map((shownBook, key) => {
-              return <BookPreview key={key}  book={shownBook} />;
-            })}
-          </tbody>
-        </table>
-      )}
+      <Typography variant={"h2"}>Katalog</Typography>
+      <BookCatalog shownBooks={shownBooks} />
     </Box>
   );
 };
 
-export default Katalog;
+export default CatalogPage;

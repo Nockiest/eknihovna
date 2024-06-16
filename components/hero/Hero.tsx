@@ -1,10 +1,7 @@
 import { Box } from "@mui/material";
 import Image from "next/image";
-import React from "react";
 import Navbar from '@/components/navbar/Navbar'
-// const NoSSRNavbar = dynamic(() => import("@/components/navbar/Navbar"), {
-//   ssr: false,
-// });
+
 const Hero = () => {
   return (
     <Box className={"w-full flex flex-col align-center"}>
