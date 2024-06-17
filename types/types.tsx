@@ -5,7 +5,6 @@ export type Book = {
     description?: string
     genre?:string
     rating?: number
-    iban?: number
     available: boolean
     formaturita: boolean
     bookCoverURL?: string
