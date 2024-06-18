@@ -52,15 +52,18 @@ const CatalogPage = async () => {
         return [];
       }
 
-      const knihy: Book[] = data.rows;
-
+      const knihy: Book[] = data ;
+      console.log('prvni kniha ' , knihy[0])
+       // Object.keys(resolvedBooks).forEach(key => {
+        //   console.log(`${key}: ${resolvedBooks[key]}`);
+        // });
       return knihy;
     } catch (error: any) {
       throw new Error(`Problem with fetching data: ${error}`);
     }
   };
 
-  const books =  getBooksByQuery();
+  const books =    getBooksByQuery();
 
   return (
     <Box>

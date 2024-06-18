@@ -1,18 +1,19 @@
+"use client";
 import { Book } from "@/types/types";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 
 type BookPreviewProps = {
-  book: Book
-}
-const BookPreview: React.FC<BookPreviewProps> = ({book}) => {
+  book: Book;
+};
+const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   const {
-    bookCoverURL = '',
+    bookCoverURL = "",
     available = false,
-    author = 'Unknown Author',
-    name = 'Unknown Name',
-    genre = 'Unknown Genre',
+    author = "Autor nezn8m7",
+    name = "Nezn8m0 jméno",
+    genre = "neznámý žánr",
     formaturita = false,
     rating = 0,
   } = book;
@@ -20,33 +21,37 @@ const BookPreview: React.FC<BookPreviewProps> = ({book}) => {
   return (
     <Paper>
       <Box>
-        <Image
+        {/* <Image
           src={ bookCoverURL}
           alt={name}
           height={50}
           width={50}
-        />
-        <Typography>Název: {name}</Typography>< br />
-        <Typography>Žánr:{genre  }</Typography>< br />
-        <Typography>Autor: {author  }</Typography>< br />
-        <Typography>Dostupnost: {available }</Typography>< br />
-        <Typography>{formaturita? 'maturitni':''}</Typography>< br />
-        <Typography>Hodnocení: {rating}/100 </Typography>< br />
+        /> */}
+        <Typography>Název: {name}</Typography>
+        <br />
+        <Typography>Žánr:{genre}</Typography>
+        <br />
+        <Typography>Autor: {author}</Typography>
+        <br />
+        <Typography>Dostupnost: {available}</Typography>
+        <br />
+        <Typography>{formaturita ? "maturitni" : ""}</Typography>
+        <br />
+        <Typography>Hodnocení: {rating}/100 </Typography>
+        <br />
       </Box>
-
-
     </Paper>
   );
 };
 
 export default BookPreview;
-  //  const bookCoverURL = book.bookCoverURL? book.bookCoverURL: ''
-  // const available =book.available? book.available: false
-  // const author =book.author? book.author: 'Unknown Author'
-  // const name = book.name? book.name:'Unknown Name'
-  // const genre =book.genre? book.genre: 'Unknown Genre'
-  // const formaturita = book.formaturita? book.formaturita:false
-  // const rating =book.rating? book.rating: 0
+//  const bookCoverURL = book.bookCoverURL? book.bookCoverURL: ''
+// const available =book.available? book.available: false
+// const author =book.author? book.author: 'Unknown Author'
+// const name = book.name? book.name:'Unknown Name'
+// const genre =book.genre? book.genre: 'Unknown Genre'
+// const formaturita = book.formaturita? book.formaturita:false
+// const rating =book.rating? book.rating: 0
 
 // const BioCard = ({ title, index }) => {
 //   return (
