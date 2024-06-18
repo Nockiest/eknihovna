@@ -47,25 +47,25 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
 
   return (
     <div>
-      {books.length > 0 && (
-        // <table
-        //   style={{
-        //     width: '100%',
-        //     zIndex: -1,
-        //     backgroundColor: '#f7f6f2',
-        //     padding: '0.25em',
-        //     maxHeight: '500px',
-        //   }}
-        // >
-        //   <tbody>
+      {books?.length > 0 && (
+        <table
+          style={{
+            width: '100%',
+            zIndex: -1,
+            backgroundColor: '#f7f6f2',
+            padding: '0.25em',
+            maxHeight: '500px',
+          }}
+        >
+          <tbody>
         <div>
            {books.map((book, key) => (
               <BookPreview key={key} book={book} />
             ))}
         </div>
 
-          // </tbody>
-        // </table>
+          </tbody>
+         </table>
       )}
     </div>
   );
