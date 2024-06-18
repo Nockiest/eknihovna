@@ -45,7 +45,14 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
     );
   }
 
+  if (books?.length === 0) {
+    console.log('problem recieving books')
+    return <div>Máme problém získat knihy</ div>
+  }
+
   return (
+
+
     <div>
       {books?.length > 0 && (
         <table
