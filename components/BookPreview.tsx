@@ -11,11 +11,11 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   const {
     bookCoverURL = "",
     available = false,
-    author = "Autor nezn8m7",
+    author = "Autor neznámý",
     name = "Nezn8m0 jméno",
     genre = "neznámý žánr",
     formaturita = false,
-    rating = 0,
+    rating = -1,
   } = book;
 
   return (
