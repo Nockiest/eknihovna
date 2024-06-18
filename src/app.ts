@@ -1,72 +1,41 @@
+
+// make sure you run npx tsc -w before using this file
+
 import express, { Request, Response } from 'express';
 import { Pool } from 'pg';
 import cors from 'cors';
-const xlsx = require('xlsx');
-
-type DbSearch = {
-  id: number;
-  keyword: string;
-  fullquery: string;
-  popularity: number;
-};
-
+import xlsx from 'xlsx'
+import { knihyURL, testURL } from './data';
+import { assignIds } from './excelUtils';
+const port = 3002;
 const app = express();
 app.use(cors());
-const port = 3002;
-const pool = new Pool({
-  host: 'localhost',
-  user: 'postgres',
-  database: 'postgres',
-  password: 'OndPost06',
-  port: 5432,
-});
 
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
   try {
-    const results = await pool.query('SELECT * FROM books');
-    res.json(results);
+    // const results = await pool.query('SELECT * FROM books');
+    const boookList = readExcelFile()
+    res.json(boookList);
   } catch (error) {
     console.error('Error executing search query:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
-const checkSearchRelevant = (keyword: string, query: string) => {
-  if (query.replace(/\s/g, '') === '') {
-    return false;
-  }
-  const keywordWithoutSpaces = keyword.replace(/\s+/g, ' ').trim();
-  const queryWithoutSpaces = query.replace(/\s+/g, ' ').trim();
-  return (
-    keywordWithoutSpaces.toLocaleLowerCase().indexOf(queryWithoutSpaces.toLocaleLowerCase()) >= 0 ||
-    queryWithoutSpaces.toLocaleLowerCase().indexOf(keywordWithoutSpaces.toLocaleLowerCase()) >= 0
-  );
-};
-
-const checkResultStartWithQuery = (result: string, query: string): boolean => {
-  return result.replace(/\s+/g, ' ').trim().toLocaleLowerCase().indexOf(query.replace(/\s+/g, ' ').trim().toLocaleLowerCase()) == 0;
-};
-
-function getSimilarity(result: string, query: string) {
-  result = result.toLowerCase();
-  query = query.toLowerCase();
-  return result.length - result.replace(new RegExp(query, 'g'), '').length;
-}
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-  console.log(`reading file  `);
-  readExcelFile();
+  // assignIds(knihyURL, true, 'A',   3530)
 });
 
 const readExcelFile = () => {
   try {
-
-    const workbook = xlsx.readFile('C:/Users/ondra/OneDrive - Gymnázium Opatov, Praha 4, Konstantinova 1500/Plocha/knihy.xlsx');
+    const workbook = xlsx.readFile(knihyURL);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
+    return data
   } catch (error) {
     console.error('Error reading Excel file:', error);
   }
@@ -84,3 +53,19 @@ const readExcelFile = () => {
 //   {"id":8,"name":"Epidendrum mutelianum Cogn.","iban":"LB64 2421 F4LF JOOZ EVZZ O1TD O84Q","author":"Rollins Vasilik","rating":88,"description":"rhoncus mauris enim leo rhoncus sed vestibulum sit amet cursus id turpis integer aliquet massa id lobortis convallis","forMaturita":true,"available":true},
 //   {"id":9,"name":"Cryptantha mohavensis (Greene) Greene","iban":"CH65 2202 7FQA DRIA EWCF 8","author":null,"rating":23,"description":"facilisi cras non velit nec nisi vulputate nonummy maecenas tincidunt lacus at velit vivamus vel nulla eget eros elementum pellentesque quisque porta volutpat","forMaturita":true,"available":true},
 //   {"id":10,"name":"Nicotiana L.","iban":"FR96 2717 6297 19FL NGQG LN84 097","author":"Malva MacConnal","rating":63,"description":"mauris eget massa tempor convallis nulla neque libero convallis eget eleifend luctus ultricies eu nibh quisque id justo","forMaturita":false,"available":true},]}
+
+//
+// const pool = new Pool({
+//   host: 'localhost',
+//   user: 'postgres',
+//   database: 'postgres',
+//   password: 'OndPost06',
+//   port: 5432,
+// });
+
+// type DbSearch = {
+//   id: number;
+//   keyword: string;
+//   fullquery: string;
+//   popularity: number;
+// };
