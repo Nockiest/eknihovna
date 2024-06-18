@@ -15,7 +15,7 @@ export const getBooksByQuery = async (query = ''): Promise<Book[]> => {
     if (data === null) {
       return [];
     }
-    console.log(data)
+
     const knihy: Book[] = data ;
 
     return knihy;
