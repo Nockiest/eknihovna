@@ -37,31 +37,33 @@
 
 import BookCatalog from "@/components/Catalog";
 import { Book } from "@/types/types";
+import { getBooksByQuery } from "@/utils/fetchBooks";
 import { Box, Typography } from "@mui/material";
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const CatalogPage = async () => {
 
-  const getBooksByQuery = async (): Promise<Book[]> => {
-    try {
-      const response = await axios.get("http://localhost:3002/bookList", { params: { query: "" } });
-      const data = response.data;
 
-      if (data === null) {
-        return [];
-      }
+  // const getBooksByQuery = async (): Promise<Book[]> => {
+  //   try {
+  //     const response = await axios.get(`${apiUrl}/bookList`, { params: { query: "" } });
+  //     const data = response.data;
 
-      const knihy: Book[] = data ;
-      console.log('prvni kniha ' , knihy[0])
-       // Object.keys(resolvedBooks).forEach(key => {
-        //   console.log(`${key}: ${resolvedBooks[key]}`);
-        // });
-      return knihy;
-    } catch (error: any) {
-      throw new Error(`Problem with fetching data: ${error}`);
-    }
-  };
+  //     if (data === null) {
+  //       return [];
+  //     }
+
+  //     const knihy: Book[] = data ;
+  //     console.log('prvni kniha ' , knihy[0])
+  //      // Object.keys(resolvedBooks).forEach(key => {
+  //       //   console.log(`${key}: ${resolvedBooks[key]}`);
+  //       // });
+  //     return knihy;
+  //   } catch (error: any) {
+  //     throw new Error(`Problem with fetching data: ${error}`);
+  //   }
+  // };
 
   const books =    getBooksByQuery();
 
