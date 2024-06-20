@@ -10,29 +10,23 @@ interface BookCatalogProps {
 
 const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
   const [books, setBooks] = useState<Book[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const loadBooks = async () => {
-      // setLoading(true);
       try {
         const resolvedBooks = shownBooks instanceof Promise ? await shownBooks : shownBooks;
         setBooks(resolvedBooks);
-
+        console.log('fetching', resolvedBooks)
       } catch (error: any) {
         setError(error.message);
       }
-      // finally {
-      //   setLoading(false);
-      // }
+
     };
+    console.log('run')
     loadBooks();
   }, [shownBooks]);
 
-  // if (loading) {
-  //   return <Typography variant="h5">Loading...</Typography>;
-  // }
 
   if (error) {
     return (
@@ -56,7 +50,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
         </div>
 
       ) : (
-          <Typography variant="h5">Loading...</Typography> 
+          <Typography variant="h5">Loading...</Typography>
       )
 
     }

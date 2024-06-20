@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { Book } from '@/types/types';
 
-// const apiUrl =  process.env.LOCAL_APP_API_URL;
 
 
 export const getBooksByQuery = async (query = ''): Promise<Book[]> => {
