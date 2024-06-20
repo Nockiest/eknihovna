@@ -16,7 +16,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const xlsx_1 = __importDefault(require("xlsx"));
-const data_1 = require("./data");
+const dotenv_1 = __importDefault(require("dotenv"));
+// Load environment variables from .env file
+dotenv_1.default.config();
+// import { knihyURL, testURL } from './data';
+console.log(process.env.KNIHY_URL);
+const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -38,7 +43,7 @@ app.listen(port, () => {
 });
 const readExcelFile = () => {
     try {
-        const workbook = xlsx_1.default.readFile(data_1.knihyURL);
+        const workbook = xlsx_1.default.readFile(knihyURL);
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const data = xlsx_1.default.utils.sheet_to_json(worksheet);

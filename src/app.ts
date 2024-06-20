@@ -5,8 +5,13 @@ import express, { Request, Response } from 'express';
 import { Pool } from 'pg';
 import cors from 'cors';
 import xlsx from 'xlsx'
-import { knihyURL, testURL } from './data';
-import { assignIds } from './excelUtils';
+import dotenv from 'dotenv';
+
+// Load environment variables from .env file
+dotenv.config();
+// import { knihyURL, testURL } from './data';
+console.log( process.env.KNIHY_URL)
+const knihyURL = process.env.KNIHY_URL
 const port = 3002;
 const app = express();
 app.use(cors());
