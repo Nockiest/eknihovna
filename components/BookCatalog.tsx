@@ -1,8 +1,8 @@
 'use client'
-import BookPreview from './BookPreview';
-import React, { useEffect, useState } from 'react';
-import { Book } from '@/types/types';
+import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
+import { Book } from '@/types/types';
+import BookPreview from './BookPreview';
 
 interface BookCatalogProps {
   shownBooks: Promise<Book[]> | Book[];
@@ -13,20 +13,32 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     const loadBooks = async () => {
       try {
         const resolvedBooks = shownBooks instanceof Promise ? await shownBooks : shownBooks;
-        setBooks(resolvedBooks);
-        console.log('fetching', resolvedBooks)
+
+        // Check if component is still mounted before setting state
+        if (isMounted) {
+          setBooks(resolvedBooks);
+        }
       } catch (error: any) {
         setError(error.message);
       }
-
     };
-    console.log('run')
-    loadBooks();
-  }, [shownBooks]);
 
+    const timeout = setTimeout(() => {
+      setError('Timeout: Fetching books took longer than 10 seconds');
+    }, 10000); // 10 seconds timeout
+
+    loadBooks();
+
+    return () => {
+      isMounted = false; // Clean up to prevent state updates on unmounted component
+      clearTimeout(timeout); // Clear timeout if component unmounts before completion
+    };
+  }, [shownBooks]);
 
   if (error) {
     return (
@@ -40,25 +52,21 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
 
   return (
     <div>
-      {books?.length > 0?  (
-
+      {books?.length > 0 ? (
         <div>
-
-           {books.slice(0, 10).map((book, key) => (
-              <BookPreview key={key} book={book} />
-            ))}
+          {books.slice(0, 10).map((book, key) => (
+            <BookPreview key={key} book={book} />
+          ))}
         </div>
-
       ) : (
-          <Typography variant="h5">Loading...</Typography>
-      )
-
-    }
+        <Typography variant="h5">Loading...</Typography>
+      )}
     </div>
   );
 };
 
 export default BookCatalog;
+
 
 // interface BookCatalogProps {
 //   // shownBooks: Promise<Book[]> | Book[];
