@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import { Book } from '@/types/types';
 import BookPreview from './BookPreview';
+import DotsShower from './DotsShower';
 
 interface BookCatalogProps {
   shownBooks: Promise<Book[]> | Book[];
@@ -13,35 +14,29 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    let isMounted = true;
+    // let isMounted = true;
 
     const loadBooks = async () => {
       try {
         const resolvedBooks = shownBooks instanceof Promise ? await shownBooks : shownBooks;
 
         // Check if component is still mounted before setting state
-        if (isMounted) {
-          setBooks(resolvedBooks);
-        }
+        // if (isMounted) {
+        //   setBooks(resolvedBooks);
+        // }
       } catch (error: any) {
         setError(error.message);
       }
     };
 
-    const timeout = setTimeout(() => {
-     if(books.length === 0){
-      setError('Timeout: Fetching books took longer than 10 seconds');
 
-     }
-    }, 10000); // 10 seconds timeout
 
     loadBooks();
 
-    return () => {
-      isMounted = false; // Clean up to prevent state updates on unmounted component
-      clearTimeout(timeout); // Clear timeout if component unmounts before completion
-    };
-  }, [shownBooks]);
+    // return () => {
+    //   isMounted = false; // Clean up to prevent state updates on unmounted component
+    // };
+  }, [shownBooks, books.length ]);
 
   if (error) {
     return (
@@ -57,12 +52,13 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
     <div>
       {books?.length > 0 ? (
         <div>
-          {books.slice(0, 10).map((book, key) => (
+          {books .map((book, key) => (
             <BookPreview key={key} book={book} />
           ))}
         </div>
       ) : (
-        <Typography variant="h5">Loading...</Typography>
+        // <Typography variant="h5">Loading...</Typography>
+        <DotsShower />
       )}
     </div>
   );
