@@ -6,16 +6,29 @@ import { Pool } from 'pg';
 import cors from 'cors';
 import xlsx from 'xlsx'
 import dotenv from 'dotenv';
+import multer from 'multer'
+import path from 'path'
+import fs from 'fs'
+
+import bodyParser from 'body-parser'
 
 // Load environment variables from .env file
 dotenv.config();
-// import { knihyURL, testURL } from './data';
-console.log( process.env.KNIHY_URL)
 const knihyURL = process.env.KNIHY_URL
 const port = 3002;
 const app = express();
 app.use(cors());
+app.use(bodyParser.json());
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, 'knihy2.xlsx');
+  }
+});
 
+const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
   try {
@@ -28,6 +41,118 @@ app.get('/bookList', async (req: Request, res: Response) => {
   }
 });
 
+// const upload = multer({ dest: '/' });
+
+// app.post('/bookList', async (req: Request, res: Response) => {
+//   const { query } = req.query;
+//   try {
+//     // const results = await pool.query('SELECT * FROM books');
+//     const boookList = readExcelFile()
+//     res.json(boookList);
+//   } catch (error) {
+//     console.error('Error executing search query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+app.post('/bookList', upload.single('file'), (req, res) => {
+  try {
+    res.status(200).json({ message: 'File uploaded successfully' });
+  } catch (error) {
+    console.error('Error processing data:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// app.post('/booklist', upload.single('file'), (req, res) => {
+//   // const { password } = req.body;
+
+//   // Example: Validate password
+//   // if (password !== '1234') {
+//   //   return res.status(401).json({ error: 'Unauthorized' });
+//   // }
+
+//   try {
+//     const filePath = path.join(__dirname, 'uploads', req.file.originalname);
+//     const data = fs.readFileSync(filePath); // Read the uploaded file
+
+//     // Process the received data (e.g., save to database, manipulate, etc.)
+//     console.log('Received data:', data);
+
+//     // Example: Write data to a new file (knihy-updated.xlsx)
+//     fs.writeFileSync('knihy.xlsx', data);
+
+//     res.status(200).json({ message: 'Data received and processed successfully' });
+//   } catch (error) {
+//     console.error('Error processing data:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+
+// app.post('/booklist', (req, res) => {
+//   const { data } = req.body;
+
+//   // Verify password (replace with your actual password validation logic)
+//   // if (password !== '1234') {
+//   //   return res.status(401).json({ error: 'Unauthorized' });
+//   // }
+
+//   try {
+//     // Process the received data (e.g., save to database, manipulate, etc.)
+//     console.log('Received data:', data);
+
+//     // Example: Write data to a new file (knihy-updated.xlsx)
+//     fs.writeFileSync('knihy-updated.xlsx', Buffer.from(data));
+
+//     res.status(200).json({ message: 'Data received and processed successfully' });
+//   } catch (error) {
+//     console.error('Error processing data:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+// app.post('/booklist', (req, res) => {
+//   const { password, data } = req.body;
+
+//   // Verify password (replace with your actual password validation logic)
+//   if (password !== '1234') {
+//     return res.status(401).json({ error: 'Unauthorized' });
+//   }
+
+//   try {
+//     // Process the received data (e.g., save to database, manipulate, etc.)
+//     console.log('Received data:', data);
+
+//     // Example: Write data to a new file (knihy-updated.xlsx)
+//     fs.writeFileSync('knihy-updated.xlsx', Buffer.from(data));
+
+//     res.status(200).json({ message: 'Data received and processed successfully' });
+//   } catch (error) {
+//     console.error('Error processing data:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+
+// app.post('/bookList', upload.single('file'), async (req, res) => {
+//   const { password, data } = req.body;
+//   console.log('recieved request')
+//   if (password !== process.env.UPLOAD_PASSWORD) {
+//     return res.status(401).send('Unauthorized: Incorrect password.');
+//   }
+//   try {
+//     const jsonData = JSON.parse(data);
+//     const workbook = xlsx.utils.book_new();
+//     const worksheet = xlsx.utils.json_to_sheet(jsonData);
+//     xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+//     xlsx.writeFile(workbook, knihyURL);
+
+//     res.send('Data written to Excel file successfully.');
+//   } catch (error) {
+//     console.error('Error writing data to Excel file:', error);
+//     res.status(500).send('Error writing data to Excel file.');
+//   }
+// });
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
