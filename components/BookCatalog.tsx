@@ -1,9 +1,9 @@
-'use client'
-import React, { useState, useEffect } from 'react';
-import { Typography } from '@mui/material';
-import { Book } from '@/types/types';
-import BookPreview from './BookPreview';
-import DotsShower from './DotsShower';
+"use client";
+import React, { useState, useEffect } from "react";
+import { Typography } from "@mui/material";
+import { Book } from "@/types/types";
+import BookPreview from "./BookPreview";
+import DotsShower from "./DotsShower";
 
 interface BookCatalogProps {
   shownBooks: Promise<Book[]> | Book[];
@@ -18,25 +18,24 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
 
     const loadBooks = async () => {
       try {
-        const resolvedBooks = shownBooks instanceof Promise ? await shownBooks : shownBooks;
+        const resolvedBooks =
+          shownBooks instanceof Promise ? await shownBooks : shownBooks;
 
         // Check if component is still mounted before setting state
         // if (isMounted) {
-        //   setBooks(resolvedBooks);
+          setBooks(resolvedBooks);
         // }
       } catch (error: any) {
         setError(error.message);
       }
     };
 
-
-
     loadBooks();
 
     // return () => {
     //   isMounted = false; // Clean up to prevent state updates on unmounted component
     // };
-  }, [shownBooks, books.length ]);
+  }, [shownBooks, books.length]);
 
   if (error) {
     return (
@@ -52,12 +51,11 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
     <div>
       {books?.length > 0 ? (
         <div>
-          {books .map((book, key) => (
+          {books.map((book, key) => (
             <BookPreview key={key} book={book} />
           ))}
         </div>
       ) : (
-        // <Typography variant="h5">Loading...</Typography>
         <DotsShower />
       )}
     </div>
@@ -65,7 +63,6 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
 };
 
 export default BookCatalog;
-
 
 // interface BookCatalogProps {
 //   // shownBooks: Promise<Book[]> | Book[];
@@ -75,14 +72,12 @@ export default BookCatalog;
 
 //   const books =    getBooksByQuery();
 
-
 //   if (books?.length === 0) {
 //     console.log('problem recieving books')
 //     return <div>Máme problém získat knihy</ div>
 //   }
 
 //   return (
-
 
 //     <div>
 //       {books?.length > 0 && (
@@ -110,7 +105,6 @@ export default BookCatalog;
 // };
 
 // export default BookCatalog;
-
 
 //   // const [books, setBooks] = useState<Book[]>([]);
 //   // const [loading, setLoading] = useState<boolean>(true);
