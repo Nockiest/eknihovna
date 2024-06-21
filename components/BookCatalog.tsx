@@ -1,41 +1,95 @@
 "use client";
+// import React, { useState, useEffect } from "react";
+// import { Typography } from "@mui/material";
+// import { Book } from "@/types/types";
+// import BookPreview from "./BookPreview";
+// import DotsShower from "./DotsShower";
+
+// interface BookCatalogProps {
+//   shownBooks: Promise<Book[]> | Book[];
+// }
+
+// const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
+//   const [books, setBooks] = useState<Book[]>([]);
+//   const [error, setError] = useState<string | null>(null);
+//   useEffect(() => {
+//     const loadBooks = async () => {
+//       try {
+//         const resolvedBooks =
+//           shownBooks instanceof Promise ? await shownBooks : shownBooks;
+//         setBooks(resolvedBooks);
+//       } catch (error: any) {
+//         setError(error.message);
+//       }
+//     };
+//     loadBooks();
+//   }, [shownBooks, books.length]);
+
+//   if (error) {
+//     return (
+//       <div>
+//         <Typography variant="body1" color="error">
+//           {error}
+//         </Typography>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div>
+//       {books?.length > 0 ? (
+//         <div>
+//           {books.map((book, key) => (
+//             <BookPreview key={key} book={book} />
+//           ))}
+//         </div>
+//       ) : (
+//         <DotsShower />
+//       )}
+//     </div>
+//   );
+// };
+
+// export default BookCatalog;
 import React, { useState, useEffect } from "react";
 import { Typography } from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "./DotsShower";
+import { useRouter } from "next/navigation";
+import PaginationLinker from "./PaginationLinker";
 
 interface BookCatalogProps {
-  shownBooks: Promise<Book[]> | Book[];
+  books: Promise<Book[]> | Book[]; // Assuming books are passed as a Promise
 }
+const BookCatalog: React.FC<BookCatalogProps> = ({ books }) => {
+  const router = useRouter();
+  const [pagenum, setPageNum] = useState<number>(1); //  router.query; // Get current page number from URL query
+  const itemsPerPage = 50;
 
-const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
-  const [books, setBooks] = useState<Book[]>([]);
+  const [shownbooks, setBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  // Calculate pagination
 
+  // Fetch books from the Promise and set them in state when available
   useEffect(() => {
-    // let isMounted = true;
-
-    const loadBooks = async () => {
+    const fetchBooks = async () => {
       try {
-        const resolvedBooks =
-          shownBooks instanceof Promise ? await shownBooks : shownBooks;
-
-        // Check if component is still mounted before setting state
-        // if (isMounted) {
-          setBooks(resolvedBooks);
-        // }
-      } catch (error: any) {
-        setError(error.message);
+        const resolvedBooks = await books;
+        setBooks(resolvedBooks);
+      } catch (err) {
+        setError(err?.message || "Failed to fetch books");
       }
     };
 
-    loadBooks();
+    fetchBooks();
+  }, [books]);
 
-    // return () => {
-    //   isMounted = false; // Clean up to prevent state updates on unmounted component
-    // };
-  }, [shownBooks, books.length]);
+  // Update current page when pagenum changes in URL
+  useEffect(() => {
+    setCurrentPage(pagenum ? parseInt(pagenum.toString(), 10) : 1);
+  }, [pagenum]);
 
   if (error) {
     return (
@@ -46,18 +100,33 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
       </div>
     );
   }
+  const indexOfLastBook = currentPage * itemsPerPage;
+
+  const indexOfFirstBook = indexOfLastBook - itemsPerPage;
+
+  const currentBooks = shownbooks?.slice(indexOfFirstBook, indexOfLastBook);
+  const totalPages = Math.ceil(shownbooks?.length / itemsPerPage);
 
   return (
     <div>
-      {books?.length > 0 ? (
+      {currentBooks && currentBooks.length > 0 ? (
         <div>
-          {books.map((book, key) => (
-            <BookPreview key={key} book={book} />
+          {currentBooks.map((book, index) => (
+            <BookPreview key={index} book={book} />
           ))}
+           <PaginationLinker totalPages={totalPages} currentPage={currentPage} folderName="katalog" />
         </div>
       ) : (
         <DotsShower />
       )}
+
+      {/* <div className="pagination">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <span key={index}>
+            <a href={`/katalog/${index + 1}`}>{index + 1}</a>
+          </span>
+        ))}
+      </div> */}
     </div>
   );
 };
