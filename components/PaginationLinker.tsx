@@ -1,19 +1,15 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
+import { getLastURLSegment } from "@/utils/getLastUrlSegment";
 
 interface PaginationProps {
   totalPages: number;
+  folderName:string
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalPages  }) => {
-
-
-
-  const router = useRouter();
-  const pathname = usePathname();
-  const segments = pathname.split("/");
-  const currentPage = parseInt(segments[segments.length - 1], 10);
+const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
+  const currentPage = parseInt(getLastURLSegment( usePathname()), 10);
 
   const getVisiblePageNumbers = () => {
     const startPage = Math.max(1, currentPage - 5);
@@ -30,7 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages  }) => {
   return (
     <div className="flex justify-center space-x-2 mt-4">
          {currentPage > 6 && (
-        <Link href={`/katalog/1`} className="px-3 py-1 rounded bg-gray-200 text-gray-800">
+        <Link href={`/${folderName}/1`} className="px-3 py-1 rounded bg-gray-200 text-gray-800">
         ...1
         </Link>
       )}
@@ -38,7 +34,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages  }) => {
       {visiblePageNumbers.map((pageNumber) => (
         <Link
           key={pageNumber}
-          href={`/katalog/${pageNumber}`}
+          href={`/${folderName}/${pageNumber}`}
           className={`px-3 py-1 rounded ${
             pageNumber === currentPage
               ? "bg-blue-500 text-white"
@@ -50,7 +46,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages  }) => {
       ))}
 
       {currentPage < totalPages - 5 && (
-        <Link href={`/katalog/${totalPages}`} className="px-3 py-1 rounded bg-gray-200 text-gray-800">
+        <Link href={`/${folderName}/${totalPages}`} className="px-3 py-1 rounded bg-gray-200 text-gray-800">
           ...{totalPages}
         </Link>
       )}

@@ -56,40 +56,43 @@ import { Typography } from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "./DotsShower";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import PaginationLinker from "./PaginationLinker";
+import { getLastURLSegment } from "@/utils/getLastUrlSegment";
 
 interface BookCatalogProps {
-  books: Promise<Book[]> | Book[]; // Assuming books are passed as a Promise
+  promisedBooks: Promise<Book[]> | Book[]; // Assuming books are passed as a Promise
 }
-const BookCatalog: React.FC<BookCatalogProps> = ({ books }) => {
+const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const router = useRouter();
-  const [pagenum, setPageNum] = useState<number>(1); //  router.query; // Get current page number from URL query
   const itemsPerPage = 50;
-
-  const [shownbooks, setBooks] = useState<Book[]>([]);
+  const [allbooks, setAllbooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [currentPage, setCurrentPage] = useState<number>(1);
-  // Calculate pagination
+  const currentPage = parseInt(getLastURLSegment(usePathname()), 10);
 
-  // Fetch books from the Promise and set them in state when available
+  const [currentBooks, setCurrentBooks] = useState<Book[]>([]);
+  const totalPages = Math.ceil(allbooks?.length / itemsPerPage);
+
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const resolvedBooks = await books;
-        setBooks(resolvedBooks);
+        const resolvedBooks = await promisedBooks;
+        setAllbooks(resolvedBooks);
       } catch (err) {
-        setError(err?.message || "Failed to fetch books");
+        throw new Error("error fetching" + err);
+        // setError(err?.message || "Failed to fetch books");
       }
     };
 
     fetchBooks();
-  }, [books]);
+  }, [promisedBooks]);
 
-  // Update current page when pagenum changes in URL
   useEffect(() => {
-    setCurrentPage(pagenum ? parseInt(pagenum.toString(), 10) : 1);
-  }, [pagenum]);
+    const indexOfLastBook = currentPage * itemsPerPage;
+    const indexOfFirstBook = indexOfLastBook - itemsPerPage;
+    const currentBooksSlice = allbooks?.slice(indexOfFirstBook, indexOfLastBook);
+    setCurrentBooks(currentBooksSlice);
+  }, [currentPage, allbooks]);
 
   if (error) {
     return (
@@ -100,12 +103,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ books }) => {
       </div>
     );
   }
-  const indexOfLastBook = currentPage * itemsPerPage;
 
-  const indexOfFirstBook = indexOfLastBook - itemsPerPage;
-
-  const currentBooks = shownbooks?.slice(indexOfFirstBook, indexOfLastBook);
-  const totalPages = Math.ceil(shownbooks?.length / itemsPerPage);
 
   return (
     <div>
@@ -114,19 +112,11 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ books }) => {
           {currentBooks.map((book, index) => (
             <BookPreview key={index} book={book} />
           ))}
-           <PaginationLinker totalPages={totalPages} currentPage={currentPage} folderName="katalog" />
+          <PaginationLinker totalPages={totalPages} folderName="katalog" />
         </div>
       ) : (
         <DotsShower />
       )}
-
-      {/* <div className="pagination">
-        {Array.from({ length: totalPages }, (_, index) => (
-          <span key={index}>
-            <a href={`/katalog/${index + 1}`}>{index + 1}</a>
-          </span>
-        ))}
-      </div> */}
     </div>
   );
 };
