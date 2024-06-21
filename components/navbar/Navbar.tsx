@@ -17,26 +17,6 @@ const NavList: React.FC<NavListProps> = ({}) => {
     setIsOpen(!isOpen);
   };
 
-  // useEffect(() => {
-  //   const mediaQuery = window.matchMedia('(min-width: 600px)'); // "sm" breakpoint
-
-  //   const handleResize = () => {
-  //     if (mediaQuery.matches) {
-  //       setIsOpen(false);
-  //     }
-  //   };
-
-  //   // Add listener to the media query
-  //   mediaQuery.addEventListener('change', handleResize);
-
-  //   // Initial check
-  //   handleResize();
-
-  //   // Cleanup function
-  //   return () => {
-  //     mediaQuery.removeEventListener('change', handleResize);
-  //   };
-  // }, []);
   return (
     <Paper
       elevation={3}
@@ -65,12 +45,3 @@ const NavList: React.FC<NavListProps> = ({}) => {
 };
 
 export default NavList;
-
-
-{/* <button
-          className=" nav-toggle bg-transparent border-0 cursor-pointer absolute right-10 top-4 z-3 m-4 p-4"
-          onClick={toggleNav}
-          aria-label="toggle navigation"
-        >
-          <span className={`hamburger`} />
-        </button> */}
