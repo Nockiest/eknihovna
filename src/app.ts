@@ -24,7 +24,7 @@ const storage = multer.diskStorage({
     cb(null, 'uploads/');
   },
   filename: (req, file, cb) => {
-    cb(null, 'knihy2.xlsx');
+    cb(null, 'knihy.xlsx');
   }
 });
 
@@ -32,7 +32,6 @@ const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
   try {
-    // const results = await pool.query('SELECT * FROM books');
     const boookList = readExcelFile()
     res.json(boookList);
   } catch (error) {

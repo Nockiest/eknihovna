@@ -31,14 +31,13 @@ const storage = multer_1.default.diskStorage({
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, 'knihy2.xlsx');
+        cb(null, 'knihy.xlsx');
     }
 });
 const upload = (0, multer_1.default)({ storage });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
     try {
-        // const results = await pool.query('SELECT * FROM books');
         const boookList = readExcelFile();
         res.json(boookList);
     }
