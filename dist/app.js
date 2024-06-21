@@ -46,6 +46,22 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+    // assignIds(knihyURL, true, 'A',   3530)
+});
+const readExcelFile = () => {
+    try {
+        const workbook = xlsx_1.default.readFile(knihyURL);
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const data = xlsx_1.default.utils.sheet_to_json(worksheet);
+        return data;
+    }
+    catch (error) {
+        console.error('Error reading Excel file:', error);
+    }
+};
 // const upload = multer({ dest: '/' });
 // app.post('/bookList', async (req: Request, res: Response) => {
 //   const { query } = req.query;
@@ -138,22 +154,6 @@ app.post('/bookList', upload.single('file'), (req, res) => {
 //     res.status(500).send('Error writing data to Excel file.');
 //   }
 // });
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-    // assignIds(knihyURL, true, 'A',   3530)
-});
-const readExcelFile = () => {
-    try {
-        const workbook = xlsx_1.default.readFile(knihyURL);
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const data = xlsx_1.default.utils.sheet_to_json(worksheet);
-        return data;
-    }
-    catch (error) {
-        console.error('Error reading Excel file:', error);
-    }
-};
 // }
 // const mockData = {rows:[{"id":1,"name":"Bobea elatior Gaudich.","iban":"IE23 LSJW 9122 7020 8015 01","author":"Rog Enns","rating":80,"description":"vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa id nisl venenatis lacinia aenean sit amet justo morbi","forMaturita":true,"available":false},
 //   {"id":2,"name":"Eriogonum codium Reveal, Caplow & K. Beck","iban":"GL85 1035 6131 3886 40","author":null,"rating":1,"description":"nec sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue","forMaturita":false,"available":true},

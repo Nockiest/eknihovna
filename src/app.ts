@@ -40,6 +40,23 @@ app.get('/bookList', async (req: Request, res: Response) => {
   }
 });
 
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+  // assignIds(knihyURL, true, 'A',   3530)
+});
+
+const readExcelFile = () => {
+  try {
+    const workbook = xlsx.readFile(knihyURL);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+    return data
+  } catch (error) {
+    console.error('Error reading Excel file:', error);
+  }
+};
+
 // const upload = multer({ dest: '/' });
 
 // app.post('/bookList', async (req: Request, res: Response) => {
@@ -153,22 +170,7 @@ app.post('/bookList', upload.single('file'), (req, res) => {
 //   }
 // });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-  // assignIds(knihyURL, true, 'A',   3530)
-});
 
-const readExcelFile = () => {
-  try {
-    const workbook = xlsx.readFile(knihyURL);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(worksheet);
-    return data
-  } catch (error) {
-    console.error('Error reading Excel file:', error);
-  }
-};
 // }
 
 

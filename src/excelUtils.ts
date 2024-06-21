@@ -1,10 +1,10 @@
-import { knihyURL, testURL } from "./data";
 
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
 
 export const assignIds = (excelUrl: string, ignoreHeader: boolean = true, idColumn: string = 'A', numberOfRows:number =10) => {
     // Load the Excel file
+    const knihyURL = process.env.knihyURL
     const workbook = xlsx.readFile(knihyURL);
 
     // Get the first sheet name

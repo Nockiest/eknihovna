@@ -1,12 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.assignIds = void 0;
-const data_1 = require("./data");
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
 const assignIds = (excelUrl, ignoreHeader = true, idColumn = 'A', numberOfRows = 10) => {
     // Load the Excel file
-    const workbook = xlsx.readFile(data_1.knihyURL);
+    const knihyURL = process.env.knihyURL;
+    const workbook = xlsx.readFile(knihyURL);
     // Get the first sheet name
     const sheetName = workbook.SheetNames[0];
     // Get the worksheet
