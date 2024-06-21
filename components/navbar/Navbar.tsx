@@ -17,12 +17,32 @@ const NavList: React.FC<NavListProps> = ({}) => {
     setIsOpen(!isOpen);
   };
 
+  // useEffect(() => {
+  //   const mediaQuery = window.matchMedia('(min-width: 600px)'); // "sm" breakpoint
+
+  //   const handleResize = () => {
+  //     if (mediaQuery.matches) {
+  //       setIsOpen(false);
+  //     }
+  //   };
+
+  //   // Add listener to the media query
+  //   mediaQuery.addEventListener('change', handleResize);
+
+  //   // Initial check
+  //   handleResize();
+
+  //   // Cleanup function
+  //   return () => {
+  //     mediaQuery.removeEventListener('change', handleResize);
+  //   };
+  // }, []);
   return (
     <Paper
       elevation={3}
       className="p-2 h-full  w-full mx-0 flex flex-col sticky top-0 z-10 items-center"
     >
-      <Box className="wraper z-3">
+      <Box className="wraper z-3  ">
         <CustomHamburger  onClick={toggleNav}  ariaLabel="toggle navigation" />
         <HamburgerNavList isOpen={isOpen} toggleNav={toggleNav} />
       </Box>
