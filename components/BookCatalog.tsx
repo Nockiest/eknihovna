@@ -29,7 +29,10 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ shownBooks }) => {
     };
 
     const timeout = setTimeout(() => {
+     if(books.length === 0){
       setError('Timeout: Fetching books took longer than 10 seconds');
+
+     }
     }, 10000); // 10 seconds timeout
 
     loadBooks();
