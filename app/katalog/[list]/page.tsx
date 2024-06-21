@@ -11,7 +11,7 @@ const CatalogPage =   () => {
       <Box>
         <Typography variant={"h2"}>Katalog</Typography>
 
-        <BookCatalog books={books} />
+        <BookCatalog promisedBooks={books} />
       </Box>
     );
   };
