@@ -1,42 +1,42 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+/*
 .hamburger {
   display: block;
   position: relative;
   margin:8px 4px
 }
 
-.hamburger,
-.hamburger::before,
-.hamburger::after {
-  @apply sm:hidden;
-  background-color: var(--secondary) ;
-   width: 3em;
-  height:  5px;
-  border-radius: 1em;
-  transition: transform 250ms ease-in-out;
+ */
 
-}
+ .hamburger,
+ .hamburger::before,
+ .hamburger::after {
+   @apply sm:hidden;
+   background-color: var(--secondary) ;
+    width: 3em;
+   height:  5px;
+   border-radius: 1em;
+   transition: transform 250ms ease-in-out;
 
-.hamburger::before,
-.hamburger::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  right: 0;
-}
+ }
 
-.hamburger::before {
-  top: 12px;
-}
+ .hamburger::before,
+ .hamburger::after {
+   content: "";
+   position: absolute;
+   left: 0;
+   right: 0;
+ }
 
-.hamburger::after {
-  bottom: 12px;
-}
+ .hamburger::before {
+   top: 12px;
+ }
 
-
+ .hamburger::after {
+   bottom: 12px;
+ }
 /* .nav-open .nav {
   transform: translateX(0);
 }

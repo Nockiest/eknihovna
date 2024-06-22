@@ -3,6 +3,71 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  typography: {
+    h1: {
+      fontSize: '2.4rem',
+      '@media (min-width:600px)': {
+        fontSize: '2.8rem',
+      },
+      [createTheme().breakpoints.up('md')]: {
+        fontSize: '3.6rem',
+      },
+    },
+    h2: {
+      fontSize: '2rem',
+      '@media (min-width:600px)': {
+        fontSize: '2.4rem',
+      },
+      [createTheme().breakpoints.up('md')]: {
+        fontSize: '3rem',
+      },
+    },
+    h3: {
+      fontSize: '1.75rem',
+      '@media (min-width:600px)': {
+        fontSize: '2rem',
+      },
+      [createTheme().breakpoints.up('md')]: {
+        fontSize: '2.5rem',
+      },
+    },
+    h4: {
+      fontSize: '1.5rem',
+      '@media (min-width:600px)': {
+        fontSize: '1.75rem',
+      },
+      [createTheme().breakpoints.up('md')]: {
+        fontSize: '2rem',
+      },
+    },
+    h5: {
+      fontSize: '1.25rem',
+      '@media (min-width:600px)': {
+        fontSize: '1.5rem',
+      },
+      [createTheme().breakpoints.up('md')]: {
+        fontSize: '1.75rem',
+      },
+    },
+    h6: {
+      fontSize: '1rem',
+      '@media (min-width:600px)': {
+        fontSize: '1.25rem',
+      },
+      [createTheme().breakpoints.up('md')]: {
+        fontSize: '1.5rem',
+      },
+    },
+    body1: {
+      fontSize: '1rem',
+      '@media (min-width:600px)': {
+        fontSize: '1.1rem',
+      },
+      [createTheme().breakpoints.up('md')]: {
+        fontSize: '1.2rem',
+      },
+    },
+  },
   palette: {
     primary: {
       main: "#93736c", // primary 500
@@ -46,5 +111,70 @@ const theme = createTheme({
     },
   },
 });
+// theme.typography  = {
+//   h1: {
+//     fontSize: '2.4rem',
+//     '@media (min-width:600px)': {
+//       fontSize: '2.8rem',
+//     },
+//     [theme.breakpoints.up('md')]: {
+//       fontSize: '3.6rem',
+//     },
+//   },
+//   h2: {
+//     fontSize: '2rem',
+//     '@media (min-width:600px)': {
+//       fontSize: '2.4rem',
+//     },
+//     [theme.breakpoints.up('md')]: {
+//       fontSize: '3rem',
+//     },
+//   },
+//   h3: {
+//     fontSize: '1.75rem',
+//     '@media (min-width:600px)': {
+//       fontSize: '2rem',
+//     },
+//     [theme.breakpoints.up('md')]: {
+//       fontSize: '2.5rem',
+//     },
+//   },
+//   h4: {
+//     fontSize: '1.5rem',
+//     '@media (min-width:600px)': {
+//       fontSize: '1.75rem',
+//     },
+//     [theme.breakpoints.up('md')]: {
+//       fontSize: '2rem',
+//     },
+//   },
+//   h5: {
+//     fontSize: '1.25rem',
+//     '@media (min-width:600px)': {
+//       fontSize: '1.5rem',
+//     },
+//     [theme.breakpoints.up('md')]: {
+//       fontSize: '1.75rem',
+//     },
+//   },
+//   h6: {
+//     fontSize: '1rem',
+//     '@media (min-width:600px)': {
+//       fontSize: '1.25rem',
+//     },
+//     [theme.breakpoints.up('md')]: {
+//       fontSize: '1.5rem',
+//     },
+//   },
+//   body1: {
+//     fontSize: '1rem',
+//     '@media (min-width:600px)': {
+//       fontSize: '1.1rem',
+//     },
+//     [theme.breakpoints.up('md')]: {
+//       fontSize: '1.2rem',
+//     },
+//   },
 
+// }
 export default theme;
