@@ -4,6 +4,8 @@ import { FormEvent, useState } from "react";
 import axios from "axios";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import * as XLSX from "xlsx";
+import { Paper, Typography } from "@mui/material";
+import Image from "next/image";
 
 const ExcelSheetUpdater = () => {
   const [responseMessage, setResponseMessage] = useState<string>("");
@@ -42,16 +44,45 @@ const ExcelSheetUpdater = () => {
   };
 
   return (
-    <div>
-      <h1>Aktualizace webových dat</h1>
-      <PrimaryButton onClick={fetchDataFromServer}>
-        Stáhnout data ze servereu
-      </PrimaryButton>
-      <form onSubmit={handleSubmit} encType="multipart/form-data">
-        <input type="file" id="fileInput" name="file" accept=".xlsx" />
-        <SecondaryButton type="submit">Přepsat data na serveru</SecondaryButton>
-      </form>
-      <div id="response">{responseMessage}</div>
+    <div className="  flex flex-col items-center justify-center p-4  ">
+      <Typography variant="h3" className="m-2">
+        Přepsat data na serveru
+      </Typography>
+
+      <Paper className="flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
+        <div className="w-full md:w-1/2 p-6 flex flex-col items-center">
+          <Typography variant="h5" className="m-2">
+            Stáhnout data ze serveru
+          </Typography>
+          <PrimaryButton className="my-auto" onClick={fetchDataFromServer}>
+          Stáhnout <Image className="m-1" src='icon/download.svg' alt='download' width={32} height={32} />
+          </PrimaryButton>
+        </div>
+        <div className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
+          <Typography variant="h5" className="m-2">
+            Přepsat data na serveru
+          </Typography>
+          <form
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+            className="flex flex-col items-center"
+          >
+            <input
+              type="file"
+              id="fileInput"
+              name="file"
+              accept=".xlsx"
+              className="mb-4"
+            />
+            <SecondaryButton type="submit">
+            Nahrát <Image className="m-1" src='icon/upload.svg' alt='download' width={32} height={32} />
+            </SecondaryButton>
+          </form>
+        </div>
+      </Paper>
+      <div id="response" className="mt-8 text-center">
+        {responseMessage}
+      </div>
     </div>
   );
 };
