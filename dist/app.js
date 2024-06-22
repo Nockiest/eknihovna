@@ -18,6 +18,8 @@ const cors_1 = __importDefault(require("cors"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const multer_1 = __importDefault(require("multer"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = __importDefault(require("fs"));
 const body_parser_1 = __importDefault(require("body-parser"));
 // Load environment variables from .env file
 dotenv_1.default.config();
@@ -47,17 +49,21 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
-// app.post('/bookList', async (req: Request, res: Response) => {
-//   const { query } = req.query;
-//   console.log('post')
-//   try {
-//     const boookList = readExcelFile()
-//     res.json(boookList);
-//   } catch (error) {
-//     console.error('Error executing search query:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
+app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filePath = path_1.default.join(__dirname, '../', knihyURL);
+    console.log('File path:', filePath);
+    if (fs_1.default.existsSync(filePath)) {
+        res.download(filePath, 'knihy.xlsx', (err) => {
+            if (err) {
+                console.error('Error sending file:', err);
+                res.status(500).json({ error: 'Internal Server Error' });
+            }
+        });
+    }
+    else {
+        res.status(404).json({ error: 'File not found' });
+    }
+}));
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     // assignIds(knihyURL, true, 'A',   3530)
@@ -83,78 +89,6 @@ app.post('/update', upload.single('file'), (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-// app.post('/booklist', upload.single('file'), (req, res) => {
-//   // const { password } = req.body;
-//   // Example: Validate password
-//   // if (password !== '1234') {
-//   //   return res.status(401).json({ error: 'Unauthorized' });
-//   // }
-//   try {
-//     const filePath = path.join(__dirname, 'uploads', req.file.originalname);
-//     const data = fs.readFileSync(filePath); // Read the uploaded file
-//     // Process the received data (e.g., save to database, manipulate, etc.)
-//     console.log('Received data:', data);
-//     // Example: Write data to a new file (knihy-updated.xlsx)
-//     fs.writeFileSync('knihy.xlsx', data);
-//     res.status(200).json({ message: 'Data received and processed successfully' });
-//   } catch (error) {
-//     console.error('Error processing data:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-// app.post('/booklist', (req, res) => {
-//   const { data } = req.body;
-//   // Verify password (replace with your actual password validation logic)
-//   // if (password !== '1234') {
-//   //   return res.status(401).json({ error: 'Unauthorized' });
-//   // }
-//   try {
-//     // Process the received data (e.g., save to database, manipulate, etc.)
-//     console.log('Received data:', data);
-//     // Example: Write data to a new file (knihy-updated.xlsx)
-//     fs.writeFileSync('knihy-updated.xlsx', Buffer.from(data));
-//     res.status(200).json({ message: 'Data received and processed successfully' });
-//   } catch (error) {
-//     console.error('Error processing data:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-// app.post('/booklist', (req, res) => {
-//   const { password, data } = req.body;
-//   // Verify password (replace with your actual password validation logic)
-//   if (password !== '1234') {
-//     return res.status(401).json({ error: 'Unauthorized' });
-//   }
-//   try {
-//     // Process the received data (e.g., save to database, manipulate, etc.)
-//     console.log('Received data:', data);
-//     // Example: Write data to a new file (knihy-updated.xlsx)
-//     fs.writeFileSync('knihy-updated.xlsx', Buffer.from(data));
-//     res.status(200).json({ message: 'Data received and processed successfully' });
-//   } catch (error) {
-//     console.error('Error processing data:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-// app.post('/bookList', upload.single('file'), async (req, res) => {
-//   const { password, data } = req.body;
-//   console.log('recieved request')
-//   if (password !== process.env.UPLOAD_PASSWORD) {
-//     return res.status(401).send('Unauthorized: Incorrect password.');
-//   }
-//   try {
-//     const jsonData = JSON.parse(data);
-//     const workbook = xlsx.utils.book_new();
-//     const worksheet = xlsx.utils.json_to_sheet(jsonData);
-//     xlsx.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
-//     xlsx.writeFile(workbook, knihyURL);
-//     res.send('Data written to Excel file successfully.');
-//   } catch (error) {
-//     console.error('Error writing data to Excel file:', error);
-//     res.status(500).send('Error writing data to Excel file.');
-//   }
-// });
-// }
 // const mockData = {rows:[{"id":1,"name":"Bobea elatior Gaudich.","iban":"IE23 LSJW 9122 7020 8015 01","author":"Rog Enns","rating":80,"description":"vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa id nisl venenatis lacinia aenean sit amet justo morbi","forMaturita":true,"available":false},
 //   {"id":2,"name":"Eriogonum codium Reveal, Caplow & K. Beck","iban":"GL85 1035 6131 3886 40","author":null,"rating":1,"description":"nec sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue","forMaturita":false,"available":true},
 //   {"id":3,"name":"Desmodium styracifolium (Osbeck) Merr.","iban":"BH94 QPPX X51H 8OJR TC6D SP","author":"Joannes Jerrems","rating":35,"description":"nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat","forMaturita":true,"available":false},
