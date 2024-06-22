@@ -13,7 +13,7 @@ interface BookCatalogProps {
   promisedBooks: Promise<Book[]> | Book[];
 }
 const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
-  const itemsPerPage = 50;
+  const itemsPerPage = 10;
   const [allbooks, setAllbooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const currentPage = parseInt(getLastURLSegment(usePathname()), 10);
