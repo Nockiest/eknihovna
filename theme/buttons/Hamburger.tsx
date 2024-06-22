@@ -28,8 +28,16 @@ const HamburgerSpan = styled('span')({
 
 const CustomHamburger: React.FC<CustomHamburgerProps> = ({ onClick, ariaLabel }) => {
   return (
-    <CustomIconButton  className={'nav-toggle nav-toggle bg-transparent border-0 cursor-pointer absolute right-10 top-0 z-3 m-4 p-4'} onClick={onClick} aria-label={ariaLabel}>
-      <HamburgerSpan className="hamburger" />
+    <CustomIconButton
+      className="      border-0 cursor-pointer absolute right-0 top-0 z-3 m-4 p-4 sm:hidden"
+      onClick={onClick}
+      aria-label={ariaLabel}
+    >
+      <HamburgerSpan className="hamburger  mt-6 mr-6 block relative my-4 mx-2  bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out   ">
+        {/* <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out"></span>
+        <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out mt-3.5 absolute"></span>
+        <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out mb-3.5 absolute"></span> */}
+      </HamburgerSpan>
     </CustomIconButton>
   );
 };

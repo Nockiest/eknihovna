@@ -20,9 +20,9 @@ const NavList: React.FC<NavListProps> = ({}) => {
   return (
     <Paper
       elevation={3}
-      className="p-2 h-full  w-full mx-0 flex flex-col sticky top-0 z-10 items-center"
+      className="p-2 h-full  sticky top-0  w-full mx-0 flex flex-col    z-10 items-center"
     >
-      <Box className="wraper z-3  ">
+      <Box className="  z-3  ">
         <CustomHamburger  onClick={toggleNav}  ariaLabel="toggle navigation" />
         <HamburgerNavList isOpen={isOpen} toggleNav={toggleNav} />
       </Box>
