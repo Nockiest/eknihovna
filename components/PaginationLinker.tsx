@@ -26,7 +26,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
   return (
     <div className="flex justify-center space-x-2 mt-4">
          {currentPage > 6 && (
-        <Link href={`/${folderName}/1`} className="px-3 py-1 rounded bg-gray-200 text-gray-800">
+        <Link href={`/${folderName}/1`} className="px-3 py-1 rounded bg-gray-200 text-text-100">
         ...1
         </Link>
       )}
@@ -37,8 +37,8 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
           href={`/${folderName}/${pageNumber}`}
           className={`px-3 py-1 rounded ${
             pageNumber === currentPage
-              ? "bg-blue-500 text-white"
-              : "bg-gray-200 text-gray-800"
+              ? "bg-secondary-500 text-text-100"
+              : "bg-primary-500 text-text-100"
           }`}
         >
           {pageNumber}
@@ -46,7 +46,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
       ))}
 
       {currentPage < totalPages - 5 && (
-        <Link href={`/${folderName}/${totalPages}`} className="px-3 py-1 rounded bg-gray-200 text-gray-800">
+        <Link href={`/${folderName}/${totalPages}`} className="px-3 py-1 rounded bg-gray-200 text-text-100">
           ...{totalPages}
         </Link>
       )}
