@@ -28,7 +28,7 @@ app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/');
+        cb(null, '');
     },
     filename: (req, file, cb) => {
         cb(null, 'knihy.xlsx');
@@ -37,6 +37,7 @@ const storage = multer_1.default.diskStorage({
 const upload = (0, multer_1.default)({ storage });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
+    console.log('get');
     try {
         const boookList = readExcelFile();
         res.json(boookList);
@@ -46,6 +47,17 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
+// app.post('/bookList', async (req: Request, res: Response) => {
+//   const { query } = req.query;
+//   console.log('post')
+//   try {
+//     const boookList = readExcelFile()
+//     res.json(boookList);
+//   } catch (error) {
+//     console.error('Error executing search query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     // assignIds(knihyURL, true, 'A',   3530)
@@ -62,19 +74,7 @@ const readExcelFile = () => {
         console.error('Error reading Excel file:', error);
     }
 };
-// const upload = multer({ dest: '/' });
-// app.post('/bookList', async (req: Request, res: Response) => {
-//   const { query } = req.query;
-//   try {
-//     // const results = await pool.query('SELECT * FROM books');
-//     const boookList = readExcelFile()
-//     res.json(boookList);
-//   } catch (error) {
-//     console.error('Error executing search query:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-app.post('/bookList', upload.single('file'), (req, res) => {
+app.post('/update', upload.single('file'), (req, res) => {
     try {
         res.status(200).json({ message: 'File uploaded successfully' });
     }
