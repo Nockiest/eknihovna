@@ -1,5 +1,4 @@
 "use strict";
-// make sure you run npx tsc -w before using this file
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -13,6 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+// make sure you run npx tsc -w before using this file
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
 const xlsx_1 = __importDefault(require("xlsx"));
@@ -20,6 +20,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
 const body_parser_1 = __importDefault(require("body-parser"));
 // Load environment variables from .env file
 dotenv_1.default.config();
@@ -49,11 +50,24 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
+app.post('/authenticate', (req, res) => {
+    const { password } = req.body;
+    if (!password) {
+        return res.status(400).json({ error: 'vyžadováno heslo' });
+    }
+    bcrypt_1.default.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
+        if (err || !result) {
+            return res.status(401).json({ error: 'Špatné heslo' });
+        }
+        // Password correct, return success
+        res.status(200).json({ message: 'Uživatel autorizován' });
+    });
+});
 app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const filePath = path_1.default.join(__dirname, '../', knihyURL);
     console.log('File path:', filePath);
     if (fs_1.default.existsSync(filePath)) {
-        res.download(filePath, 'knihy.xlsx', (err) => {
+        res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
             if (err) {
                 console.error('Error sending file:', err);
                 res.status(500).json({ error: 'Internal Server Error' });

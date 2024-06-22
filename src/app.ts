@@ -1,15 +1,13 @@
 
 // make sure you run npx tsc -w before using this file
-
 import express, { Request, Response } from 'express';
-import { Pool } from 'pg';
 import cors from 'cors';
 import xlsx from 'xlsx'
 import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
-
+import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
 
 // Load environment variables from .env file
@@ -28,6 +26,7 @@ const storage = multer.diskStorage({
   }
 });
 
+
 const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
@@ -41,12 +40,29 @@ app.get('/bookList', async (req: Request, res: Response) => {
   }
 });
 
+app.post('/authenticate', (req, res) => {
+  const { password } = req.body;
+
+  if (!password) {
+    return res.status(400).json({ error: 'vyžadováno heslo' });
+  }
+
+  bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
+    if (err || !result) {
+      return res.status(401).json({ error: 'Špatné heslo' });
+    }
+
+    // Password correct, return success
+    res.status(200).json({ message: 'Uživatel autorizován' });
+  });
+});
+
 app.get('/downloadExcel', async (req: Request, res: Response) => {
   const filePath = path.join(__dirname, '../', knihyURL);
   console.log('File path:', filePath);
 
   if (fs.existsSync(filePath)) {
-    res.download(filePath, 'knihy.xlsx', (err) => {
+    res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
       if (err) {
         console.error('Error sending file:', err);
         res.status(500).json({ error: 'Internal Server Error' });
