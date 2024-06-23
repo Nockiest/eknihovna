@@ -44,7 +44,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider theme={theme}>
           <NoSSRHero />
-          <main className="min-h-screen">
+          <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
           {children}
 
           </main>

@@ -4,7 +4,6 @@ import OpeningHours from "@/components/OpeningHours";
 import { Container, Typography } from "@mui/material";
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
       <Container maxWidth={'lg'}>
         <Typography variant="body1">
           Vítejte na domovské stránce knihovny Gymnázia Opatov, kde se můžete
@@ -52,6 +51,5 @@ export default function Home() {
           </Typography>
         </div>
       </Container>
-    </main>
   );
 }
