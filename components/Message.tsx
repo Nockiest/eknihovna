@@ -12,7 +12,7 @@ const Message: React.FC<MessageProps> = ({ message, date }) => {
       <Typography variant="body1" gutterBottom>
         {message}
       </Typography>
-      <Typography variant="caption" color="textSecondary" align="right">
+      <Typography variant="caption" color="textPrimary" align="right">
         {date}
       </Typography>
     </Paper>
