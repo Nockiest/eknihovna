@@ -3,6 +3,7 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+  spacing: 8,
   typography: {
     h1: {
       fontSize: '2.4rem',
@@ -84,6 +85,22 @@ const theme = createTheme({
 
   },
   components: {
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          margin: '16px', // default margin
+          [createTheme().breakpoints.down('sm')]: {
+            margin: '8px', // smaller screens
+          },
+          [createTheme().breakpoints.up('md')]: {
+            margin: '24px', // medium screens
+          },
+          [createTheme().breakpoints.up('lg')]: {
+            margin: '32px', // large screens
+          },
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         root: {
@@ -110,6 +127,7 @@ const theme = createTheme({
       },
     },
   },
+
 });
 // theme.typography  = {
 //   h1: {
