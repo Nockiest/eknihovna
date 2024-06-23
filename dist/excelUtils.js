@@ -92,7 +92,6 @@ const excelWordsToBool = (worksheet, columnName) => {
             jsonData[i][columnIndex] = value;
         }
     }
-    console.log('ran');
     // Convert JSON data back to worksheet format
     worksheet = xlsx.utils.aoa_to_sheet(jsonData);
     return worksheet;
