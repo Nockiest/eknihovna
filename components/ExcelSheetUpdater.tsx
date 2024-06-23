@@ -89,7 +89,7 @@ const ExcelSheetUpdater = () => {
               Stáhnout data ze serveru
             </PrimaryButton>
           </div>
-          <div className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
+          <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
             <h2 className="text-xl font-semibold mb-4">Přepsat data na serveru</h2>
 
             <form onSubmit={handleSubmit} encType="multipart/form-data" className="flex flex-col items-center">
@@ -101,11 +101,11 @@ const ExcelSheetUpdater = () => {
               className="mb-4"
             />
 
-              <SecondaryButton type="submit">
+              <SecondaryButton type="submit" >
                 Nahrát <Image className="m-1" src="icon/upload.svg" alt="download" width={32} height={32} />
               </SecondaryButton>
             </form>
-          </div>
+          </Box>
         </div>
       )}
       <div id="response" className="mt-8 text-center">{responseMessage}</div>
@@ -117,22 +117,4 @@ const ExcelSheetUpdater = () => {
 
 export default ExcelSheetUpdater;
 
-  // <div>
-        //   <h1>Aktualizace webových dat</h1>
-        //   <PrimaryButton onClick={fetchDataFromServer} className="mb-4">
-        //     Stáhnout data ze serveru
-        //   </PrimaryButton>
-        //   <form onSubmit={handleSubmit} encType="multipart/form-data">
-        //     <input
-        //       type="file"
-        //       id="fileInput"
-        //       name="file"
-        //       accept=".xlsx"
-        //       className="mb-4"
-        //     />
-        //     <SecondaryButton type="submit">
-        //       Přepsat data na serveru
-        //     </SecondaryButton>
-        //   </form>
-        //   <div id="response">{responseMessage}</div>
-      // </div>
+ 
