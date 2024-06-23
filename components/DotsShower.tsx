@@ -13,9 +13,9 @@ const DotsShower = () => {
   }, []);
   return (
     <div
-    
+
     >
-      <h1 style={{ fontSize: "24px" }}>Loading{dots}</h1>
+      <h1 style={{ fontSize: "24px" }}>Načítání{dots}</h1>
     </div>
   );
 };

@@ -9,7 +9,7 @@ export default function Home() {
         seznámit s bohatým fondem naší školní knihovny a získat důležité
         informace. Naše knihovna je otevřeným prostorem pro vaše vzdělání a
         inspiraci. Nabízíme široký výběr literatury, studijních materiálů a
-        časopisů. Projd2te si naši
+        časopisů. Projděte si naši
         sbírku a objevujte nové příběhy, poznatky a světy. Jsme tu pro vás,
         abychom vám pomohli s vašimi studijními potřebami a abychom vám poskytli
         prostor k odpočinku a pohodlnému čtení. Pokud máte zájem o konkrétní

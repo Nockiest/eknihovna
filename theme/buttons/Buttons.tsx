@@ -33,11 +33,19 @@ export const NavbarButton = styled(Button)(({ theme }) => ({
     '&.MuiButton-containedPrimary': {
       backgroundColor: theme.palette.secondary.dark,
       color: theme.palette.primary.contrastText,
-      '&:hover': {
+      '&:active': {
         backgroundColor: theme.palette.primary.light,
       },
     },
-  }));
+  //   '&.active': {
+  //     backgroundColor: theme.palette.primary.dark,
+  //     color: theme.palette.primary.contrastText,
+  //     // '&:active': {
+  //     //   backgroundColor: theme.palette.primary.light,
+  //     // },
+  // }
+}
+));
 
 
 

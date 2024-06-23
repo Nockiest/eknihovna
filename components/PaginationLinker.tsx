@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
-import { getLastURLSegment } from "@/utils/getLastUrlSegment";
+import { getURLSegment } from "@/utils/getURLSegment";
 
 interface PaginationProps {
   totalPages: number;
@@ -9,7 +9,7 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
-  const currentPage = parseInt(getLastURLSegment( usePathname()), 10);
+  const currentPage = parseInt(getURLSegment( usePathname(), 2), 10);
 
   const getVisiblePageNumbers = () => {
     const startPage = Math.max(1, currentPage - 5);

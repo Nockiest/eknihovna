@@ -7,40 +7,39 @@ import BookPreview from "./BookPreview";
 import DotsShower from "./DotsShower";
 import { usePathname  } from "next/navigation";
 import PaginationLinker from "./PaginationLinker";
-import { getLastURLSegment } from "@/utils/getLastUrlSegment";
+import { getURLSegment } from "@/utils/getURLSegment";
 
 interface BookCatalogProps {
   promisedBooks: Promise<Book[]> | Book[];
 }
+
 const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const itemsPerPage = 10;
-  const [allbooks, setAllbooks] = useState<Book[]>([]);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const currentPage = parseInt(getLastURLSegment(usePathname()), 10);
+  const pathname = usePathname();
+  const currentPage = parseInt(getURLSegment(pathname, 2), 10) || 1;
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
-  const totalPages = Math.ceil(allbooks?.length / itemsPerPage);
+  const totalPages = Math.ceil(allBooks.length / itemsPerPage);
 
   useEffect(() => {
     const fetchBooks = async () => {
       try {
-        console.log('awaiting books')
         const resolvedBooks = await promisedBooks;
-        setAllbooks(resolvedBooks);
-      } catch (err ) {
-        throw new Error("error fetching" + err);
-        // setError(err?.message || "Failed to fetch books");
+        setAllBooks(resolvedBooks);
+      } catch (err: any) {
+        setError(err.message || "Failed to fetch books");
       }
     };
-    console.log('fetching books')
     fetchBooks();
   }, [promisedBooks]);
 
   useEffect(() => {
     const indexOfLastBook = currentPage * itemsPerPage;
     const indexOfFirstBook = indexOfLastBook - itemsPerPage;
-    const currentBooksSlice = allbooks?.slice(indexOfFirstBook, indexOfLastBook);
+    const currentBooksSlice = allBooks.slice(indexOfFirstBook, indexOfLastBook);
     setShownBooks(currentBooksSlice);
-  }, [currentPage, allbooks]);
+  }, [currentPage, allBooks]);
 
   if (error) {
     return (
@@ -51,9 +50,10 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
       </div>
     );
   }
+
   return (
     <div>
-      { shownBooks.length > 0 ? (
+      {shownBooks.length > 0 ? (
         <div>
           {shownBooks.map((book, index) => (
             <BookPreview key={index} book={book} />
