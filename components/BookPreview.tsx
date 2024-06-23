@@ -1,4 +1,6 @@
 "use client";
+import { truthyValues } from "@/data/values";
+import theme from "@/theme/theme";
 import { Book } from "@/types/types";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
@@ -20,21 +22,21 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className="w-auto flex-grow"
-      sx={{ opacity: available ? 1 : 0.2 }}  // Adjust opacity based on availability
+    className={`w-auto flex-grow text-text-50 ${truthyValues.indexOf(available) >= 0 ? 'opacity-100 bg-primary-600 ' : 'opacity-50 bg-secondary-500  '}`}
+    sx={{ color: theme.palette.text.primary }}
     >
       <Box p={2}>
-        <Typography>Název: {name}</Typography>
+        <Typography variant={'h6'}>Název: {name}</Typography>
         <br />
-        <Typography>Žánr: {genre}</Typography>
+        <Typography variant={'body1'}>Žánr: {genre}</Typography>
         <br />
-        <Typography>Autor: {author}</Typography>
+        <Typography variant={'body1'}>Autor: {author}</Typography>
         <br />
-        <Typography>Dostupnost: {available ? 'Dostupný' : 'Nedostupný'}</Typography>
+        <Typography variant={'body1'}>Dostupnost: {available.toString()} {truthyValues.indexOf(available) >= 0 ? 'Dostupný' : 'Nedostupný'}</Typography>
         <br />
-        <Typography>{formaturita ? "Maturitní" : ""}</Typography>
+        <Typography variant={'body1'}>{formaturita ? "Maturitní" : ""}</Typography>
         <br />
-        <Typography>Hodnocení: {rating}/100 </Typography>
+        <Typography variant={'body1'}>Hodnocení: {rating}/100 </Typography>
         <br />
       </Box>
     </Paper>
