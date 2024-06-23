@@ -22,7 +22,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-    className={`w-auto flex-grow text-text-50 ${truthyValues.indexOf(available) >= 0 ? 'opacity-100 bg-primary-600 ' : 'opacity-50 bg-secondary-500  '}`}
+    className={`w-auto flex-grow text-text-50 ${truthyValues.indexOf(available) >= 0 ? 'opacity-100 bg-primary-800 ' : 'opacity-50 bg-secondary-800  '}`}
     sx={{ color: theme.palette.text.primary }}
     >
       <Box p={2}>
