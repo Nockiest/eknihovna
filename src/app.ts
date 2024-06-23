@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
-import bcrypt from 'bcrypt';
+// import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
 import { excelWordsToBool, fillMissingIds, readExcelFile } from './excelUtils';
 import { v4 as uuidv4 } from 'uuid';
@@ -48,14 +48,20 @@ app.post('/authenticate', (req, res) => {
     return res.status(400).json({ error: 'vyžadováno heslo' });
   }
 
-  bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-    if (err || !result) {
-      return res.status(401).json({ error: 'Špatné heslo' });
-    }
+  if (password === process.env.UPLOAD_PASSWORD){
+    res.status(200).json({ message: 'Uživatel autorizován' });
+  } else {
+    return res.status(401).json({ error: 'Špatné heslo' });
+
+  }
+  // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
+  //   if (err || !result) {
+  //     return res.status(401).json({ error: 'Špatné heslo' });
+  //   }
 
     // Password correct, return success
-    res.status(200).json({ message: 'Uživatel autorizován' });
-  });
+  //   res.status(200).json({ message: 'Uživatel autorizován' });
+  // });
 });
 
 app.get('/downloadExcel', async (req: Request, res: Response) => {
@@ -80,45 +86,7 @@ app.listen(port, () => {
 });
 
 
-// app.post('/update', upload.single('file'), (req, res) => {
-//   console.log(req.file)
-//   try {
-//     // Read the uploaded file
-//     const filePath = path.join(__dirname, req.file.path);
-//     const workbook = xlsx.readFile(filePath);
-//     const sheetName = workbook.SheetNames[0]; // Assuming we're working with the first sheet
-//     let worksheet = workbook.Sheets[sheetName];
 
-//     // Get the range of the worksheet
-//     const range = xlsx.utils.decode_range(worksheet['!ref']);
-//     const idCol = Object.keys(worksheet)
-//       .filter((key) => key[0] >= 'A' && key[1] === '1')
-//       .find((key) => worksheet[key].v.toLowerCase() === 'id');
-
-//     if (!idCol) {
-//       throw new Error("No 'id' column found");
-//     }
-
-//     worksheet = excelWordsToBool(worksheet, 'available')
-//     // Iterate over the rows starting from the second row
-//     for (let row = range.s.r + 1; row <= range.e.r; row++) {
-//       const cellAddress = `${idCol[0]}${row + 1}`;
-//       if (!worksheet[cellAddress]) {
-//         worksheet[cellAddress] = { t: 's', v: uuidv4() };
-//       }
-//     }
-
-//       xlsx.writeFile(workbook, filePath);
-
-//       res.status(200).json({ message: 'File uploaded  successfully' });
-
-//     // Remove the uploaded file from the temporary storage
-//     fs.unlinkSync(filePath);
-//   } catch (error) {
-//     console.error('Error processing data:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
 app.post('/update', upload.single('file'), async (req, res) => {
   try {
     // Handle file upload with Multer

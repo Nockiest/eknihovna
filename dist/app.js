@@ -20,7 +20,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+// import bcrypt from 'bcrypt';
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
 // Load environment variables from .env file
@@ -56,13 +56,19 @@ app.post('/authenticate', (req, res) => {
     if (!password) {
         return res.status(400).json({ error: 'vyžadováno heslo' });
     }
-    bcrypt_1.default.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-        if (err || !result) {
-            return res.status(401).json({ error: 'Špatné heslo' });
-        }
-        // Password correct, return success
+    if (password === process.env.UPLOAD_PASSWORD) {
         res.status(200).json({ message: 'Uživatel autorizován' });
-    });
+    }
+    else {
+        return res.status(401).json({ error: 'Špatné heslo' });
+    }
+    // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
+    //   if (err || !result) {
+    //     return res.status(401).json({ error: 'Špatné heslo' });
+    //   }
+    // Password correct, return success
+    //   res.status(200).json({ message: 'Uživatel autorizován' });
+    // });
 });
 app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const filePath = path_1.default.join(__dirname, '../', knihyURL);
@@ -83,39 +89,6 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     // assignIds(knihyURL, true, 'A',   3530)
 });
-// app.post('/update', upload.single('file'), (req, res) => {
-//   console.log(req.file)
-//   try {
-//     // Read the uploaded file
-//     const filePath = path.join(__dirname, req.file.path);
-//     const workbook = xlsx.readFile(filePath);
-//     const sheetName = workbook.SheetNames[0]; // Assuming we're working with the first sheet
-//     let worksheet = workbook.Sheets[sheetName];
-//     // Get the range of the worksheet
-//     const range = xlsx.utils.decode_range(worksheet['!ref']);
-//     const idCol = Object.keys(worksheet)
-//       .filter((key) => key[0] >= 'A' && key[1] === '1')
-//       .find((key) => worksheet[key].v.toLowerCase() === 'id');
-//     if (!idCol) {
-//       throw new Error("No 'id' column found");
-//     }
-//     worksheet = excelWordsToBool(worksheet, 'available')
-//     // Iterate over the rows starting from the second row
-//     for (let row = range.s.r + 1; row <= range.e.r; row++) {
-//       const cellAddress = `${idCol[0]}${row + 1}`;
-//       if (!worksheet[cellAddress]) {
-//         worksheet[cellAddress] = { t: 's', v: uuidv4() };
-//       }
-//     }
-//       xlsx.writeFile(workbook, filePath);
-//       res.status(200).json({ message: 'File uploaded  successfully' });
-//     // Remove the uploaded file from the temporary storage
-//     fs.unlinkSync(filePath);
-//   } catch (error) {
-//     console.error('Error processing data:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
 app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Handle file upload with Multer
