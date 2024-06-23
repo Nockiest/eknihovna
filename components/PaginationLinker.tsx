@@ -24,7 +24,7 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
   const visiblePageNumbers = getVisiblePageNumbers();
 
   return (
-    <div className="flex justify-center space-x-2 mt-4">
+    <div className="flex justify-center space-x-2 m-4">
       {currentPage > 6 && (
         <Link
           href={`/${folderName}/1`}
