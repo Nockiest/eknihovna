@@ -50,26 +50,37 @@ const ExcelSheetUpdater = () => {
     }
   };
 
+ 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    // Assuming you have a file input with id "fileInput"
+    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const file = fileInput.files && fileInput.files[0];
+
+    if (!file) {
+      console.error('No file selected');
+      return;
+    }
+
+    // Create FormData object
+    const formData = new FormData();
+    formData.append('file', file); // Append the file to FormData
+    formData.append('password', password); // Append other form data as needed
+
     try {
-      const response = await axios.post(
-        `${knihyURL}/update`,
-        { password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await axios.post(`${knihyURL}/update`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data
+        },
+      });
+
       setResponseMessage(JSON.stringify(response.data, null, 2));
     } catch (error: any) {
-      console.error("Error:", error);
-      setResponseMessage("Error: " + error.message);
+      console.error('Error:', error);
+      setResponseMessage('Error: ' + error.message);
     }
   };
-
   const fetchDataFromServer = async () => {
     console.log("Fetching data from server...");
     try {
@@ -94,7 +105,7 @@ const ExcelSheetUpdater = () => {
           className="w-1/2 flex flex-col items-center justify-center mt-16 mx-auto"
         >
           <label htmlFor="password" className="block mb-2">
-            Pro úpravu dat vepište heslo:
+            Pro práci s daty vepište heslo:
           </label>
           <PasswordEntry
             label="heslo"
