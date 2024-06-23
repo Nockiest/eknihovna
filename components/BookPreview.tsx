@@ -12,25 +12,27 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     bookCoverURL = "",
     available = false,
     author = "Autor neznámý",
-    name = "Nezn8m0 jméno",
+    name = "Neznámé jméno",
     genre = "neznámý žánr",
     formaturita = false,
     rating = -1,
   } = book;
 
   return (
-    <Paper className="w-auto flex-grow">
-      <Box>
-
+    <Paper
+      className="w-auto flex-grow"
+      sx={{ opacity: available ? 1 : 0.2 }}  // Adjust opacity based on availability
+    >
+      <Box p={2}>
         <Typography>Název: {name}</Typography>
         <br />
-        <Typography>Žánr:{genre}</Typography>
+        <Typography>Žánr: {genre}</Typography>
         <br />
         <Typography>Autor: {author}</Typography>
         <br />
-        <Typography>Dostupnost: {available}</Typography>
+        <Typography>Dostupnost: {available ? 'Dostupný' : 'Nedostupný'}</Typography>
         <br />
-        <Typography>{formaturita ? "maturitni" : ""}</Typography>
+        <Typography>{formaturita ? "Maturitní" : ""}</Typography>
         <br />
         <Typography>Hodnocení: {rating}/100 </Typography>
         <br />
