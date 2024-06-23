@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Typography } from "@mui/material";
+import { Box, Grid, Typography, useTheme,useMediaQuery } from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "./DotsShower";
@@ -14,13 +14,27 @@ interface BookCatalogProps {
 }
 
 const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
-  const itemsPerPage = 10;
+  const theme = useTheme();
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
+  const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'))
+
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const pathname = usePathname();
   const currentPage = parseInt(getURLSegment(pathname, 2), 10) || 1;
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
   const totalPages = Math.ceil(allBooks.length / itemsPerPage);
+  useEffect(() => {
+    if (isSmallScreen) {
+      setItemsPerPage(12);
+    } else if (isMediumScreen) {
+      setItemsPerPage(24);
+    } else if (isLargeScreen) {
+      setItemsPerPage(36);
+    }
+  }, [isSmallScreen, isMediumScreen, isLargeScreen]);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -39,7 +53,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
     const indexOfFirstBook = indexOfLastBook - itemsPerPage;
     const currentBooksSlice = allBooks.slice(indexOfFirstBook, indexOfLastBook);
     setShownBooks(currentBooksSlice);
-  }, [currentPage, allBooks]);
+  }, [currentPage,   allBooks]);
 
   if (error) {
     return (
