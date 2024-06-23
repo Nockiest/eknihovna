@@ -19,7 +19,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
   const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'))
 
-  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12); // should think about what to do with the url when this val changes
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const pathname = usePathname();
