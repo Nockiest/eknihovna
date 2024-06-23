@@ -84,8 +84,7 @@ export const readExcelFile = (url:string) => {
  */
 export const excelWordsToBool = (worksheet, columnName) => {
   let jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: null });
-
-  // Find the column index based on the label 'available'
+  const truthyvalues = ['yes', 'true', true, 1, 'ano']
   const header = jsonData[0];
   const columnIndex = header.findIndex(col => col === columnName);
 
@@ -98,7 +97,7 @@ export const excelWordsToBool = (worksheet, columnName) => {
     const value = jsonData[i][columnIndex];
     if (typeof value === 'string') {
       // Convert 'yes' to true and 'no' to false
-      jsonData[i][columnIndex] = value.toLowerCase() === 'ano' ? 'yes' : 'no';
+      jsonData[i][columnIndex] = truthyvalues.indexOf(value.toLowerCase()) >= 0 ? 'true' : 'false';
     } else if (typeof value === 'boolean') {
       // Normalize boolean values
       jsonData[i][columnIndex] = value;
@@ -109,6 +108,25 @@ export const excelWordsToBool = (worksheet, columnName) => {
   return worksheet;
 };
 
+export const fillMissingIds = ( worksheet) => {
+  const range = xlsx.utils.decode_range(worksheet['!ref']);
+  const idCol = Object.keys(worksheet)
+    .filter((key) => key[0] >= 'A' && key[1] === '1')
+    .find((key) => worksheet[key].v.toLowerCase() === 'id');
+
+  if (!idCol) {
+    throw new Error("No 'id' column found");
+  }
+
+  // Iterate over the rows starting from the second row
+  for (let row = range.s.r + 1; row <= range.e.r; row++) {
+    const cellAddress = `${idCol[0]}${row + 1}`;
+    if (!worksheet[cellAddress]) {
+      worksheet[cellAddress] = { t: 's', v: uuidv4() };
+    }
+  }
+  return worksheet
+}
   // // Convert JSON back to sheet
   // const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
   // workbook.Sheets[sheetName] = newWorksheet;

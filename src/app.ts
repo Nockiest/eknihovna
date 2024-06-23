@@ -9,7 +9,7 @@ import path from 'path'
 import fs from 'fs'
 import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
-import { excelWordsToBool, readExcelFile } from './excelUtils';
+import { excelWordsToBool, fillMissingIds, readExcelFile } from './excelUtils';
 import { v4 as uuidv4 } from 'uuid';
 // Load environment variables from .env file
 dotenv.config();
@@ -141,24 +141,9 @@ app.post('/update', upload.single('file'), async (req, res) => {
 
     // Apply data transformation
     worksheet = excelWordsToBool(worksheet, 'available');
+    worksheet = excelWordsToBool(worksheet, 'formaturita');
+    worksheet = fillMissingIds(worksheet)
 
-    // Example: Ensure 'id' column exists and add UUID if missing
-    const range = xlsx.utils.decode_range(worksheet['!ref']);
-    const idCol = Object.keys(worksheet)
-      .filter((key) => key[0] >= 'A' && key[1] === '1')
-      .find((key) => worksheet[key].v.toLowerCase() === 'id');
-
-    if (!idCol) {
-      throw new Error("No 'id' column found");
-    }
-
-    // Iterate over the rows starting from the second row
-    for (let row = range.s.r + 1; row <= range.e.r; row++) {
-      const cellAddress = `${idCol[0]}${row + 1}`;
-      if (!worksheet[cellAddress]) {
-        worksheet[cellAddress] = { t: 's', v: uuidv4() };
-      }
-    }
     workbook.Sheets[sheetName] = worksheet
     // Write the modified workbook back to file
     xlsx.writeFile(workbook, filePath);

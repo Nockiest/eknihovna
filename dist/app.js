@@ -23,7 +23,6 @@ const fs_1 = __importDefault(require("fs"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
-const uuid_1 = require("uuid");
 // Load environment variables from .env file
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
@@ -135,21 +134,8 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         let worksheet = workbook.Sheets[sheetName];
         // Apply data transformation
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'available');
-        // Example: Ensure 'id' column exists and add UUID if missing
-        const range = xlsx_1.default.utils.decode_range(worksheet['!ref']);
-        const idCol = Object.keys(worksheet)
-            .filter((key) => key[0] >= 'A' && key[1] === '1')
-            .find((key) => worksheet[key].v.toLowerCase() === 'id');
-        if (!idCol) {
-            throw new Error("No 'id' column found");
-        }
-        // Iterate over the rows starting from the second row
-        for (let row = range.s.r + 1; row <= range.e.r; row++) {
-            const cellAddress = `${idCol[0]}${row + 1}`;
-            if (!worksheet[cellAddress]) {
-                worksheet[cellAddress] = { t: 's', v: (0, uuid_1.v4)() };
-            }
-        }
+        worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'formaturita');
+        worksheet = (0, excelUtils_1.fillMissingIds)(worksheet);
         workbook.Sheets[sheetName] = worksheet;
         // Write the modified workbook back to file
         xlsx_1.default.writeFile(workbook, filePath);
