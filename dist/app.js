@@ -22,6 +22,8 @@ const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const excelUtils_1 = require("./excelUtils");
+const uuid_1 = require("uuid");
 // Load environment variables from .env file
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
@@ -40,9 +42,8 @@ const storage = multer_1.default.diskStorage({
 const upload = (0, multer_1.default)({ storage });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
-    console.log('get');
     try {
-        const boookList = readExcelFile();
+        const boookList = (0, excelUtils_1.readExcelFile)(knihyURL);
         res.json(boookList);
     }
     catch (error) {
@@ -52,6 +53,7 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
 }));
 app.post('/authenticate', (req, res) => {
     const { password } = req.body;
+    console.log(password);
     if (!password) {
         return res.status(400).json({ error: 'vyžadováno heslo' });
     }
@@ -82,27 +84,109 @@ app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     // assignIds(knihyURL, true, 'A',   3530)
 });
-const readExcelFile = () => {
+// app.post('/update', upload.single('file'), (req, res) => {
+//   console.log(req.file)
+//   try {
+//     // Read the uploaded file
+//     const filePath = path.join(__dirname, req.file.path);
+//     const workbook = xlsx.readFile(filePath);
+//     const sheetName = workbook.SheetNames[0]; // Assuming we're working with the first sheet
+//     let worksheet = workbook.Sheets[sheetName];
+//     // Get the range of the worksheet
+//     const range = xlsx.utils.decode_range(worksheet['!ref']);
+//     const idCol = Object.keys(worksheet)
+//       .filter((key) => key[0] >= 'A' && key[1] === '1')
+//       .find((key) => worksheet[key].v.toLowerCase() === 'id');
+//     if (!idCol) {
+//       throw new Error("No 'id' column found");
+//     }
+//     worksheet = excelWordsToBool(worksheet, 'available')
+//     // Iterate over the rows starting from the second row
+//     for (let row = range.s.r + 1; row <= range.e.r; row++) {
+//       const cellAddress = `${idCol[0]}${row + 1}`;
+//       if (!worksheet[cellAddress]) {
+//         worksheet[cellAddress] = { t: 's', v: uuidv4() };
+//       }
+//     }
+//       xlsx.writeFile(workbook, filePath);
+//       res.status(200).json({ message: 'File uploaded  successfully' });
+//     // Remove the uploaded file from the temporary storage
+//     fs.unlinkSync(filePath);
+//   } catch (error) {
+//     console.error('Error processing data:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const workbook = xlsx_1.default.readFile(knihyURL);
+        // Handle file upload with Multer
+        if (!req.file) {
+            throw new Error('No file uploaded');
+        }
+        // Specify the file path
+        const filePath = path_1.default.join(__dirname, '../', 'knihy.xlsx'); // Adjust the path as needed
+        // Check if the file exists
+        if (!fs_1.default.existsSync(filePath)) {
+            throw new Error(`File not found at path: ${filePath}`);
+        }
+        // Read the uploaded file
+        const workbook = xlsx_1.default.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
-        const data = xlsx_1.default.utils.sheet_to_json(worksheet);
-        return data;
-    }
-    catch (error) {
-        console.error('Error reading Excel file:', error);
-    }
-};
-app.post('/update', upload.single('file'), (req, res) => {
-    try {
-        res.status(200).json({ message: 'File uploaded successfully' });
+        let worksheet = workbook.Sheets[sheetName];
+        // Apply data transformation
+        worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'available');
+        // Example: Ensure 'id' column exists and add UUID if missing
+        const range = xlsx_1.default.utils.decode_range(worksheet['!ref']);
+        const idCol = Object.keys(worksheet)
+            .filter((key) => key[0] >= 'A' && key[1] === '1')
+            .find((key) => worksheet[key].v.toLowerCase() === 'id');
+        if (!idCol) {
+            throw new Error("No 'id' column found");
+        }
+        // Iterate over the rows starting from the second row
+        for (let row = range.s.r + 1; row <= range.e.r; row++) {
+            const cellAddress = `${idCol[0]}${row + 1}`;
+            if (!worksheet[cellAddress]) {
+                worksheet[cellAddress] = { t: 's', v: (0, uuid_1.v4)() };
+            }
+        }
+        workbook.Sheets[sheetName] = worksheet;
+        // Write the modified workbook back to file
+        xlsx_1.default.writeFile(workbook, filePath);
+        // Respond with success message
+        res.status(200).json({ message: 'File processed and uploaded successfully' });
     }
     catch (error) {
         console.error('Error processing data:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
-});
+}));
+// function modifyWorksheet(worksheet) {
+//   // Example: Convert all 'available' values to boolean
+//   const range = xlsx.utils.decode_range(worksheet['!ref']);
+//   for (let row = range.s.r + 1; row <= range.e.r; row++) {
+//     const cellAddress = `available${row + 1}`;
+//     if (worksheet[cellAddress]) {
+//       worksheet[cellAddress].v = worksheet[cellAddress].v.toLowerCase() === 'yes';
+//     }
+//   }
+//   return worksheet;
+// }
+// app.post('/update', async (req, res) => {
+//   try {
+//     await upload.single('file')(req, res, (err) => {
+//       if (err) {
+//         console.error('Error uploading file:', err);
+//         throw new Error('File upload failed');
+//       }
+//       res.status(200).json('sucess')
+//       // Continue processing
+//     });
+//   } catch (error) {
+//     console.error('Error processing request:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 // const mockData = {rows:[{"id":1,"name":"Bobea elatior Gaudich.","iban":"IE23 LSJW 9122 7020 8015 01","author":"Rog Enns","rating":80,"description":"vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa id nisl venenatis lacinia aenean sit amet justo morbi","forMaturita":true,"available":false},
 //   {"id":2,"name":"Eriogonum codium Reveal, Caplow & K. Beck","iban":"GL85 1035 6131 3886 40","author":null,"rating":1,"description":"nec sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue","forMaturita":false,"available":true},
 //   {"id":3,"name":"Desmodium styracifolium (Osbeck) Merr.","iban":"BH94 QPPX X51H 8OJR TC6D SP","author":"Joannes Jerrems","rating":35,"description":"nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat","forMaturita":true,"available":false},

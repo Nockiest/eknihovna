@@ -9,8 +9,8 @@ import path from 'path'
 import fs from 'fs'
 import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
-import { readExcelFile } from './excelUtils';
-import v4 as uuidv4 from 'uuid'
+import { excelWordsToBool, readExcelFile } from './excelUtils';
+import { v4 as uuidv4 } from 'uuid';
 // Load environment variables from .env file
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
@@ -80,15 +80,69 @@ app.listen(port, () => {
 });
 
 
-app.post('/update', upload.single('file'), (req, res) => {
-  try {
-    // Read the uploaded file
-    const filePath = path.join(__dirname, req.file.path);
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0]; // Assuming we're working with the first sheet
-    const worksheet = workbook.Sheets[sheetName];
+// app.post('/update', upload.single('file'), (req, res) => {
+//   console.log(req.file)
+//   try {
+//     // Read the uploaded file
+//     const filePath = path.join(__dirname, req.file.path);
+//     const workbook = xlsx.readFile(filePath);
+//     const sheetName = workbook.SheetNames[0]; // Assuming we're working with the first sheet
+//     let worksheet = workbook.Sheets[sheetName];
 
-    // Get the range of the worksheet
+//     // Get the range of the worksheet
+//     const range = xlsx.utils.decode_range(worksheet['!ref']);
+//     const idCol = Object.keys(worksheet)
+//       .filter((key) => key[0] >= 'A' && key[1] === '1')
+//       .find((key) => worksheet[key].v.toLowerCase() === 'id');
+
+//     if (!idCol) {
+//       throw new Error("No 'id' column found");
+//     }
+
+//     worksheet = excelWordsToBool(worksheet, 'available')
+//     // Iterate over the rows starting from the second row
+//     for (let row = range.s.r + 1; row <= range.e.r; row++) {
+//       const cellAddress = `${idCol[0]}${row + 1}`;
+//       if (!worksheet[cellAddress]) {
+//         worksheet[cellAddress] = { t: 's', v: uuidv4() };
+//       }
+//     }
+
+//       xlsx.writeFile(workbook, filePath);
+
+//       res.status(200).json({ message: 'File uploaded  successfully' });
+
+//     // Remove the uploaded file from the temporary storage
+//     fs.unlinkSync(filePath);
+//   } catch (error) {
+//     console.error('Error processing data:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+app.post('/update', upload.single('file'), async (req, res) => {
+  try {
+    // Handle file upload with Multer
+    if (!req.file) {
+      throw new Error('No file uploaded');
+    }
+
+    // Specify the file path
+    const filePath = path.join(__dirname, '../', 'knihy.xlsx'); // Adjust the path as needed
+
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+      throw new Error(`File not found at path: ${filePath}`);
+    }
+
+    // Read the uploaded file
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0];
+    let worksheet = workbook.Sheets[sheetName];
+
+    // Apply data transformation
+    worksheet = excelWordsToBool(worksheet, 'available');
+
+    // Example: Ensure 'id' column exists and add UUID if missing
     const range = xlsx.utils.decode_range(worksheet['!ref']);
     const idCol = Object.keys(worksheet)
       .filter((key) => key[0] >= 'A' && key[1] === '1')
@@ -98,35 +152,50 @@ app.post('/update', upload.single('file'), (req, res) => {
       throw new Error("No 'id' column found");
     }
 
-    let updated = false;
-
     // Iterate over the rows starting from the second row
     for (let row = range.s.r + 1; row <= range.e.r; row++) {
       const cellAddress = `${idCol[0]}${row + 1}`;
       if (!worksheet[cellAddress]) {
         worksheet[cellAddress] = { t: 's', v: uuidv4() };
-        updated = true;
       }
     }
+    workbook.Sheets[sheetName] = worksheet
+    // Write the modified workbook back to file
+    xlsx.writeFile(workbook, filePath);
 
-    if (updated) {
-      // Write the updated workbook to the same file
-      xlsx.writeFile(workbook, filePath);
-
-      res.status(200).json({ message: 'File uploaded and updated successfully' });
-    } else {
-      res.status(200).json({ message: 'File uploaded successfully' });
-    }
-
-    // Remove the uploaded file from the temporary storage
-    fs.unlinkSync(filePath);
+    // Respond with success message
+    res.status(200).json({ message: 'File processed and uploaded successfully' });
   } catch (error) {
     console.error('Error processing data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
-
+// function modifyWorksheet(worksheet) {
+//   // Example: Convert all 'available' values to boolean
+//   const range = xlsx.utils.decode_range(worksheet['!ref']);
+//   for (let row = range.s.r + 1; row <= range.e.r; row++) {
+//     const cellAddress = `available${row + 1}`;
+//     if (worksheet[cellAddress]) {
+//       worksheet[cellAddress].v = worksheet[cellAddress].v.toLowerCase() === 'yes';
+//     }
+//   }
+//   return worksheet;
+// }
+// app.post('/update', async (req, res) => {
+//   try {
+//     await upload.single('file')(req, res, (err) => {
+//       if (err) {
+//         console.error('Error uploading file:', err);
+//         throw new Error('File upload failed');
+//       }
+//       res.status(200).json('sucess')
+//       // Continue processing
+//     });
+//   } catch (error) {
+//     console.error('Error processing request:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 
 
 

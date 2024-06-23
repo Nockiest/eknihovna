@@ -77,6 +77,58 @@ export const readExcelFile = (url:string) => {
   }
 };
 
+/**
+ * Copies all cells from a source Excel file to a destination Excel file.
+ * @param {string} worksheet - the Excel file
+ * @param {string} columnName - The label of the column you want to change
+ */
+export const excelWordsToBool = (worksheet, columnName) => {
+  let jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+
+  // Find the column index based on the label 'available'
+  const header = jsonData[0];
+  const columnIndex = header.findIndex(col => col === columnName);
+
+  if (columnIndex === -1) {
+    return worksheet; // No 'available' column found, return unchanged worksheet
+  }
+
+  // Update values in the 'available' column
+  for (let i = 1; i < jsonData.length; i++) { // start from 1 to skip the header row
+    const value = jsonData[i][columnIndex];
+    if (typeof value === 'string') {
+      // Convert 'yes' to true and 'no' to false
+      jsonData[i][columnIndex] = value.toLowerCase() === 'ano' ? 'yes' : 'no';
+    } else if (typeof value === 'boolean') {
+      // Normalize boolean values
+      jsonData[i][columnIndex] = value;
+    }
+  }
+  console.log('ran')
+  // Convert JSON data back to worksheet format
+  worksheet = xlsx.utils.aoa_to_sheet(jsonData);
+  return worksheet;
+};
+
+  // // Convert JSON back to sheet
+  // const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
+  // workbook.Sheets[sheetName] = newWorksheet;
+
+  // // Write the updated workbook to a new file
+  // const updatedFilePath = path.join(__dirname, 'uploads', `updated_${req.file.originalname}`);
+  // xlsx.writeFile(workbook, updatedFilePath);
+
+  // // Send response with the updated file path
+  // res.status(200).json({ message: 'Values processed and file updated successfully', filePath: updatedFilePath });
+
+  // // Clean up: Remove the uploaded file from the temporary storage
+  // fs.unlinkSync(filePath);
+  // } catch (error) {
+  // console.error('Error processing data:', error);
+  // res.status(500).json({ error: 'Internal Server Error' });
+  // }
+
+
 // Example usage
 // const sourceFilePath = 'path/to/source/file.xlsx';
 // const destFilePath = 'path/to/dest/file.xlsx';
