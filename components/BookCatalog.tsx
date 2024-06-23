@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Box, Typography } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "./DotsShower";
@@ -52,16 +52,19 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   }
 
   return (
-    <Box>
+    <Box className='w-full'>
       {shownBooks.length > 0 ? (
-        <div>
-          {shownBooks.map((book, index) => (
-            <BookPreview key={index} book={book} />
+        <div className='w-full'>
+       <Grid container spacing={2} columns={12}  >
+       {shownBooks.map((book, index) => (
+          <Grid item xs={12} sm={6} md={4} key={index}>
+          <BookPreview book={book} />
+        </Grid>
           ))}
-          <div>
+         </Grid>
+
 
             <PaginationLinker totalPages={totalPages} folderName="katalog" />
-          </div>
         </div>
       ) : (
         <DotsShower />

@@ -8,8 +8,8 @@ const CatalogPage =   () => {
     const books =    getBooksByQuery();
 
     return (
-      <Box>
-        <Typography className="mx-auto text-center" variant={"h2"}>Katalog</Typography>
+      <Box className='w-full'>
+        <Typography className="mx-auto text-center my-6" variant={"h2"}>Katalog</Typography>
 
         <BookCatalog promisedBooks={books} />
       </Box>

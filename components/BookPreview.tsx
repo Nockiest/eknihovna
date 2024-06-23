@@ -19,9 +19,9 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   } = book;
 
   return (
-    <Paper>
+    <Paper className="w-auto flex-grow">
       <Box>
-      
+
         <Typography>Název: {name}</Typography>
         <br />
         <Typography>Žánr:{genre}</Typography>
