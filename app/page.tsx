@@ -20,7 +20,12 @@ export default function Home() {
           vás máme připraveného. Těšíme se na vaši návštěvu!
         </Typography>
         <OpeningHours />
-        <div>
+
+      </Container>
+  );
+}
+
+        {/* <div>
           <Typography variant="h1" component="h2">
             {" "}
             jumping over the lazy brown foxes
@@ -49,7 +54,4 @@ export default function Home() {
             {" "}
             jumping over the lazy brown foxes
           </Typography>
-        </div>
-      </Container>
-  );
-}
+        </div> */}
