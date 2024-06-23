@@ -21,12 +21,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   return (
     <Paper>
       <Box>
-        {/* <Image
-          src={ bookCoverURL}
-          alt={name}
-          height={50}
-          width={50}
-        /> */}
+      
         <Typography>Název: {name}</Typography>
         <br />
         <Typography>Žánr:{genre}</Typography>
