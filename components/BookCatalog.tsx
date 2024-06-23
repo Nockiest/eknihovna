@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "./DotsShower";
-import { usePathname  } from "next/navigation";
+import { usePathname } from "next/navigation";
 import PaginationLinker from "./PaginationLinker";
 import { getURLSegment } from "@/utils/getURLSegment";
 
@@ -52,18 +52,21 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   }
 
   return (
-    <div>
+    <Box>
       {shownBooks.length > 0 ? (
         <div>
           {shownBooks.map((book, index) => (
             <BookPreview key={index} book={book} />
           ))}
-          <PaginationLinker totalPages={totalPages} folderName="katalog" />
+          <div>
+
+            <PaginationLinker totalPages={totalPages} folderName="katalog" />
+          </div>
         </div>
       ) : (
         <DotsShower />
       )}
-    </div>
+    </Box>
   );
 };
 

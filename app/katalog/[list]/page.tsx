@@ -9,7 +9,7 @@ const CatalogPage =   () => {
 
     return (
       <Box>
-        <Typography variant={"h2"}>Katalog</Typography>
+        <Typography className="mx-auto text-center" variant={"h2"}>Katalog</Typography>
 
         <BookCatalog promisedBooks={books} />
       </Box>

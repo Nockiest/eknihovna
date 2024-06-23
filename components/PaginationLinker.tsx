@@ -5,11 +5,11 @@ import { getURLSegment } from "@/utils/getURLSegment";
 
 interface PaginationProps {
   totalPages: number;
-  folderName:string
+  folderName: string;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
-  const currentPage = parseInt(getURLSegment( usePathname(), 2), 10);
+const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
+  const currentPage = parseInt(getURLSegment(usePathname(), 1), 10);
 
   const getVisiblePageNumbers = () => {
     const startPage = Math.max(1, currentPage - 5);
@@ -25,9 +25,12 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
 
   return (
     <div className="flex justify-center space-x-2 mt-4">
-         {currentPage > 6 && (
-        <Link href={`/${folderName}/1`} className="px-3 py-1 rounded bg-gray-200 text-text-100">
-        ...1
+      {currentPage > 6 && (
+        <Link
+          href={`/${folderName}/1`}
+          className="px-3 py-1 rounded bg-gray-200 text-text-100"
+        >
+          ...1
         </Link>
       )}
 
@@ -46,12 +49,14 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName  }) => {
       ))}
 
       {currentPage < totalPages - 5 && (
-        <Link href={`/${folderName}/${totalPages}`} className="px-3 py-1 rounded bg-gray-200 text-text-100">
+        <Link
+          href={`/${folderName}/${totalPages}`}
+          className="px-3 py-1 rounded bg-gray-200 text-text-100"
+        >
           ...{totalPages}
         </Link>
       )}
     </div>
-
   );
 };
 
@@ -70,6 +75,5 @@ export default Pagination;
 
 // Sync the state with the URL when the component mounts or when the URL changes
 //   useEffect(() => {
-
 
 //   }, [router]);
