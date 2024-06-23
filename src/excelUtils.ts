@@ -39,7 +39,7 @@ xlsx.writeFile(workbook, excelUrl);
  * @param {string} sourceFilePath - The path to the source Excel file.
  * @param {string} destFilePath - The path to the destination Excel file.
  */
-function copyExcelFile(sourceFilePath, destFilePath) {
+export function copyExcelFile(sourceFilePath, destFilePath) {
   try {
     // Read the source Excel file
     const sourceWorkbook = xlsx.readFile(sourceFilePath);
@@ -64,6 +64,18 @@ function copyExcelFile(sourceFilePath, destFilePath) {
     console.error('Error copying Excel file:', error);
   }
 }
+
+export const readExcelFile = (url:string) => {
+  try {
+    const workbook = xlsx.readFile(url);
+    const sheetName = workbook.SheetNames[0];
+    const worksheet = workbook.Sheets[sheetName];
+    const data = xlsx.utils.sheet_to_json(worksheet);
+    return data
+  } catch (error) {
+    console.error('Error reading Excel file:', error);
+  }
+};
 
 // Example usage
 // const sourceFilePath = 'path/to/source/file.xlsx';

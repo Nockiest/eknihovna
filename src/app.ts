@@ -9,7 +9,8 @@ import path from 'path'
 import fs from 'fs'
 import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
-
+import { readExcelFile } from './excelUtils';
+import v4 as uuidv4 from 'uuid'
 // Load environment variables from .env file
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
@@ -30,9 +31,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
-  console.log('get')
   try {
-    const boookList = readExcelFile()
+    const boookList = readExcelFile(knihyURL)
     res.json(boookList);
   } catch (error) {
     console.error('Error executing search query:', error);
@@ -42,6 +42,7 @@ app.get('/bookList', async (req: Request, res: Response) => {
 
 app.post('/authenticate', (req, res) => {
   const { password } = req.body;
+  console.log(password)
 
   if (!password) {
     return res.status(400).json({ error: 'vyžadováno heslo' });
@@ -78,21 +79,47 @@ app.listen(port, () => {
   // assignIds(knihyURL, true, 'A',   3530)
 });
 
-const readExcelFile = () => {
-  try {
-    const workbook = xlsx.readFile(knihyURL);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
-    const data = xlsx.utils.sheet_to_json(worksheet);
-    return data
-  } catch (error) {
-    console.error('Error reading Excel file:', error);
-  }
-};
 
 app.post('/update', upload.single('file'), (req, res) => {
   try {
-    res.status(200).json({ message: 'File uploaded successfully' });
+    // Read the uploaded file
+    const filePath = path.join(__dirname, req.file.path);
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0]; // Assuming we're working with the first sheet
+    const worksheet = workbook.Sheets[sheetName];
+
+    // Get the range of the worksheet
+    const range = xlsx.utils.decode_range(worksheet['!ref']);
+    const idCol = Object.keys(worksheet)
+      .filter((key) => key[0] >= 'A' && key[1] === '1')
+      .find((key) => worksheet[key].v.toLowerCase() === 'id');
+
+    if (!idCol) {
+      throw new Error("No 'id' column found");
+    }
+
+    let updated = false;
+
+    // Iterate over the rows starting from the second row
+    for (let row = range.s.r + 1; row <= range.e.r; row++) {
+      const cellAddress = `${idCol[0]}${row + 1}`;
+      if (!worksheet[cellAddress]) {
+        worksheet[cellAddress] = { t: 's', v: uuidv4() };
+        updated = true;
+      }
+    }
+
+    if (updated) {
+      // Write the updated workbook to the same file
+      xlsx.writeFile(workbook, filePath);
+
+      res.status(200).json({ message: 'File uploaded and updated successfully' });
+    } else {
+      res.status(200).json({ message: 'File uploaded successfully' });
+    }
+
+    // Remove the uploaded file from the temporary storage
+    fs.unlinkSync(filePath);
   } catch (error) {
     console.error('Error processing data:', error);
     res.status(500).json({ error: 'Internal Server Error' });
