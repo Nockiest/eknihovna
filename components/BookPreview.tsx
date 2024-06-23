@@ -32,7 +32,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         <br />
         <Typography variant={'body1'}>Autor: {author}</Typography>
         <br />
-        <Typography variant={'body1'}>Dostupnost: {available.toString()} {truthyValues.indexOf(available) >= 0 ? 'Dostupný' : 'Nedostupný'}</Typography>
+        <Typography variant={'body1'}>Dostupnost: {truthyValues.indexOf(available) >= 0 ? 'Dostupný' : 'Nedostupný'}</Typography>
         <br />
         <Typography variant={'body1'}>{formaturita ? "Maturitní" : ""}</Typography>
         <br />
