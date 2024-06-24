@@ -10,8 +10,6 @@ export type Book = {
     available: boolean
     formaturita: boolean
     bookCoverURL?: string
-
-
 }
 
 export type NavButton = {
