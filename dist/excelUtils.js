@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
+exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
 const assignIds = (excelUrl, ignoreHeader = true, idColumn = 'A', numberOfRows = 10) => {
@@ -115,6 +115,13 @@ const fillMissingIds = (worksheet) => {
     return worksheet;
 };
 exports.fillMissingIds = fillMissingIds;
+const extractExcelWorksheet = (filePath, sheetnum = 0) => {
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[sheetnum];
+    let worksheet = workbook.Sheets[sheetName];
+    return worksheet;
+};
+exports.extractExcelWorksheet = extractExcelWorksheet;
 // // Convert JSON back to sheet
 // const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
 // workbook.Sheets[sheetName] = newWorksheet;

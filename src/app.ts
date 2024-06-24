@@ -7,11 +7,10 @@ import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
+import { query } from './db';
 // import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
-import { excelWordsToBool, fillMissingIds, readExcelFile } from './excelUtils';
-import { v4 as uuidv4 } from 'uuid';
-// Load environment variables from .env file
+import { excelWordsToBool, extractExcelWorksheet, fillMissingIds, readExcelFile } from './excelUtils';
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
 const port = 3002;
@@ -28,6 +27,25 @@ const storage = multer.diskStorage({
 });
 
 
+async function connectAndQuery() {
+  try {
+    // Connect to the database and execute queries
+    await query('SELECT NOW()', []);
+    console.log('Connected to the database successfully.');
+
+    // Example query with parameters
+    const id = 1;
+    const queryResult = await query('SELECT * FROM knihy WHERE id = $1', [id]);
+    console.log('Query result:', queryResult.rows);
+  } catch (error) {
+    console.error('Error connecting to the database:', error);
+  } finally {
+    // The pool automatically manages connections, no need to manually close it
+  }
+}
+
+
+connectAndQuery();
 const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
@@ -105,7 +123,8 @@ app.post('/update', upload.single('file'), async (req, res) => {
     // Read the uploaded file
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
-    let worksheet = workbook.Sheets[sheetName];
+     let worksheet = workbook.Sheets[sheetName];
+    // let worksheet = extractExcelWorksheet(filePath)
 
     // Apply data transformation
     worksheet = excelWordsToBool(worksheet, 'available');
@@ -123,32 +142,6 @@ app.post('/update', upload.single('file'), async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-// function modifyWorksheet(worksheet) {
-//   // Example: Convert all 'available' values to boolean
-//   const range = xlsx.utils.decode_range(worksheet['!ref']);
-//   for (let row = range.s.r + 1; row <= range.e.r; row++) {
-//     const cellAddress = `available${row + 1}`;
-//     if (worksheet[cellAddress]) {
-//       worksheet[cellAddress].v = worksheet[cellAddress].v.toLowerCase() === 'yes';
-//     }
-//   }
-//   return worksheet;
-// }
-// app.post('/update', async (req, res) => {
-//   try {
-//     await upload.single('file')(req, res, (err) => {
-//       if (err) {
-//         console.error('Error uploading file:', err);
-//         throw new Error('File upload failed');
-//       }
-//       res.status(200).json('sucess')
-//       // Continue processing
-//     });
-//   } catch (error) {
-//     console.error('Error processing request:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
 
 
 

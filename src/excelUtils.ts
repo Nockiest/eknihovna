@@ -127,6 +127,13 @@ export const fillMissingIds = ( worksheet) => {
   }
   return worksheet
 }
+
+export const extractExcelWorksheet = (filePath:string ,sheetnum: number = 0) => {
+  const workbook = xlsx.readFile(filePath);
+  const sheetName = workbook.SheetNames[sheetnum];
+  let worksheet = workbook.Sheets[sheetName]
+  return worksheet
+}
   // // Convert JSON back to sheet
   // const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
   // workbook.Sheets[sheetName] = newWorksheet;

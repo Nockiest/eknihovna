@@ -20,10 +20,10 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
+const db_1 = require("./db");
 // import bcrypt from 'bcrypt';
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
-// Load environment variables from .env file
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -38,6 +38,26 @@ const storage = multer_1.default.diskStorage({
         cb(null, 'knihy.xlsx');
     }
 });
+function connectAndQuery() {
+    return __awaiter(this, void 0, void 0, function* () {
+        try {
+            // Connect to the database and execute queries
+            yield (0, db_1.query)('SELECT NOW()', []);
+            console.log('Connected to the database successfully.');
+            // Example query with parameters
+            const id = 1;
+            const queryResult = yield (0, db_1.query)('SELECT * FROM knihy WHERE id = $1', [id]);
+            console.log('Query result:', queryResult.rows);
+        }
+        catch (error) {
+            console.error('Error connecting to the database:', error);
+        }
+        finally {
+            // The pool automatically manages connections, no need to manually close it
+        }
+    });
+}
+connectAndQuery();
 const upload = (0, multer_1.default)({ storage });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
@@ -105,6 +125,7 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         const workbook = xlsx_1.default.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
         let worksheet = workbook.Sheets[sheetName];
+        // let worksheet = extractExcelWorksheet(filePath)
         // Apply data transformation
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'available');
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'formaturita');
@@ -120,32 +141,6 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
-// function modifyWorksheet(worksheet) {
-//   // Example: Convert all 'available' values to boolean
-//   const range = xlsx.utils.decode_range(worksheet['!ref']);
-//   for (let row = range.s.r + 1; row <= range.e.r; row++) {
-//     const cellAddress = `available${row + 1}`;
-//     if (worksheet[cellAddress]) {
-//       worksheet[cellAddress].v = worksheet[cellAddress].v.toLowerCase() === 'yes';
-//     }
-//   }
-//   return worksheet;
-// }
-// app.post('/update', async (req, res) => {
-//   try {
-//     await upload.single('file')(req, res, (err) => {
-//       if (err) {
-//         console.error('Error uploading file:', err);
-//         throw new Error('File upload failed');
-//       }
-//       res.status(200).json('sucess')
-//       // Continue processing
-//     });
-//   } catch (error) {
-//     console.error('Error processing request:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
 // const mockData = {rows:[{"id":1,"name":"Bobea elatior Gaudich.","iban":"IE23 LSJW 9122 7020 8015 01","author":"Rog Enns","rating":80,"description":"vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa id nisl venenatis lacinia aenean sit amet justo morbi","forMaturita":true,"available":false},
 //   {"id":2,"name":"Eriogonum codium Reveal, Caplow & K. Beck","iban":"GL85 1035 6131 3886 40","author":null,"rating":1,"description":"nec sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue","forMaturita":false,"available":true},
 //   {"id":3,"name":"Desmodium styracifolium (Osbeck) Merr.","iban":"BH94 QPPX X51H 8OJR TC6D SP","author":"Joannes Jerrems","rating":35,"description":"nibh fusce lacus purus aliquet at feugiat non pretium quis lectus suspendisse potenti in eleifend quam a odio in hac habitasse platea dictumst maecenas ut massa quis augue luctus tincidunt nulla mollis molestie lorem quisque ut erat","forMaturita":true,"available":false},
