@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { useRouter, usePathname, useParams, useSearchParams } from "next/navigation";
+import {  useSearchParams } from "next/navigation";
 import { getURLSegment } from "@/utils/getURLSegment";
 
 interface PaginationProps {
@@ -9,8 +9,6 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
-  // const currentPage = parseInt(getURLSegment(usePathname(), 1), 10);
-  // const { page } = router.query; // Extract the 'page' parameter from the URL query
   const searchParams = useSearchParams()
 
   const page = parseInt(searchParams.get('page')||'0', 10)

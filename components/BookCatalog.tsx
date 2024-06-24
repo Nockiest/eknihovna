@@ -13,7 +13,7 @@ import DotsShower from "./DotsShower";
 import PaginationLinker from "./PaginationLinker";
 import { getURLSegment } from "@/utils/getURLSegment";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
-import { usePathname ,useRouter} from "next/navigation";
+import { usePathname ,useRouter, useSearchParams} from "next/navigation";
 
 interface BookCatalogProps {
   promisedBooks: Promise<Book[]> | Book[];
@@ -36,19 +36,29 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const searchParams = useSearchParams()
 
+  const page = parseInt(searchParams.get('page')||'1', 10)
   // Parse currentPage from URL parameter
-  const currentPage = parseInt(getURLSegment(pathname, 1), 10) || 1;
+  // const currentPage = parseInt(getURLSegment(pathname, 1), 10) || 1;
 
   // Handle itemsPerPage change based on breakpoint
+  const setNewBookSlice = (page:number,itemsPerPage:number, allBooks:Book[]) => {
+    const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
+    const newLastBookIndex = page * itemsPerPage
+    setShownBooks(allBooks.slice(indexOfFirstBook, newLastBookIndex) );
+  }
   useEffect(() => {
     if (size) {
+      const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
       const newItemsPerPage = shownBooksBySize[size];
       setItemsPerPage(newItemsPerPage);
-      const newCurrentPage = Math.ceil((currentPage * itemsPerPage) / newItemsPerPage);
-      router.push(`/katalog?page=${newCurrentPage}`);
+      const newCurrentPage = Math.ceil((indexOfFirstBook) / newItemsPerPage);
+      setNewBookSlice(page, itemsPerPage, allBooks)
+      setTotalPages(Math.ceil(allBooks.length / itemsPerPage));
+      router.push(`/katalog?page=${newCurrentPage + 1}`);
     }
-  }, [size]);
+  }, [size, page]);
 
   // State for items per page
   const [itemsPerPage, setItemsPerPage] = useState<number>(12);
@@ -68,12 +78,9 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
 
   // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {
-    const indexOfLastBook = currentPage * itemsPerPage;
-    const indexOfFirstBook = indexOfLastBook - itemsPerPage;
-    const currentBooksSlice = allBooks.slice(indexOfFirstBook, indexOfLastBook);
-    setShownBooks(currentBooksSlice);
+    setNewBookSlice(page, itemsPerPage, allBooks)
     setTotalPages(Math.ceil(allBooks.length / itemsPerPage));
-  }, [currentPage, itemsPerPage, allBooks]);
+  }, [page, itemsPerPage, allBooks]);
 
   if (error) {
     return (
