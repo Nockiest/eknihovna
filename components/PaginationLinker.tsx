@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
+import { useRouter, usePathname, useParams, useSearchParams } from "next/navigation";
 import { getURLSegment } from "@/utils/getURLSegment";
 
 interface PaginationProps {
@@ -9,11 +9,14 @@ interface PaginationProps {
 }
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
-  const currentPage = parseInt(getURLSegment(usePathname(), 1), 10);
+  // const currentPage = parseInt(getURLSegment(usePathname(), 1), 10);
+  // const { page } = router.query; // Extract the 'page' parameter from the URL query
+  const searchParams = useSearchParams()
 
+  const page = parseInt(searchParams.get('page')||'0', 10)
   const getVisiblePageNumbers = () => {
-    const startPage = Math.max(1, currentPage - 5);
-    const endPage = Math.min(totalPages, currentPage + 5);
+    const startPage = Math.max(1, page - 5);
+    const endPage = Math.min(totalPages, page + 5);
     const pageNumbers = [];
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
@@ -25,9 +28,9 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
 
   return (
     <div className="flex justify-center space-x-2 m-4">
-      {currentPage > 6 && (
+      {page > 6 && (
         <Link
-          href={`/${folderName}/1`}
+          href={`/${folderName}?page=${1}`}
           className="px-3 py-1 rounded bg-gray-200 text-text-100"
         >
           ...1
@@ -37,9 +40,9 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
       {visiblePageNumbers.map((pageNumber) => (
         <Link
           key={pageNumber}
-          href={`/${folderName}/${pageNumber}`}
+          href={`/${folderName}?page=${pageNumber}`}
           className={`px-3 py-1 rounded ${
-            pageNumber === currentPage
+            pageNumber === page
               ? "bg-secondary-500 text-text-100"
               : "bg-primary-500 text-text-100"
           }`}
@@ -48,9 +51,9 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
         </Link>
       ))}
 
-      {currentPage < totalPages - 5 && (
+      {page < totalPages - 5 && (
         <Link
-          href={`/${folderName}/${totalPages}`}
+          href={`/${folderName}?page=${totalPages}`}
           className="px-3 py-1 rounded bg-gray-200 text-text-100"
         >
           ...{totalPages}

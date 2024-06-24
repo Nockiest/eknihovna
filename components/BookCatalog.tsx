@@ -1,55 +1,59 @@
-"use client";
-
+'use client'
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Typography, useTheme,useMediaQuery, Breakpoint } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  useTheme,
+  Breakpoint,
+} from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "./DotsShower";
-import { usePathname } from "next/navigation";
 import PaginationLinker from "./PaginationLinker";
 import { getURLSegment } from "@/utils/getURLSegment";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
+import { usePathname ,useRouter} from "next/navigation";
 
 interface BookCatalogProps {
   promisedBooks: Promise<Book[]> | Book[];
 }
 
-const shownBooksBySize: Record<Breakpoint, number>  = {
-  'xs' : 12,
-  'sm' : 12,
-  'md' : 24,
-  'lg' : 36,
-  'xl' : 36
-}
+const shownBooksBySize: Record<Breakpoint, number> = {
+  xs: 12,
+  sm: 12,
+  md: 24,
+  lg: 36,
+  xl: 36,
+};
 
 const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const theme = useTheme();
-  // const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  // const isMediumScreen = useMediaQuery(theme.breakpoints.between('sm', 'md'));
-  // const isLargeScreen = useMediaQuery(theme.breakpoints.up('md'))
-  const size = useCurrentBreakpoint()
-  const [itemsPerPage, setItemsPerPage] = useState<number>(12); // should think about what to do with the url when this val changes
+  const size = useCurrentBreakpoint();
+  const router = useRouter();
+  const pathname = usePathname();
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const pathname = usePathname();
-  const currentPage = parseInt(getURLSegment(pathname, 2), 10) || 1;
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
-  const totalPages = Math.ceil(allBooks.length / itemsPerPage);
+  const [totalPages, setTotalPages] = useState<number>(0);
+
+  // Parse currentPage from URL parameter
+  const currentPage = parseInt(getURLSegment(pathname, 1), 10) || 1;
+
+  // Handle itemsPerPage change based on breakpoint
   useEffect(() => {
     if (size) {
-
-      setItemsPerPage(shownBooksBySize[size]);
-      console.log('size changed')
+      const newItemsPerPage = shownBooksBySize[size];
+      setItemsPerPage(newItemsPerPage);
+      const newCurrentPage = Math.ceil((currentPage * itemsPerPage) / newItemsPerPage);
+      router.push(`/katalog?page=${newCurrentPage}`);
     }
-    // if (isSmallScreen) {
-    //   setItemsPerPage(12);
-    // } else if (isMediumScreen) {
-    //   setItemsPerPage(24);
-    // } else if (isLargeScreen) {
-    //   setItemsPerPage(36);
-    // }
   }, [size]);
 
+  // State for items per page
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+
+  // Fetch books on initial render
   useEffect(() => {
     const fetchBooks = async () => {
       try {
@@ -62,12 +66,14 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
     fetchBooks();
   }, [promisedBooks]);
 
+  // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {
     const indexOfLastBook = currentPage * itemsPerPage;
     const indexOfFirstBook = indexOfLastBook - itemsPerPage;
     const currentBooksSlice = allBooks.slice(indexOfFirstBook, indexOfLastBook);
     setShownBooks(currentBooksSlice);
-  }, [currentPage,   allBooks]);
+    setTotalPages(Math.ceil(allBooks.length / itemsPerPage));
+  }, [currentPage, itemsPerPage, allBooks]);
 
   if (error) {
     return (
@@ -80,19 +86,19 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   }
 
   return (
-    <Box className='w-full'>
+    <Box className="w-full">
+      {totalPages}
       {shownBooks.length > 0 ? (
-        <div className='w-full'>
-       <Grid container spacing={2} columns={12}  >
-       {shownBooks.map((book, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
-          <BookPreview book={book} />
-        </Grid>
-          ))}
-         </Grid>
+        <div className="w-full">
+          <Grid container spacing={2} columns={12}>
+            {shownBooks.map((book, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <BookPreview book={book} />
+              </Grid>
+            ))}
+          </Grid>
 
-
-            <PaginationLinker totalPages={totalPages} folderName="katalog" />
+          <PaginationLinker totalPages={totalPages} folderName="katalog" />
         </div>
       ) : (
         <DotsShower />
