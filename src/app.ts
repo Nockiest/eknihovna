@@ -7,10 +7,11 @@ import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
-import { query } from './db';
+import { insertExcelDataToPostgres, query } from './db';
 // import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
 import { excelWordsToBool, extractExcelWorksheet, fillMissingIds, readExcelFile } from './excelUtils';
+import { Pool } from 'pg';
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
 const port = 3002;
@@ -33,9 +34,11 @@ async function connectAndQuery() {
     await query('SELECT NOW()', []);
     console.log('Connected to the database successfully.');
 
+    const allEntriesQuery = 'SELECT * FROM knihy';
+    const queryResult = await query(allEntriesQuery);
     // Example query with parameters
-    const id = 1;
-    const queryResult = await query('SELECT * FROM knihy WHERE id = $1', [id]);
+    // const id = 1;
+    // const queryResult = await query('SELECT * FROM knihy WHERE id = $1', [id]);
     console.log('Query result:', queryResult.rows);
   } catch (error) {
     console.error('Error connecting to the database:', error);
@@ -130,7 +133,7 @@ app.post('/update', upload.single('file'), async (req, res) => {
     worksheet = excelWordsToBool(worksheet, 'available');
     worksheet = excelWordsToBool(worksheet, 'formaturita');
     worksheet = fillMissingIds(worksheet)
-
+    insertExcelDataToPostgres(filePath, 'knihy'   )
     workbook.Sheets[sheetName] = worksheet
     // Write the modified workbook back to file
     xlsx.writeFile(workbook, filePath);

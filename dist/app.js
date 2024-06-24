@@ -44,9 +44,11 @@ function connectAndQuery() {
             // Connect to the database and execute queries
             yield (0, db_1.query)('SELECT NOW()', []);
             console.log('Connected to the database successfully.');
+            const allEntriesQuery = 'SELECT * FROM knihy';
+            const queryResult = yield (0, db_1.query)(allEntriesQuery);
             // Example query with parameters
-            const id = 1;
-            const queryResult = yield (0, db_1.query)('SELECT * FROM knihy WHERE id = $1', [id]);
+            // const id = 1;
+            // const queryResult = await query('SELECT * FROM knihy WHERE id = $1', [id]);
             console.log('Query result:', queryResult.rows);
         }
         catch (error) {
@@ -130,6 +132,7 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'available');
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'formaturita');
         worksheet = (0, excelUtils_1.fillMissingIds)(worksheet);
+        (0, db_1.insertExcelDataToPostgres)(filePath, 'knihy');
         workbook.Sheets[sheetName] = worksheet;
         // Write the modified workbook back to file
         xlsx_1.default.writeFile(workbook, filePath);
