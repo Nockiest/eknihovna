@@ -38,28 +38,8 @@ const storage = multer_1.default.diskStorage({
         cb(null, 'knihy.xlsx');
     }
 });
-function connectAndQuery() {
-    return __awaiter(this, void 0, void 0, function* () {
-        try {
-            // Connect to the database and execute queries
-            yield (0, db_1.query)('SELECT NOW()', []);
-            console.log('Connected to the database successfully.');
-            const allEntriesQuery = 'SELECT * FROM knihy';
-            const queryResult = yield (0, db_1.query)(allEntriesQuery);
-            // Example query with parameters
-            // const id = 1;
-            // const queryResult = await query('SELECT * FROM knihy WHERE id = $1', [id]);
-            console.log('Query result:', queryResult.rows);
-        }
-        catch (error) {
-            console.error('Error connecting to the database:', error);
-        }
-        finally {
-            // The pool automatically manages connections, no need to manually close it
-        }
-    });
-}
-connectAndQuery();
+(0, db_1.connectAndQuery)();
+// connectAndQuery();
 const upload = (0, multer_1.default)({ storage });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
@@ -92,19 +72,31 @@ app.post('/authenticate', (req, res) => {
     //   res.status(200).json({ message: 'Uživatel autorizován' });
     // });
 });
+// app.get('/downloadExcel', async (req: Request, res: Response) => {
+//   const filePath = path.join(__dirname, '../', knihyURL);
+//   console.log('File path:', filePath);
+//   if (fs.existsSync(filePath)) {
+//     res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
+//       if (err) {
+//         console.error('Error sending file:', err);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//       }
+//     });
+//   } else {
+//     res.status(404).json({ error: 'File not found' });
+//   }
+// });
 app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const filePath = path_1.default.join(__dirname, '../', knihyURL);
-    console.log('File path:', filePath);
-    if (fs_1.default.existsSync(filePath)) {
-        res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
-            if (err) {
-                console.error('Error sending file:', err);
-                res.status(500).json({ error: 'Internal Server Error' });
-            }
-        });
+    try {
+        const buffer = yield (0, db_1.fetchAndCreateExcel)('knihy'); // Replace 'knihy' with your table name
+        res.setHeader('Content-Disposition', 'attachment; filename="stav_knih_na_serveru.xlsx"');
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        res.send(buffer);
+        console.log('downloading excel');
     }
-    else {
-        res.status(404).json({ error: 'File not found' });
+    catch (error) {
+        console.error('Error generating or sending Excel file:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
 app.listen(port, () => {
@@ -127,7 +119,6 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         const workbook = xlsx_1.default.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
         let worksheet = workbook.Sheets[sheetName];
-        // let worksheet = extractExcelWorksheet(filePath)
         // Apply data transformation
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'available');
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'formaturita');

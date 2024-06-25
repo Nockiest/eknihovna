@@ -7,11 +7,12 @@ import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
-import { insertExcelDataToPostgres, query } from './db';
+import { connectAndQuery, fetchAndCreateExcel, insertExcelDataToPostgres, query } from './db';
 // import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
 import { excelWordsToBool, extractExcelWorksheet, fillMissingIds, readExcelFile } from './excelUtils';
 import { Pool } from 'pg';
+import { convertCzechCharsInWorksheet } from './czechToAscii';
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
 const port = 3002;
@@ -27,28 +28,10 @@ const storage = multer.diskStorage({
   }
 });
 
-
-async function connectAndQuery() {
-  try {
-    // Connect to the database and execute queries
-    await query('SELECT NOW()', []);
-    console.log('Connected to the database successfully.');
-
-    const allEntriesQuery = 'SELECT * FROM knihy';
-    const queryResult = await query(allEntriesQuery);
-    // Example query with parameters
-    // const id = 1;
-    // const queryResult = await query('SELECT * FROM knihy WHERE id = $1', [id]);
-    console.log('Query result:', queryResult.rows);
-  } catch (error) {
-    console.error('Error connecting to the database:', error);
-  } finally {
-    // The pool automatically manages connections, no need to manually close it
-  }
-}
+connectAndQuery()
 
 
-connectAndQuery();
+// connectAndQuery();
 const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
@@ -85,19 +68,32 @@ app.post('/authenticate', (req, res) => {
   // });
 });
 
-app.get('/downloadExcel', async (req: Request, res: Response) => {
-  const filePath = path.join(__dirname, '../', knihyURL);
-  console.log('File path:', filePath);
+// app.get('/downloadExcel', async (req: Request, res: Response) => {
+//   const filePath = path.join(__dirname, '../', knihyURL);
+//   console.log('File path:', filePath);
 
-  if (fs.existsSync(filePath)) {
-    res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
-      if (err) {
-        console.error('Error sending file:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
-      }
-    });
-  } else {
-    res.status(404).json({ error: 'File not found' });
+//   if (fs.existsSync(filePath)) {
+//     res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
+//       if (err) {
+//         console.error('Error sending file:', err);
+//         res.status(500).json({ error: 'Internal Server Error' });
+//       }
+//     });
+//   } else {
+//     res.status(404).json({ error: 'File not found' });
+//   }
+// });
+
+app.get('/downloadExcel', async (req: Request, res: Response) => {
+  try {
+    const buffer = await fetchAndCreateExcel('knihy'); // Replace 'knihy' with your table name
+    res.setHeader('Content-Disposition', 'attachment; filename="stav_knih_na_serveru.xlsx"');
+    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    res.send(buffer);
+    console.log('downloading excel')
+  } catch (error) {
+    console.error('Error generating or sending Excel file:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -127,8 +123,6 @@ app.post('/update', upload.single('file'), async (req, res) => {
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
      let worksheet = workbook.Sheets[sheetName];
-    // let worksheet = extractExcelWorksheet(filePath)
-
     // Apply data transformation
     worksheet = excelWordsToBool(worksheet, 'available');
     worksheet = excelWordsToBool(worksheet, 'formaturita');
