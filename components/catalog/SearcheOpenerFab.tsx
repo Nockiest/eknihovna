@@ -12,6 +12,7 @@ type SearcherOpenerFabProps = {
           onClick={() => {
             onClick()
           }}
+          className='z-1'
         >
           <Image
             src="icon/search.svg"
