@@ -24,7 +24,7 @@ interface SearcherProps {
 
 const Searcher: React.FC<SearcherProps> = ( ) => {
   const classes = useTheme();
-    const {isOpenSearcher,setOpenSearcher,filters,setFilters} = useSearchContext()
+    const {isOpenSearcher,setOpenSearcher,filters,setFilters,books,setBooks} = useSearchContext()
     const handleFilterChange = (key: keyof Filters, value: Filters[keyof Filters]) => {
         setFilters((prevFilters) => ({
           ...prevFilters,

@@ -11,7 +11,7 @@ interface PaginationProps {
 const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
   const searchParams = useSearchParams()
   const page = parseInt(searchParams.get('page')||'0', 10)
-  
+
   const getVisiblePageNumbers = () => {
     const startPage = Math.max(1, page - 5);
     const endPage = Math.min(totalPages, page + 5);
@@ -23,7 +23,9 @@ const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
   };
 
   const visiblePageNumbers = getVisiblePageNumbers();
-
+  if (totalPages <= 1) {
+    return null; // If there's only one page or no pages, don't render pagination
+  }
   return (
     <div className="flex justify-center space-x-2 m-4">
       {page > 6 && (
