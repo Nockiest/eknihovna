@@ -1,12 +1,12 @@
 "use client";
-
 import BookCatalog from "@/components/catalog/BookCatalog";
 import { getBooksByQuery } from "@/utils/fetchBooks";
 import { Box, Typography } from "@mui/material";
 import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
-import { createContext, useContext, useState } from "react";
-import { Filters } from "@/types/types";
+import { createContext, useContext, useEffect, useState } from "react";
+import { Book, Filters } from "@/types/types";
+import { fetchGenres } from "@/utils/fetchGenres";
 
 // Define the context type
 type QueryContextType = {
@@ -14,6 +14,8 @@ type QueryContextType = {
   setOpenSearcher: React.Dispatch<React.SetStateAction<boolean>>;
   filters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+  books: Book[];
+  setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
 };
 
 // Create the context
@@ -29,9 +31,9 @@ export const useSearchContext = () => {
 
   return context;
 };
-
+//const  books =  getBooksByQuery()
 const CatalogPage = () => {
-  const books = getBooksByQuery();
+  const [books, setBooks] = useState<Book[] >([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
      name: '',
@@ -39,9 +41,18 @@ const CatalogPage = () => {
     available: false,
     forMaturita: false
   });
+  const allGenres = fetchGenres()
+  useEffect(()=> {
+    async function update () {
+      const newBooks = await getBooksByQuery()
+    setBooks(newBooks)
+
+    }
+    update()
+  }, [])
 
   return (
-    <SearchContext.Provider value={{ isOpenSearcher, setOpenSearcher,filters, setFilters  }}>
+    <SearchContext.Provider value={{ isOpenSearcher, setOpenSearcher,filters, setFilters,books,setBooks  }}>
       <Box className="w-full">
         <Box
           display="flex"
