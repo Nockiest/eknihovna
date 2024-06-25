@@ -134,6 +134,16 @@ export const extractExcelWorksheet = (filePath:string ,sheetnum: number = 0) => 
   let worksheet = workbook.Sheets[sheetName]
   return worksheet
 }
+
+export  const saveExcelFile = async () => {
+  try {
+    const buffer = await fetchAndCreateExcel('knihy');
+    fs.writeFileSync('output.xlsx', buffer);
+    console.log('Excel file created successfully.');
+  } catch (error) {
+    console.error('Error creating Excel file:', error);
+  }
+};
   // // Convert JSON back to sheet
   // const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
   // workbook.Sheets[sheetName] = newWorksheet;

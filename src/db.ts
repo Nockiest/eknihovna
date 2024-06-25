@@ -1,4 +1,4 @@
-import { Pool,   } from 'pg';
+import { Pool, PoolClient,   } from 'pg';
 import dotenv from 'dotenv';
 import xlsx from 'xlsx'
 import fs from 'fs'
@@ -94,6 +94,18 @@ export const insertExcelDataToPostgres = async (
   }
 };
 
+export function convertQueryResToJson(queryRes) {
+  const res = queryRes.rows.map(row => {
+    // Convert boolean values to actual booleans instead of 'true'/'false'
+    return {
+      ...row,
+      // Example: Assuming 'active' is a boolean column
+      available: row.available === 'true'? "ano":"ne"  ,// Convert 'true'/'false' strings to actual booleans
+      formaturita: row.formaturita === 'true'?"ano":"ne"   // Convert 'true'/'false' strings to actual booleans
+    }} )
+    return res
+}
+
 export const fetchAndCreateExcel = async (tableName: string): Promise<Buffer> => {
   try {
     // Query to select all entries from the specified table
@@ -104,15 +116,16 @@ export const fetchAndCreateExcel = async (tableName: string): Promise<Buffer> =>
     }
 
     // Convert the query result to JSON
-    const jsonData = queryResult.rows.map(row => {
-      // Convert boolean values to actual booleans instead of 'true'/'false'
-      return {
-        ...row,
-        // Example: Assuming 'active' is a boolean column
-        available: row.available === 'true'? "ano":"ne"  ,// Convert 'true'/'false' strings to actual booleans
-        formaturita: row.formaturita === 'true'?"ano":"ne"   // Convert 'true'/'false' strings to actual booleans
-      };
-    });
+    const jsonData = convertQueryResToJson(queryResult)
+    // queryResult.rows.map(row => {
+    //   // Convert boolean values to actual booleans instead of 'true'/'false'
+    //   return {
+    //     ...row,
+    //     // Example: Assuming 'active' is a boolean column
+    //     available: row.available === 'true'? "ano":"ne"  ,// Convert 'true'/'false' strings to actual booleans
+    //     formaturita: row.formaturita === 'true'?"ano":"ne"   // Convert 'true'/'false' strings to actual booleans
+    //   };
+    // });
 
     // Create a new workbook and worksheet
     const workbook = xlsx.utils.book_new();
@@ -131,23 +144,8 @@ export const fetchAndCreateExcel = async (tableName: string): Promise<Buffer> =>
   }
 };
 
-  // Example usage
- export  const saveExcelFile = async () => {
-    try {
-      const buffer = await fetchAndCreateExcel('knihy');
-      fs.writeFileSync('output.xlsx', buffer);
-      console.log('Excel file created successfully.');
-    } catch (error) {
-      console.error('Error creating Excel file:', error);
-    }
-  };
-
 export async function connectAndQuery() {
     try {
-      // Connect to the database and execute queries
-      await query('SELECT NOW()', []);
-      console.log('Connected to the database successfully.');
-
       const allEntriesQuery = 'SELECT * FROM knihy';
       const queryResult = await query(allEntriesQuery);
       // Example query with parameters
@@ -160,3 +158,36 @@ export async function connectAndQuery() {
       // The pool automatically manages connections, no need to manually close it
     }
   }
+  interface ExtractedValues {
+    columnName: string;
+    values: any[];
+  }
+  export const extractValuesFromArrayColumn = async (
+    columnName: string,
+    tableName: string = 'knihy'
+  ): Promise<ExtractedValues | null> => {
+    const client: PoolClient = await pool.connect();
+    try {
+      const query = `
+        SELECT unnest(${columnName}) AS ${columnName}
+        FROM ${tableName}
+      `;
+      const result = await client.query(query);
+
+      // Extract the values from the result
+      const values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
+      values.forEach((value, index) => {
+        console.log(`Value ${index + 1}:`, value);
+      });
+      console.log(result.rows)
+      return {
+        columnName,
+        values,
+      };
+    } catch (error) {
+      console.error('Error extracting values:', error);
+      return null;
+    } finally {
+      client.release();
+    }
+  };

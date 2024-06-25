@@ -12,11 +12,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.connectAndQuery = exports.saveExcelFile = exports.fetchAndCreateExcel = exports.insertExcelDataToPostgres = exports.query = exports.pool = void 0;
+exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = exports.pool = void 0;
 const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 const xlsx_1 = __importDefault(require("xlsx"));
-const fs_1 = __importDefault(require("fs"));
 dotenv_1.default.config();
 // Create a new Pool instance (recommended for handling multiple connections)
 exports.pool = new pg_1.Pool({
@@ -102,6 +101,17 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
     }
 });
 exports.insertExcelDataToPostgres = insertExcelDataToPostgres;
+function convertQueryResToJson(queryRes) {
+    const res = queryRes.rows.map(row => {
+        // Convert boolean values to actual booleans instead of 'true'/'false'
+        return Object.assign(Object.assign({}, row), { 
+            // Example: Assuming 'active' is a boolean column
+            available: row.available === 'true' ? "ano" : "ne", formaturita: row.formaturita === 'true' ? "ano" : "ne" // Convert 'true'/'false' strings to actual booleans
+         });
+    });
+    return res;
+}
+exports.convertQueryResToJson = convertQueryResToJson;
 const fetchAndCreateExcel = (tableName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Query to select all entries from the specified table
@@ -110,13 +120,16 @@ const fetchAndCreateExcel = (tableName) => __awaiter(void 0, void 0, void 0, fun
             throw new Error('No data found in the table.');
         }
         // Convert the query result to JSON
-        const jsonData = queryResult.rows.map(row => {
-            // Convert boolean values to actual booleans instead of 'true'/'false'
-            return Object.assign(Object.assign({}, row), { 
-                // Example: Assuming 'active' is a boolean column
-                available: row.available === 'true' ? "ano" : "ne", formaturita: row.formaturita === 'true' ? "ano" : "ne" // Convert 'true'/'false' strings to actual booleans
-             });
-        });
+        const jsonData = convertQueryResToJson(queryResult);
+        // queryResult.rows.map(row => {
+        //   // Convert boolean values to actual booleans instead of 'true'/'false'
+        //   return {
+        //     ...row,
+        //     // Example: Assuming 'active' is a boolean column
+        //     available: row.available === 'true'? "ano":"ne"  ,// Convert 'true'/'false' strings to actual booleans
+        //     formaturita: row.formaturita === 'true'?"ano":"ne"   // Convert 'true'/'false' strings to actual booleans
+        //   };
+        // });
         // Create a new workbook and worksheet
         const workbook = xlsx_1.default.utils.book_new();
         const worksheet = xlsx_1.default.utils.json_to_sheet(jsonData);
@@ -132,24 +145,9 @@ const fetchAndCreateExcel = (tableName) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.fetchAndCreateExcel = fetchAndCreateExcel;
-// Example usage
-const saveExcelFile = () => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const buffer = yield (0, exports.fetchAndCreateExcel)('knihy');
-        fs_1.default.writeFileSync('output.xlsx', buffer);
-        console.log('Excel file created successfully.');
-    }
-    catch (error) {
-        console.error('Error creating Excel file:', error);
-    }
-});
-exports.saveExcelFile = saveExcelFile;
 function connectAndQuery() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            // Connect to the database and execute queries
-            yield (0, exports.query)('SELECT NOW()', []);
-            console.log('Connected to the database successfully.');
             const allEntriesQuery = 'SELECT * FROM knihy';
             const queryResult = yield (0, exports.query)(allEntriesQuery);
             // Example query with parameters
@@ -166,3 +164,31 @@ function connectAndQuery() {
     });
 }
 exports.connectAndQuery = connectAndQuery;
+const extractValuesFromArrayColumn = (columnName, tableName = 'knihy') => __awaiter(void 0, void 0, void 0, function* () {
+    const client = yield exports.pool.connect();
+    try {
+        const query = `
+        SELECT unnest(${columnName}) AS ${columnName}
+        FROM ${tableName}
+      `;
+        const result = yield client.query(query);
+        // Extract the values from the result
+        const values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
+        values.forEach((value, index) => {
+            console.log(`Value ${index + 1}:`, value);
+        });
+        console.log(result.rows);
+        return {
+            columnName,
+            values,
+        };
+    }
+    catch (error) {
+        console.error('Error extracting values:', error);
+        return null;
+    }
+    finally {
+        client.release();
+    }
+});
+exports.extractValuesFromArrayColumn = extractValuesFromArrayColumn;

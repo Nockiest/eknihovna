@@ -38,17 +38,42 @@ const storage = multer_1.default.diskStorage({
         cb(null, 'knihy.xlsx');
     }
 });
-(0, db_1.connectAndQuery)();
-// connectAndQuery();
 const upload = (0, multer_1.default)({ storage });
+// app.get('/bookList', async (req: Request, res: Response) => {
+//   const { query } = req.query;
+//   try {
+//     const boookList = readExcelFile(knihyURL)
+//     res.json(boookList);
+//   } catch (error) {
+//     console.error('Error executing search query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { query } = req.query;
+    const { query: searchQuery } = req.query;
     try {
-        const boookList = (0, excelUtils_1.readExcelFile)(knihyURL);
-        res.json(boookList);
+        // Example query to fetch books filtered by  name containing the searchQuery
+        const sqlQuery = `
+      SELECT *
+      FROM knihy
+      WHERE name ILIKE $1
+    `;
+        const result = yield (0, db_1.query)(sqlQuery, [`%${searchQuery}%`]); // Using ILIKE for case-insensitive search
+        res.json(result.rows); // Assuming result.rows contains books retrieved from the database
     }
     catch (error) {
         console.error('Error executing search query:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+}));
+app.get('/getGenres', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const columnName = 'genre'; // Replace with your actual array column name
+    try {
+        const values = yield (0, db_1.extractValuesFromArrayColumn)(columnName);
+        res.json(values);
+    }
+    catch (error) {
+        console.error('Error retrieving values:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
@@ -87,7 +112,6 @@ app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, functi
 }));
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
-    // assignIds(knihyURL, true, 'A',   3530)
 });
 app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
@@ -110,9 +134,9 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'formaturita');
         worksheet = (0, excelUtils_1.fillMissingIds)(worksheet);
         (0, db_1.insertExcelDataToPostgres)(filePath, 'knihy');
-        workbook.Sheets[sheetName] = worksheet;
-        // Write the modified workbook back to file
-        xlsx_1.default.writeFile(workbook, filePath);
+        // // remove this part asap!!!!!
+        // workbook.Sheets[sheetName] = worksheet
+        // xlsx.writeFile(workbook, filePath);
         // Respond with success message
         res.status(200).json({ message: 'File processed and uploaded successfully' });
     }

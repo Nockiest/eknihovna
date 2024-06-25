@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
-import { connectAndQuery, fetchAndCreateExcel, insertExcelDataToPostgres, query } from './db';
+import { connectAndQuery, extractValuesFromArrayColumn, fetchAndCreateExcel, insertExcelDataToPostgres, pool, query } from './db';
 // import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
 import { excelWordsToBool, extractExcelWorksheet, fillMissingIds, readExcelFile } from './excelUtils';
@@ -27,18 +27,44 @@ const storage = multer.diskStorage({
   }
 });
 
-connectAndQuery()
-
-
-// connectAndQuery();
 const upload = multer({ storage });
-app.get('/bookList', async (req: Request, res: Response) => {
-  const { query } = req.query;
+// app.get('/bookList', async (req: Request, res: Response) => {
+//   const { query } = req.query;
+//   try {
+//     const boookList = readExcelFile(knihyURL)
+//     res.json(boookList);
+//   } catch (error) {
+//     console.error('Error executing search query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+app.get('/bookList', async (req, res) => {
+  const { query: searchQuery } = req.query;
+
   try {
-    const boookList = readExcelFile(knihyURL)
-    res.json(boookList);
+    // Example query to fetch books filtered by  name containing the searchQuery
+    const sqlQuery = `
+      SELECT *
+      FROM knihy
+      WHERE name ILIKE $1
+    `;
+
+    const result = await query(sqlQuery, [`%${searchQuery}%`]); // Using ILIKE for case-insensitive search
+
+    res.json(result.rows); // Assuming result.rows contains books retrieved from the database
   } catch (error) {
     console.error('Error executing search query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/getGenres', async (req: Request, res: Response) => {
+  const columnName = 'genre'; // Replace with your actual array column name
+  try {
+    const values = await extractValuesFromArrayColumn( columnName);
+    res.json(values);
+  } catch (error) {
+    console.error('Error retrieving values:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -82,7 +108,6 @@ app.get('/downloadExcel', async (req: Request, res: Response) => {
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
-  // assignIds(knihyURL, true, 'A',   3530)
 });
 
 
@@ -110,9 +135,10 @@ app.post('/update', upload.single('file'), async (req, res) => {
     worksheet = excelWordsToBool(worksheet, 'formaturita');
     worksheet = fillMissingIds(worksheet)
     insertExcelDataToPostgres(filePath, 'knihy'   )
-    workbook.Sheets[sheetName] = worksheet
-    // Write the modified workbook back to file
-    xlsx.writeFile(workbook, filePath);
+
+    // // remove this part asap!!!!!
+    // workbook.Sheets[sheetName] = worksheet
+    // xlsx.writeFile(workbook, filePath);
 
     // Respond with success message
     res.status(200).json({ message: 'File processed and uploaded successfully' });
