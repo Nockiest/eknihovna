@@ -38,6 +38,8 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+
   const searchParams = useSearchParams()
   const page = parseInt(searchParams.get('page')||'1', 10)
   const setNewBookSlice = (page:number,itemsPerPage:number, allBooks:Book[]) => {
@@ -55,10 +57,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
       setTotalPages(Math.ceil(allBooks.length / itemsPerPage));
       router.push(`/katalog?page=${newCurrentPage + 1}`);
     }
-  }, [size, page]);
-
-  // State for items per page
-  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+  }, [size,allBooks,itemsPerPage,router, page]);
 
   // Fetch books on initial render
   useEffect(() => {
@@ -91,7 +90,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
 
   return (
     <Box className="w-full">
-       
+
 
       <Filter text={'romány'} />
       {shownBooks.length > 0 ? (

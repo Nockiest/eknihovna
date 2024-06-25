@@ -5,7 +5,7 @@ export type Book = {
     author: string
     description?: string
     category: string
-    genre?:string
+    genre?:string[]
     rating?: number
     available: boolean
     formaturita: boolean
@@ -15,4 +15,11 @@ export type Book = {
 export type NavButton = {
     URL: string;
     label: string;
+  }
+
+  export interface Filters {
+    name: string;
+    genre: string;
+    available: boolean;
+    forMaturita: boolean;
   }
