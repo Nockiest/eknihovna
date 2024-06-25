@@ -19,7 +19,7 @@ type QueryContextType = {
 };
 
 // Create the context
-export const SearchContext = createContext<QueryContextType | undefined>(undefined);
+  const SearchContext = createContext<QueryContextType | undefined>(undefined);
 
 // Custom hook to use the SearchContext
 export const useSearchContext = () => {
