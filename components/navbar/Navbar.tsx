@@ -27,6 +27,7 @@ const NavList: React.FC<NavListProps> = ({}) => {
       className="p-2 h-full  sticky top-0  w-full mx-0 flex flex-col    z-10 items-center"
     >
       <Box className="  z-3  ">
+        
         <CustomHamburger onClick={toggleNav} ariaLabel="toggle navigation" />
         <HamburgerNavList isOpen={isOpen} toggleNav={toggleNav} />
       </Box>

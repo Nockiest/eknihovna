@@ -9,11 +9,12 @@ import {
 } from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
-import DotsShower from "./DotsShower";
-import PaginationLinker from "./PaginationLinker";
+import DotsShower from "../DotsShower";
+import PaginationLinker from "../PaginationLinker";
 import { getURLSegment } from "@/utils/getURLSegment";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import { usePathname ,useRouter, useSearchParams} from "next/navigation";
+import Filter from "./Filter";
 
 interface BookCatalogProps {
   promisedBooks: Promise<Book[]> | Book[];
@@ -31,18 +32,14 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const theme = useTheme();
   const size = useCurrentBreakpoint();
   const router = useRouter();
-  const pathname = usePathname();
+
+
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
   const searchParams = useSearchParams()
-
   const page = parseInt(searchParams.get('page')||'1', 10)
-  // Parse currentPage from URL parameter
-  // const currentPage = parseInt(getURLSegment(pathname, 1), 10) || 1;
-
-  // Handle itemsPerPage change based on breakpoint
   const setNewBookSlice = (page:number,itemsPerPage:number, allBooks:Book[]) => {
     const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
     const newLastBookIndex = page * itemsPerPage
@@ -94,7 +91,9 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
 
   return (
     <Box className="w-full">
-      {totalPages}
+       
+
+      <Filter text={'romány'} />
       {shownBooks.length > 0 ? (
         <div className="w-full">
           <Grid container spacing={2} columns={12}>

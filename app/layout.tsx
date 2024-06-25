@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import Footer from "@/components/footer/Footer";
 import Head from "next/head";
 import NavList from "@/components/navbar/Navbar";
+import { QueryContextProvider } from "./context";
 // import NavBar from "@/components/navbar/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -42,14 +43,20 @@ export default function RootLayout({
       <meta name="theme-color" content="#413330" />
     </Head>
       <body className={inter.className}>
+      <QueryContextProvider>
         <ThemeProvider theme={theme}>
+
+
           <NoSSRHero />
           <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
           {children}
 
           </main>
           <Footer />
+
         </ThemeProvider>
+      </QueryContextProvider>
+
       </body>
     </html>
   );
