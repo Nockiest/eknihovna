@@ -53,12 +53,31 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
         // Use the pool to get a client and execute the query
         const client = yield exports.pool.connect();
         try {
+            // Get column types from the database
+            const columnTypesQuery = `
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = $1
+      `;
+            const columnTypesResult = yield client.query(columnTypesQuery, [tableName]);
+            const columnTypes = columnTypesResult.rows.reduce((acc, { column_name, data_type }) => {
+                acc[column_name] = data_type;
+                return acc;
+            }, {});
             for (const row of rows) {
                 try {
                     // Check if row is well-formed
                     if (row.length !== headers.length) {
                         throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
                     }
+                    // Process each cell value based on its column type
+                    const processedRow = row.map((value, index) => {
+                        const columnName = headers[index];
+                        if (columnTypes[columnName] === 'ARRAY' || columnTypes[columnName] === 'text[]') {
+                            return value ? `{${value.split(',').map((v) => `"${v.trim()}"`).join(',')}}` : null;
+                        }
+                        return value;
+                    });
                     // Construct the insert query with ON CONFLICT to handle upserts
                     const insertQuery = `
             INSERT INTO ${tableName} (${headers.join(', ')})
@@ -66,7 +85,7 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
             ON CONFLICT (id) DO UPDATE SET ${headers.map((header, i) => `${header} = EXCLUDED.${header}`).join(', ')}
           `;
                     // Execute the query
-                    yield client.query(insertQuery, row);
+                    yield client.query(insertQuery, processedRow);
                 }
                 catch (rowError) {
                     console.error(rowError.message);

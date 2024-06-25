@@ -72,20 +72,6 @@ app.post('/authenticate', (req, res) => {
     //   res.status(200).json({ message: 'Uživatel autorizován' });
     // });
 });
-// app.get('/downloadExcel', async (req: Request, res: Response) => {
-//   const filePath = path.join(__dirname, '../', knihyURL);
-//   console.log('File path:', filePath);
-//   if (fs.existsSync(filePath)) {
-//     res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
-//       if (err) {
-//         console.error('Error sending file:', err);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//       }
-//     });
-//   } else {
-//     res.status(404).json({ error: 'File not found' });
-//   }
-// });
 app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const buffer = yield (0, db_1.fetchAndCreateExcel)('knihy'); // Replace 'knihy' with your table name

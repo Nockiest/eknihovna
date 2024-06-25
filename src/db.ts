@@ -44,12 +44,33 @@ export const insertExcelDataToPostgres = async (
     // Use the pool to get a client and execute the query
     const client = await pool.connect();
     try {
+      // Get column types from the database
+      const columnTypesQuery = `
+        SELECT column_name, data_type
+        FROM information_schema.columns
+        WHERE table_name = $1
+      `;
+      const columnTypesResult = await client.query(columnTypesQuery, [tableName]);
+      const columnTypes = columnTypesResult.rows.reduce((acc: any, { column_name, data_type }: { column_name: string, data_type: string }) => {
+        acc[column_name] = data_type;
+        return acc;
+      }, {});
+
       for (const row of rows) {
         try {
           // Check if row is well-formed
           if (row.length !== headers.length) {
             throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
           }
+
+          // Process each cell value based on its column type
+          const processedRow = row.map((value, index) => {
+            const columnName = headers[index];
+            if (columnTypes[columnName] === 'ARRAY' || columnTypes[columnName] === 'text[]') {
+              return value ? `{${value.split(',').map((v: string) => `"${v.trim()}"`).join(',')}}` : null;
+            }
+            return value;
+          });
 
           // Construct the insert query with ON CONFLICT to handle upserts
           const insertQuery = `
@@ -59,7 +80,7 @@ export const insertExcelDataToPostgres = async (
           `;
 
           // Execute the query
-          await client.query(insertQuery, row);
+          await client.query(insertQuery, processedRow);
         } catch (rowError) {
           console.error(rowError.message);
         }

@@ -12,7 +12,6 @@ import { connectAndQuery, fetchAndCreateExcel, insertExcelDataToPostgres, query 
 import bodyParser from 'body-parser'
 import { excelWordsToBool, extractExcelWorksheet, fillMissingIds, readExcelFile } from './excelUtils';
 import { Pool } from 'pg';
-import { convertCzechCharsInWorksheet } from './czechToAscii';
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
 const port = 3002;
@@ -68,22 +67,6 @@ app.post('/authenticate', (req, res) => {
   // });
 });
 
-// app.get('/downloadExcel', async (req: Request, res: Response) => {
-//   const filePath = path.join(__dirname, '../', knihyURL);
-//   console.log('File path:', filePath);
-
-//   if (fs.existsSync(filePath)) {
-//     res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
-//       if (err) {
-//         console.error('Error sending file:', err);
-//         res.status(500).json({ error: 'Internal Server Error' });
-//       }
-//     });
-//   } else {
-//     res.status(404).json({ error: 'File not found' });
-//   }
-// });
-
 app.get('/downloadExcel', async (req: Request, res: Response) => {
   try {
     const buffer = await fetchAndCreateExcel('knihy'); // Replace 'knihy' with your table name
@@ -101,7 +84,6 @@ app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
   // assignIds(knihyURL, true, 'A',   3530)
 });
-
 
 
 app.post('/update', upload.single('file'), async (req, res) => {
