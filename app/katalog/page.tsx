@@ -37,7 +37,7 @@ const CatalogPage = () => {
       </Box>
       <BookCatalog promisedBooks={books} />
       {isOpenSearcher.toString()}
-      <Searcher isOpen={isOpenSearcher} />
+      <Searcher isOpen={isOpenSearcher} setIsOpen={setOpenSearcher} />
     </Box>
   );
 };
