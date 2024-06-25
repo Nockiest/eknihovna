@@ -1,4 +1,4 @@
-import BookPreview from "@/components/BookPreview";
+import BookPreview from "@/components/catalog/BookPreview";
 import OpeningHours from "@/components/OpeningHours";
 // import ThemedButtons from "@/theme/buttons/Buttons";
 import { Container, Typography } from "@mui/material";

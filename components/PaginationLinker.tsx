@@ -10,8 +10,8 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
   const searchParams = useSearchParams()
-
   const page = parseInt(searchParams.get('page')||'0', 10)
+  
   const getVisiblePageNumbers = () => {
     const startPage = Math.max(1, page - 5);
     const endPage = Math.min(totalPages, page + 5);
