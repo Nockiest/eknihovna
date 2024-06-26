@@ -5,6 +5,8 @@ import { Book } from "@/types/types";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useEffect } from "react";
+import Filter from "./Filter";
+import { useTheme } from "@emotion/react";
 
 type BookPreviewProps = {
   book: Book;
@@ -15,60 +17,47 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     available = false,
     author = "Autor neznámý",
     name = "Neznámé jméno",
-    genre = "neznámý žánr",
+    genres = "neznámý žánr",
     formaturita = false,
     rating = -1,
   } = book;
 
+
   return (
     <Paper
-    className={`w-auto flex-grow text-text-50 ${truthyValues.indexOf(available) >= 0 ? 'opacity-100 bg-primary-800 ' : 'opacity-50 bg-secondary-800  '}`}
-    sx={{ color: theme.palette.text.primary }}
+      className={`w-auto flex-grow text-text-50 ${
+        truthyValues.includes(available)
+          ? "opacity-100 bg-primary-800"
+          : "opacity-50 bg-secondary-800"
+      }`}
+      sx={{ color: theme.palette.text.primary }}
     >
       <Box p={2}>
-        <Typography variant={'h6'}>Název: {name}</Typography>
+        <Typography variant="h6">Název: {name}</Typography>
         <br />
-        <Typography variant={'body1'}>Žánr: {genre}</Typography>
+
+        {Array.isArray(genres) ? (
+          genres.map((gen, key) => (
+            <Filter text={gen} key={key} />
+          ))
+        ) : (
+          <Typography variant="body1">Neznámý žánr</Typography>
+        )}
         <br />
-        <Typography variant={'body1'}>Autor: {author}</Typography>
+        <Typography variant="body1">Autor: {author}</Typography>
         <br />
-        <Typography variant={'body1'}>Dostupnost: {truthyValues.indexOf(available) >= 0 ? 'Dostupný' : 'Nedostupný'}</Typography>
+        <Typography variant="body1">
+          Dostupnost: {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
+        </Typography>
         <br />
-        <Typography variant={'body1'}>{formaturita ? "Maturitní" : ""}</Typography>
+        <Typography variant="body1">
+          {formaturita ? "Maturitní" : ""}
+        </Typography>
         <br />
-        <Typography variant={'body1'}>Hodnocení: {rating}/100 </Typography>
+        <Typography variant="body1">Hodnocení: {rating}/100 </Typography>
         <br />
       </Box>
     </Paper>
   );
 };
-
 export default BookPreview;
-//  const bookCoverURL = book.bookCoverURL? book.bookCoverURL: ''
-// const available =book.available? book.available: false
-// const author =book.author? book.author: 'Unknown Author'
-// const name = book.name? book.name:'Unknown Name'
-// const genre =book.genre? book.genre: 'Unknown Genre'
-// const formaturita = book.formaturita? book.formaturita:false
-// const rating =book.rating? book.rating: 0
-
-// const BioCard = ({ title, index }) => {
-//   return (
-//     <div className={`m-auto card ${index % 2 === 0 ? 'bg-primary-color-60' : ' gap-16 bg-white border-solid border-black'} w-72 border-solid border-black p-6`}>
-//      <div className="flex justify-center m-2">
-//      <Image width={200} height={200} src="/books.jpg" alt="xyz" />
-//      </div>
-
-//       <h3>{title}</h3>
-//       <p className="h-32 ml-2   text-base  leading-8   overflow-hidden">
-//         lorem ipsgup sagssdp jag gasjg las g§asgdsj pgd ap jdsdg sadj dsagpgjddajdslj lgj sadgilsjd
-//         glsdijg dps gjdsali gjdsalgjs sd l aepofjw gúwq jgoagw wpig jdasg jsgs jla jd
-//       </p>
-//       <div className="flex justify-center m-2">
-//       <Image src="/chat-dots.svg" width={24} height={24} />
-//       </div>
-//     </div>
-//   );
-// };
-
-// export default BioCard;

@@ -5,7 +5,7 @@ export type Book = {
     author: string
     description?: string
     category: string
-    genre?:string[]
+    genres?:string[]
     rating?: number
     available: boolean
     formaturita: boolean

@@ -40,7 +40,7 @@ const CatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
     name: "",
-    genre: "",
+    genres: "",
     available: false,
     forMaturita: false,
   });

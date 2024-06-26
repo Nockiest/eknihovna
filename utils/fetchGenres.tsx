@@ -5,7 +5,7 @@ export const fetchGenres = async () => {
   try {
     const response = await axios.get(`${apiUrl}/getGenres`);
 
-    console.log("Array Column Values:", response.data);
+    // console.log("Array Column Values:", response.data);
     return response.data
   } catch (error: any) {
     console.error("Error fetching values:", error.message);

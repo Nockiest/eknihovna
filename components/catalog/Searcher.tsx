@@ -72,8 +72,8 @@ const Searcher: React.FC<SearcherProps> = ( ) => {
 
             <TextField
               label="Žánr"
-              value={filters.genre}
-              onChange={(e) => handleFilterChange('genre', e.target.value)}
+              value={filters.genres}
+              onChange={(e) => handleFilterChange('genres', e.target.value)}
               fullWidth
               margin="normal"
             />
