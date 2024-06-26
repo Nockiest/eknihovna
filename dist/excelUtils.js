@@ -8,8 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveExcelFile = exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
+const db_1 = require("./db");
+const fs_1 = __importDefault(require("fs"));
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
 const assignIds = (excelUrl, ignoreHeader = true, idColumn = 'A', numberOfRows = 10) => {
@@ -133,8 +138,8 @@ const extractExcelWorksheet = (filePath, sheetnum = 0) => {
 exports.extractExcelWorksheet = extractExcelWorksheet;
 const saveExcelFile = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const buffer = yield fetchAndCreateExcel('knihy');
-        fs.writeFileSync('output.xlsx', buffer);
+        const buffer = yield (0, db_1.fetchAndCreateExcel)('knihy');
+        fs_1.default.writeFileSync('output.xlsx', buffer);
         console.log('Excel file created successfully.');
     }
     catch (error) {

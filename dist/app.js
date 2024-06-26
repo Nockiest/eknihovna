@@ -39,16 +39,6 @@ const storage = multer_1.default.diskStorage({
     }
 });
 const upload = (0, multer_1.default)({ storage });
-// app.get('/bookList', async (req: Request, res: Response) => {
-//   const { query } = req.query;
-//   try {
-//     const boookList = readExcelFile(knihyURL)
-//     res.json(boookList);
-//   } catch (error) {
-//     console.error('Error executing search query:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query: searchQuery } = req.query;
     try {

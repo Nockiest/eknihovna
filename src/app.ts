@@ -7,10 +7,10 @@ import dotenv from 'dotenv';
 import multer from 'multer'
 import path from 'path'
 import fs from 'fs'
-import { connectAndQuery, extractValuesFromArrayColumn, fetchAndCreateExcel, insertExcelDataToPostgres, pool, query } from './db';
+import { connectAndQuery, extractValuesFromArrayColumn, fetchAndCreateExcel, insertExcelDataToPostgres,  query } from './db';
 // import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
-import { excelWordsToBool, extractExcelWorksheet, fillMissingIds, readExcelFile } from './excelUtils';
+import { excelWordsToBool,   fillMissingIds,   } from './excelUtils';
 import { Pool } from 'pg';
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
@@ -28,16 +28,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-// app.get('/bookList', async (req: Request, res: Response) => {
-//   const { query } = req.query;
-//   try {
-//     const boookList = readExcelFile(knihyURL)
-//     res.json(boookList);
-//   } catch (error) {
-//     console.error('Error executing search query:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
+
 app.get('/bookList', async (req, res) => {
   const { query: searchQuery } = req.query;
 

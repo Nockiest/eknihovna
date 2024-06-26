@@ -12,20 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = void 0;
+exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = exports.pool = void 0;
 const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 const xlsx_1 = __importDefault(require("xlsx"));
 dotenv_1.default.config();
 // Create a new Pool instance (recommended for handling multiple connections)
-// export const pool = new Pool({
-//   user: 'postgres',
-// host: 'localhost', // or your database host
-//   database: 'eknihovna',
-//   password: process.env.PSQL_PASSWORD,
-//   port: 5432, // default PostgreSQL port
-// });
-const pool = new pg_1.Pool({
+exports.pool = new pg_1.Pool({
     host: process.env.DB_HOST,
     port: parseInt(process.env.DB_PORT, 10),
     user: process.env.DB_USER,
@@ -33,8 +26,8 @@ const pool = new pg_1.Pool({
     database: process.env.DB_NAME,
 });
 // Export a query function to execute SQL queries
-const query = (text, params) => __awaiter(void 0, void 0, void 0, function* () {
-    const client = yield pool.connect();
+const query = (text, params = []) => __awaiter(void 0, void 0, void 0, function* () {
+    const client = yield exports.pool.connect();
     try {
         const result = yield client.query(text, params);
         return result;
@@ -57,7 +50,7 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
             throw new Error('The Excel file does not contain headers');
         }
         // Use the pool to get a client and execute the query
-        const client = yield pool.connect();
+        const client = yield exports.pool.connect();
         try {
             // Get column types from the database
             const columnTypesQuery = `
@@ -164,7 +157,7 @@ function connectAndQuery() {
 exports.connectAndQuery = connectAndQuery;
 const extractValuesFromArrayColumn = (columnName, unique = false, // Default to false, meaning non-unique by default
 tableName = 'knihy') => __awaiter(void 0, void 0, void 0, function* () {
-    const client = yield pool.connect();
+    const client = yield exports.pool.connect();
     try {
         const query = `
         SELECT unnest(${columnName}) AS ${columnName}
