@@ -4,14 +4,20 @@ import xlsx from 'xlsx'
 import fs from 'fs'
 dotenv.config();
 // Create a new Pool instance (recommended for handling multiple connections)
-export const pool = new Pool({
-  user: 'postgres',
-  host: 'localhost', // or your database host
-  database: 'eknihovna',
+// export const pool = new Pool({
+//   user: 'postgres',
+  // host: 'localhost', // or your database host
+//   database: 'eknihovna',
+//   password: process.env.PSQL_PASSWORD,
+//   port: 5432, // default PostgreSQL port
+// });
+const pool = new Pool({
+  host: process.env.DB_HOST,
+  port: parseInt(process.env.DB_PORT, 10),
+  user: process.env.DB_USER,
   password: process.env.PSQL_PASSWORD,
-  port: 5432, // default PostgreSQL port
+  database: process.env.DB_NAME,
 });
-
 // Export a query function to execute SQL queries
 export const query = async (text, params) => {
   const client = await pool.connect();
@@ -117,15 +123,6 @@ export const fetchAndCreateExcel = async (tableName: string): Promise<Buffer> =>
 
     // Convert the query result to JSON
     const jsonData = convertQueryResToJson(queryResult)
-    // queryResult.rows.map(row => {
-    //   // Convert boolean values to actual booleans instead of 'true'/'false'
-    //   return {
-    //     ...row,
-    //     // Example: Assuming 'active' is a boolean column
-    //     available: row.available === 'true'? "ano":"ne"  ,// Convert 'true'/'false' strings to actual booleans
-    //     formaturita: row.formaturita === 'true'?"ano":"ne"   // Convert 'true'/'false' strings to actual booleans
-    //   };
-    // });
 
     // Create a new workbook and worksheet
     const workbook = xlsx.utils.book_new();
@@ -164,7 +161,9 @@ export async function connectAndQuery() {
   }
   export const extractValuesFromArrayColumn = async (
     columnName: string,
-    tableName: string = 'knihy'
+    unique: boolean = false, // Default to false, meaning non-unique by default
+
+    tableName: string = 'knihy',
   ): Promise<ExtractedValues | null> => {
     const client: PoolClient = await pool.connect();
     try {
@@ -175,11 +174,17 @@ export async function connectAndQuery() {
       const result = await client.query(query);
 
       // Extract the values from the result
-      const values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
+      let values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
+
+      // If unique is true, filter the values to only include unique values
+      if (unique) {
+        values = Array.from(new Set(values));
+      }
+
       values.forEach((value, index) => {
         console.log(`Value ${index + 1}:`, value);
       });
-      console.log(result.rows)
+      console.log(result.rows);
       return {
         columnName,
         values,
