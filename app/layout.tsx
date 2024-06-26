@@ -7,7 +7,7 @@ import dynamic from "next/dynamic";
 import Footer from "@/components/footer/Footer";
 import Head from "next/head";
 import NavList from "@/components/navbar/Navbar";
-import { QueryContextProvider } from "./context";
+
 // import NavBar from "@/components/navbar/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,7 +43,7 @@ export default function RootLayout({
       <meta name="theme-color" content="#413330" />
     </Head>
       <body className={inter.className}>
-      <QueryContextProvider>
+      {/* <QueryContextProvider> */}
         <ThemeProvider theme={theme}>
 
 
@@ -55,7 +55,7 @@ export default function RootLayout({
           <Footer />
 
         </ThemeProvider>
-      </QueryContextProvider>
+      {/* </QueryContextProvider> */}
 
       </body>
     </html>
