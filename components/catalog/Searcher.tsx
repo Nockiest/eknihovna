@@ -13,9 +13,9 @@ import {
 import SearchBar from "./SearchBar";
 import Filter from "./Filter";
 import Image from "next/image";
-import { useSearchContext } from "@/app/katalog/page";
 import theme from "@/theme/theme";
 import { Filters } from "@/types/types";
+import { useSearchContext } from "@/app/katalog/context";
 
 interface SearcherProps {
 //   isOpen: boolean;
@@ -26,7 +26,7 @@ const Searcher: React.FC<SearcherProps> = ( ) => {
   const classes = useTheme();
     const {isOpenSearcher,setOpenSearcher,filters,setFilters,books,setBooks} = useSearchContext()
     const handleFilterChange = (key: keyof Filters, value: Filters[keyof Filters]) => {
-        setFilters((prevFilters) => ({
+        setFilters((prevFilters:Filters) => ({
           ...prevFilters,
           [key]: value,
         }));
