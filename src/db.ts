@@ -12,18 +12,7 @@ export const pool = new Pool({
   database: process.env.DB_NAME,
 });
 // Export a query function to execute SQL queries
-// const { Client } = pg
-
-// const connectionString = `postgresql://u_bbe81f93_d01f_4f38_922d_4289978b0cb8:p8zg6g53vep49Pd1Hqp36Y4km77OPNuX5sOA59z4S62GZaq3sBq2@pg.rapidapp.io:5432/db_bbe81f93_d01f_4f38_922d_4289978b0cb8?ssl=true&sslmode=no-verify&application_name=rapidapp_nodejs`;
-// const client = new Client({
-// 	connectionString,
-// })
-
-// client.connect().then((rsp) => {
-// 	console.log("Successfully connected to the database!")
-// }).catch((err) => {
-// 	console.log(err)
-// })
+  
 export const query = async (text, params =[]) => {
   const client = await pool.connect();
   try {
