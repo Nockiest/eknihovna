@@ -50,7 +50,7 @@ app.get('/bookList', async (req, res) => {
 });
 
 app.get('/getGenres', async (req: Request, res: Response) => {
-  const columnName = 'genre'; // Replace with your actual array column name
+  const columnName = 'genres'; // Replace with your actual array column name
   try {
     const values = await extractValuesFromArrayColumn( columnName, true);
     res.json(values);

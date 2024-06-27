@@ -57,7 +57,7 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 }));
 app.get('/getGenres', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const columnName = 'genre'; // Replace with your actual array column name
+    const columnName = 'genres'; // Replace with your actual array column name
     try {
         const values = yield (0, db_1.extractValuesFromArrayColumn)(columnName, true);
         res.json(values);
