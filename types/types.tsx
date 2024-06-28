@@ -19,7 +19,7 @@ export type NavButton = {
 
   export interface Filters {
     name: string;
-    genre: string;
+    genres: string[]|null;
     available: boolean;
     forMaturita: boolean;
   }

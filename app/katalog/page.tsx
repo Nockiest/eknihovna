@@ -9,38 +9,12 @@ import { Book, Filters } from "@/types/types";
 import { fetchGenres } from "@/utils/fetchGenres";
 import { SearchContext } from "./context";
 
-// Define the context type
-// type QueryContextType = {
-//   isOpenSearcher: boolean;
-//   setOpenSearcher: React.Dispatch<React.SetStateAction<boolean>>;
-//   filters: Filters;
-//   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-//   books: Book[];
-//   setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
-// };
-
-// // Create the context
-// const SearchContext = createContext<QueryContextType | undefined>(undefined);
-
-// // Custom hook to use the SearchContext
-// export const useSearchContext = () => {
-//   const context = useContext(SearchContext);
-
-//   if (!context) {
-//     throw new Error(
-//       "useSearchContext must be used within a SearchContextProvider"
-//     );
-//   }
-
-//   return context;
-// };
-//const  books =  getBooksByQuery()
 const CatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
     name: "",
-    genres: "",
+    genres: [],
     available: false,
     forMaturita: false,
   });
