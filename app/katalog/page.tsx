@@ -1,10 +1,11 @@
 "use client";
+
 import BookCatalog from "@/components/catalog/BookCatalog";
 import { getBooksByQuery } from "@/utils/fetchBooks";
-import { Box, Typography } from "@mui/material";
+import { Box, Typography, CircularProgress } from "@mui/material";
 import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
-import {   useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Book, Filters } from "@/types/types";
 import { fetchGenres } from "@/utils/fetchGenres";
 import { SearchContext } from "./context";
@@ -18,14 +19,42 @@ const CatalogPage = () => {
     available: false,
     forMaturita: false,
   });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
   const allGenres = fetchGenres();
+
   useEffect(() => {
     async function update() {
-      const newBooks = await getBooksByQuery();
-      setBooks(newBooks);
+      try {
+        const newBooks = await getBooksByQuery();
+        setBooks(newBooks);
+      } catch (error) {
+        setError("Failed to load books.");
+      } finally {
+        setIsLoading(false);
+      }
     }
     update();
   }, []);
+
+  if (isLoading) {
+    return (
+      <Box className="w-full flex justify-center items-center" style={{ height: "100vh" }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box className="w-full flex justify-center items-center" style={{ height: "100vh" }}>
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <SearchContext.Provider
@@ -54,7 +83,6 @@ const CatalogPage = () => {
           </Typography>
         </Box>
         <BookCatalog promisedBooks={books} />
-
         <Searcher />
       </Box>
     </SearchContext.Provider>
