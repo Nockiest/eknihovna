@@ -42,7 +42,7 @@ const upload = (0, multer_1.default)({ storage });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
     try {
-        const boookList = (0, excelUtils_1.readExcelFile)(knihyURL);
+        const boookList = (0, excelUtils_1.readExcelFile)(knihyURL, 'genres');
         res.json(boookList);
     }
     catch (error) {

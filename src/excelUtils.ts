@@ -64,86 +64,112 @@ export function copyExcelFile(sourceFilePath, destFilePath) {
     console.error('Error copying Excel file:', error);
   }
 }
-
-export const readExcelFile = (url:string) => {
+export const readExcelFile = (url: string, arrayColumnName: string) => {
   try {
     const workbook = xlsx.readFile(url);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
-    return data
+
+    // Assuming your Excel sheet has a column named 'genres'
+    const books = data.map((book: any) => {
+      // Split the specified column by ',' and trim whitespace
+      if (book[arrayColumnName]) {
+        book[arrayColumnName] = book[arrayColumnName].split(',').map((item: string) => item.trim());
+      }
+      return book;
+    });
+
+    return books;
   } catch (error) {
     console.error('Error reading Excel file:', error);
+    throw new Error('Error reading Excel file');
   }
 };
-
 /**
- * Copies all cells from a source Excel file to a destination Excel file.
- * @param {string} worksheet - the Excel file
- * @param {string} columnName - The label of the column you want to change
- */
+* Copies all cells from a source Excel file to a destination Excel file.
+* @param {string} worksheet - the Excel file
+* @param {string} columnName - The label of the column you want to change
+*/
 export const excelWordsToBool = (worksheet, columnName) => {
-  let jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: null });
-  const truthyvalues = ['yes', 'true', true, 1, 'ano']
-  const header = jsonData[0];
-  const columnIndex = header.findIndex(col => col === columnName);
+let jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+const truthyvalues = ['yes', 'true', true, 1, 'ano']
+const header = jsonData[0];
+const columnIndex = header.findIndex(col => col === columnName);
 
-  if (columnIndex === -1) {
-    return worksheet; // No 'available' column found, return unchanged worksheet
-  }
+if (columnIndex === -1) {
+  return worksheet; // No 'available' column found, return unchanged worksheet
+}
 
-  // Update values in the 'available' column
-  for (let i = 1; i < jsonData.length; i++) { // start from 1 to skip the header row
-    const value = jsonData[i][columnIndex];
-    if (typeof value === 'string') {
-      // Convert 'yes' to true and 'no' to false
-      jsonData[i][columnIndex] = truthyvalues.indexOf(value.toLowerCase()) >= 0 ? 'true' : 'false';
-    } else if (typeof value === 'boolean') {
-      // Normalize boolean values
-      jsonData[i][columnIndex] = value;
-    }
+// Update values in the 'available' column
+for (let i = 1; i < jsonData.length; i++) { // start from 1 to skip the header row
+  const value = jsonData[i][columnIndex];
+  if (typeof value === 'string') {
+    // Convert 'yes' to true and 'no' to false
+    jsonData[i][columnIndex] = truthyvalues.indexOf(value.toLowerCase()) >= 0 ? 'true' : 'false';
+  } else if (typeof value === 'boolean') {
+    // Normalize boolean values
+    jsonData[i][columnIndex] = value;
   }
-  // Convert JSON data back to worksheet format
-  worksheet = xlsx.utils.aoa_to_sheet(jsonData);
-  return worksheet;
+}
+// Convert JSON data back to worksheet format
+worksheet = xlsx.utils.aoa_to_sheet(jsonData);
+return worksheet;
 };
 
 export const fillMissingIds = ( worksheet) => {
-  const range = xlsx.utils.decode_range(worksheet['!ref']);
-  const idCol = Object.keys(worksheet)
-    .filter((key) => key[0] >= 'A' && key[1] === '1')
-    .find((key) => worksheet[key].v.toLowerCase() === 'id');
+const range = xlsx.utils.decode_range(worksheet['!ref']);
+const idCol = Object.keys(worksheet)
+  .filter((key) => key[0] >= 'A' && key[1] === '1')
+  .find((key) => worksheet[key].v.toLowerCase() === 'id');
 
-  if (!idCol) {
-    throw new Error("No 'id' column found");
-  }
-
-  // Iterate over the rows starting from the second row
-  for (let row = range.s.r + 1; row <= range.e.r; row++) {
-    const cellAddress = `${idCol[0]}${row + 1}`;
-    if (!worksheet[cellAddress]) {
-      worksheet[cellAddress] = { t: 's', v: uuidv4() };
-    }
-  }
-  return worksheet
+if (!idCol) {
+  throw new Error("No 'id' column found");
 }
-  // // Convert JSON back to sheet
-  // const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
-  // workbook.Sheets[sheetName] = newWorksheet;
 
-  // // Write the updated workbook to a new file
-  // const updatedFilePath = path.join(__dirname, 'uploads', `updated_${req.file.originalname}`);
-  // xlsx.writeFile(workbook, updatedFilePath);
+// Iterate over the rows starting from the second row
+for (let row = range.s.r + 1; row <= range.e.r; row++) {
+  const cellAddress = `${idCol[0]}${row + 1}`;
+  if (!worksheet[cellAddress]) {
+    worksheet[cellAddress] = { t: 's', v: uuidv4() };
+  }
+}
+return worksheet
+}
 
-  // // Send response with the updated file path
-  // res.status(200).json({ message: 'Values processed and file updated successfully', filePath: updatedFilePath });
+export const extractExcelWorksheet = (filePath:string ,sheetnum: number = 0) => {
+const workbook = xlsx.readFile(filePath);
+const sheetName = workbook.SheetNames[sheetnum];
+let worksheet = workbook.Sheets[sheetName]
+return worksheet
+}
 
-  // // Clean up: Remove the uploaded file from the temporary storage
-  // fs.unlinkSync(filePath);
-  // } catch (error) {
-  // console.error('Error processing data:', error);
-  // res.status(500).json({ error: 'Internal Server Error' });
-  // }
+// export  const saveExcelFile = async () => {
+// try {
+//   const buffer = await fetchAndCreateExcel('knihy');
+//   fs.writeFileSync('output.xlsx', buffer);
+//   console.log('Excel file created successfully.');
+// } catch (error) {
+//   console.error('Error creating Excel file:', error);
+// }
+// };
+// // Convert JSON back to sheet
+// const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
+// workbook.Sheets[sheetName] = newWorksheet;
+
+// // Write the updated workbook to a new file
+// const updatedFilePath = path.join(__dirname, 'uploads', `updated_${req.file.originalname}`);
+// xlsx.writeFile(workbook, updatedFilePath);
+
+// // Send response with the updated file path
+// res.status(200).json({ message: 'Values processed and file updated successfully', filePath: updatedFilePath });
+
+// // Clean up: Remove the uploaded file from the temporary storage
+// fs.unlinkSync(filePath);
+// } catch (error) {
+// console.error('Error processing data:', error);
+// res.status(500).json({ error: 'Internal Server Error' });
+// }
 
 
 // Example usage

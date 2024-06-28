@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
+exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
 const assignIds = (excelUrl, ignoreHeader = true, idColumn = 'A', numberOfRows = 10) => {
@@ -54,24 +54,33 @@ function copyExcelFile(sourceFilePath, destFilePath) {
     }
 }
 exports.copyExcelFile = copyExcelFile;
-const readExcelFile = (url) => {
+const readExcelFile = (url, arrayColumnName) => {
     try {
         const workbook = xlsx.readFile(url);
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const data = xlsx.utils.sheet_to_json(worksheet);
-        return data;
+        // Assuming your Excel sheet has a column named 'genres'
+        const books = data.map((book) => {
+            // Split the specified column by ',' and trim whitespace
+            if (book[arrayColumnName]) {
+                book[arrayColumnName] = book[arrayColumnName].split(',').map((item) => item.trim());
+            }
+            return book;
+        });
+        return books;
     }
     catch (error) {
         console.error('Error reading Excel file:', error);
+        throw new Error('Error reading Excel file');
     }
 };
 exports.readExcelFile = readExcelFile;
 /**
- * Copies all cells from a source Excel file to a destination Excel file.
- * @param {string} worksheet - the Excel file
- * @param {string} columnName - The label of the column you want to change
- */
+* Copies all cells from a source Excel file to a destination Excel file.
+* @param {string} worksheet - the Excel file
+* @param {string} columnName - The label of the column you want to change
+*/
 const excelWordsToBool = (worksheet, columnName) => {
     let jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: null });
     const truthyvalues = ['yes', 'true', true, 1, 'ano'];
@@ -115,6 +124,22 @@ const fillMissingIds = (worksheet) => {
     return worksheet;
 };
 exports.fillMissingIds = fillMissingIds;
+const extractExcelWorksheet = (filePath, sheetnum = 0) => {
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[sheetnum];
+    let worksheet = workbook.Sheets[sheetName];
+    return worksheet;
+};
+exports.extractExcelWorksheet = extractExcelWorksheet;
+// export  const saveExcelFile = async () => {
+// try {
+//   const buffer = await fetchAndCreateExcel('knihy');
+//   fs.writeFileSync('output.xlsx', buffer);
+//   console.log('Excel file created successfully.');
+// } catch (error) {
+//   console.error('Error creating Excel file:', error);
+// }
+// };
 // // Convert JSON back to sheet
 // const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
 // workbook.Sheets[sheetName] = newWorksheet;

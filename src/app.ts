@@ -32,7 +32,7 @@ const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
   try {
-    const boookList = readExcelFile(knihyURL)
+    const boookList = readExcelFile(knihyURL, 'genres')
     res.json(boookList);
   } catch (error) {
     console.error('Error executing search query:', error);
