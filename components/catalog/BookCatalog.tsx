@@ -9,8 +9,8 @@ import {
 } from "@mui/material";
 import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
-import DotsShower from "../DotsShower";
-import PaginationLinker from "../PaginationLinker";
+import DotsShower from "../general/DotsShower";
+import PaginationLinker from "../general/PaginationLinker";
 import { getURLSegment } from "@/utils/getURLSegment";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import { usePathname ,useRouter, useSearchParams} from "next/navigation";
