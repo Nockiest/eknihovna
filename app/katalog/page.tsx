@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { Book, Filters } from "@/types/types";
 import { fetchGenres } from "@/utils/fetchGenres";
 import { SearchContext } from "./context";
+import ColorCircles from "@/utils/ColorCircles";
 
 const CatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
@@ -22,7 +23,7 @@ const CatalogPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const allGenres = fetchGenres();
+  const allGenres = [] //fetchGenres();
 
   useEffect(() => {
     async function update() {
@@ -84,6 +85,8 @@ const CatalogPage = () => {
         </Box>
         <BookCatalog promisedBooks={books} />
         <Searcher />
+        <ColorCircles />
+
       </Box>
     </SearchContext.Provider>
   );
