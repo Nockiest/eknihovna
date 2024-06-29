@@ -11,6 +11,7 @@ import fs from 'fs'
 import bodyParser from 'body-parser'
 import { excelWordsToBool, fillMissingIds, readExcelFile } from './excelUtils';
 import { v4 as uuidv4 } from 'uuid';
+import { Filter } from './types';
 // Load environment variables from .env file
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
@@ -31,15 +32,22 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 app.get('/bookList', async (req: Request, res: Response) => {
   const { query } = req.query;
+
+  // Define filters object to specify allowed values for each column
+  const filters: Filter[] = [
+    { name: 'genres', value: 'a' },
+    // { name: 'author', value: 'J.K. Rowling' },
+    // Add more filters as needed
+  ];
+
   try {
-    const boookList = readExcelFile(knihyURL, 'genres')
-    res.json(boookList);
+    const bookList = readExcelFile(knihyURL, ['genres'], filters);
+    res.json(bookList);
   } catch (error) {
     console.error('Error executing search query:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 app.post('/authenticate', (req, res) => {
   const { password } = req.body;
   console.log(password)

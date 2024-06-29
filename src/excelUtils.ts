@@ -1,3 +1,4 @@
+import { Filter } from "./types";
 
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
@@ -64,23 +65,37 @@ export function copyExcelFile(sourceFilePath, destFilePath) {
     console.error('Error copying Excel file:', error);
   }
 }
-export const readExcelFile = (url: string, arrayColumnName: string) => {
+export const readExcelFile = (url: string, arrayColumnNames: string[], filters: Filter[]) => {
   try {
     const workbook = xlsx.readFile(url);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
-    // Assuming your Excel sheet has a column named 'genres'
+    // Process arrayColumnNames to split by ',' and trim whitespace
     const books = data.map((book: any) => {
-      // Split the specified column by ',' and trim whitespace
-      if (book[arrayColumnName]) {
-        book[arrayColumnName] = book[arrayColumnName].split(',').map((item: string) => item.trim());
-      }
-      return book;
+      arrayColumnNames.forEach(columnName => {
+        if (book[columnName]) {
+          book[columnName] = book[columnName].split(',').map((item: string) => item.trim());
+        }
+      });
+      return book  ; // Cast to your Book interface type
     });
 
-    return books;
+    // Filter books based on specified filters
+    const filteredBooks = books.filter((book ) => {
+      return filters.every(filter => {
+        if (typeof filter.value === 'boolean') {
+          return book[filter.name] === filter.value;
+        } else if (Array.isArray(book[filter.name])) {
+          return book[filter.name].some((value: string) => value === filter.value);
+        } else {
+          return book[filter.name] === filter.value;
+        }
+      });
+    });
+
+    return filteredBooks;
   } catch (error) {
     console.error('Error reading Excel file:', error);
     throw new Error('Error reading Excel file');

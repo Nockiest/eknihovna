@@ -41,9 +41,15 @@ const storage = multer_1.default.diskStorage({
 const upload = (0, multer_1.default)({ storage });
 app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
+    // Define filters object to specify allowed values for each column
+    const filters = [
+        { name: 'genres', value: 'a' },
+        // { name: 'author', value: 'J.K. Rowling' },
+        // Add more filters as needed
+    ];
     try {
-        const boookList = (0, excelUtils_1.readExcelFile)(knihyURL, 'genres');
-        res.json(boookList);
+        const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ['genres'], filters);
+        res.json(bookList);
     }
     catch (error) {
         console.error('Error executing search query:', error);

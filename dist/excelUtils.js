@@ -54,21 +54,36 @@ function copyExcelFile(sourceFilePath, destFilePath) {
     }
 }
 exports.copyExcelFile = copyExcelFile;
-const readExcelFile = (url, arrayColumnName) => {
+const readExcelFile = (url, arrayColumnNames, filters) => {
     try {
         const workbook = xlsx.readFile(url);
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const data = xlsx.utils.sheet_to_json(worksheet);
-        // Assuming your Excel sheet has a column named 'genres'
+        // Process arrayColumnNames to split by ',' and trim whitespace
         const books = data.map((book) => {
-            // Split the specified column by ',' and trim whitespace
-            if (book[arrayColumnName]) {
-                book[arrayColumnName] = book[arrayColumnName].split(',').map((item) => item.trim());
-            }
-            return book;
+            arrayColumnNames.forEach(columnName => {
+                if (book[columnName]) {
+                    book[columnName] = book[columnName].split(',').map((item) => item.trim());
+                }
+            });
+            return book; // Cast to your Book interface type
         });
-        return books;
+        // Filter books based on specified filters
+        const filteredBooks = books.filter((book) => {
+            return filters.every(filter => {
+                if (typeof filter.value === 'boolean') {
+                    return book[filter.name] === filter.value;
+                }
+                else if (Array.isArray(book[filter.name])) {
+                    return book[filter.name].some((value) => value === filter.value);
+                }
+                else {
+                    return book[filter.name] === filter.value;
+                }
+            });
+        });
+        return filteredBooks;
     }
     catch (error) {
         console.error('Error reading Excel file:', error);
