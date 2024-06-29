@@ -123,7 +123,10 @@ const ExcelSheetUpdater = () => {
               Stáhnout data ze serveru
             </h2>
             <PrimaryButton onClick={fetchDataFromServer}>
-              Stáhnout data ze serveru
+              <Image src={"icon/download.svg"}  alt="download"
+                  width={32}
+                  height={32} />
+              {/* Stáhnout data ze serveru */}
             </PrimaryButton>
           </div>
           <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
@@ -149,7 +152,7 @@ const ExcelSheetUpdater = () => {
                 <Image
                   className="m-1"
                   src="icon/upload.svg"
-                  alt="download"
+                  alt="upload"
                   width={32}
                   height={32}
                 />
