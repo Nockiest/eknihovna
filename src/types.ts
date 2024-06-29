@@ -1,7 +1,6 @@
 export type Filter = {
     name: string
-    type?: 'boolean'
-    value: string
+    value: string|boolean
 }
 
 export type TruthyValues =  'yes'| 'true'| true| 1|'ano'

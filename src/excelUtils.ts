@@ -72,7 +72,6 @@ export const readExcelFile = (url: string, arrayColumnNames: string[], filters: 
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
-    // Process arrayColumnNames to split by ',' and trim whitespace
     const books = data.map((book: any) => {
       arrayColumnNames.forEach(columnName => {
         if (book[columnName]) {
@@ -86,9 +85,9 @@ export const readExcelFile = (url: string, arrayColumnNames: string[], filters: 
     const filteredBooks = books.filter((book ) => {
       return filters.every(filter => {
         // console.log(1)
-        if (  filter.type === 'boolean') {
+        if (  typeof filter.value === 'boolean') {
           console.log(book.name, book[filter.name], isInTruthyValues(book[filter.name]),filter.value)
-          return isInTruthyValues(book[filter.name]) === filter.value;
+          return isInTruthyValues(book[filter.name]) === filter.value.toString();
         } else if (Array.isArray(book[filter.name])) {
           return book[filter.name].some((value: string) => value === filter.value);
         } else {

@@ -36,7 +36,7 @@ app.get('/bookList', async (req: Request, res: Response) => {
   // Define filters object to specify allowed values for each column
   const filters: Filter[] = [
     // { name: 'genres', value: 'a' },
-    { name: 'formaturita', type: 'boolean', value: 'false' },
+    { name: 'formaturita',  value:  false  },
     // { name: 'author', value: 'J.K. Rowling' },
     // Add more filters as needed
   ];

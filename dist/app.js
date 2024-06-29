@@ -44,7 +44,7 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     // Define filters object to specify allowed values for each column
     const filters = [
         // { name: 'genres', value: 'a' },
-        { name: 'formaturita', type: 'boolean', value: 'false' },
+        { name: 'formaturita', value: false },
         // { name: 'author', value: 'J.K. Rowling' },
         // Add more filters as needed
     ];
