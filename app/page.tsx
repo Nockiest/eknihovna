@@ -1,5 +1,5 @@
 import BookPreview from "@/components/catalog/BookPreview";
-import OpeningHours from "@/components/OpeningHours";
+import OpeningHours from "@/components/general/OpeningHours";
 // import ThemedButtons from "@/theme/buttons/Buttons";
 import { Container, Typography } from "@mui/material";
 export default function Home() {

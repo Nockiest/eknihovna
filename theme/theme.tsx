@@ -90,8 +90,11 @@ const theme = createTheme({
     background: {
       default: "#ee8f77", // secondary 500
 
-
+// this is the accent color
       },
+      error:{
+        main: '#C42C0E'
+      }
     },
 
 

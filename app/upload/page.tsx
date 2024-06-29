@@ -1,4 +1,4 @@
-import ExcelSheetUpdater from '@/components/ExcelSheetUpdater'
+import ExcelSheetUpdater from '@/components/general/ExcelSheetUpdater'
 import React from 'react'
 
 const page = () => {
