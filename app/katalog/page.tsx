@@ -23,7 +23,7 @@ const CatalogPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const allGenres = [] //fetchGenres();
+  const allGenres =  fetchGenres();
 
   useEffect(() => {
     async function update() {
