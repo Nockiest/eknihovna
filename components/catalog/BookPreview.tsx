@@ -27,9 +27,10 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   return (
     <Paper
       className={`w-auto h-full flex flex-col items-center  relative flex-grow text-text-50 ${
-        truthyValues.includes(available)
-          ? "opacity-100 bg-primary-800"
-          : "opacity-50 bg-secondary-800"
+" opacity-100 bg-primary-800"
+        // truthyValues.includes(available)
+        //   ? "opacity-100 bg-primary-800"
+        //   : "opacity-50 bg-secondary-800"
       }`}
       sx={{ color: theme.palette.text.primary, maxWidth: "311px" }}
     >
