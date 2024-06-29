@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container } from '@mui/material';
-import Message from '@/components/Message';
+import Message from '@/components/general/Message';
 
 const page: React.FC = () => {
   const messages = [

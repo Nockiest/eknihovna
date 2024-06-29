@@ -26,13 +26,15 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`w-auto h-full flex flex-col items-center  relative flex-grow text-text-50 ${
-" opacity-100 bg-primary-800"
-        // truthyValues.includes(available)
-        //   ? "opacity-100 bg-primary-800"
-        //   : "opacity-50 bg-secondary-800"
-      }`}
-      sx={{ color: theme.palette.text.primary, maxWidth: "311px" }}
+      className={`w-auto h-full flex flex-col items-center  relative flex-grow text-text-50`}
+      sx={{
+        opacity: truthyValues.includes(available) ? "1" : "0.5",
+        backgroundColor: truthyValues.includes(available)
+          ? theme.palette.background.default
+          : theme.palette.error.main,
+        color: theme.palette.text.primary,
+        maxWidth: "311px",
+      }}
     >
       <Box p={2} className=" flex flex-col items-center justify-between h-full">
         <BookCover />
@@ -60,11 +62,9 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         </Box>
         <br />
         <Typography className="absolute bottom-2 right-2" variant="body1">
-      {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
-    </Typography>
+          {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
+        </Typography>
       </Box>
-
-
     </Paper>
   );
 };
