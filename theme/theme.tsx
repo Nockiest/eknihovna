@@ -82,12 +82,19 @@ const theme = createTheme({
       dark: "#882911", // secondary 300
       contrastText: "#ffffff",
     },
+
     text: {
       primary: '#131603',
       secondary: '#99b319'
-    }
+    },
+    background: {
+      default: "#ee8f77", // secondary 500
 
-  },
+
+      },
+    },
+
+
   components: {
     MuiContainer: {
       styleOverrides: {
