@@ -97,7 +97,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
         <div className="w-full">
           <Grid container spacing={2} columns={12}>
             {shownBooks.map((book, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid item xs={12} sm={6} md={4} xl={3} key={index}>
                 <BookPreview book={book} />
               </Grid>
             ))}
