@@ -1,5 +1,5 @@
 'use client'
-import DotsShower from "@/components/DotsShower";
+import DotsShower from "@/components/general/DotsShower";
 import { useEffect, useState } from "react";
 
 const LoadingPage = () => {

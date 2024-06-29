@@ -8,6 +8,7 @@ import React, { useEffect } from "react";
 import Filter from "./Filter";
 import { useTheme } from "@emotion/react";
 import BookCover from "./BookCover";
+import StarRow from "../general/starRow/StarRow";
 
 type BookPreviewProps = {
   book: Book;
@@ -23,7 +24,6 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     rating = -1,
   } = book;
 
-
   return (
     <Paper
       className={`w-auto flex-grow text-text-50 ${
@@ -35,27 +35,33 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     >
       <Box p={2}>
         <BookCover />
-        {/* <Image src='/img/placeholderImage.png' alt='knižní přebaly přijdou v jiné verzi' height={152} width={111} /> */}
-        <Typography  variant="h6" align='center'> {name}</Typography>
-        <br />
+        <Typography variant="h6" align="center">
+          {" "}
+          {name}
+        </Typography>
+
 
         {genres.length > 0 && (
-          genres.map((gen, key) => (
-            <Filter text={gen} key={key} />
-          ))
-          ) }
-        <br />
+          <Box>
+            <br />
+            {genres.map((gen, key) => (
+              <Filter text={gen} key={key} />
+            ))}
+          </Box>
+        )}
         <Typography variant="body1">Autor: {author}</Typography>
         <br />
         <Typography variant="body1">
           {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
         </Typography>
         <br />
-        <Typography variant="body1">
+        {/* <Typography variant="body1">
           {formaturita ? "Maturitní" : ""}
-        </Typography>
-        <br />
-        <Typography variant="body1">Hodnocení: {rating}/100 </Typography>
+        </Typography> */}
+        {/* <br /> */}
+
+        <StarRow rating={rating} />
+        {/* <Typography variant="body1">Hodnocení: {rating}/100 </Typography> */}
         <br />
       </Box>
     </Paper>
