@@ -1,92 +1,104 @@
-
 // make sure you run npx tsc -w before using this file
-import express, { Request, Response } from 'express';
-import cors from 'cors';
-import xlsx from 'xlsx'
-import dotenv from 'dotenv';
-import multer from 'multer'
-import path from 'path'
-import fs from 'fs'
+import express, { Request, Response } from "express";
+import cors from "cors";
+import xlsx from "xlsx";
+import dotenv from "dotenv";
+import multer from "multer";
+import path from "path";
+import fs from "fs";
 // import bcrypt from 'bcrypt';
-import bodyParser from 'body-parser'
-import { excelWordsToBool, fillMissingIds, readExcelFile } from './excelUtils';
-import { v4 as uuidv4 } from 'uuid';
-import { Filter } from './types';
+import bodyParser from "body-parser";
+import {
+  excelWordsToBool,
+  extractUniqueGenres,
+  fillMissingIds,
+  readExcelFile,
+} from "./excelUtils";
+import { v4 as uuidv4 } from "uuid";
+import { Filter } from "./types";
 // Load environment variables from .env file
 dotenv.config();
-const knihyURL = process.env.KNIHY_URL
+const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
 const app = express();
 app.use(cors());
 app.use(bodyParser.json());
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, '');
+    cb(null, "");
   },
   filename: (req, file, cb) => {
-    cb(null, 'knihy.xlsx');
-  }
+    cb(null, "knihy.xlsx");
+  },
 });
 
-
 const upload = multer({ storage });
-app.get('/bookList', async (req: Request, res: Response) => {
+app.get("/bookList", async (req: Request, res: Response) => {
   const { query } = req.query;
 
   // Define filters object to specify allowed values for each column
   const filters: Filter[] = [
     // { name: 'genres', value: 'a' },
-    { name: 'formaturita',  value:  false  },
+    { name: "formaturita", value: false },
     // { name: 'author', value: 'J.K. Rowling' },
     // Add more filters as needed
   ];
 
   try {
-    const bookList = readExcelFile(knihyURL, ['genres'], filters);
-    console.log(bookList)
+    const bookList = readExcelFile(knihyURL, ["genres"], filters);
+    console.log(bookList);
     res.json(bookList);
   } catch (error) {
-    console.error('Error executing search query:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error executing search query:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
-app.post('/authenticate', (req, res) => {
+app.post("/authenticate", (req, res) => {
   const { password } = req.body;
-  console.log(password)
+  console.log(password);
 
   if (!password) {
-    return res.status(400).json({ error: 'vyžadováno heslo' });
+    return res.status(400).json({ error: "vyžadováno heslo" });
   }
 
-  if (password === process.env.UPLOAD_PASSWORD){
-    res.status(200).json({ message: 'Uživatel autorizován' });
+  if (password === process.env.UPLOAD_PASSWORD) {
+    res.status(200).json({ message: "Uživatel autorizován" });
   } else {
-    return res.status(401).json({ error: 'Špatné heslo' });
-
+    return res.status(401).json({ error: "Špatné heslo" });
   }
   // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
   //   if (err || !result) {
   //     return res.status(401).json({ error: 'Špatné heslo' });
   //   }
 
-    // Password correct, return success
+  // Password correct, return success
   //   res.status(200).json({ message: 'Uživatel autorizován' });
   // });
 });
 
-app.get('/downloadExcel', async (req: Request, res: Response) => {
-  const filePath = path.join(__dirname, '../', knihyURL);
-  console.log('File path:', filePath);
+app.get("/downloadExcel", async (req: Request, res: Response) => {
+  const filePath = path.join(__dirname, "../", knihyURL);
+  console.log("File path:", filePath);
 
   if (fs.existsSync(filePath)) {
-    res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
+    res.download(filePath, "stav knih na serveru.xlsx", (err) => {
       if (err) {
-        console.error('Error sending file:', err);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error("Error sending file:", err);
+        res.status(500).json({ error: "Internal Server Error" });
       }
     });
   } else {
-    res.status(404).json({ error: 'File not found' });
+    res.status(404).json({ error: "File not found" });
+  }
+});
+
+app.get("/getGenres", async (req: Request, res: Response) => {
+  try {
+    const bookList = readExcelFile(knihyURL, ["genres"], []);
+    res.json(extractUniqueGenres(bookList));
+  } catch (error) {
+    console.error("Error fetching genres:", error);
+    res.status(500).json({ error: "Server Error fetching genres: " });
   }
 });
 
@@ -95,17 +107,15 @@ app.listen(port, () => {
   // assignIds(knihyURL, true, 'A',   3530)
 });
 
-
-
-app.post('/update', upload.single('file'), async (req, res) => {
+app.post("/update", upload.single("file"), async (req, res) => {
   try {
     // Handle file upload with Multer
     if (!req.file) {
-      throw new Error('No file uploaded');
+      throw new Error("No file uploaded");
     }
 
     // Specify the file path
-    const filePath = path.join(__dirname, '../', 'knihy.xlsx'); // Adjust the path as needed
+    const filePath = path.join(__dirname, "../", "knihy.xlsx"); // Adjust the path as needed
 
     // Check if the file exists
     if (!fs.existsSync(filePath)) {
@@ -118,19 +128,21 @@ app.post('/update', upload.single('file'), async (req, res) => {
     let worksheet = workbook.Sheets[sheetName];
 
     // Apply data transformation
-    worksheet = excelWordsToBool(worksheet, 'available');
-    worksheet = excelWordsToBool(worksheet, 'formaturita');
-    worksheet = fillMissingIds(worksheet)
+    worksheet = excelWordsToBool(worksheet, "available");
+    worksheet = excelWordsToBool(worksheet, "formaturita");
+    worksheet = fillMissingIds(worksheet);
 
-    workbook.Sheets[sheetName] = worksheet
+    workbook.Sheets[sheetName] = worksheet;
     // Write the modified workbook back to file
     xlsx.writeFile(workbook, filePath);
 
     // Respond with success message
-    res.status(200).json({ message: 'File processed and uploaded successfully' });
+    res
+      .status(200)
+      .json({ message: "File processed and uploaded successfully" });
   } catch (error) {
-    console.error('Error processing data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error processing data:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 // function modifyWorksheet(worksheet) {
@@ -159,8 +171,6 @@ app.post('/update', upload.single('file'), async (req, res) => {
 //     res.status(500).json({ error: 'Internal Server Error' });
 //   }
 // });
-
-
 
 // const mockData = {rows:[{"id":1,"name":"Bobea elatior Gaudich.","iban":"IE23 LSJW 9122 7020 8015 01","author":"Rog Enns","rating":80,"description":"vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa id nisl venenatis lacinia aenean sit amet justo morbi","forMaturita":true,"available":false},
 //   {"id":2,"name":"Eriogonum codium Reveal, Caplow & K. Beck","iban":"GL85 1035 6131 3886 40","author":null,"rating":1,"description":"nec sem duis aliquam convallis nunc proin at turpis a pede posuere nonummy integer non velit donec diam neque vestibulum eget vulputate ut ultrices vel augue","forMaturita":false,"available":true},

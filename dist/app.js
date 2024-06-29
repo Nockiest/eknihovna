@@ -32,43 +32,43 @@ app.use((0, cors_1.default)());
 app.use(body_parser_1.default.json());
 const storage = multer_1.default.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, '');
+        cb(null, "");
     },
     filename: (req, file, cb) => {
-        cb(null, 'knihy.xlsx');
-    }
+        cb(null, "knihy.xlsx");
+    },
 });
 const upload = (0, multer_1.default)({ storage });
-app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
     // Define filters object to specify allowed values for each column
     const filters = [
         // { name: 'genres', value: 'a' },
-        { name: 'formaturita', value: false },
+        { name: "formaturita", value: false },
         // { name: 'author', value: 'J.K. Rowling' },
         // Add more filters as needed
     ];
     try {
-        const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ['genres'], filters);
+        const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ["genres"], filters);
         console.log(bookList);
         res.json(bookList);
     }
     catch (error) {
-        console.error('Error executing search query:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error("Error executing search query:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }));
-app.post('/authenticate', (req, res) => {
+app.post("/authenticate", (req, res) => {
     const { password } = req.body;
     console.log(password);
     if (!password) {
-        return res.status(400).json({ error: 'vyžadováno heslo' });
+        return res.status(400).json({ error: "vyžadováno heslo" });
     }
     if (password === process.env.UPLOAD_PASSWORD) {
-        res.status(200).json({ message: 'Uživatel autorizován' });
+        res.status(200).json({ message: "Uživatel autorizován" });
     }
     else {
-        return res.status(401).json({ error: 'Špatné heslo' });
+        return res.status(401).json({ error: "Špatné heslo" });
     }
     // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
     //   if (err || !result) {
@@ -78,33 +78,43 @@ app.post('/authenticate', (req, res) => {
     //   res.status(200).json({ message: 'Uživatel autorizován' });
     // });
 });
-app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const filePath = path_1.default.join(__dirname, '../', knihyURL);
-    console.log('File path:', filePath);
+app.get("/downloadExcel", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const filePath = path_1.default.join(__dirname, "../", knihyURL);
+    console.log("File path:", filePath);
     if (fs_1.default.existsSync(filePath)) {
-        res.download(filePath, 'stav knih na serveru.xlsx', (err) => {
+        res.download(filePath, "stav knih na serveru.xlsx", (err) => {
             if (err) {
-                console.error('Error sending file:', err);
-                res.status(500).json({ error: 'Internal Server Error' });
+                console.error("Error sending file:", err);
+                res.status(500).json({ error: "Internal Server Error" });
             }
         });
     }
     else {
-        res.status(404).json({ error: 'File not found' });
+        res.status(404).json({ error: "File not found" });
+    }
+}));
+app.get("/getGenres", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ["genres"], []);
+        res.json((0, excelUtils_1.extractUniqueGenres)(bookList));
+    }
+    catch (error) {
+        console.error("Error fetching genres:", error);
+        res.status(500).json({ error: "Server Error fetching genres: " });
     }
 }));
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
     // assignIds(knihyURL, true, 'A',   3530)
 });
-app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/update", upload.single("file"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Handle file upload with Multer
         if (!req.file) {
-            throw new Error('No file uploaded');
+            throw new Error("No file uploaded");
         }
         // Specify the file path
-        const filePath = path_1.default.join(__dirname, '../', 'knihy.xlsx'); // Adjust the path as needed
+        const filePath = path_1.default.join(__dirname, "../", "knihy.xlsx"); // Adjust the path as needed
         // Check if the file exists
         if (!fs_1.default.existsSync(filePath)) {
             throw new Error(`File not found at path: ${filePath}`);
@@ -114,18 +124,20 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         const sheetName = workbook.SheetNames[0];
         let worksheet = workbook.Sheets[sheetName];
         // Apply data transformation
-        worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'available');
-        worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'formaturita');
+        worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, "available");
+        worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, "formaturita");
         worksheet = (0, excelUtils_1.fillMissingIds)(worksheet);
         workbook.Sheets[sheetName] = worksheet;
         // Write the modified workbook back to file
         xlsx_1.default.writeFile(workbook, filePath);
         // Respond with success message
-        res.status(200).json({ message: 'File processed and uploaded successfully' });
+        res
+            .status(200)
+            .json({ message: "File processed and uploaded successfully" });
     }
     catch (error) {
-        console.error('Error processing data:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error("Error processing data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }));
 // function modifyWorksheet(worksheet) {

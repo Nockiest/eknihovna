@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
+exports.extractExcelWorksheet = exports.fillMissingIds = exports.extractUniqueGenres = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
 const types_1 = require("./types");
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
@@ -123,6 +123,23 @@ const excelWordsToBool = (worksheet, columnName) => {
     return worksheet;
 };
 exports.excelWordsToBool = excelWordsToBool;
+const extractUniqueGenres = (books) => {
+    // Use a Set to store unique genres
+    const uniqueGenres = new Set();
+    // Iterate through each book
+    books.forEach(book => {
+        // Check if genres are defined for the current book
+        if (book.genres && book.genres.length > 0) {
+            // Iterate through genres array of each book and add to Set
+            book.genres.forEach(genre => {
+                uniqueGenres.add(genre.trim()); // Trim to remove any leading/trailing spaces
+            });
+        }
+    });
+    // Convert Set to array and return
+    return Array.from(uniqueGenres);
+};
+exports.extractUniqueGenres = extractUniqueGenres;
 const fillMissingIds = (worksheet) => {
     const range = xlsx.utils.decode_range(worksheet['!ref']);
     const idCol = Object.keys(worksheet)

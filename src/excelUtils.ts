@@ -133,6 +133,25 @@ worksheet = xlsx.utils.aoa_to_sheet(jsonData);
 return worksheet;
 };
 
+export const extractUniqueGenres = (books ): string[] => {
+  // Use a Set to store unique genres
+  const uniqueGenres: Set<string> = new Set();
+
+  // Iterate through each book
+  books.forEach(book => {
+    // Check if genres are defined for the current book
+    if (book.genres && book.genres.length > 0) {
+      // Iterate through genres array of each book and add to Set
+      book.genres.forEach(genre => {
+        uniqueGenres.add(genre.trim()); // Trim to remove any leading/trailing spaces
+      });
+    }
+  });
+
+  // Convert Set to array and return
+  return Array.from(uniqueGenres);
+};
+
 export const fillMissingIds = ( worksheet) => {
 const range = xlsx.utils.decode_range(worksheet['!ref']);
 const idCol = Object.keys(worksheet)
