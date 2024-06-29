@@ -26,44 +26,44 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`w-auto flex-grow text-text-50 ${
+      className={`w-auto h-full flex flex-col items-center  relative flex-grow text-text-50 ${
         truthyValues.includes(available)
           ? "opacity-100 bg-primary-800"
           : "opacity-50 bg-secondary-800"
       }`}
-      sx={{ color: theme.palette.text.primary }}
+      sx={{ color: theme.palette.text.primary, maxWidth: "311px" }}
     >
-      <Box p={2}>
+      <Box p={2} className=" flex flex-col items-center justify-between h-full">
         <BookCover />
         <Typography variant="h6" align="center">
           {" "}
           {name}
         </Typography>
+        <br />
 
-
-        {genres.length > 0 && (
-          <Box>
-            <br />
-            {genres.map((gen, key) => (
-              <Filter text={gen} key={key} />
-            ))}
-          </Box>
-        )}
+        <Box>
+          {genres.length > 0 && (
+            <Box>
+              <br />
+              {genres.map((gen, key) => (
+                <Filter text={gen} key={key} />
+              ))}
+            </Box>
+          )}
+        </Box>
         <Typography variant="body1">Autor: {author}</Typography>
-        <br />
-        <Typography variant="body1">
-          {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
-        </Typography>
-        <br />
-        {/* <Typography variant="body1">
-          {formaturita ? "Maturitní" : ""}
-        </Typography> */}
-        {/* <br /> */}
 
-        <StarRow rating={rating} />
-        {/* <Typography variant="body1">Hodnocení: {rating}/100 </Typography> */}
+        <Box className="flex flex-col items-center  ">
+          <Typography variant="body2">Hodnocení Studentů</Typography>
+          <StarRow rating={rating} />
+        </Box>
         <br />
+        <Typography className="absolute bottom-2 right-2" variant="body1">
+      {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
+    </Typography>
       </Box>
+
+
     </Paper>
   );
 };
