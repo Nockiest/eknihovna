@@ -1,4 +1,4 @@
-import { Filter } from "./types";
+import { Filter, isInTruthyValues } from "./types";
 
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
@@ -85,8 +85,10 @@ export const readExcelFile = (url: string, arrayColumnNames: string[], filters: 
     // Filter books based on specified filters
     const filteredBooks = books.filter((book ) => {
       return filters.every(filter => {
-        if (typeof filter.value === 'boolean') {
-          return book[filter.name] === filter.value;
+        // console.log(1)
+        if (  filter.type === 'boolean') {
+          console.log(book.name, book[filter.name], isInTruthyValues(book[filter.name]),filter.value)
+          return isInTruthyValues(book[filter.name]) === filter.value;
         } else if (Array.isArray(book[filter.name])) {
           return book[filter.name].some((value: string) => value === filter.value);
         } else {
@@ -121,7 +123,7 @@ for (let i = 1; i < jsonData.length; i++) { // start from 1 to skip the header r
   const value = jsonData[i][columnIndex];
   if (typeof value === 'string') {
     // Convert 'yes' to true and 'no' to false
-    jsonData[i][columnIndex] = truthyvalues.indexOf(value.toLowerCase()) >= 0 ? 'true' : 'false';
+    jsonData[i][columnIndex] = isInTruthyValues(value)
   } else if (typeof value === 'boolean') {
     // Normalize boolean values
     jsonData[i][columnIndex] = value;

@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
+const types_1 = require("./types");
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
 const assignIds = (excelUrl, ignoreHeader = true, idColumn = 'A', numberOfRows = 10) => {
@@ -72,8 +73,10 @@ const readExcelFile = (url, arrayColumnNames, filters) => {
         // Filter books based on specified filters
         const filteredBooks = books.filter((book) => {
             return filters.every(filter => {
-                if (typeof filter.value === 'boolean') {
-                    return book[filter.name] === filter.value;
+                // console.log(1)
+                if (filter.type === 'boolean') {
+                    console.log(book.name, book[filter.name], (0, types_1.isInTruthyValues)(book[filter.name]), filter.value);
+                    return (0, types_1.isInTruthyValues)(book[filter.name]) === filter.value;
                 }
                 else if (Array.isArray(book[filter.name])) {
                     return book[filter.name].some((value) => value === filter.value);
@@ -109,7 +112,7 @@ const excelWordsToBool = (worksheet, columnName) => {
         const value = jsonData[i][columnIndex];
         if (typeof value === 'string') {
             // Convert 'yes' to true and 'no' to false
-            jsonData[i][columnIndex] = truthyvalues.indexOf(value.toLowerCase()) >= 0 ? 'true' : 'false';
+            jsonData[i][columnIndex] = (0, types_1.isInTruthyValues)(value);
         }
         else if (typeof value === 'boolean') {
             // Normalize boolean values

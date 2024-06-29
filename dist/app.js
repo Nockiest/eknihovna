@@ -43,12 +43,14 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
     const { query } = req.query;
     // Define filters object to specify allowed values for each column
     const filters = [
-        { name: 'genres', value: 'a' },
+        // { name: 'genres', value: 'a' },
+        { name: 'formaturita', type: 'boolean', value: 'false' },
         // { name: 'author', value: 'J.K. Rowling' },
         // Add more filters as needed
     ];
     try {
         const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ['genres'], filters);
+        console.log(bookList);
         res.json(bookList);
     }
     catch (error) {
