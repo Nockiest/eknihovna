@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchGenres = async () => {
+export const fetchGenres = async () :Promise<string[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
   try {
     const response = await axios.get(`${apiUrl}/getGenres`);

@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import Footer from "@/components/footer/Footer";
 import Head from "next/head";
 import NavList from "@/components/navbar/Navbar";
+import ColorCircles from "@/utils/ColorCircles";
 
 // import NavBar from "@/components/navbar/Navbar";
 const inter = Inter({ subsets: ["latin"] });

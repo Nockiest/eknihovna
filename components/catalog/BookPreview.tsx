@@ -7,6 +7,7 @@ import Image from "next/image";
 import React, { useEffect } from "react";
 import Filter from "./Filter";
 import { useTheme } from "@emotion/react";
+import BookCover from "./BookCover";
 
 type BookPreviewProps = {
   book: Book;
@@ -17,7 +18,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     available = false,
     author = "Autor neznámý",
     name = "Neznámé jméno",
-    genres = "neznámý žánr",
+    genres = [],
     formaturita = false,
     rating = -1,
   } = book;
@@ -33,21 +34,21 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
       sx={{ color: theme.palette.text.primary }}
     >
       <Box p={2}>
-        <Typography variant="h6">Název: {name}</Typography>
+        <BookCover />
+        {/* <Image src='/img/placeholderImage.png' alt='knižní přebaly přijdou v jiné verzi' height={152} width={111} /> */}
+        <Typography  variant="h6" align='center'> {name}</Typography>
         <br />
 
-        {Array.isArray(genres) ? (
+        {genres.length > 0 && (
           genres.map((gen, key) => (
             <Filter text={gen} key={key} />
           ))
-        ) : (
-          <Typography variant="body1">Neznámý žánr</Typography>
-        )}
+          ) }
         <br />
         <Typography variant="body1">Autor: {author}</Typography>
         <br />
         <Typography variant="body1">
-          Dostupnost: {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
+          {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
         </Typography>
         <br />
         <Typography variant="body1">
