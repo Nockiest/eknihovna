@@ -9,17 +9,16 @@ import {
   FormControlLabel,
   Fab,
   TextField,
+  Button,
 } from "@mui/material";
 import SearchBar from "./SearchBar";
-import Filter from "./Filter";
 import Image from "next/image";
 import theme from "@/theme/theme";
-import { Filters } from "@/types/types";
+import {  Filters  } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
+import { getBooksByQuery } from "@/utils/fetchBooks";
 
 interface SearcherProps {
-  //   isOpen: boolean;
-  //   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const Searcher: React.FC<SearcherProps> = () => {
@@ -32,20 +31,27 @@ const Searcher: React.FC<SearcherProps> = () => {
     books,
     setBooks,
   } = useSearchContext();
-  const handleFilterChange = (
-    key: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      [key]: value,
-    }));
+
+  const fetchFilteredBooks = async () => {
+    try {
+      const response = getBooksByQuery(filters)
+      const data = response.data;
+      setBooks(data);
+    } catch (error) {
+      console.error("Error fetching filtered books:", error);
+    }
   };
 
+  const handleFilterChange = (name: string, value: string | boolean) => {
+    setFilters((prevFilters: Filters) => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
   const handleGenresChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     // Split the input value into an array of genres
     const genresArray = e.target.value.split(",").map((genre) => genre.trim());
-    handleFilterChange("genres", genresArray);
+    // handleFilterChange("genres", genresArray);
   };
   return (
     <Slide direction="up" in={isOpenSearcher} mountOnEnter unmountOnExit>
@@ -80,7 +86,7 @@ const Searcher: React.FC<SearcherProps> = () => {
 
         <TextField
           label="Název"
-          value={filters.name}
+          value={filters.name || ""}
           onChange={(e) => handleFilterChange("name", e.target.value)}
           fullWidth
           margin="normal"
@@ -88,17 +94,16 @@ const Searcher: React.FC<SearcherProps> = () => {
 
         <TextField
           label="Žánr"
-          value={filters.genres.join(", ")} // Join genres array back into a comma-separated string for display
-          onChange={handleGenresChange} // Handle changes to genres input
+          value={(filters.genres || []) }
+          onChange={handleGenresChange}
           fullWidth
           margin="normal"
         />
 
-        <FormGroup>
-          <FormControlLabel
+        <FormControlLabel
             control={
               <Checkbox
-                checked={filters.available}
+                checked={Boolean(filters.available)}
                 onChange={(e) =>
                   handleFilterChange("available", e.target.checked)
                 }
@@ -116,7 +121,7 @@ const Searcher: React.FC<SearcherProps> = () => {
           <FormControlLabel
             control={
               <Checkbox
-                checked={filters.forMaturita}
+                checked={Boolean(filters.forMaturita)}
                 onChange={(e) =>
                   handleFilterChange("forMaturita", e.target.checked)
                 }
@@ -130,76 +135,18 @@ const Searcher: React.FC<SearcherProps> = () => {
               },
             }}
           />
-        </FormGroup>
+    <Button
+          variant="contained"
+          color="primary"
+          onClick={fetchFilteredBooks}
+          style={{ marginTop: "16px" }}
+        >
+          POUŽÍT FILTRY
+        </Button>
       </Paper>
+
     </Slide>
   );
 };
 
 export default Searcher;
-
-// const SearchFilters = () => {
-
-//     const [results, setResults] = useState([]);
-
-//     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//       const { name, value } = event.target;
-//       setFilters((prevFilters) => ({ ...prevFilters, [name]: value }));
-//     };
-
-//     const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-//       const { name, checked } = event.target;
-//       setFilters((prevFilters) => ({ ...prevFilters, [name]: checked }));
-//     };
-
-//     useEffect(() => {
-//       const fetchData = async () => {
-//         const response = await fetch('/api/search', {
-//           method: 'POST',
-//           headers: { 'Content-Type': 'application/json' },
-//           body: JSON.stringify(filters),
-//         });
-//         const result = await response.json();
-//         setResults(result);
-//       };
-
-//       fetchData();
-//     }, [filters]);
-
-//     return (
-//       <div>
-//         <TextField
-//           label="Keyword"
-//           name="keyword"
-//           value={filters.keyword}
-//           onChange={handleInputChange}
-//         />
-//         <Select
-//           name="category"
-//           value={filters.category}
-//           onChange={handleInputChange}
-//         >
-//           <MenuItem value="">
-//             <em>None</em>
-//           </MenuItem>
-//           <MenuItem value="category1">Category 1</MenuItem>
-//           <MenuItem value="category2">Category 2</MenuItem>
-//         </Select>
-//         <Checkbox
-//           name="isActive"
-//           checked={filters.isActive}
-//           onChange={handleCheckboxChange}
-//         />
-//         <Button onClick={() => setFilters({ keyword: '', category: '', dateRange: [null, null], isActive: false })}>
-//           Clear Filters
-//         </Button>
-//         <div>
-//           {results.map((result, index) => (
-//             <div key={index}>{JSON.stringify(result)}</div>
-//           ))}
-//         </div>
-//       </div>
-//     );
-//   };
-
-//   export default SearchFilters;
