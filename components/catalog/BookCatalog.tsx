@@ -45,7 +45,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const setNewBookSlice = (page:number,itemsPerPage:number, allBooks:Book[]) => {
     const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
     const newLastBookIndex = page * itemsPerPage
-    setShownBooks(allBooks.slice(indexOfFirstBook, newLastBookIndex) );
+    setShownBooks(allBooks.length> 0? allBooks?.slice(indexOfFirstBook, newLastBookIndex): [] );
   }
   useEffect(() => {
     if (size) {

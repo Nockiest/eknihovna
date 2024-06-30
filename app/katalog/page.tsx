@@ -6,20 +6,18 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
 import { useEffect, useState } from "react";
-import { Book, Filters } from "@/types/types";
+import { Book,   Filters  } from "@/types/types";
 import { fetchGenres } from "@/utils/fetchGenres";
 import { SearchContext } from "./context";
 import ColorCircles from "@/utils/ColorCircles";
 
+
 const CatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
-  const [filters, setFilters] = useState<Filters>({
-    name: "",
-    genres: [],
-    available: false,
-    forMaturita: false,
-  });
+  const [filters, setFilters] = useState<Filters>([]
+
+   );
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
