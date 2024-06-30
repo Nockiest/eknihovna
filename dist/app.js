@@ -40,12 +40,8 @@ const storage = multer_1.default.diskStorage({
 });
 const upload = (0, multer_1.default)({ storage });
 app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { query } = req.query;
-    // const filters: Filters = req.query.filters ? JSON.parse(req.query.filters as string) : {};
-    const filters = {
-        formaturita: false,
-        genres: 'a'
-    };
+    const { filters } = req.body;
+    console.log(filters);
     try {
         const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ["genres"], filters);
         console.log(1, bookList);
