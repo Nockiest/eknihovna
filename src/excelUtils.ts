@@ -1,4 +1,4 @@
-import { Filter, isInTruthyValues } from "./types";
+import { Filters, isInTruthyValues } from "./types";
 
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
@@ -65,13 +65,14 @@ export function copyExcelFile(sourceFilePath, destFilePath) {
     console.error('Error copying Excel file:', error);
   }
 }
-export const readExcelFile = (url: string, arrayColumnNames: string[], filters: Filter[]) => {
+export const readExcelFile = (url: string, arrayColumnNames: string[], filters: Filters) => {
   try {
     const workbook = xlsx.readFile(url);
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
     const data = xlsx.utils.sheet_to_json(worksheet);
 
+    // Process arrayColumnNames to split by ',' and trim whitespace
     const books = data.map((book: any) => {
       arrayColumnNames.forEach(columnName => {
         if (book[columnName]) {
@@ -82,16 +83,29 @@ export const readExcelFile = (url: string, arrayColumnNames: string[], filters: 
     });
 
     // Filter books based on specified filters
-    const filteredBooks = books.filter((book ) => {
-      return filters.every(filter => {
-        // console.log(1)
-        if (  typeof filter.value === 'boolean') {
-          console.log(book.name, book[filter.name], isInTruthyValues(book[filter.name]),filter.value)
-          return isInTruthyValues(book[filter.name]) === filter.value.toString();
-        } else if (Array.isArray(book[filter.name])) {
-          return book[filter.name].some((value: string) => value === filter.value);
+    // const filteredBooks = books.filter((book ) => {
+    //   return filters.every(filter => {
+    //     // console.log(1)
+    //     if (  filter.type === 'boolean') {
+    //       console.log(book.name, book[filter.name], isInTruthyValues(book[filter.name]),filter.value)
+    //       return isInTruthyValues(book[filter.name]) === filter.value;
+    //     } else if (Array.isArray(book[filter.name])) {
+    //       return book[filter.name].some((value: string) => value === filter.value);
+    //     } else {
+    //       return book[filter.name] === filter.value;
+    //     }
+    //   });
+    // });
+
+    const filteredBooks = books.filter(book => {
+      return Object.keys(filters).every(filterKey => {
+        const filterValue = filters[filterKey];
+        if (typeof filterValue === 'boolean') {
+          return isInTruthyValues(book[filterKey]) === filterValue ;
+        } else if (Array.isArray(book[filterKey])) {
+          return book[filterKey].some((value: string) => value === filterValue);
         } else {
-          return book[filter.name] === filter.value;
+          return book[filterKey] === filterValue;
         }
       });
     });
@@ -133,25 +147,6 @@ worksheet = xlsx.utils.aoa_to_sheet(jsonData);
 return worksheet;
 };
 
-export const extractUniqueGenres = (books ): string[] => {
-  // Use a Set to store unique genres
-  const uniqueGenres: Set<string> = new Set();
-
-  // Iterate through each book
-  books.forEach(book => {
-    // Check if genres are defined for the current book
-    if (book.genres && book.genres.length > 0) {
-      // Iterate through genres array of each book and add to Set
-      book.genres.forEach(genre => {
-        uniqueGenres.add(genre.trim()); // Trim to remove any leading/trailing spaces
-      });
-    }
-  });
-
-  // Convert Set to array and return
-  return Array.from(uniqueGenres);
-};
-
 export const fillMissingIds = ( worksheet) => {
 const range = xlsx.utils.decode_range(worksheet['!ref']);
 const idCol = Object.keys(worksheet)
@@ -178,6 +173,19 @@ const sheetName = workbook.SheetNames[sheetnum];
 let worksheet = workbook.Sheets[sheetName]
 return worksheet
 }
+export const extractUniqueGenres = (books): string[] => {
+  const uniqueGenres: Set<string> = new Set();
+
+  books.forEach(book => {
+    if (book.genres && book.genres.length > 0) {
+      book.genres.forEach(genre => {
+        uniqueGenres.add(genre.trim());
+      });
+    }
+  });
+
+  return Array.from(uniqueGenres);
+};
 
 // export  const saveExcelFile = async () => {
 // try {

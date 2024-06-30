@@ -15,7 +15,7 @@ import {
   readExcelFile,
 } from "./excelUtils";
 import { v4 as uuidv4 } from "uuid";
-import { Filter } from "./types";
+import { Filters } from "./types";
 // Load environment variables from .env file
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL;
@@ -33,20 +33,16 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-app.get("/bookList", async (req: Request, res: Response) => {
+app.post("/bookList", async (req: Request, res: Response) => {
   const { query } = req.query;
-
-  // Define filters object to specify allowed values for each column
-  const filters: Filter[] = [
-    // { name: 'genres', value: 'a' },
-    { name: "formaturita", value: false },
-    // { name: 'author', value: 'J.K. Rowling' },
-    // Add more filters as needed
-  ];
-
+  // const filters: Filters = req.query.filters ? JSON.parse(req.query.filters as string) : {};
+  const filters: Filters = {
+    formaturita: false,
+    genres: 'a'
+  };
   try {
     const bookList = readExcelFile(knihyURL, ["genres"], filters);
-    console.log(bookList);
+    console.log(1, bookList);
     res.json(bookList);
   } catch (error) {
     console.error("Error executing search query:", error);
@@ -94,7 +90,7 @@ app.get("/downloadExcel", async (req: Request, res: Response) => {
 
 app.get("/getGenres", async (req: Request, res: Response) => {
   try {
-    const bookList = readExcelFile(knihyURL, ["genres"], []);
+    const bookList = readExcelFile(knihyURL, ["genres"], {});
     res.json(extractUniqueGenres(bookList));
   } catch (error) {
     console.error("Error fetching genres:", error);

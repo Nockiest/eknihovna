@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractExcelWorksheet = exports.fillMissingIds = exports.extractUniqueGenres = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
+exports.extractUniqueGenres = exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
 const types_1 = require("./types");
 const xlsx = require('xlsx');
 const { v4: uuidv4 } = require('uuid');
@@ -61,6 +61,7 @@ const readExcelFile = (url, arrayColumnNames, filters) => {
         const sheetName = workbook.SheetNames[0];
         const worksheet = workbook.Sheets[sheetName];
         const data = xlsx.utils.sheet_to_json(worksheet);
+        // Process arrayColumnNames to split by ',' and trim whitespace
         const books = data.map((book) => {
             arrayColumnNames.forEach(columnName => {
                 if (book[columnName]) {
@@ -70,18 +71,30 @@ const readExcelFile = (url, arrayColumnNames, filters) => {
             return book; // Cast to your Book interface type
         });
         // Filter books based on specified filters
-        const filteredBooks = books.filter((book) => {
-            return filters.every(filter => {
-                // console.log(1)
-                if (typeof filter.value === 'boolean') {
-                    console.log(book.name, book[filter.name], (0, types_1.isInTruthyValues)(book[filter.name]), filter.value);
-                    return (0, types_1.isInTruthyValues)(book[filter.name]) === filter.value.toString();
+        // const filteredBooks = books.filter((book ) => {
+        //   return filters.every(filter => {
+        //     // console.log(1)
+        //     if (  filter.type === 'boolean') {
+        //       console.log(book.name, book[filter.name], isInTruthyValues(book[filter.name]),filter.value)
+        //       return isInTruthyValues(book[filter.name]) === filter.value;
+        //     } else if (Array.isArray(book[filter.name])) {
+        //       return book[filter.name].some((value: string) => value === filter.value);
+        //     } else {
+        //       return book[filter.name] === filter.value;
+        //     }
+        //   });
+        // });
+        const filteredBooks = books.filter(book => {
+            return Object.keys(filters).every(filterKey => {
+                const filterValue = filters[filterKey];
+                if (typeof filterValue === 'boolean') {
+                    return (0, types_1.isInTruthyValues)(book[filterKey]) === filterValue;
                 }
-                else if (Array.isArray(book[filter.name])) {
-                    return book[filter.name].some((value) => value === filter.value);
+                else if (Array.isArray(book[filterKey])) {
+                    return book[filterKey].some((value) => value === filterValue);
                 }
                 else {
-                    return book[filter.name] === filter.value;
+                    return book[filterKey] === filterValue;
                 }
             });
         });
@@ -123,23 +136,6 @@ const excelWordsToBool = (worksheet, columnName) => {
     return worksheet;
 };
 exports.excelWordsToBool = excelWordsToBool;
-const extractUniqueGenres = (books) => {
-    // Use a Set to store unique genres
-    const uniqueGenres = new Set();
-    // Iterate through each book
-    books.forEach(book => {
-        // Check if genres are defined for the current book
-        if (book.genres && book.genres.length > 0) {
-            // Iterate through genres array of each book and add to Set
-            book.genres.forEach(genre => {
-                uniqueGenres.add(genre.trim()); // Trim to remove any leading/trailing spaces
-            });
-        }
-    });
-    // Convert Set to array and return
-    return Array.from(uniqueGenres);
-};
-exports.extractUniqueGenres = extractUniqueGenres;
 const fillMissingIds = (worksheet) => {
     const range = xlsx.utils.decode_range(worksheet['!ref']);
     const idCol = Object.keys(worksheet)
@@ -165,6 +161,18 @@ const extractExcelWorksheet = (filePath, sheetnum = 0) => {
     return worksheet;
 };
 exports.extractExcelWorksheet = extractExcelWorksheet;
+const extractUniqueGenres = (books) => {
+    const uniqueGenres = new Set();
+    books.forEach(book => {
+        if (book.genres && book.genres.length > 0) {
+            book.genres.forEach(genre => {
+                uniqueGenres.add(genre.trim());
+            });
+        }
+    });
+    return Array.from(uniqueGenres);
+};
+exports.extractUniqueGenres = extractUniqueGenres;
 // export  const saveExcelFile = async () => {
 // try {
 //   const buffer = await fetchAndCreateExcel('knihy');

@@ -39,18 +39,16 @@ const storage = multer_1.default.diskStorage({
     },
 });
 const upload = (0, multer_1.default)({ storage });
-app.get("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query } = req.query;
-    // Define filters object to specify allowed values for each column
-    const filters = [
-        // { name: 'genres', value: 'a' },
-        { name: "formaturita", value: false },
-        // { name: 'author', value: 'J.K. Rowling' },
-        // Add more filters as needed
-    ];
+    // const filters: Filters = req.query.filters ? JSON.parse(req.query.filters as string) : {};
+    const filters = {
+        formaturita: false,
+        genres: 'a'
+    };
     try {
         const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ["genres"], filters);
-        console.log(bookList);
+        console.log(1, bookList);
         res.json(bookList);
     }
     catch (error) {
@@ -95,7 +93,7 @@ app.get("/downloadExcel", (req, res) => __awaiter(void 0, void 0, void 0, functi
 }));
 app.get("/getGenres", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ["genres"], []);
+        const bookList = (0, excelUtils_1.readExcelFile)(knihyURL, ["genres"], {});
         res.json((0, excelUtils_1.extractUniqueGenres)(bookList));
     }
     catch (error) {
