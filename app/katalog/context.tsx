@@ -10,6 +10,7 @@ type QueryContextType = {
   books: Book[];
   setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
   genres: string[] | Promise<string[]>
+  categories:string[] | Promise<string[]>
 };
 
 // Create the context
