@@ -50,7 +50,6 @@ app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         const sqlQuery = `
       SELECT *
       FROM knihy
-      WHERE name ILIKE $1
     `;
         const result = yield (0, db_1.query)(sqlQuery, [`%${searchQuery}%`]); // Using ILIKE for case-insensitive search
         res.json(result.rows); // Assuming result.rows contains books retrieved from the database
