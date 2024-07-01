@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = void 0;
+exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = exports.pool = void 0;
 const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 const xlsx_1 = __importDefault(require("xlsx"));
@@ -25,12 +25,12 @@ dotenv_1.default.config();
 //   password: process.env.PSQL_PASSWORD,
 //   database: process.env.DB_NAME,
 // });
-const pool = new pg_1.Pool({
+exports.pool = new pg_1.Pool({
     connectionString: process.env.POSTGRES_URL,
 });
 // Export a query function to execute SQL queries
 const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void 0, function* (text, params = []) {
-    const client = yield pool.connect();
+    const client = yield exports.pool.connect();
     try {
         const result = yield client.query(text, params);
         return result;
@@ -53,7 +53,7 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
             throw new Error('The Excel file does not contain headers');
         }
         // Use the pool to get a client and execute the query
-        const client = yield pool.connect();
+        const client = yield exports.pool.connect();
         try {
             // Get column types from the database
             const columnTypesQuery = `
@@ -90,7 +90,9 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
                     yield client.query(insertQuery, processedRow);
                 }
                 catch (rowError) {
-                    console.error(rowError.message);
+                    console.error('Error processing row:', rowError.message);
+                    // Throw error to stop further processing or log as needed
+                    throw new Error(`Error processing row: ${rowError.message}`);
                 }
             }
             console.log('Data successfully inserted or updated in PostgreSQL');
@@ -101,6 +103,7 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
     }
     catch (error) {
         console.error('Error inserting data into PostgreSQL:', error);
+        throw new Error(`Error inserting data into PostgreSQL: ${error.message}`);
     }
 });
 exports.insertExcelDataToPostgres = insertExcelDataToPostgres;
@@ -160,7 +163,7 @@ function connectAndQuery() {
 exports.connectAndQuery = connectAndQuery;
 const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void 0, [columnName_1, ...args_2], void 0, function* (columnName, unique = false, // Default to false, meaning non-unique by default
 tableName = 'knihy') {
-    const client = yield pool.connect();
+    const client = yield exports.pool.connect();
     try {
         const query = `
         SELECT unnest(${columnName}) AS ${columnName}

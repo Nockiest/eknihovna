@@ -11,7 +11,7 @@ dotenv.config();
 //   password: process.env.PSQL_PASSWORD,
 //   database: process.env.DB_NAME,
 // });
-const pool = new Pool({
+export const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 })
 // Export a query function to execute SQL queries
@@ -85,7 +85,9 @@ export const insertExcelDataToPostgres = async (
           // Execute the query
           await client.query(insertQuery, processedRow);
         } catch (rowError) {
-          console.error(rowError.message);
+          console.error('Error processing row:', rowError.message);
+          // Throw error to stop further processing or log as needed
+          throw new Error(`Error processing row: ${rowError.message}`);
         }
       }
       console.log('Data successfully inserted or updated in PostgreSQL');
@@ -94,6 +96,7 @@ export const insertExcelDataToPostgres = async (
     }
   } catch (error) {
     console.error('Error inserting data into PostgreSQL:', error);
+    throw new Error(`Error inserting data into PostgreSQL: ${error.message}`);
   }
 };
 

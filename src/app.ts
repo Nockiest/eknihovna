@@ -28,9 +28,36 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
+// app.post('/bookList', async (req, res) => {
+//   const { filters } = req.body;
 
+//   let sqlQuery = 'SELECT * FROM knihy';
+//   const queryParams = [];
+
+//   if (filters) {
+//     const filterKeys = Object.keys(filters);
+//     if (filterKeys.length > 0) {
+//       const conditions = filterKeys.map((key, index) => {
+//         queryParams.push(filters[key]);
+//         return `${key} = $${index + 1}`;
+//       });
+
+//       sqlQuery += ` WHERE ${conditions.join(' AND ')}`;
+//     }
+//   }
+
+//   try {
+//     const result = await pool.query(sqlQuery, queryParams);
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error('Error executing search query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!////////////////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
 app.post('/bookList', async (req, res) => {
-  const { query: searchQuery } = req.query;
+  // const { query: searchQuery } = req.query;
 
   try {
     // Example query to fetch books filtered by  name containing the searchQuery
@@ -39,8 +66,8 @@ app.post('/bookList', async (req, res) => {
       FROM knihy
     `;
 
-    const result = await query(sqlQuery, [`%${searchQuery}%`]); // Using ILIKE for case-insensitive search
-    console.log(result)
+    const result = await query(sqlQuery ); // Using ILIKE for case-insensitive search
+    console.log(result.rows)
     res.json(result.rows); // Assuming result.rows contains books retrieved from the database
   } catch (error) {
     console.error('Error executing search query:', error);
@@ -61,7 +88,7 @@ app.get('/getUniqueValues', async (req: Request, res: Response) => {
 
 app.post('/authenticate', (req, res) => {
   const { password } = req.body;
-  console.log(password)
+  console.log(password,process.env.UPLOAD_PASSWORD)
 
   if (!password) {
     return res.status(400).json({ error: 'vyžadováno heslo' });
@@ -119,22 +146,32 @@ app.post('/update', upload.single('file'), async (req, res) => {
     // Read the uploaded file
     const workbook = xlsx.readFile(filePath);
     const sheetName = workbook.SheetNames[0];
-     let worksheet = workbook.Sheets[sheetName];
-    // Apply data transformation
+    let worksheet = workbook.Sheets[sheetName];
+
+    // Apply data transformations
     worksheet = excelWordsToBool(worksheet, 'available');
     worksheet = excelWordsToBool(worksheet, 'formaturita');
-    worksheet = fillMissingIds(worksheet)
-    insertExcelDataToPostgres(filePath, 'knihy'   )
-
-    // // remove this part asap!!!!!
-    // workbook.Sheets[sheetName] = worksheet
-    // xlsx.writeFile(workbook, filePath);
+    worksheet = fillMissingIds(worksheet);
+    console.log('x')
+    // Insert data into PostgreSQL
+    await insertExcelDataToPostgres(filePath, 'knihy'); // Assuming insertExcelDataToPostgres is async
 
     // Respond with success message
     res.status(200).json({ message: 'File processed and uploaded successfully' });
   } catch (error) {
     console.error('Error processing data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+
+    // Determine the appropriate error response
+    let errorMessage = 'Internal Server Error';
+    if (error.message === 'No file uploaded' || error.message.startsWith('File not found')) {
+      errorMessage = error.message;
+    } else if (error.message === 'Badly formatted row') {
+      errorMessage = 'Some rows in the file are badly formatted';
+    } else if (error.message.startsWith('Error inserting data into PostgreSQL')) {
+      errorMessage = 'Error inserting data into the database';
+    }
+
+    res.status(500).json({ error: errorMessage });
   }
 });
 

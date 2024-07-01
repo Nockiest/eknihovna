@@ -39,16 +39,40 @@ const storage = multer_1.default.diskStorage({
     }
 });
 const upload = (0, multer_1.default)({ storage });
+///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
+// app.post('/bookList', async (req, res) => {
+//   const { filters } = req.body;
+//   let sqlQuery = 'SELECT * FROM knihy';
+//   const queryParams = [];
+//   if (filters) {
+//     const filterKeys = Object.keys(filters);
+//     if (filterKeys.length > 0) {
+//       const conditions = filterKeys.map((key, index) => {
+//         queryParams.push(filters[key]);
+//         return `${key} = $${index + 1}`;
+//       });
+//       sqlQuery += ` WHERE ${conditions.join(' AND ')}`;
+//     }
+//   }
+//   try {
+//     const result = await pool.query(sqlQuery, queryParams);
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error('Error executing search query:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
+///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!////////////////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
 app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { query: searchQuery } = req.query;
+    // const { query: searchQuery } = req.query;
     try {
         // Example query to fetch books filtered by  name containing the searchQuery
         const sqlQuery = `
       SELECT *
       FROM knihy
     `;
-        const result = yield (0, db_1.query)(sqlQuery, [`%${searchQuery}%`]); // Using ILIKE for case-insensitive search
-        console.log(result);
+        const result = yield (0, db_1.query)(sqlQuery); // Using ILIKE for case-insensitive search
+        console.log(result.rows);
         res.json(result.rows); // Assuming result.rows contains books retrieved from the database
     }
     catch (error) {
@@ -69,7 +93,7 @@ app.get('/getUniqueValues', (req, res) => __awaiter(void 0, void 0, void 0, func
 }));
 app.post('/authenticate', (req, res) => {
     const { password } = req.body;
-    console.log(password);
+    console.log(password, process.env.UPLOAD_PASSWORD);
     if (!password) {
         return res.status(400).json({ error: 'vyžadováno heslo' });
     }
@@ -119,20 +143,30 @@ app.post('/update', upload.single('file'), (req, res) => __awaiter(void 0, void 
         const workbook = xlsx_1.default.readFile(filePath);
         const sheetName = workbook.SheetNames[0];
         let worksheet = workbook.Sheets[sheetName];
-        // Apply data transformation
+        // Apply data transformations
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'available');
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, 'formaturita');
         worksheet = (0, excelUtils_1.fillMissingIds)(worksheet);
-        (0, db_1.insertExcelDataToPostgres)(filePath, 'knihy');
-        // // remove this part asap!!!!!
-        // workbook.Sheets[sheetName] = worksheet
-        // xlsx.writeFile(workbook, filePath);
+        console.log('x');
+        // Insert data into PostgreSQL
+        yield (0, db_1.insertExcelDataToPostgres)(filePath, 'knihy'); // Assuming insertExcelDataToPostgres is async
         // Respond with success message
         res.status(200).json({ message: 'File processed and uploaded successfully' });
     }
     catch (error) {
         console.error('Error processing data:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        // Determine the appropriate error response
+        let errorMessage = 'Internal Server Error';
+        if (error.message === 'No file uploaded' || error.message.startsWith('File not found')) {
+            errorMessage = error.message;
+        }
+        else if (error.message === 'Badly formatted row') {
+            errorMessage = 'Some rows in the file are badly formatted';
+        }
+        else if (error.message.startsWith('Error inserting data into PostgreSQL')) {
+            errorMessage = 'Error inserting data into the database';
+        }
+        res.status(500).json({ error: errorMessage });
     }
 }));
 // const mockData = {rows:[{"id":1,"name":"Bobea elatior Gaudich.","iban":"IE23 LSJW 9122 7020 8015 01","author":"Rog Enns","rating":80,"description":"vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa id nisl venenatis lacinia aenean sit amet justo morbi","forMaturita":true,"available":false},
