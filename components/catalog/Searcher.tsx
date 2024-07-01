@@ -19,6 +19,7 @@ import theme from "@/theme/theme";
 import { Filters } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
 import { getBooksByQuery } from "@/utils/fetchBooks";
+import SortedSelect from "@/theme/select/select";
 
 interface SearcherProps {}
 
@@ -41,6 +42,7 @@ const Searcher: React.FC<SearcherProps> = () => {
     const resolveGenres = async () => {
       if (genres instanceof Promise) {
         const resolved = await genres;
+        console.log(resolved)
         setResolvedGenres(resolved);
       } else {
         setResolvedGenres(genres);
@@ -120,8 +122,15 @@ const Searcher: React.FC<SearcherProps> = () => {
           fullWidth
           margin="normal"
         />
-
-        <Select
+<SortedSelect  label="Žánr"
+          value={filters.genres || ""}
+          options={resolvedGenres}
+          onChange={(e) =>
+            handleFilterChange("genres", e.target.value as string)
+          }
+          fullWidth
+          margin="dense"/>
+        {/* <Select
           label="Žánr"
           value={filters.genres || ""}
           onChange={(e) =>
@@ -135,11 +144,12 @@ const Searcher: React.FC<SearcherProps> = () => {
               {genre}
             </MenuItem>
           ))}
-        </Select>
+        </Select> */}
 
-        <Select
+        <SortedSelect
           label="Kategorie"
-          value={filters.category || ""}
+          value={filters.category   || ""}
+          options={resolvedCategories}
           onChange={(e) =>
             handleFilterChange("category", e.target.value as string)
           }
@@ -151,7 +161,7 @@ const Searcher: React.FC<SearcherProps> = () => {
               {category}
             </MenuItem>
           ))}
-        </Select>
+        </SortedSelect>
 
 
         <FormControlLabel

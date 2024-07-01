@@ -33,7 +33,6 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const size = useCurrentBreakpoint();
   const router = useRouter();
 
-
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
@@ -61,7 +60,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
       });
       router.push(`/katalog?page=${Math.min(Math.ceil(allBooks.length / itemsPerPage),newCurrentPage + 1||1)}`);
     }
-  }, [size,allBooks,itemsPerPage,router, page]);
+  }, [size,allBooks,itemsPerPage,  page]);
 
   // Fetch books on initial render
   useEffect(() => {
@@ -75,7 +74,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
       }
     };
     fetchBooks();
-  }, [promisedBooks,router]);
+  }, [promisedBooks ]);
 
   // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {

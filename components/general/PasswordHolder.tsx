@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import Image from "next/image";
+import { useTheme } from "@emotion/react";
 // import { Visibility, VisibilityOff } from '@mui/icons-material';
-
+import theme from "@/theme/theme";
 interface PasswordEntryProps {
   label: string;
   value: string;
@@ -26,6 +27,27 @@ const PasswordEntry: React.FC<PasswordEntryProps> = ({
       type={showPassword ? "text" : "password"}
       value={value}
       onChange={onChange}
+      sx={{
+        '& .MuiOutlinedInput-root': {
+          '& fieldset': {
+            borderColor: theme.palette.primary.main,
+          },
+          '&:hover fieldset': {
+            borderColor: theme.palette.primary.main,
+          },
+          '&.Mui-focused fieldset': {
+            borderColor: theme.palette.primary.main,
+          },
+          color: theme.palette.primary.main,
+        },
+        '& .MuiInputLabel-root': {
+          color: theme.palette.primary.main,
+        },
+        '& .MuiInputLabel-root.Mui-focused': {
+          color: theme.palette.primary.main,
+        },
+      }}
+
       variant="outlined"
       fullWidth
       InputProps={{
