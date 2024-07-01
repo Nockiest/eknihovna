@@ -1,6 +1,33 @@
 // src/theme.js
 "use client";
 import { createTheme } from "@mui/material/styles";
+const rootPalette = {
+  primary: {
+    main: "#93736c", // primary 500
+    light: "#beaba7", // primary 700
+    dark: "#584541", // primary 300
+    contrastText: "#ffffff",
+  },
+  secondary: {
+    main: "#e3441c", // secondary 500
+    light: "#ee8f77", // secondary 700
+    dark: "#882911", // secondary 300
+    contrastText: "#ffffff",
+  },
+
+  text: {
+    primary: '#131603',
+    secondary: '#ffffff'
+  },
+  background: {
+    default: "#ee8f77", // secondary 500
+
+// this is the accent color
+    },
+    error:{
+      main: '#C42C0E'
+    }
+  }
 
 const theme = createTheme({
   spacing: 8,
@@ -71,24 +98,24 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#93736c", // primary 500
-      light: "#beaba7", // primary 700
-      dark: "#584541", // primary 300
-      contrastText: "#ffffff",
+      main: rootPalette.primary.main , // primary 500
+      light: rootPalette.primary.light, // primary 700
+      dark: rootPalette.primary.dark, // primary 300
+      contrastText: rootPalette.primary.contrastText,
     },
     secondary: {
-      main: "#e3441c", // secondary 500
-      light: "#ee8f77", // secondary 700
-      dark: "#882911", // secondary 300
-      contrastText: "#ffffff",
+      main: rootPalette.secondary.main, // secondary 500
+      light: rootPalette.secondary.light, // secondary 700
+      dark: rootPalette.secondary.dark, // secondary 300
+      contrastText: rootPalette.secondary.contrastText,
     },
 
     text: {
-      primary: '#131603',
-      secondary: '#99b319'
+      primary: rootPalette.text.primary ,
+      secondary: rootPalette.text.secondary
     },
     background: {
-      default: "#ee8f77", // secondary 500
+      default:  rootPalette.background.default, // secondary 500
 
 // this is the accent color
       },
@@ -137,6 +164,54 @@ const theme = createTheme({
           subtitle2: 'h2',
           body1: 'span',
           body2: 'span',
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: rootPalette.primary.main, // Primary color
+            },
+            "&:hover fieldset": {
+              borderColor: rootPalette.primary.main, // Primary color on hover
+            },
+            "&.Mui-focused fieldset": {
+              borderColor: rootPalette.primary.main, // Primary color when focused
+            },
+            color: rootPalette.text.primary, // Text color
+          },
+          "& .MuiInputLabel-root": {
+            color:  rootPalette.text.primary, // Label color
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color:  rootPalette.text.primary, // Label color when focused
+          },
+        },
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        root: {
+          "& .MuiOutlinedInput-root": {
+            "& fieldset": {
+              borderColor: rootPalette.text.primary, // Primary color
+            },
+            "&:hover fieldset": {
+              borderColor:  rootPalette.text.primary, // Primary color on hover
+            },
+            "&.Mui-focused fieldset": {
+              borderColor:  rootPalette.text.primary, // Primary color when focused
+            },
+            color:  rootPalette.text.primary, // Text color
+          },
+          "& .MuiInputLabel-root": {
+            color:  rootPalette.text.primary, // Label color
+          },
+          "& .MuiInputLabel-root.Mui-focused": {
+            color:  rootPalette.text.primary, // Label color when focused
+          },
         },
       },
     },

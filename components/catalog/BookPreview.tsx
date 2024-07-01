@@ -61,7 +61,11 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           <StarRow rating={rating} />
         </Box>
         <br />
-        <Typography className="absolute bottom-2 right-2" variant="body1">
+        <Typography
+          className="absolute bottom-2 right-2"
+          sx={{ opacity: "1" , color: theme.palette.text.secondary}}
+          variant="body1"
+        >
           {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
         </Typography>
       </Box>
