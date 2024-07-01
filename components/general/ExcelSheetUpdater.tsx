@@ -7,14 +7,16 @@ import Image from "next/image";
 import { useState } from "react";
 import axios from "axios";
 import PasswordEntry from "./PasswordHolder";
+import { authenticate } from "@/utils/authenticate";
+import { knihyURL } from "@/data/values";
 
 const ExcelSheetUpdater = () => {
   const [responseMessage, setResponseMessage] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const knihyURL =
-    process.env.NEXT_PUBLIC_APP_API_URL || "http://localhost:3002"; // Adjust URL as per your backend setup
+  // const knihyURL =
+  //   process.env.NEXT_PUBLIC_APP_API_URL || "http://localhost:3002"; // Adjust URL as per your backend setup
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -24,61 +26,34 @@ const ExcelSheetUpdater = () => {
     }
   };
 
-  const authenticate = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    try {
-      const response = await axios.post(
-        `${knihyURL}/authenticate`,
-        { password },
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        setResponseMessage("Authentication successful");
-        setAuthenticated(true);
-      } else {
-        setResponseMessage("Authentication failed");
-      }
-    } catch (error: any) {
-      console.error("Error:", error);
-      setResponseMessage("Error: " + error.message);
-    }
-  };
-
-
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     // Assuming you have a file input with id "fileInput"
-    const fileInput = document.getElementById('fileInput') as HTMLInputElement;
+    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
     const file = fileInput.files && fileInput.files[0];
 
     if (!file) {
-      console.error('No file selected');
+      console.error("No file selected");
       return;
     }
 
     // Create FormData object
     const formData = new FormData();
-    formData.append('file', file); // Append the file to FormData
-    formData.append('password', password); // Append other form data as needed
+    formData.append("file", file); // Append the file to FormData
+    formData.append("password", password); // Append other form data as needed
 
     try {
       const response = await axios.post(`${knihyURL}/update`, formData, {
         headers: {
-          'Content-Type': 'multipart/form-data', // Set content type to multipart/form-data
+          "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
         },
       });
 
       setResponseMessage(JSON.stringify(response.data, null, 2));
     } catch (error: any) {
-      console.error('Error:', error);
-      setResponseMessage('Error: ' + error.message);
+      console.error("Error:", error);
+      setResponseMessage("Error: " + error.message);
     }
   };
   const fetchDataFromServer = async () => {
@@ -101,7 +76,15 @@ const ExcelSheetUpdater = () => {
     <Box className="flex flex-col items-center justify-center">
       {!authenticated ? (
         <form
-          onSubmit={authenticate}
+          onSubmit={async (e) => {
+            const res = await authenticate(e, password);
+            if (res) {
+              setResponseMessage("Authentication successful");
+              setAuthenticated(true);
+            } else {
+              setResponseMessage("Authentication failed");
+            }
+          }}
           className="w-1/2 flex flex-col items-center justify-center mt-16 mx-auto"
         >
           <label htmlFor="password" className="block mb-2">
@@ -123,9 +106,12 @@ const ExcelSheetUpdater = () => {
               Stáhnout data ze serveru
             </h2>
             <PrimaryButton onClick={fetchDataFromServer}>
-              <Image src={"icon/download.svg"}  alt="download"
-                  width={32}
-                  height={32} />
+              <Image
+                src={"icon/download.svg"}
+                alt="download"
+                width={32}
+                height={32}
+              />
               {/* Stáhnout data ze serveru */}
             </PrimaryButton>
           </div>
