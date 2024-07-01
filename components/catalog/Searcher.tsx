@@ -81,6 +81,7 @@ const Searcher: React.FC<SearcherProps> = () => {
     const genresArray = e.target.value.split(",").map((genre) => genre.trim());
     // handleFilterChange("genres", genresArray);
   };
+
   return (
     <Slide direction="up" in={isOpenSearcher} mountOnEnter unmountOnExit>
       <Paper
@@ -129,7 +130,7 @@ const Searcher: React.FC<SearcherProps> = () => {
           fullWidth
           margin="dense"
         >
-          {resolvedGenres.map((genre) => (
+          {resolvedGenres && resolvedGenres.map((genre) => (
             <MenuItem key={genre} value={genre}>
               {genre}
             </MenuItem>
@@ -145,7 +146,7 @@ const Searcher: React.FC<SearcherProps> = () => {
           fullWidth
           margin="dense"
         >
-          {resolvedCategories.map((category,key  ) => (
+          {resolvedCategories && resolvedCategories.map((category,key  ) => (
             <MenuItem key={key} value={category}>
               {category}
             </MenuItem>
