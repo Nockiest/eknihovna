@@ -1,6 +1,7 @@
-import React from 'react';
-import  Button from '@mui/material/IconButton';
-import { styled } from '@mui/material/styles';
+'use client'
+import React from "react";
+import Button from "@mui/material/IconButton";
+import { styled } from "@mui/material/styles";
 
 interface CustomHamburgerProps {
   onClick: () => void;
@@ -8,28 +9,32 @@ interface CustomHamburgerProps {
 }
 
 const CustomIconButton = styled(Button)(({ theme }) => ({
-//   backgroundColor: 'transparent',
-//   border: 0,
-//   cursor: 'pointer',
-//   position: 'absolute',
-//   right: '15px', // Tailwind `right-10`
-//   top: '15px', // Tailwind `top-4`
-//   zIndex: 3,
-//   margin: '1rem', // Tailwind `m-4`
-//   padding: '1rem', // Tailwind `p-4`
-//   '&:hover': {
-//     backgroundColor: 'transparent',
-//   },
+  margin: '0'
+  //   backgroundColor: 'transparent',
+  //   border: 0,
+  //   cursor: 'pointer',
+  //   position: 'absolute',
+  //   right: '15px', // Tailwind `right-10`
+  //   top: '15px', // Tailwind `top-4`
+  //   zIndex: 3,
+  //   margin: '1rem', // Tailwind `m-4`
+  //   padding: '1rem', // Tailwind `p-4`
+  //   '&:hover': {
+  //     backgroundColor: 'transparent',
+  //   },
 }));
 
-const HamburgerSpan = styled('span')({
+const HamburgerSpan = styled("span")({
   /* Add your hamburger span styles here */
 });
 
-const CustomHamburger: React.FC<CustomHamburgerProps> = ({ onClick, ariaLabel }) => {
+const CustomHamburger: React.FC<CustomHamburgerProps> = ({
+  onClick,
+  ariaLabel,
+}) => {
   return (
     <CustomIconButton
-      className="      border-0 cursor-pointer absolute right-0 top-0 z-3 m-4 p-4 sm:hidden"
+      className="border-0 cursor-pointer absolute right-0 top-1 z-3 m-4 p-4 sm:hidden"
       onClick={onClick}
       aria-label={ariaLabel}
     >

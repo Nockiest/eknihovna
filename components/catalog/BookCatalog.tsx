@@ -56,7 +56,6 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
       setItemsPerPage(newItemsPerPage);
       const newCurrentPage = Math.ceil((indexOfFirstBook) / newItemsPerPage);
       setNewBookSlice(page, itemsPerPage, allBooks)
-      console.log(Math.ceil(allBooks.length / itemsPerPage),newCurrentPage + 1)
       setTotalPages((prev) => {
         return allBooks === undefined ? 0 : Math.ceil(allBooks.length / itemsPerPage);
       });
@@ -66,7 +65,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
 
   // Fetch books on initial render
   useEffect(() => {
-   router.push(`/katalog?page=1`);
+    router.push(`/katalog?page=1`); // reset page number on every query
     const fetchBooks = async () => {
       try {
         const resolvedBooks = await promisedBooks;
@@ -76,7 +75,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
       }
     };
     fetchBooks();
-  }, [promisedBooks]);
+  }, [promisedBooks,router]);
 
   // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {
@@ -84,7 +83,6 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
     setTotalPages((prev) => {
       return allBooks === undefined ? 0 : Math.ceil(allBooks.length / itemsPerPage);
     });
-    // setTotalPages(Math.ceil(allBooks.length / itemsPerPage));
   }, [page, itemsPerPage, allBooks]);
 
   if (error) {
@@ -99,10 +97,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
 
   return (
     <Box className="w-full">
-
-
       <Filter text={'romány'} />
-      {shownBooks.length}
       {shownBooks.length > 0 ? (
         <div className="w-full">
           <Grid container spacing={2} columns={12}>
