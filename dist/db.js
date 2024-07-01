@@ -16,6 +16,7 @@ exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAn
 const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 const xlsx_1 = __importDefault(require("xlsx"));
+const utils_1 = require("./utils");
 dotenv_1.default.config();
 // Create a new Pool instance (recommended for handling multiple connections)
 // export const pool = new Pool({
@@ -25,8 +26,15 @@ dotenv_1.default.config();
 //   password: process.env.PSQL_PASSWORD,
 //   database: process.env.DB_NAME,
 // });
+// export const pool = new Pool({
+//   connectionString: process.env.POSTGRES_URL,
+// })
 exports.pool = new pg_1.Pool({
-    connectionString: process.env.POSTGRES_URL,
+    user: 'postgres',
+    host: 'localhost', // or your database host
+    database: 'eknihovna',
+    password: process.env.PSQL_PASSWORD,
+    port: 5432, // default PostgreSQL port
 });
 // Export a query function to execute SQL queries
 const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void 0, function* (text, params = []) {
@@ -195,9 +203,13 @@ const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void
             values = result.rows.map((row) => row.value);
         }
         // If unique is true, filter the values to only include unique values
-        if (unique) {
-            values = Array.from(new Set(values));
-        }
+        // if (unique) {
+        //   values = Array.from(new Set(values));
+        // }
+        // Filter out null values
+        values = values.filter(value => value !== null);
+        values = (0, utils_1.flattenIfArrayOfArrays)(values);
+        console.log(values);
         return {
             columnName,
             values,

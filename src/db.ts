@@ -2,6 +2,7 @@ import { Pool, PoolClient } from 'pg';
 import dotenv from 'dotenv';
 import xlsx from 'xlsx'
 import fs from 'fs'
+import { flattenIfArrayOfArrays } from './utils';
 dotenv.config();
 // Create a new Pool instance (recommended for handling multiple connections)
 // export const pool = new Pool({
@@ -11,9 +12,16 @@ dotenv.config();
 //   password: process.env.PSQL_PASSWORD,
 //   database: process.env.DB_NAME,
 // });
+// export const pool = new Pool({
+//   connectionString: process.env.POSTGRES_URL,
+// })
 export const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-})
+  user: 'postgres',
+  host: 'localhost', // or your database host
+  database: 'eknihovna',
+  password: process.env.PSQL_PASSWORD  ,
+  port: 5432, // default PostgreSQL port
+});
 // Export a query function to execute SQL queries
 
 export const query = async (text, params =[]) => {
@@ -199,14 +207,14 @@ export async function connectAndQuery() {
         // Extract the values from the result
         values = result.rows.map((row) => row.value);
       }
-
       // If unique is true, filter the values to only include unique values
-      if (unique) {
-        values = Array.from(new Set(values));
-      }
-
-
-
+      // if (unique) {
+      //   values = Array.from(new Set(values));
+      // }
+  // Filter out null values
+  values = values.filter(value => value !== null);
+      values = flattenIfArrayOfArrays(values )
+      console.log(values)
       return {
         columnName,
         values,
@@ -218,6 +226,7 @@ export async function connectAndQuery() {
       client.release();
     }
   };
+
   // export const extractValuesFromArrayColumn = async (
   //   columnName: string,
   //   unique: boolean = false, // Default to false, meaning non-unique by default
