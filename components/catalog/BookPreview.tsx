@@ -45,7 +45,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         <br />
 
         <Box>
-          {genres.length > 0 && (
+          {genres && genres.length > 0 && (
             <Box>
               <br />
               {genres.map((gen, key) => (
