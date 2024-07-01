@@ -161,30 +161,52 @@ export async function connectAndQuery() {
   }
   export const extractValuesFromArrayColumn = async (
     columnName: string,
-    unique: boolean = false, // Default to false, meaning non-unique by default
-
-    tableName: string = 'knihy',
+    unique: boolean = false,
+    tableName: string = 'knihy'
   ): Promise<ExtractedValues | null> => {
     const client: PoolClient = await pool.connect();
-    try {
-      const query = `
-        SELECT unnest(${columnName}) AS ${columnName}
-        FROM ${tableName}
-      `;
-      const result = await client.query(query);
 
-      // Extract the values from the result
-      let values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
+    try {
+      // Check if the column type is an array or can be treated as an array
+      const columnTypeQuery = `
+        SELECT data_type
+        FROM information_schema.columns
+        WHERE table_name = $1 AND column_name = $2
+      `;
+      const columnTypeResult = await client.query(columnTypeQuery, [tableName, columnName]);
+      const columnType = columnTypeResult.rows[0]?.data_type;
+
+      let values: string[] = [];
+
+      if (columnType && columnType.includes('[]')) {
+        // Column is an array type, unnest the array
+        const query = `
+          SELECT DISTINCT unnest(${columnName}) AS value
+          FROM ${tableName}
+        `;
+        const result = await client.query(query);
+
+        // Extract the values from the result
+        values = result.rows.map((row) => row.value);
+      } else {
+        // Column is not an array type, treat it as a single value per row
+        const query = `
+          SELECT DISTINCT ${columnName} AS value
+          FROM ${tableName}
+        `;
+        const result = await client.query(query);
+
+        // Extract the values from the result
+        values = result.rows.map((row) => row.value);
+      }
 
       // If unique is true, filter the values to only include unique values
       if (unique) {
         values = Array.from(new Set(values));
       }
 
-      values.forEach((value, index) => {
-        console.log(`Value ${index + 1}:`, value);
-      });
-      console.log(result.rows);
+
+
       return {
         columnName,
         values,
@@ -196,3 +218,40 @@ export async function connectAndQuery() {
       client.release();
     }
   };
+  // export const extractValuesFromArrayColumn = async (
+  //   columnName: string,
+  //   unique: boolean = false, // Default to false, meaning non-unique by default
+
+  //   tableName: string = 'knihy',
+  // ): Promise<ExtractedValues | null> => {
+  //   const client: PoolClient = await pool.connect();
+  //   try {
+  //     const query = `
+  //       SELECT unnest(${columnName}) AS ${columnName}
+  //       FROM ${tableName}
+  //     `;
+  //     const result = await client.query(query);
+
+  //     // Extract the values from the result
+  //     let values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
+
+  //     // If unique is true, filter the values to only include unique values
+  //     if (unique) {
+  //       values = Array.from(new Set(values));
+  //     }
+
+  //     values.forEach((value, index) => {
+  //       console.log(`Value ${index + 1}:`, value);
+  //     });
+  //     console.log(result.rows);
+  //     return {
+  //       columnName,
+  //       values,
+  //     };
+  //   } catch (error) {
+  //     console.error('Error extracting values:', error);
+  //     return null;
+  //   } finally {
+  //     client.release();
+  //   }
+  // };

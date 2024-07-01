@@ -65,6 +65,7 @@ const upload = (0, multer_1.default)({ storage });
 ///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!////////////////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
 app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     // const { query: searchQuery } = req.query;
+    const { filters } = req.body;
     try {
         // Example query to fetch books filtered by  name containing the searchQuery
         const sqlQuery = `
@@ -80,10 +81,23 @@ app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
+// app.get('/getUniqueValues', async (req: Request, res: Response) => {
+//   const { columnName } = req.body;
+//   console.log(columnName)
+//   // const columnName = 'genres'; // Replace with your actual array column name
+//   try {
+//     const values = await extractValuesFromArrayColumn( columnName, true);
+//     res.json(values);
+//   } catch (error) {
+//     console.error('Error retrieving values:', error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 app.get('/getUniqueValues', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const columnName = 'genres'; // Replace with your actual array column name
+    const { columnName } = req.query; // Use req.query to get query parameters
+    console.log(columnName); // Debugging: Ensure columnName is correctly received
     try {
-        const values = yield (0, db_1.extractValuesFromArrayColumn)(columnName, true);
+        const values = yield (0, db_1.extractValuesFromArrayColumn)(columnName, true); // Assuming extractValuesFromArrayColumn returns unique values
         res.json(values);
     }
     catch (error) {
@@ -91,26 +105,6 @@ app.get('/getUniqueValues', (req, res) => __awaiter(void 0, void 0, void 0, func
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
-app.post('/authenticate', (req, res) => {
-    const { password } = req.body;
-    console.log(password, process.env.UPLOAD_PASSWORD);
-    if (!password) {
-        return res.status(400).json({ error: 'vyžadováno heslo' });
-    }
-    if (password === process.env.UPLOAD_PASSWORD) {
-        res.status(200).json({ message: 'Uživatel autorizován' });
-    }
-    else {
-        return res.status(401).json({ error: 'Špatné heslo' });
-    }
-    // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-    //   if (err || !result) {
-    //     return res.status(401).json({ error: 'Špatné heslo' });
-    //   }
-    // Password correct, return success
-    //   res.status(200).json({ message: 'Uživatel autorizován' });
-    // });
-});
 app.get('/downloadExcel', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const buffer = yield (0, db_1.fetchAndCreateExcel)('knihy'); // Replace 'knihy' with your table name
