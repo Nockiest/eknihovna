@@ -6,22 +6,19 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
 import { useEffect, useState } from "react";
-import { Book,   Filters  } from "@/types/types";
+import { Book, Filters } from "@/types/types";
 import { fetchGenres } from "@/utils/fetchGenres";
 import { SearchContext } from "./context";
 import ColorCircles from "@/utils/ColorCircles";
 
-
 const CatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
-  const [filters, setFilters] = useState<Filters>([]
-
-   );
+  const [filters, setFilters] = useState<Filters>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const allGenres =  fetchGenres();
+  const allGenres =   fetchGenres();
 
   useEffect(() => {
     async function update() {
@@ -39,7 +36,10 @@ const CatalogPage = () => {
 
   if (isLoading) {
     return (
-      <Box className="w-full flex justify-center items-center" style={{ height: "100vh" }}>
+      <Box
+        className="w-full flex justify-center items-center"
+        style={{ height: "100vh" }}
+      >
         <CircularProgress />
       </Box>
     );
@@ -47,7 +47,10 @@ const CatalogPage = () => {
 
   if (error) {
     return (
-      <Box className="w-full flex justify-center items-center" style={{ height: "100vh" }}>
+      <Box
+        className="w-full flex justify-center items-center"
+        style={{ height: "100vh" }}
+      >
         <Typography variant="h6" color="error">
           {error}
         </Typography>
@@ -64,6 +67,7 @@ const CatalogPage = () => {
         setFilters,
         books,
         setBooks,
+        genres : allGenres
       }}
     >
       <Box className="w-full">
@@ -84,7 +88,6 @@ const CatalogPage = () => {
         <BookCatalog promisedBooks={books} />
         <Searcher />
         <ColorCircles />
-
       </Box>
     </SearchContext.Provider>
   );
