@@ -4,15 +4,18 @@ import xlsx from 'xlsx'
 import fs from 'fs'
 dotenv.config();
 // Create a new Pool instance (recommended for handling multiple connections)
-export const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: parseInt(process.env.DB_PORT, 10),
-  user: process.env.DB_USER,
-  password: process.env.PSQL_PASSWORD,
-  database: process.env.DB_NAME,
-});
+// export const pool = new Pool({
+//   host: process.env.DB_HOST,
+//   port: parseInt(process.env.DB_PORT, 10),
+//   user: process.env.DB_USER,
+//   password: process.env.PSQL_PASSWORD,
+//   database: process.env.DB_NAME,
+// });
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+})
 // Export a query function to execute SQL queries
-  
+
 export const query = async (text, params =[]) => {
   const client = await pool.connect();
   try {

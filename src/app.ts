@@ -11,11 +11,7 @@ import { connectAndQuery, extractValuesFromArrayColumn, fetchAndCreateExcel, ins
 // import bcrypt from 'bcrypt';
 import bodyParser from 'body-parser'
 import { excelWordsToBool,   fillMissingIds,   } from './excelUtils';
-import { Pool } from 'pg';
 
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-})
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
 const port = 3002;
@@ -44,7 +40,7 @@ app.post('/bookList', async (req, res) => {
     `;
 
     const result = await query(sqlQuery, [`%${searchQuery}%`]); // Using ILIKE for case-insensitive search
-
+    console.log(result)
     res.json(result.rows); // Assuming result.rows contains books retrieved from the database
   } catch (error) {
     console.error('Error executing search query:', error);

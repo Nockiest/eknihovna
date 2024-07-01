@@ -24,10 +24,6 @@ const db_1 = require("./db");
 // import bcrypt from 'bcrypt';
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
-const pg_1 = require("pg");
-const pool = new pg_1.Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -52,6 +48,7 @@ app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* 
       FROM knihy
     `;
         const result = yield (0, db_1.query)(sqlQuery, [`%${searchQuery}%`]); // Using ILIKE for case-insensitive search
+        console.log(result);
         res.json(result.rows); // Assuming result.rows contains books retrieved from the database
     }
     catch (error) {
