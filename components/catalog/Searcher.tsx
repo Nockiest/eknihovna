@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Slide,
   Paper,
@@ -10,16 +10,17 @@ import {
   Fab,
   TextField,
   Button,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import SearchBar from "./SearchBar";
 import Image from "next/image";
 import theme from "@/theme/theme";
-import {  Filters  } from "@/types/types";
+import { Filters } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
 import { getBooksByQuery } from "@/utils/fetchBooks";
 
-interface SearcherProps {
-}
+interface SearcherProps {}
 
 const Searcher: React.FC<SearcherProps> = () => {
   const classes = useTheme();
@@ -30,12 +31,27 @@ const Searcher: React.FC<SearcherProps> = () => {
     setFilters,
     books,
     setBooks,
+    genres,
   } = useSearchContext();
+
+  const [resolvedGenres, setResolvedGenres] = useState<string[]>([]);
+
+  useEffect(() => {
+    const resolveGenres = async () => {
+      if (genres instanceof Promise) {
+        const resolved = await genres;
+        setResolvedGenres(resolved);
+      } else {
+        setResolvedGenres(genres);
+      }
+    };
+    resolveGenres();
+  }, [genres]);
 
   const fetchFilteredBooks = async () => {
     try {
-      const response = getBooksByQuery(filters)
-      const data = response.data;
+      const response = await getBooksByQuery(filters);
+      const data = response;
       setBooks(data);
     } catch (error) {
       console.error("Error fetching filtered books:", error);
@@ -92,50 +108,66 @@ const Searcher: React.FC<SearcherProps> = () => {
           margin="normal"
         />
 
-        <TextField
+        <Select
           label="Žánr"
-          value={(filters.genres || []) }
-          onChange={handleGenresChange}
+          value={filters.genres || ""}
+          onChange={(e) =>
+            handleFilterChange("genres", e.target.value as string)
+          }
+          fullWidth
+          margin="dense"
+        >
+          {resolvedGenres.map((genre) => (
+            <MenuItem key={genre} value={genre}>
+              {genre}
+            </MenuItem>
+          ))}
+        </Select>
+
+        <TextField
+          label="category"
+          value={filters.category || []}
+          onChange={(e) => handleFilterChange("category", e.target.value)}
           fullWidth
           margin="normal"
         />
 
         <FormControlLabel
-            control={
-              <Checkbox
-                checked={Boolean(filters.available)}
-                onChange={(e) =>
-                  handleFilterChange("available", e.target.checked)
-                }
-              />
-            }
-            label="Dostupnost"
-            sx={{
-              color: theme.palette.primary.main,
-              "&.Mui-checked": {
-                color: theme.palette.secondary.main,
-              },
-            }}
-          />
+          control={
+            <Checkbox
+              checked={Boolean(filters.available)}
+              onChange={(e) =>
+                handleFilterChange("available", e.target.checked)
+              }
+            />
+          }
+          label="Dostupnost"
+          sx={{
+            color: theme.palette.primary.main,
+            "&.Mui-checked": {
+              color: theme.palette.secondary.main,
+            },
+          }}
+        />
 
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={Boolean(filters.forMaturita)}
-                onChange={(e) =>
-                  handleFilterChange("forMaturita", e.target.checked)
-                }
-              />
-            }
-            label="Maturitní"
-            sx={{
-              color: theme.palette.primary.main,
-              "&.Mui-checked": {
-                color: theme.palette.secondary.main,
-              },
-            }}
-          />
-    <Button
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={Boolean(filters.formaturita)}
+              onChange={(e) =>
+                handleFilterChange("formaturita", e.target.checked)
+              }
+            />
+          }
+          label="Maturitní"
+          sx={{
+            color: theme.palette.primary.main,
+            "&.Mui-checked": {
+              color: theme.palette.secondary.main,
+            },
+          }}
+        />
+        <Button
           variant="contained"
           color="primary"
           onClick={fetchFilteredBooks}
@@ -144,7 +176,6 @@ const Searcher: React.FC<SearcherProps> = () => {
           POUŽÍT FILTRY
         </Button>
       </Paper>
-
     </Slide>
   );
 };

@@ -9,6 +9,7 @@ type QueryContextType = {
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   books: Book[];
   setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
+  genres: string[] | Promise<string[]>
 };
 
 // Create the context
