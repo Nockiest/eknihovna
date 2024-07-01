@@ -12,6 +12,10 @@ import { connectAndQuery, extractValuesFromArrayColumn, fetchAndCreateExcel, ins
 import bodyParser from 'body-parser'
 import { excelWordsToBool,   fillMissingIds,   } from './excelUtils';
 import { Pool } from 'pg';
+
+const pool = new Pool({
+  connectionString: process.env.POSTGRES_URL,
+})
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL
 const port = 3002;
@@ -29,7 +33,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.get('/bookList', async (req, res) => {
+app.post('/bookList', async (req, res) => {
   const { query: searchQuery } = req.query;
 
   try {
@@ -49,7 +53,7 @@ app.get('/bookList', async (req, res) => {
   }
 });
 
-app.get('/getGenres', async (req: Request, res: Response) => {
+app.get('/getUniqueValues', async (req: Request, res: Response) => {
   const columnName = 'genres'; // Replace with your actual array column name
   try {
     const values = await extractValuesFromArrayColumn( columnName, true);

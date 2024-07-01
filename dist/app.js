@@ -24,6 +24,10 @@ const db_1 = require("./db");
 // import bcrypt from 'bcrypt';
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
+const pg_1 = require("pg");
+const pool = new pg_1.Pool({
+    connectionString: process.env.POSTGRES_URL,
+});
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -39,7 +43,7 @@ const storage = multer_1.default.diskStorage({
     }
 });
 const upload = (0, multer_1.default)({ storage });
-app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { query: searchQuery } = req.query;
     try {
         // Example query to fetch books filtered by  name containing the searchQuery
@@ -56,7 +60,7 @@ app.get('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* (
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
-app.get('/getGenres', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.get('/getUniqueValues', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const columnName = 'genres'; // Replace with your actual array column name
     try {
         const values = yield (0, db_1.extractValuesFromArrayColumn)(columnName, true);

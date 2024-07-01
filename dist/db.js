@@ -26,7 +26,7 @@ exports.pool = new pg_1.Pool({
     database: process.env.DB_NAME,
 });
 // Export a query function to execute SQL queries
-const query = (text, params = []) => __awaiter(void 0, void 0, void 0, function* () {
+const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void 0, function* (text, params = []) {
     const client = yield exports.pool.connect();
     try {
         const result = yield client.query(text, params);
@@ -155,8 +155,8 @@ function connectAndQuery() {
     });
 }
 exports.connectAndQuery = connectAndQuery;
-const extractValuesFromArrayColumn = (columnName, unique = false, // Default to false, meaning non-unique by default
-tableName = 'knihy') => __awaiter(void 0, void 0, void 0, function* () {
+const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void 0, [columnName_1, ...args_2], void 0, function* (columnName, unique = false, // Default to false, meaning non-unique by default
+tableName = 'knihy') {
     const client = yield exports.pool.connect();
     try {
         const query = `
