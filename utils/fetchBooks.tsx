@@ -7,15 +7,8 @@ export const getBooksByQuery = async (filters: Filters = {}): Promise<Book[]> =>
 
   try {
     const response = await axios.post(`${apiUrl}/bookList`, { filters });
-    const data = response.data;
-
-    if (data === null) {
-      return [];
-    }
-
-    const knihy: Book[] = data;
-    return knihy;
+    return response.data || [];
   } catch (error: any) {
-    throw new Error(`Problem with fetching data: ${error}`);
+    throw new Error(`Problem with fetching data: ${error.message}`);
   }
 };

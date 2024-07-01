@@ -18,8 +18,8 @@ const CatalogPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const allGenres =   fetchUniqueValues('genres');
-  const allCateories =   fetchUniqueValues('category');
+  const allGenres:string[] =   []//fetchUniqueValues('genres');
+  const allCateories:string[] =  []// fetchUniqueValues('category');
 
   useEffect(() => {
     async function update() {
