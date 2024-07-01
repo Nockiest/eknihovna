@@ -32,10 +32,11 @@ const Searcher: React.FC<SearcherProps> = () => {
     books,
     setBooks,
     genres,
+    categories
   } = useSearchContext();
 
   const [resolvedGenres, setResolvedGenres] = useState<string[]>([]);
-
+  const [resolvedCategories, setResolvedCategories] = useState<string[]>([]);
   useEffect(() => {
     const resolveGenres = async () => {
       if (genres instanceof Promise) {
@@ -47,6 +48,17 @@ const Searcher: React.FC<SearcherProps> = () => {
     };
     resolveGenres();
   }, [genres]);
+  useEffect(() => {
+    const resolveGenres = async () => {
+      if (categories instanceof Promise) {
+        const resolved = await categories;
+        setResolvedCategories(resolved);
+      } else {
+        setResolvedCategories(categories);
+      }
+    };
+    resolveGenres();
+  }, [categories]);
 
   const fetchFilteredBooks = async () => {
     try {
@@ -124,13 +136,22 @@ const Searcher: React.FC<SearcherProps> = () => {
           ))}
         </Select>
 
-        <TextField
-          label="category"
-          value={filters.category || []}
-          onChange={(e) => handleFilterChange("category", e.target.value)}
+        <Select
+          label="Kategorie"
+          value={filters.category || ""}
+          onChange={(e) =>
+            handleFilterChange("category", e.target.value as string)
+          }
           fullWidth
-          margin="normal"
-        />
+          margin="dense"
+        >
+          {resolvedCategories.map((category,key  ) => (
+            <MenuItem key={key} value={category}>
+              {category}
+            </MenuItem>
+          ))}
+        </Select>
+
 
         <FormControlLabel
           control={

@@ -7,7 +7,7 @@ import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
 import { useEffect, useState } from "react";
 import { Book, Filters } from "@/types/types";
-import { fetchGenres } from "@/utils/fetchGenres";
+import {  fetchUniqueValues } from "@/utils/fetchUniqueValues";
 import { SearchContext } from "./context";
 import ColorCircles from "@/utils/ColorCircles";
 
@@ -18,7 +18,8 @@ const CatalogPage = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
-  const allGenres =   fetchGenres();
+  const allGenres =   fetchUniqueValues('genres');
+  const allCateories =   fetchUniqueValues('category');
 
   useEffect(() => {
     async function update() {
@@ -67,7 +68,8 @@ const CatalogPage = () => {
         setFilters,
         books,
         setBooks,
-        genres : allGenres
+        genres : allGenres,
+        categories: allCateories
       }}
     >
       <Box className="w-full">
