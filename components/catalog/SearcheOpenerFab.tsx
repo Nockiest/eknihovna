@@ -1,3 +1,4 @@
+import { useSearchContext } from '@/app/katalog/context';
 import { Fab } from '@mui/material';
 import Image from 'next/image';
 import React from 'react'
@@ -6,6 +7,7 @@ type SearcherOpenerFabProps = {
   };
 
   const SearcherOpenerFab: React.FC<SearcherOpenerFabProps> = ({onClick}) => {
+
   return (
     <Fab
           size="large"
@@ -15,7 +17,7 @@ type SearcherOpenerFabProps = {
           className='z-1'
         >
           <Image
-            src="icon/search.svg"
+            src="icon/filter.svg"
             alt="search"
             width={32}
             height={32}
