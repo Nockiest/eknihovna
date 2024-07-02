@@ -24,7 +24,7 @@ export type NavButton = {
   //   forMaturita: boolean;
   // }
 
- 
+
   export  type Filters= {
-    [key: string]: string | boolean;
+    [key: string]: string ;
   };
