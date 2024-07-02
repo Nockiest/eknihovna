@@ -33,7 +33,7 @@ const Searcher: React.FC<SearcherProps> = () => {
     books,
     setBooks,
     genres,
-    categories
+    categories,
   } = useSearchContext();
 
   const [resolvedGenres, setResolvedGenres] = useState<string[]>([]);
@@ -42,7 +42,6 @@ const Searcher: React.FC<SearcherProps> = () => {
     const resolveGenres = async () => {
       if (genres instanceof Promise) {
         const resolved = await genres;
-        console.log(resolved)
         setResolvedGenres(resolved);
       } else {
         setResolvedGenres(genres);
@@ -75,14 +74,14 @@ const Searcher: React.FC<SearcherProps> = () => {
   const handleFilterChange = (name: string, value: string | boolean) => {
     setFilters((prevFilters: Filters) => ({
       ...prevFilters,
-      [name]: value,
+      [name]: value.toString(),
     }));
   };
-  const handleGenresChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    // Split the input value into an array of genres
-    const genresArray = e.target.value.split(",").map((genre) => genre.trim());
-    // handleFilterChange("genres", genresArray);
-  };
+  // const handleGenresChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   // Split the input value into an array of genres
+  //   const genresArray = e.target.value.split(",").map((genre) => genre.trim());
+  //   // handleFilterChange("genres", genresArray);
+  // };
 
   return (
     <Slide direction="up" in={isOpenSearcher} mountOnEnter unmountOnExit>
@@ -122,14 +121,14 @@ const Searcher: React.FC<SearcherProps> = () => {
           fullWidth
           margin="normal"
         />
-<SortedSelect  label="Žánr"
-          value={filters.genres || ""}
+        {/* <SortedSelect  label="Žánr"
+          value={filters.genres  || ""}
           options={resolvedGenres}
           onChange={(e) =>
             handleFilterChange("genres", e.target.value as string)
           }
           fullWidth
-          margin="dense"/>
+          margin="dense"/> */}
         {/* <Select
           label="Žánr"
           value={filters.genres || ""}
@@ -145,24 +144,27 @@ const Searcher: React.FC<SearcherProps> = () => {
             </MenuItem>
           ))}
         </Select> */}
+        {filters.category?.toString()}
 
         <SortedSelect
           label="Kategorie"
-          value={filters.category   || ""}
+          value={filters.category || ""}
           options={resolvedCategories}
           onChange={(e) =>
-            handleFilterChange("category", e.target.value as string)
+           {
+            console.log( e.target.value)
+             handleFilterChange("category", e.target.value as string)}
           }
           fullWidth
           margin="dense"
-        >
-          {resolvedCategories && resolvedCategories.map((category,key  ) => (
-            <MenuItem key={key} value={category}>
-              {category}
-            </MenuItem>
-          ))}
-        </SortedSelect>
-
+       />
+          {/* {resolvedCategories &&
+            resolvedCategories.map((category, key) => (
+              <MenuItem key={key} value={category}>
+                {category}
+              </MenuItem>
+            ))}
+        </SortedSelect> */}
 
         <FormControlLabel
           control={
