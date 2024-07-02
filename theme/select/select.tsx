@@ -1,70 +1,56 @@
-import React, { useMemo } from 'react';
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
-import ListSubheader from '@mui/material/ListSubheader';
-import { SelectChangeEvent } from '@mui/material/Select';
-import theme from '../theme';
-import { FormControl, InputLabel, Typography } from '@mui/material';
+import { Filters } from '@/types/types';
+import { MenuItem, Select } from '@mui/material';
+import React from 'react';
 
-interface SortedSelectProps {
-  label: string;
-  value: string;
-  options: string[];
-  onChange: (event: SelectChangeEvent<string>) => void;
-  fullWidth?: boolean;
-  margin?: 'dense' | 'none' | 'normal';
-}
-
-const groupAndSortOptions = (options: string[]) => {
-  const groupedOptions: { [key: string]: string[] } = {};
-  options.forEach((option) => {
-    const letter = option[0].toUpperCase();
-    if (!groupedOptions[letter]) {
-      groupedOptions[letter] = [];
-    }
-    groupedOptions[letter].push(option);
-  });
-
-  Object.keys(groupedOptions).forEach((letter) => {
-    groupedOptions[letter].sort();
-  });
-
-  return groupedOptions;
+type SortedGroupedSelectProps = {
+    categories: string[];
+    filters: Filters;
+    handleFilterChange: (key: string, value: string) => void;
 };
+interface GroupedCategories {
+  [key: string]: any;
+}
+const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({ categories, filters, handleFilterChange }) => {
+  // Sort categories alphabetically
+  const sortedCategories = categories.slice().sort((a, b) => a.localeCompare(b));
 
-const SortedSelect: React.FC<SortedSelectProps> = ({
-  label,
-  value,
-  options,
-  onChange,
-  fullWidth = false,
-  margin = 'none',
-}) => {
-  const groupedOptions = useMemo(() => groupAndSortOptions(options), [options]);
+  // Group categories if needed
+  // For example, you can group them by the first letter
+  const groupedCategories: GroupedCategories = sortedCategories.reduce((acc: GroupedCategories, category: string) => {
+    const firstLetter = category[0].toUpperCase();
+    console.log(acc, category);
+    if (!acc[firstLetter]) {
+      acc[firstLetter] = [];
+    }
+    acc[firstLetter].push(category);
+    return acc;
+  }, {});
 
   return (
-    <FormControl fullWidth={fullWidth} margin={margin}>
-      <InputLabel sx={{color:theme.palette.text.primary}}>{label}</InputLabel>
-      <Select value={value} onChange={onChange} displayEmpty>
-        {/* <MenuItem value="">
-          <em>None</em>
-        </MenuItem> */}
-        {Object.keys(groupedOptions).map((letter) => (
-          <React.Fragment key={letter}>
-            <ListSubheader>{letter}</ListSubheader>
-            {groupedOptions[letter].map((option) => (
-              <MenuItem key={option} value={option}>
-                {option}
-              </MenuItem>
-            ))}
-          </React.Fragment>
-        ))}
-      </Select>
-    </FormControl>
+    <Select
+  label="Kategorie"
+  value={filters.category || ""}
+  // onChange={(e) => handleFilterChange("category", e.target.value || "")}
+  fullWidth
+  margin="dense"
+>
+     {Object.keys(groupedCategories).map((letter) => (
+    <optgroup label={letter} key={letter}>
+
+      {groupedCategories[letter].map((category:string, index:number) => (
+        <option onClick={() => { handleFilterChange("category", category )}} key={category} value={category}>
+          {category}
+        </option>
+      ))}
+    </optgroup>
+  ))}
+    </Select>
   );
 };
 
-export default SortedSelect;
+
+
+export default SortedGroupedSelect;
 
 
 // const SortedSelect: React.FC<CustomSelectProps> = ({ label, value, onChange, options, fullWidth = true, margin = 'dense' }) => {
