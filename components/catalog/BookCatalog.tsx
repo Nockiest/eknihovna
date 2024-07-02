@@ -14,7 +14,8 @@ import PaginationLinker from "../general/PaginationLinker";
 import { getURLSegment } from "@/utils/getURLSegment";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import { usePathname ,useRouter, useSearchParams} from "next/navigation";
-import Filter from "./Filter";
+import CategoryChip from "./CategoryChip";
+import { useSearchContext } from "@/app/katalog/context";
 
 interface BookCatalogProps {
   promisedBooks: Promise<Book[]> | Book[];
@@ -32,6 +33,7 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
   const theme = useTheme();
   const size = useCurrentBreakpoint();
   const router = useRouter();
+  const {filters,setFilters} = useSearchContext();
 
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -93,10 +95,21 @@ const BookCatalog: React.FC<BookCatalogProps> = ({ promisedBooks }) => {
       </div>
     );
   }
+  const removeFilter = (key: string) => {
+    console.log(filters);
+    setFilters((prevFilters) => {
+        const { [key]: removedKey, ...rest } = prevFilters;
+        return rest;
+    });
+}
+
 
   return (
     <Box className="w-full">
-      <Filter text={'romány'} />
+      {Object.entries(filters).map(([key, value], index) => (
+  <CategoryChip key={index} text={key} onRemove={() => removeFilter(key)} />
+))}
+
       {shownBooks.length > 0 ? (
         <div className="w-full">
           <Grid container spacing={2} columns={12}>

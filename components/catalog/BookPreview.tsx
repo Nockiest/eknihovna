@@ -5,7 +5,7 @@ import { Book } from "@/types/types";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import Filter from "./Filter";
+import Filter from "./CategoryChip";
 import { useTheme } from "@emotion/react";
 import BookCover from "./BookCover";
 import StarRow from "../general/starRow/StarRow";
