@@ -20,6 +20,7 @@ import { Filters } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
 import { getBooksByQuery } from "@/utils/fetchBooks";
 import SortedSelect from "@/theme/select/select";
+import SortedGroupedSelect from "@/theme/select/select";
 
 interface SearcherProps {}
 
@@ -72,6 +73,7 @@ const Searcher: React.FC<SearcherProps> = () => {
   };
 
   const handleFilterChange = (name: string, value: string | boolean) => {
+    console.log(name, value);
     setFilters((prevFilters: Filters) => ({
       ...prevFilters,
       [name]: value.toString(),
@@ -121,6 +123,8 @@ const Searcher: React.FC<SearcherProps> = () => {
           fullWidth
           margin="normal"
         />
+    {resolvedCategories.map((category)=> { return category})}
+        <SortedGroupedSelect categories={resolvedCategories} filters={filters} handleFilterChange={handleFilterChange} />
         {/* <SortedSelect  label="Žánr"
           value={filters.genres  || ""}
           options={resolvedGenres}
@@ -146,7 +150,7 @@ const Searcher: React.FC<SearcherProps> = () => {
         </Select> */}
         {filters.category?.toString()}
 
-        <SortedSelect
+        {/* <SortedSelect
           label="Kategorie"
           value={filters.category || ""}
           options={resolvedCategories}
@@ -157,7 +161,7 @@ const Searcher: React.FC<SearcherProps> = () => {
           }
           fullWidth
           margin="dense"
-       />
+       /> */}
           {/* {resolvedCategories &&
             resolvedCategories.map((category, key) => (
               <MenuItem key={key} value={category}>
