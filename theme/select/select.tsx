@@ -16,7 +16,6 @@ interface CustomSelectProps {
 
 const groupAndSortOptions = (options: string[]): { [key: string]: string[] } => {
   const groupedOptions: { [key: string]: string[] } = {};
-console.log(options)
   options.sort().forEach((option) => {
 
     const firstLetter = option[0].toUpperCase();
@@ -38,31 +37,10 @@ const SortedSelect: React.FC<CustomSelectProps> = ({ label, value, onChange, opt
       value={value}
       onChange={onChange}
       fullWidth={fullWidth}
-      margin={margin}
-    //   sx={{
-    //     '& .MuiOutlinedInput-root': {
-    //       '& fieldset': {
-    //         borderColor: theme.palette.primary.main,
-    //       },
-    //       '&:hover fieldset': {
-    //         borderColor: theme.palette.primary.main,
-    //       },
-    //       '&.Mui-focused fieldset': {
-    //         borderColor: theme.palette.primary.main,
-    //       },
-    //       color: theme.palette.primary.main,
-    //     },
-    //     '& .MuiInputLabel-root': {
-    //       color: theme.palette.primary.main,
-    //     },
-    //     '& .MuiInputLabel-root.Mui-focused': {
-    //       color: theme.palette.primary.main,
-    //     },
-    //   }}
       displayEmpty
     >
       <MenuItem value="">
-        <em>None</em>
+        <em>Žádný</em>
       </MenuItem>
       {Object.keys(groupedOptions).map((letter) => (
         <React.Fragment key={letter}>

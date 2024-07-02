@@ -1,6 +1,7 @@
 // src/theme.js
 "use client";
 import { createTheme } from "@mui/material/styles";
+import { Margarine } from "next/font/google";
 const rootPalette = {
   primary: {
     main: "#93736c", // primary 500
@@ -123,8 +124,6 @@ const theme = createTheme({
         main: '#C42C0E'
       }
     },
-
-
   components: {
     MuiContainer: {
       styleOverrides: {
@@ -215,7 +214,43 @@ const theme = createTheme({
         },
       },
     },
-  },
-
+    MuiCheckbox: {
+      styleOverrides: {
+        root: {
+          '&:hover': {
+            backgroundColor: 'rgba(0, 0, 0, 0.08)', // Background color on hover
+          },
+          '&:focus': {
+            outline: `2px solid ${rootPalette.primary.dark}`, // Outline when focused
+            color: rootPalette.primary.light
+          },
+          '&:disabled': {
+            color: 'rgba(0, 0, 0, 0.38)', // Color when disabled
+          },
+          '&.Mui-checked': {
+            outline: `2px solid ${rootPalette.primary.dark}`,
+            color: rootPalette.primary.light, // Tick color when checked
+            backgroundColor: rootPalette.primary.light, // Background color when checked
+            '& .MuiSvgIcon-root': {
+              fill: rootPalette.primary.light, // Tick color when checked
+            },
+            icon: {
+              color: 'white',
+            },
+          },
+          '&.MuiCheckbox-root': {
+            // outline: `2px solid ${rootPalette.primary.light}`, // Outline when not checked
+             color: rootPalette.primary.light,
+             width: 20,
+             height: 20,
+             margin: '2px',
+             "& svg": {
+               fontSize: 20,
+             },
+          },
+        },
+      },
+    },
+  }
 });
 export default theme;
