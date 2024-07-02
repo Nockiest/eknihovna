@@ -120,7 +120,9 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
         {Object.entries(filters).map(([key, value], index) => (
           <CategoryChip
             key={index}
-            text={key}
+            text={
+               value === "true"|'false' ? key : value.split(",").join(", ")
+            }
             onRemove={() => removeFilter(key)}
           />
         ))}
