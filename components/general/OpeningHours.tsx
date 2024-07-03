@@ -4,11 +4,11 @@ import { Typography, Box, Grid } from '@mui/material';
 const OpeningHours: React.FC = () => {
   // Data for days and opening hours (assuming a static data structure)
   const days = [
-    { day: 'Pondělí', hours: '8:00 - 18:00' },
-    { day: 'Úterý', hours: '8:00 - 18:00' },
-    { day: 'Středa', hours: '8:00 - 18:00' },
-    { day: 'Čtvrtek', hours: '8:00 - 18:00' },
-    { day: 'Pátek', hours: '8:00 - 16:00' },
+    { day: 'Pondělí', hours: '13:30 - 16:00' },
+    { day: 'Úterý', hours: '12:35 - 15:35' },
+    { day: 'Středa', hours: '13:30 - 15:30' },
+    { day: 'Čtvrtek', hours: '12:35 - 15:35' },
+    { day: 'Pátek', hours: '13:30 - 14:00' },
   ];
 
   return (

@@ -1,14 +1,19 @@
 import Image from 'next/image';
 import { Box } from '@mui/material';
+interface BookCoverProps {
+  width: string;
+}
 
-const BookCover = () => {
+const BookCover: React.FC<BookCoverProps> = ({ width }) => {
+  // const width = '200px'; // Set the desired width percentage
+
   return (
     <Box
       p={2}
       sx={{
         position: 'relative',
-        width: '111px', // Width for aspect ratio 3:4 (height is 4/3 of the width)
-        height: '148px', // Height for aspect ratio 3:4 (height is 4/3 of the width)
+        width: width,
+        height: `calc(${width} * 4 / 3)`, // Calculate height to maintain 3:4 aspect ratio
         '& img': {
           objectFit: 'cover',
           width: '100%',
