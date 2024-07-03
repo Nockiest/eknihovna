@@ -156,6 +156,15 @@ export const fetchAndCreateExcel = async (
     // Convert the query result to JSON
     const jsonData = convertQueryResToJson(queryResult);
 
+    // Join array values into a string separated by commas
+    jsonData.forEach((row: any) => {
+      Object.keys(row).forEach((key) => {
+        if (Array.isArray(row[key])) {
+          row[key] = row[key].join(', ');
+        }
+      });
+    });
+
     // Create a new workbook and worksheet
     const workbook = xlsx.utils.book_new();
     const worksheet = xlsx.utils.json_to_sheet(jsonData);

@@ -58,8 +58,6 @@ app.post('/bookList', async (req, res) => {
 
 app.get('/getUniqueValues', async (req, res) => {
   const { columnName } = req.query; // Use req.query to get query parameters
-  console.log(columnName); // Debugging: Ensure columnName is correctly received
-
   try {
     const values = await extractValuesFromArrayColumn(columnName as string, true); // Assuming extractValuesFromArrayColumn returns unique values
     res.json(values);
@@ -84,6 +82,8 @@ app.get('/downloadExcel', async (req: Request, res: Response) => {
 });
 
 app.post("/authenticate", (req, res) => {
+  console.log('hello world x')
+
   const { password } = req.body;
   console.log(password, password.trim() === process.env.UPLOAD_PASSWORD);
 
@@ -92,7 +92,7 @@ app.post("/authenticate", (req, res) => {
   }
 
   if (password === process.env.UPLOAD_PASSWORD) {
-    res.status(200).json({ message: "Uživatel autorizován" });
+   return res.status(200).json({ message: "Uživatel autorizován" });
   } else {
     return res.status(401).json({ error: "Špatné heslo" });
   }

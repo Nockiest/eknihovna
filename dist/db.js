@@ -147,6 +147,14 @@ const fetchAndCreateExcel = (tableName) => __awaiter(void 0, void 0, void 0, fun
         }
         // Convert the query result to JSON
         const jsonData = convertQueryResToJson(queryResult);
+        // Join array values into a string separated by commas
+        jsonData.forEach((row) => {
+            Object.keys(row).forEach((key) => {
+                if (Array.isArray(row[key])) {
+                    row[key] = row[key].join(', ');
+                }
+            });
+        });
         // Create a new workbook and worksheet
         const workbook = xlsx_1.default.utils.book_new();
         const worksheet = xlsx_1.default.utils.json_to_sheet(jsonData);
