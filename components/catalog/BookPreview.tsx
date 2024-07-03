@@ -9,6 +9,8 @@ import Filter from "./CategoryChip";
 import { useTheme } from "@emotion/react";
 import BookCover from "./BookCover";
 import StarRow from "../general/starRow/StarRow";
+import CategoryChip from "./CategoryChip";
+import LineWithCircle from "../general/LineWithCircle";
 
 type BookPreviewProps = {
   book: Book;
@@ -26,48 +28,54 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`w-auto h-full flex flex-col items-center  relative flex-grow text-text-50`}
+      className={`w-auto h-full   items-center  relative flex-grow `}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
-        backgroundColor: truthyValues.includes(available)
-          ? theme.palette.background.default
-          : theme.palette.error.main,
+        border: `2px ${
+          truthyValues.includes(available)
+            ? theme.palette.background.default
+            : theme.palette.error.main
+        }`,
         color: theme.palette.text.primary,
         maxWidth: "311px",
       }}
     >
-      <Box p={2} className=" flex flex-col items-center justify-between h-full">
-        <BookCover />
+      <Box
+        p={2}
+        className=" flex flex-col items-center justify-around    h-full"
+      >
+        <BookCover width={'200px'} />
         <Typography variant="h6" align="center">
-          {" "}
           {name}
         </Typography>
-        <br />
-
+        <Typography variant="body1"  >
+          {author ? author : "Neznámý autor"}
+        </Typography>
+        <LineWithCircle />
         <Box>
+          <p> {genres?.length}</p>
+
           {genres && genres.length > 0 && (
             <Box>
               <br />
               {genres.map((gen, key) => (
-                <Filter text={gen} key={key} />
+                <CategoryChip text={gen} key={key} />
               ))}
             </Box>
           )}
         </Box>
-        <Typography variant="body1">Autor: {author}</Typography>
-
-        <Box className="flex flex-col items-center  ">
-          <Typography variant="body2">Hodnocení Studentů</Typography>
-          <StarRow rating={rating} />
-        </Box>
-        <br />
+        {/* <Box className="flex flex-col items-center w-full  ">
+          <Typography variant="body2">Hodnocení Studentů</Typography> */}
+        <StarRow rating={rating} />
+        {/* </Box> */}
+        {/* <br />
         <Typography
           className="absolute bottom-2 right-2"
           sx={{ opacity: "1" , color: theme.palette.text.secondary}}
           variant="body1"
         >
           {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
-        </Typography>
+        </Typography> */}
       </Box>
     </Paper>
   );

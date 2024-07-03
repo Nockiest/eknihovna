@@ -4,29 +4,32 @@ import Image from "next/image";
 
 interface FilterProps {
   text: string;
+  onRemove?: () => void
 }
 
-// const CategoryChip: React.FC<FilterProps> = ({ text }) => {
+const CategoryChip: React.FC<FilterProps> = ({ text }) => {
 
-//   return (
-//     <Chip
-//     label={
-//       <Typography variant="body1">
-//         {text}
-//       </Typography>
-//     }
-//   />
-//   );
-// };
-
-
-const CategoryChip: React.FC<{ text: string, onRemove: () => void }> = ({ text, onRemove }) => {
   return (
     <Chip
-      label={text}
-      onDelete={onRemove}
-      deleteIcon={<IconButton onClick={onRemove} size="small"><Image src='/icon/cross.svg' alt='cross icon' height={16} width={16} /></IconButton>}
-    />
+    label={
+      <Typography variant="body1">
+        {text}
+      </Typography>
+    }
+  />
   );
 };
-export default CategoryChip
+// const CategoryChip: React.FC<FilterProps> = ({ text, onRemove }) => {
+//   return (
+//     <Chip
+//       label={
+//               <Typography variant="body1">
+//                 {text}
+//               </Typography>
+//             }
+//       onDelete={onRemove ? onRemove : undefined}
+//       deleteIcon={onRemove && <IconButton onClick={onRemove} size="small"><Image src='/icon/cross.svg' alt='cross icon' height={16} width={16} /></IconButton>}
+//     />
+//   );
+// };
+export default CategoryChip;
