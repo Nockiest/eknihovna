@@ -1,12 +1,12 @@
 'use client'
 import { Box } from "@mui/material";
 import Image from "next/image";
-import Navbar from '@/components/navbar/Navbar'
 import CustomHamburger from "@/theme/buttons/Hamburger";
 import { useState } from "react";
 import { HeaderContext } from "../navbar/headerConntext";
 import { getURLSegment } from "@/utils/getURLSegment";
 import { usePathname } from "next/navigation";
+import NavBar from "../navbar/Navbar";
 
 const Hero = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
@@ -30,7 +30,7 @@ const Hero = () => {
           alt="Books"
         />
       </Box>
-      <Navbar />
+      <NavBar />
     </Box>
      </HeaderContext.Provider>
   );

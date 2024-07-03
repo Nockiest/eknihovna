@@ -13,7 +13,7 @@ import { HeaderContext, useHeaderContext } from "./headerConntext";
 
 interface NavListProps {}
 
-const NavList: React.FC<NavListProps> = ({}) => {
+const NavBar: React.FC<NavListProps> = ({}) => {
   const firstURLSegment = getURLSegment(usePathname(), 0);
   const {isHamburgerOpen, setIsHamburgerOpen} = useHeaderContext()
 
@@ -48,4 +48,4 @@ const NavList: React.FC<NavListProps> = ({}) => {
   );
 };
 
-export default NavList;
+export default NavBar;
