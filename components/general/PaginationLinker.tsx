@@ -1,16 +1,28 @@
-import React, { useEffect } from "react";
+"use client";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import {  useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { getURLSegment } from "@/utils/getURLSegment";
 
 interface PaginationProps {
-  totalPages: number;
+  allItems: any[];
+  itemsPerPage: number;
   folderName: string;
 }
 
-const Pagination: React.FC<PaginationProps> = ({ totalPages, folderName }) => {
-  const searchParams = useSearchParams()
-  const page = parseInt(searchParams.get('page')||'0', 10)
+const Pagination: React.FC<PaginationProps> = ({
+  allItems,
+  itemsPerPage,
+  folderName,
+}) => {
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "0", 10);
+  const [totalPages, setTotalPages] = useState<number>(
+    Math.ceil(allItems.length / itemsPerPage)
+  );
+  useEffect(() => {
+    setTotalPages(Math.ceil(allItems.length / itemsPerPage));
+  }, [allItems, itemsPerPage]);
 
   const getVisiblePageNumbers = () => {
     const startPage = Math.max(1, page - 5);
