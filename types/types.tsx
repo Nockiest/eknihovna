@@ -17,14 +17,15 @@ export type NavButton = {
     label: string;
   }
 
-  // export interface Filters {
-  //   name: string;
-  //   genres: string[] ;
-  //   available: boolean;
-  //   forMaturita: boolean;
-  // }
 
 
   export  type Filters= {
-    [key: string]: string ;
+    [key: string]: string|null ;
+  };
+
+  export type FiltringValues = {
+    category: string[];
+    genres: string[];
+    author: string[];
+    name: string[];
   };

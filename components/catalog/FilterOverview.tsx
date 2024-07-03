@@ -15,23 +15,25 @@ const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
   return (
     <Box className="w-full flex flex-row items-center justify-between my-4">
       <SearcherOpenerFab
-        css={`flex-0 ${isOpenSearcher? "hidden" : "block"}`}
+        css={`flex-0 ${isOpenSearcher ? "hidden" : "block"}`}
         onClick={() => {
           setOpenSearcher(!isOpenSearcher);
         }}
       />
       <Box className={"  flex-1"}>
-        {Object.entries(filters).map(([key, value], index) => (
-          <CategoryChip
-            key={index}
-            text={
-              value === "true" || value === "false"
-                ? key
-                : value.split(",").join(", ")
-            }
-            onRemove={() => removeFilter(key)}
-          />
-        ))}
+        {Object.entries(filters).map(([key, value], index) =>
+          value ? (
+            <CategoryChip
+              key={index}
+              text={
+                value === "true" || value === "false"
+                  ? key
+                  : value.split(",").join(", ")
+              }
+              onRemove={() => removeFilter(key)}
+            />
+          ) : undefined
+        )}
       </Box>
 
       {Object.keys(filters).length > 0 && (

@@ -19,13 +19,12 @@ import theme from "@/theme/theme";
 import { Filters } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
 import { getBooksByQuery } from "@/utils/fetchBooks";
-import SortedSelect from "@/theme/select/select";
-import SortedGroupedSelect from "@/theme/select/select";
+import SortedGroupedSelect from "./SortedSelect";
+
 
 interface SearcherProps {}
 
 const Searcher: React.FC<SearcherProps> = () => {
-  const classes = useTheme();
   const {
     isOpenSearcher,
     setOpenSearcher,
@@ -33,34 +32,9 @@ const Searcher: React.FC<SearcherProps> = () => {
     setFilters,
     books,
     setBooks,
-    genres,
-    categories,
-  } = useSearchContext();
+    filterValues
 
-  const [resolvedGenres, setResolvedGenres] = useState<string[]>([]);
-  const [resolvedCategories, setResolvedCategories] = useState<string[]>([]);
-  useEffect(() => {
-    const resolveGenres = async () => {
-      if (genres instanceof Promise) {
-        const resolved = await genres;
-        setResolvedGenres(resolved);
-      } else {
-        setResolvedGenres(genres);
-      }
-    };
-    resolveGenres();
-  }, [genres]);
-  useEffect(() => {
-    const resolveGenres = async () => {
-      if (categories instanceof Promise) {
-        const resolved = await categories;
-        setResolvedCategories(resolved);
-      } else {
-        setResolvedCategories(categories);
-      }
-    };
-    resolveGenres();
-  }, [categories]);
+  } = useSearchContext();
 
   const fetchFilteredBooks = async () => {
     try {
@@ -72,11 +46,11 @@ const Searcher: React.FC<SearcherProps> = () => {
     }
   };
 
-  const handleFilterChange = (name: string, value: string | boolean) => {
+  const handleFilterChange = (name: string, value: string | boolean|null) => {
     console.log(name, value);
     setFilters((prevFilters: Filters) => ({
       ...prevFilters,
-      [name]: value.toString(),
+      [name]: value? value.toString(): null,
     }));
   };
   // const handleGenresChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,24 +61,10 @@ const Searcher: React.FC<SearcherProps> = () => {
 
   return (
     <Slide direction="up" in={isOpenSearcher} mountOnEnter unmountOnExit>
-      <Paper
-        elevation={3}
-        style={{
-          position: "fixed",
-          bottom: 0,
-          left: "16px",
-          right: "16px",
-          zIndex: 999,
-          padding: "16px",
-          height: "75vh",
-        }}
-      >
-        <button
-          onClick={() => {
+      <Paper className="fixed bottom-0 left-0 right-0 md:left-16 md:right-16 z-50 p-4 h-3/4" elevation={3}>
+          <Fab  onClick={() => {
             setOpenSearcher(!isOpenSearcher);
-          }}
-        >
-          <Fab>
+          }}>
             <Image
               src={"icon/cross.svg"}
               alt="cross"
@@ -112,7 +72,6 @@ const Searcher: React.FC<SearcherProps> = () => {
               height={32}
             />
           </Fab>
-        </button>
 
         <SearchBar />
 
@@ -123,53 +82,10 @@ const Searcher: React.FC<SearcherProps> = () => {
           fullWidth
           margin="normal"
         />
-    {resolvedCategories.map((category)=> { return category})}
-        <SortedGroupedSelect categories={resolvedCategories} filters={filters} handleFilterChange={handleFilterChange} />
-        {/* <SortedSelect  label="Žánr"
-          value={filters.genres  || ""}
-          options={resolvedGenres}
-          onChange={(e) =>
-            handleFilterChange("genres", e.target.value as string)
-          }
-          fullWidth
-          margin="dense"/> */}
-        {/* <Select
-          label="Žánr"
-          value={filters.genres || ""}
-          onChange={(e) =>
-            handleFilterChange("genres", e.target.value as string)
-          }
-          fullWidth
-          margin="dense"
-        >
-          {resolvedGenres && resolvedGenres.map((genre) => (
-            <MenuItem key={genre} value={genre}>
-              {genre}
-            </MenuItem>
-          ))}
-        </Select> */}
-        {filters.category?.toString()}
-
-        {/* <SortedSelect
-          label="Kategorie"
-          value={filters.category || ""}
-          options={resolvedCategories}
-          onChange={(e) =>
-           {
-            console.log( e.target.value)
-             handleFilterChange("category", e.target.value as string)}
-          }
-          fullWidth
-          margin="dense"
-       /> */}
-          {/* {resolvedCategories &&
-            resolvedCategories.map((category, key) => (
-              <MenuItem key={key} value={category}>
-                {category}
-              </MenuItem>
-            ))}
-        </SortedSelect> */}
-
+        <SortedGroupedSelect options={filterValues.category}  colName={'category'}handleChange={handleFilterChange} />
+        <SortedGroupedSelect options={filterValues.genres}  colName={'genres'} handleChange={handleFilterChange} />
+        {/* <SortedGroupedSelect options={filterValues.name}  colName={'name'} handleChange={handleFilterChange} /> */}
+        <SortedGroupedSelect options={filterValues.author}  colName={'author'} handleChange={handleFilterChange} />
         <FormControlLabel
           control={
             <Checkbox

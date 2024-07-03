@@ -31,15 +31,14 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
       className={`w-auto h-full items-center  relative flex-grow `}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
-        border: truthyValues.includes(available)? `2px solid ${theme.palette.primary.main}`: 0,
+        border: truthyValues.includes(available)
+          ? `2px solid ${theme.palette.primary.main}`
+          : 0,
         color: theme.palette.text.primary,
         maxWidth: "311px",
       }}
     >
-      <Box
-        p={2}
-        className=" flex flex-col items-center justify-around h-full"
-      >
+      <Box p={2} className=" flex flex-col items-center justify-around h-full">
         <BookCover width={"200px"} />
         <Typography variant="h6" align="center">
           {name}
@@ -49,19 +48,16 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         </Typography>
         <LineWithCircle />
         <Box>
-
           {genres && genres.length > 0 && (
-           <Box>
-           {genres.map((gen, key) => (
-             <CategoryChip text={gen} key={key}  />
-           ))}
-         </Box>
-
+            <Box>
+              {genres.map((gen, key) => (
+                <CategoryChip text={gen} key={key} />
+              ))}
+            </Box>
           )}
         </Box>
         {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
         <StarRow rating={rating} />
-
       </Box>
     </Paper>
   );
