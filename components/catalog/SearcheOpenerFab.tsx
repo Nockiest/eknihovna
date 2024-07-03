@@ -4,9 +4,10 @@ import Image from 'next/image';
 import React from 'react'
 type SearcherOpenerFabProps = {
     onClick: () => void;
+    css:string
   };
 
-  const SearcherOpenerFab: React.FC<SearcherOpenerFabProps> = ({onClick}) => {
+  const SearcherOpenerFab: React.FC<SearcherOpenerFabProps> = ({onClick, css}) => {
 
   return (
     <Fab
@@ -14,7 +15,7 @@ type SearcherOpenerFabProps = {
           onClick={() => {
             onClick()
           }}
-          className='z-1'
+          className={`z-1 ${css}  flex-0 flex justify-center items-center  `}
         >
           <Image
             src="icon/filter.svg"

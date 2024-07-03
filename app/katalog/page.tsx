@@ -78,11 +78,7 @@ const CatalogPage = () => {
           alignItems="space-between"
           justifyContent={"center"}
         >
-          <SearcherOpenerFab
-            onClick={() => {
-              setOpenSearcher(!isOpenSearcher);
-            }}
-          />
+          
           <Typography className="mx-auto text-center my-6" variant={"h2"}>
             Katalog
           </Typography>
