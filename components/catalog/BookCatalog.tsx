@@ -25,7 +25,7 @@ const shownBooksBySize: Record<Breakpoint, number> = {
 
 const BookCatalog: React.FC<BookCatalogProps> = () => {
   const theme = useTheme();
-  const size = useCurrentBreakpoint();
+  const size = useCurrentBreakpoint()|| "xs";
   const router = useRouter();
   const { books, setBooks, filters, setFilters } = useSearchContext();
 
@@ -33,7 +33,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [itemsPerPage, setItemsPerPage] = useState<number>(12);
+  // const [itemsPerPage, setItemsPerPage] = useState<number>(12);
 
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10);
@@ -54,24 +54,24 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   };
   useEffect(() => {
     if (size) {
-      const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
+      const indexOfFirstBook = page * shownBooksBySize[size] - shownBooksBySize[size];
       const newItemsPerPage = shownBooksBySize[size];
-      setItemsPerPage(newItemsPerPage);
+      // setItemsPerPage(newItemsPerPage);
       const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
-      setNewBookSlice(page, itemsPerPage, allBooks);
+      setNewBookSlice(page, shownBooksBySize[size], allBooks);
       setTotalPages((prev) => {
         return allBooks === undefined
           ? 0
-          : Math.ceil(allBooks.length / itemsPerPage);
+          : Math.ceil(allBooks.length / shownBooksBySize[size]);
       });
       router.push(
         `/katalog?page=${Math.min(
-          Math.ceil(allBooks.length / itemsPerPage),
+          Math.ceil(allBooks.length / shownBooksBySize[size]),
           newCurrentPage + 1 || 1
         )}`
       );
     }
-  }, [size, allBooks, itemsPerPage, page]);
+  }, [size, allBooks,   page]);
 
   // Fetch books on initial render
   useEffect(() => {
@@ -89,13 +89,13 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
 
   // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {
-    setNewBookSlice(page, itemsPerPage, allBooks);
+    setNewBookSlice(page, shownBooksBySize[size], allBooks);
     setTotalPages((prev) => {
       return allBooks === undefined
         ? 0
-        : Math.ceil(allBooks.length / itemsPerPage);
+        : Math.ceil(allBooks.length / shownBooksBySize[size]);
     });
-  }, [page, itemsPerPage, allBooks]);
+  }, [page,   allBooks]);
 
   if (error) {
     return (
@@ -121,7 +121,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
           <CategoryChip
             key={index}
             text={
-               value === "true"|'false' ? key : value.split(",").join(", ")
+               value === "true"||'false' ? key : value.split(",").join(", ")
             }
             onRemove={() => removeFilter(key)}
           />
