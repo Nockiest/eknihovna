@@ -32,7 +32,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
-  const [totalPages, setTotalPages] = useState<number>(0);
+  // const [totalPages, setTotalPages] = useState<number>(0);
   // const [itemsPerPage, setItemsPerPage] = useState<number>(12);
 
   const searchParams = useSearchParams();
@@ -59,11 +59,11 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       // setItemsPerPage(newItemsPerPage);
       const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
       setNewBookSlice(page, shownBooksBySize[size], allBooks);
-      setTotalPages((prev) => {
-        return allBooks === undefined
-          ? 0
-          : Math.ceil(allBooks.length / shownBooksBySize[size]);
-      });
+      // setTotalPages((prev) => {
+      //   return allBooks === undefined
+      //     ? 0
+      //     : Math.ceil(allBooks.length / shownBooksBySize[size]);
+      // });
       router.push(
         `/katalog?page=${Math.min(
           Math.ceil(allBooks.length / shownBooksBySize[size]),
@@ -90,11 +90,11 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {
     setNewBookSlice(page, shownBooksBySize[size], allBooks);
-    setTotalPages((prev) => {
-      return allBooks === undefined
-        ? 0
-        : Math.ceil(allBooks.length / shownBooksBySize[size]);
-    });
+    // setTotalPages((prev) => {
+    //   return allBooks === undefined
+    //     ? 0
+    //     : Math.ceil(allBooks.length / shownBooksBySize[size]);
+    // });
   }, [page,   allBooks]);
 
   if (error) {
@@ -146,7 +146,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             ))}
           </Grid>
 
-          <PaginationLinker totalPages={totalPages} folderName="katalog" />
+          <PaginationLinker allItems={allBooks} itemsPerPage={shownBooksBySize[size]}  folderName="katalog" />
         </div>
       ) : (
         <DotsShower />
