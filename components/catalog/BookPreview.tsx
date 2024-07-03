@@ -31,9 +31,9 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
       className={`w-auto h-full   items-center  relative flex-grow `}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
-        border: `2px ${
+        border: `2px solid ${
           truthyValues.includes(available)
-            ? theme.palette.background.default
+            ? theme.palette.primary.main
             : theme.palette.error.main
         }`,
         color: theme.palette.text.primary,
@@ -48,7 +48,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         <Typography variant="h6" align="center">
           {name}
         </Typography>
-        <Typography variant="body1"  >
+        <Typography variant="body1"  align="center" >
           {author ? author : "Neznámý autor"}
         </Typography>
         <LineWithCircle />
