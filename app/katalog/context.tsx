@@ -1,5 +1,6 @@
-import { Book, Filters  } from "@/types/types";
+import { Book, Filters, FiltringValues  } from "@/types/types";
 import { useContext,createContext } from "react";
+
 
 
 type QueryContextType = {
@@ -9,8 +10,8 @@ type QueryContextType = {
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   books: Book[];
   setBooks: React.Dispatch<React.SetStateAction<Book[] >>;
-  genres: string[] | Promise<string[]>
-  categories:string[] | Promise<string[]>
+
+  filterValues: FiltringValues;
 };
 
 // Create the context

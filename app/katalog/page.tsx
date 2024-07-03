@@ -6,7 +6,7 @@ import { Box, Typography, CircularProgress } from "@mui/material";
 import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
 import { useEffect, useState } from "react";
-import { Book, Filters } from "@/types/types";
+import { Book, Filters, FiltringValues } from "@/types/types";
 import {  fetchUniqueValues } from "@/utils/fetchUniqueValues";
 import { SearchContext } from "./context";
 import ColorCircles from "@/utils/ColorCircles";
@@ -17,14 +17,37 @@ const CatalogPage = () => {
   const [filters, setFilters] = useState<Filters>({});
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const [filterValues,setFiltersValues] = useState<FiltringValues  >({
+    genres: [],
+    category: [],
+    name: [],
+    author: [],
+  });
 
-  const allGenres  =   fetchUniqueValues('genres');
-  const allCateories  =   fetchUniqueValues('category');
+
+
+  // }  // genres: fetchUniqueValues('genres'),
+      // category: fetchUniqueValues('category'),
+      // name: fetchUniqueValues('name'),
+      // author: fetchUniqueValues('author'),
+  // const allGenres  =   fetchUniqueValues('genres');
+  // const allCateories  =   fetchUniqueValues('category');
 
   useEffect(() => {
+    async function fetchUniqueFilterCol(colName: 'genres'| 'category' |'name'|'author') {
+      const res = await fetchUniqueValues(colName);
+      setFiltersValues((prevFilters: FiltringValues) => ({ ...prevFilters, [colName]: res }));
+    }
+
     async function update() {
       try {
         const newBooks = await getBooksByQuery();
+        await Promise.all([
+          fetchUniqueFilterCol('genres'),
+          fetchUniqueFilterCol('category'),
+          fetchUniqueFilterCol('name'),
+          fetchUniqueFilterCol('author')
+        ]);
         setBooks(newBooks);
       } catch (error) {
         setError("Failed to load books.");
@@ -32,8 +55,10 @@ const CatalogPage = () => {
         setIsLoading(false);
       }
     }
+
     update();
   }, []);
+
 
   if (isLoading) {
     return (
@@ -68,8 +93,9 @@ const CatalogPage = () => {
         setFilters,
         books,
         setBooks,
-        genres : allGenres,
-        categories: allCateories
+        filterValues,
+        // genres : allGenres,
+        // categories: allCateories
       }}
     >
       <Box className="w-full">
@@ -78,7 +104,7 @@ const CatalogPage = () => {
           alignItems="space-between"
           justifyContent={"center"}
         >
-          
+
           <Typography className="mx-auto text-center my-6" variant={"h2"}>
             Katalog
           </Typography>
