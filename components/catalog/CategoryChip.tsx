@@ -11,8 +11,9 @@ const CategoryChip: React.FC<FilterProps> = ({ text }) => {
 
   return (
     <Chip
+    sx={{ margin: '0 4px' }}
     label={
-      <Typography variant="body1">
+      <Typography variant="body1" >
         {text}
       </Typography>
     }

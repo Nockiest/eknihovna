@@ -25,9 +25,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     formaturita = false,
     rating = -1,
   } = book;
-  if (genres){
-    console.log(genres, name);
-  }
+
   return (
     <Paper
       className={`w-auto h-full items-center  relative flex-grow `}
@@ -51,18 +49,17 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         </Typography>
         <LineWithCircle />
         <Box>
-          <p> {genres?.length}</p>
 
           {genres && genres.length > 0 && (
-            <Box>
-              <br />
-              {genres.map((gen, key) => (
-                <CategoryChip text={gen} key={key} />
-              ))}
-            </Box>
+           <Box>
+           {genres.map((gen, key) => (
+             <CategoryChip text={gen} key={key}  />
+           ))}
+         </Box>
+
           )}
         </Box>
-        <Typography variant="body2">Hodnocení Studentů</Typography> */}
+        {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
         <StarRow rating={rating} />
 
       </Box>

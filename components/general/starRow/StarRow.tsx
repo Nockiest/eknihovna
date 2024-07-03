@@ -33,13 +33,4 @@ const StarRow: React.FC<StarRowProps> = ({ rating }) => {
 
 export default StarRow;
 
-//   {[...Array(5)].map((_, index) => (
-//     <Box key={index} flex="1" display="flex" justifyContent="center">
-//       {index < filledStars ? (
-//         <StarFull style={{ color: 'gold', width: '100%', height: 'auto' }} />
-//       ) : (
-//         <StarEmpty style={{ color: 'gold', width: '100%', height: 'auto' }} />
-//       )}
-//     </Box>
-//   ))}
-// </Box>
+ 

@@ -1,11 +1,12 @@
 import ExcelSheetUpdater from '@/components/general/ExcelSheetUpdater'
+import { Box } from '@mui/material'
 import React from 'react'
 
 const page = () => {
   return (
-    <div className='w-full'>
+    <Box className='w-full'>
         <ExcelSheetUpdater />
-    </div>
+    </Box>
   )
 }
 

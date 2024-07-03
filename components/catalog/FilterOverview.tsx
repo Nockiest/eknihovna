@@ -11,9 +11,9 @@ interface FilterOverviewProps {
   const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
     const {filters,setBooks} = useSearchContext();
   return (
-    <div>
-        {Object.keys(filters).length > 0 && (
-        <Box>
+    <Box className='w-full justify-between'>
+
+        <Box className={'flex '}>
           {Object.entries(filters).map(([key, value], index) => (
             <CategoryChip
               key={index}
@@ -23,6 +23,9 @@ interface FilterOverviewProps {
               onRemove={() => removeFilter(key)}
             />
           ))}
+        </Box>
+
+          {Object.keys(filters).length > 0 && (
           <PrimaryButton
             onClick={async () => {
               const newBooks = await getBooksByQuery(filters);
@@ -31,9 +34,8 @@ interface FilterOverviewProps {
           >
             Použít Filtry
           </PrimaryButton>
-        </Box>
       )}
-      </div>
+      </Box>
   )
 }
 
