@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { Box, Grid, Typography, useTheme, Breakpoint } from "@mui/material";
-import { Book } from "@/types/types";
+import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "../general/DotsShower";
 import PaginationLinker from "../general/PaginationLinker";
@@ -12,6 +12,7 @@ import CategoryChip from "./CategoryChip";
 import { useSearchContext } from "@/app/katalog/context";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { getBooksByQuery } from "@/utils/fetchBooks";
+import FilterOverview from "./FilterOverview";
 
 interface BookCatalogProps {}
 
@@ -25,27 +26,30 @@ const shownBooksBySize: Record<Breakpoint, number> = {
 
 const BookCatalog: React.FC<BookCatalogProps> = () => {
   const theme = useTheme();
-  const size = useCurrentBreakpoint()|| "xs";
+  const size = useCurrentBreakpoint() || "xs";
   const router = useRouter();
   const { books, setBooks, filters, setFilters } = useSearchContext();
 
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
-  // const [totalPages, setTotalPages] = useState<number>(0);
-  // const [itemsPerPage, setItemsPerPage] = useState<number>(12);
-
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10);
 
+  const getStartAndEndIndexes = (page: number, itemsPerPage: number) => {
+    const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
+    const newLastBookIndex = page * itemsPerPage;
+    return [indexOfFirstBook, newLastBookIndex];
+  };
   const setNewBookSlice = (
     page: number,
     itemsPerPage: number,
     allBooks: Book[] | undefined
   ) => {
-    const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
-    const newLastBookIndex = page * itemsPerPage;
-    console.log(allBooks, allBooks === undefined);
+    const [indexOfFirstBook, newLastBookIndex] = getStartAndEndIndexes(
+      page,
+      itemsPerPage
+    );
     setShownBooks(
       allBooks === undefined
         ? []
@@ -54,24 +58,18 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   };
   useEffect(() => {
     if (size) {
-      const indexOfFirstBook = page * shownBooksBySize[size] - shownBooksBySize[size];
       const newItemsPerPage = shownBooksBySize[size];
-      // setItemsPerPage(newItemsPerPage);
+      const [indexOfFirstBook] = getStartAndEndIndexes(page, newItemsPerPage);
       const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
-      setNewBookSlice(page, shownBooksBySize[size], allBooks);
-      // setTotalPages((prev) => {
-      //   return allBooks === undefined
-      //     ? 0
-      //     : Math.ceil(allBooks.length / shownBooksBySize[size]);
-      // });
+      setNewBookSlice(page, newItemsPerPage, allBooks);
       router.push(
         `/katalog?page=${Math.min(
-          Math.ceil(allBooks.length / shownBooksBySize[size]),
+          Math.ceil(allBooks.length / newItemsPerPage),
           newCurrentPage + 1 || 1
         )}`
       );
     }
-  }, [size, allBooks,   page]);
+  }, [size, allBooks, router, page]);
 
   // Fetch books on initial render
   useEffect(() => {
@@ -85,17 +83,12 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       }
     };
     fetchBooks();
-  }, [books]);
+  }, [books, router]);
 
   // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {
     setNewBookSlice(page, shownBooksBySize[size], allBooks);
-    // setTotalPages((prev) => {
-    //   return allBooks === undefined
-    //     ? 0
-    //     : Math.ceil(allBooks.length / shownBooksBySize[size]);
-    // });
-  }, [page,   allBooks]);
+  }, [page, router, size, allBooks]);
 
   if (error) {
     return (
@@ -106,9 +99,10 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       </div>
     );
   }
+
   const removeFilter = (key: string) => {
     console.log(filters);
-    setFilters((prevFilters) => {
+    setFilters((prevFilters: Filters) => {
       const { [key]: removedKey, ...rest } = prevFilters;
       return rest;
     });
@@ -116,26 +110,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
 
   return (
     <Box className="w-full">
-      <Box>
-        {Object.entries(filters).map(([key, value], index) => (
-          <CategoryChip
-            key={index}
-            text={
-               value === "true"||'false' ? key : value.split(",").join(", ")
-            }
-            onRemove={() => removeFilter(key)}
-          />
-        ))}
-        <PrimaryButton
-          onClick={async () => {
-            const newBooks = await getBooksByQuery(filters);
-            setBooks(newBooks);
-          }}
-        >
-          Použít Filtry
-        </PrimaryButton>
-      </Box>
-
+      <FilterOverview removeFilter={removeFilter} />
       {shownBooks.length > 0 ? (
         <div className="w-full">
           <Grid container spacing={2} columns={12}>
@@ -146,7 +121,11 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             ))}
           </Grid>
 
-          <PaginationLinker allItems={allBooks} itemsPerPage={shownBooksBySize[size]}  folderName="katalog" />
+          <PaginationLinker
+            allItems={allBooks}
+            itemsPerPage={shownBooksBySize[size]}
+            folderName="katalog"
+          />
         </div>
       ) : (
         <DotsShower />

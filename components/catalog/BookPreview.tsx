@@ -25,7 +25,9 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     formaturita = false,
     rating = -1,
   } = book;
-
+  if (genres){
+    console.log(genres, name);
+  }
   return (
     <Paper
       className={`w-auto h-full items-center  relative flex-grow `}
@@ -60,18 +62,9 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
             </Box>
           )}
         </Box>
-        {/* <Box className="flex flex-col items-center w-full  ">
-          <Typography variant="body2">Hodnocení Studentů</Typography> */}
+        <Typography variant="body2">Hodnocení Studentů</Typography> */}
         <StarRow rating={rating} />
-        {/* </Box> */}
-        {/* <br />
-        <Typography
-          className="absolute bottom-2 right-2"
-          sx={{ opacity: "1" , color: theme.palette.text.secondary}}
-          variant="body1"
-        >
-          {truthyValues.includes(available) ? "Dostupný" : "Nedostupný"}
-        </Typography> */}
+
       </Box>
     </Paper>
   );
