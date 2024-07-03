@@ -87,7 +87,7 @@ const CatalogPage = () => {
             Katalog
           </Typography>
         </Box>
-        <BookCatalog promisedBooks={books} />
+        <BookCatalog   />
         <Searcher />
         <ColorCircles />
       </Box>
