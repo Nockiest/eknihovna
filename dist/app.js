@@ -40,56 +40,46 @@ const storage = multer_1.default.diskStorage({
 });
 const upload = (0, multer_1.default)({ storage });
 ///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
-// app.post('/bookList', async (req, res) => {
-//   const { filters } = req.body;
-//   let sqlQuery = 'SELECT * FROM knihy';
-//   const queryParams = [];
-//   if (filters) {
-//     const filterKeys = Object.keys(filters);
-//     if (filterKeys.length > 0) {
-//       const conditions = filterKeys.map((key, index) => {
-//         queryParams.push(filters[key]);
-//         return `${key} = $${index + 1}`;
-//       });
-//       sqlQuery += ` WHERE ${conditions.join(' AND ')}`;
-//     }
-//   }
-//   try {
-//     const result = await pool.query(sqlQuery, queryParams);
-//     res.json(result.rows);
-//   } catch (error) {
-//     console.error('Error executing search query:', error);
-//     res.status(500).json({ error: 'Internal Server Error' });
-//   }
-// });
-///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!////////////////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
 app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    // const { query: searchQuery } = req.query;
     const { filters } = req.body;
+    let sqlQuery = 'SELECT * FROM knihy';
+    const queryParams = [];
+    console.log(filters);
+    if (filters) {
+        const filterKeys = Object.keys(filters);
+        if (filterKeys.length > 0) {
+            const conditions = filterKeys.map((key, index) => {
+                queryParams.push(filters[key]);
+                return `${key} = $${index + 1}`;
+            });
+            sqlQuery += ` WHERE ${conditions.join(' AND ')}`;
+        }
+    }
     try {
-        // Example query to fetch books filtered by  name containing the searchQuery
-        const sqlQuery = `
-      SELECT *
-      FROM knihy
-    `;
-        const result = yield (0, db_1.query)(sqlQuery); // Using ILIKE for case-insensitive search
-        console.log(result.rows);
-        res.json(result.rows); // Assuming result.rows contains books retrieved from the database
+        const result = yield (0, db_1.query)(sqlQuery, queryParams);
+        // const result = await pool.query(sqlQuery, queryParams);
+        res.json(result.rows);
     }
     catch (error) {
         console.error('Error executing search query:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 }));
-// app.get('/getUniqueValues', async (req: Request, res: Response) => {
-//   const { columnName } = req.body;
-//   console.log(columnName)
-//   // const columnName = 'genres'; // Replace with your actual array column name
+///////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!////////////////////////!!!!!!!!!!usefull!!!!!!!!!!!!!!!!!!!!!!!!!!/////////
+// app.post('/bookList', async (req, res) => {
+//   // const { query: searchQuery } = req.query;
+//   const { filters } = req.body;
 //   try {
-//     const values = await extractValuesFromArrayColumn( columnName, true);
-//     res.json(values);
+//     // Example query to fetch books filtered by  name containing the searchQuery
+//     const sqlQuery = `
+//       SELECT *
+//       FROM knihy
+//     `;
+//     const result = await query(sqlQuery ); // Using ILIKE for case-insensitive search
+//     console.log(result.rows)
+//     res.json(result.rows); // Assuming result.rows contains books retrieved from the database
 //   } catch (error) {
-//     console.error('Error retrieving values:', error);
+//     console.error('Error executing search query:', error);
 //     res.status(500).json({ error: 'Internal Server Error' });
 //   }
 // });

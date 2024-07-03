@@ -30,9 +30,9 @@ dotenv_1.default.config();
 //   connectionString: process.env.POSTGRES_URL,
 // })
 exports.pool = new pg_1.Pool({
-    user: 'postgres',
-    host: 'localhost', // or your database host
-    database: 'eknihovna',
+    user: "postgres",
+    host: "localhost", // or your database host
+    database: "eknihovna",
     password: process.env.PSQL_PASSWORD,
     port: 5432, // default PostgreSQL port
 });
@@ -54,11 +54,14 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
         const workbook = xlsx_1.default.readFile(filePath);
         const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
         const worksheet = workbook.Sheets[sheetName];
-        const jsonData = xlsx_1.default.utils.sheet_to_json(worksheet, { header: 1, defval: null });
+        const jsonData = xlsx_1.default.utils.sheet_to_json(worksheet, {
+            header: 1,
+            defval: null,
+        });
         // Extract headers and rows
         const [headers, ...rows] = jsonData;
         if (!headers || headers.length === 0) {
-            throw new Error('The Excel file does not contain headers');
+            throw new Error("The Excel file does not contain headers");
         }
         // Use the pool to get a client and execute the query
         const client = yield exports.pool.connect();
@@ -69,7 +72,9 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
         FROM information_schema.columns
         WHERE table_name = $1
       `;
-            const columnTypesResult = yield client.query(columnTypesQuery, [tableName]);
+            const columnTypesResult = yield client.query(columnTypesQuery, [
+                tableName,
+            ]);
             const columnTypes = columnTypesResult.rows.reduce((acc, { column_name, data_type }) => {
                 acc[column_name] = data_type;
                 return acc;
@@ -83,45 +88,52 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
                     // Process each cell value based on its column type
                     const processedRow = row.map((value, index) => {
                         const columnName = headers[index];
-                        if (columnTypes[columnName] === 'ARRAY' || columnTypes[columnName] === 'text[]') {
-                            return value ? `{${value.split(',').map((v) => `"${v.trim()}"`).join(',')}}` : null;
+                        if (columnTypes[columnName] === "ARRAY" ||
+                            columnTypes[columnName] === "text[]") {
+                            return value
+                                ? `{${value
+                                    .split(",")
+                                    .map((v) => `"${v.trim()}"`)
+                                    .join(",")}}`
+                                : null;
                         }
                         return value;
                     });
                     // Construct the insert query with ON CONFLICT to handle upserts
                     const insertQuery = `
-            INSERT INTO ${tableName} (${headers.join(', ')})
-            VALUES (${headers.map((_, i) => `$${i + 1}`).join(', ')})
-            ON CONFLICT (id) DO UPDATE SET ${headers.map((header, i) => `${header} = EXCLUDED.${header}`).join(', ')}
+            INSERT INTO ${tableName} (${headers.join(", ")})
+            VALUES (${headers.map((_, i) => `$${i + 1}`).join(", ")})
+            ON CONFLICT (id) DO UPDATE SET ${headers
+                        .map((header, i) => `${header} = EXCLUDED.${header}`)
+                        .join(", ")}
           `;
                     // Execute the query
                     yield client.query(insertQuery, processedRow);
                 }
                 catch (rowError) {
-                    console.error('Error processing row:', rowError.message);
+                    console.error("Error processing row:", rowError.message);
                     // Throw error to stop further processing or log as needed
                     throw new Error(`Error processing row: ${rowError.message}`);
                 }
             }
-            console.log('Data successfully inserted or updated in PostgreSQL');
+            console.log("Data successfully inserted or updated in PostgreSQL");
         }
         finally {
             client.release();
         }
     }
     catch (error) {
-        console.error('Error inserting data into PostgreSQL:', error);
+        console.error("Error inserting data into PostgreSQL:", error);
         throw new Error(`Error inserting data into PostgreSQL: ${error.message}`);
     }
 });
 exports.insertExcelDataToPostgres = insertExcelDataToPostgres;
 function convertQueryResToJson(queryRes) {
-    const res = queryRes.rows.map(row => {
+    const res = queryRes.rows.map((row) => {
         // Convert boolean values to actual booleans instead of 'true'/'false'
         return Object.assign(Object.assign({}, row), { 
             // Example: Assuming 'active' is a boolean column
-            available: row.available === 'true' ? "ano" : "ne", formaturita: row.formaturita === 'true' ? "ano" : "ne" // Convert 'true'/'false' strings to actual booleans
-         });
+            available: row.available === "true" ? "ano" : "ne", formaturita: row.formaturita === "true" ? "ano" : "ne" });
     });
     return res;
 }
@@ -131,7 +143,7 @@ const fetchAndCreateExcel = (tableName) => __awaiter(void 0, void 0, void 0, fun
         // Query to select all entries from the specified table
         const queryResult = yield (0, exports.query)(`SELECT * FROM ${tableName}`);
         if (queryResult.rows.length === 0) {
-            throw new Error('No data found in the table.');
+            throw new Error("No data found in the table.");
         }
         // Convert the query result to JSON
         const jsonData = convertQueryResToJson(queryResult);
@@ -141,11 +153,11 @@ const fetchAndCreateExcel = (tableName) => __awaiter(void 0, void 0, void 0, fun
         // Append the worksheet to the workbook
         xlsx_1.default.utils.book_append_sheet(workbook, worksheet, tableName);
         // Write the workbook to a buffer
-        const buffer = xlsx_1.default.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+        const buffer = xlsx_1.default.write(workbook, { type: "buffer", bookType: "xlsx" });
         return buffer;
     }
     catch (error) {
-        console.error('Error fetching data or creating Excel file:', error);
+        console.error("Error fetching data or creating Excel file:", error);
         throw error;
     }
 });
@@ -153,15 +165,14 @@ exports.fetchAndCreateExcel = fetchAndCreateExcel;
 function connectAndQuery() {
     return __awaiter(this, void 0, void 0, function* () {
         try {
-            const allEntriesQuery = 'SELECT * FROM knihy';
+            const allEntriesQuery = "SELECT * FROM knihy";
             const queryResult = yield (0, exports.query)(allEntriesQuery);
             // Example query with parameters
             // const id = 1;
             // const queryResult = await query('SELECT * FROM knihy WHERE id = $1', [id]);
-            console.log('Query result:', queryResult.rows);
         }
         catch (error) {
-            console.error('Error connecting to the database:', error);
+            console.error("Error connecting to the database:", error);
         }
         finally {
             // The pool automatically manages connections, no need to manually close it
@@ -169,7 +180,7 @@ function connectAndQuery() {
     });
 }
 exports.connectAndQuery = connectAndQuery;
-const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void 0, [columnName_1, ...args_2], void 0, function* (columnName, unique = false, tableName = 'knihy') {
+const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void 0, [columnName_1, ...args_2], void 0, function* (columnName, unique = false, tableName = "knihy") {
     var _a;
     const client = yield exports.pool.connect();
     try {
@@ -179,10 +190,13 @@ const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void
         FROM information_schema.columns
         WHERE table_name = $1 AND column_name = $2
       `;
-        const columnTypeResult = yield client.query(columnTypeQuery, [tableName, columnName]);
+        const columnTypeResult = yield client.query(columnTypeQuery, [
+            tableName,
+            columnName,
+        ]);
         const columnType = (_a = columnTypeResult.rows[0]) === null || _a === void 0 ? void 0 : _a.data_type;
         let values = [];
-        if (columnType && columnType.includes('[]')) {
+        if (columnType && columnType.includes("[]")) {
             // Column is an array type, unnest the array
             const query = `
           SELECT DISTINCT unnest(${columnName}) AS value
@@ -202,21 +216,16 @@ const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void
             // Extract the values from the result
             values = result.rows.map((row) => row.value);
         }
-        // If unique is true, filter the values to only include unique values
-        // if (unique) {
-        //   values = Array.from(new Set(values));
-        // }
         // Filter out null values
-        values = values.filter(value => value !== null);
+        values = values.filter((value) => value !== null);
         values = (0, utils_1.flattenIfArrayOfArrays)(values);
-        console.log(values);
         return {
             columnName,
             values,
         };
     }
     catch (error) {
-        console.error('Error extracting values:', error);
+        console.error("Error extracting values:", error);
         return null;
     }
     finally {
