@@ -28,7 +28,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`w-auto h-full   items-center  relative flex-grow `}
+      className={`w-auto h-full items-center  relative flex-grow `}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: `2px solid ${
@@ -44,11 +44,11 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         p={2}
         className=" flex flex-col items-center justify-around    h-full"
       >
-        <BookCover width={'200px'} />
+        <BookCover width={"200px"} />
         <Typography variant="h6" align="center">
           {name}
         </Typography>
-        <Typography variant="body1"  align="center" >
+        <Typography variant="body1" align="center">
           {author ? author : "Neznámý autor"}
         </Typography>
         <LineWithCircle />
