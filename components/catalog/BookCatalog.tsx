@@ -134,9 +134,9 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             folderName="katalog"
           />
         </div>
-      ) : (
-        <DotsShower />
-      )}
+       ) : (
+<Typography variant='h6' >Žádné knihy nenalezeny</Typography>
+)}
     </Box>
   );
 };
