@@ -5,7 +5,7 @@ import React, { useState } from "react";
 
 type SortedGroupedSelectProps = {
   options: string[];
-  handleChange: (key: string, value: string|boolean|null) => void;
+  handleChange: (e: string|null) => void;
   colName:string
 };
 interface GroupedCategories {
@@ -43,9 +43,12 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
 
   sx={{ width: 300 }}
   renderInput={(params) => <TextField {...params} label={colName} />}
-  onChange={(event: any, newValue: string | null) => {
-    handleChange(colName,newValue);
-  }}
+  onChange={(e,newVal) => {
+    handleChange(newVal)}}
+  //   (event: any, newValue: string | null) => {
+  //   handleChange(colName,newValue);
+  // }
+  // }
 />
   );
 };

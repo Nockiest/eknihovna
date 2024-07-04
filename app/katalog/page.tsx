@@ -13,7 +13,14 @@ import ColorCircles from "@/utils/ColorCircles";
 const CatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
-  const [filters, setFilters] = useState<Filters>({});
+  const [filters, setFilters] = useState<Filters>({
+    name:null,
+    author: [],
+    category: [],
+    genres: [],
+    formaturita : null,
+    available: null
+  });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [filterValues,setFiltersValues] = useState<FiltringValues  >({

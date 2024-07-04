@@ -117,12 +117,11 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             container
             spacing={2}
             columns={12}
-            // justify="center"
             alignItems="center"
-            sx={{justifyContent: "center",alignItems: "center"}}
+            sx={{justifyContent: "center",alignItems: "center",}}
           >
             {shownBooks.map((book, index) => (
-              <Grid sx={{margin:'0 auto'}} item xs={12} sm={6} md={4} xl={3} key={index}>
+              <Grid sx={{margin:'0 auto', height: 'auto'}} item xs={12} sm={6} md={4} xl={3} key={index}>
                 <BookPreview  book={book} />
               </Grid>
             ))}

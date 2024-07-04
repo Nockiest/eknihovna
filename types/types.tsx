@@ -17,11 +17,18 @@ export type NavButton = {
     label: string;
   }
 
+export type StringedBool = "true" | "false";
 
-
-  export  type Filters= {
-    [key: string]: string|null ;
-  };
+export  type Filters= {
+  // [key: string]: string[]| Omit<string | 'false' | 'true', 'false' | 'true'>| StringedBool|null ;
+  name: string|null ;
+  author: string[];
+  category: string[];
+  genres: string[];
+  formaturita: StringedBool|null;
+  // rating: number;
+  available: StringedBool|null;
+};
 
   export type FiltringValues = {
     category: string[];
