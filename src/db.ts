@@ -34,6 +34,28 @@ export const query = async (text, params = []) => {
   }
 };
 
+// export async function findArrayColumns(db: Pool = pool) {
+//   const client = await db.connect();
+
+//   try {
+//     const query = `
+//       SELECT column_name
+//       FROM information_schema.columns
+//       WHERE table_schema = 'public'
+//         AND data_type LIKE '%[]%';
+//     `;
+//     const result = await client.query(query);
+//     console.log(result);
+//     const arrayColumns = result.rows.map(row => row.column_name);
+//     return arrayColumns;
+//   } catch (error) {
+//     console.error('Error finding array columns:', error);
+//     return [];
+//   } finally {
+//     client.release();
+//   }
+// }
+
 export const insertExcelDataToPostgres = async (
   filePath: string,
   tableName: string
@@ -256,4 +278,3 @@ export const extractValuesFromArrayColumn = async (
     client.release();
   }
 };
- 

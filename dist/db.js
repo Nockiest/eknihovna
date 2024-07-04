@@ -48,6 +48,26 @@ const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void
     }
 });
 exports.query = query;
+// export async function findArrayColumns(db: Pool = pool) {
+//   const client = await db.connect();
+//   try {
+//     const query = `
+//       SELECT column_name
+//       FROM information_schema.columns
+//       WHERE table_schema = 'public'
+//         AND data_type LIKE '%[]%';
+//     `;
+//     const result = await client.query(query);
+//     console.log(result);
+//     const arrayColumns = result.rows.map(row => row.column_name);
+//     return arrayColumns;
+//   } catch (error) {
+//     console.error('Error finding array columns:', error);
+//     return [];
+//   } finally {
+//     client.release();
+//   }
+// }
 const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Read the Excel file
