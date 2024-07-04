@@ -5,14 +5,15 @@ import { Box } from "@mui/material";
 import React from "react";
 import CategoryChip from "./CategoryChip";
 import SearcherOpenerFab from "./SearcheOpenerFab";
+import { isStringedBool } from "@/types/typeChecks";
+
 interface FilterOverviewProps {
   removeFilter: (key: string) => void;
 }
 const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
-  const { filters, setBooks, isOpenSearcher, setOpenSearcher } = useSearchContext();
+  const { filters, isOpenSearcher, setOpenSearcher } = useSearchContext();
 
   const filterKeys = Object.keys(filters);
-  const filtersPerRow = 3; // Number of filters to display per row
 
   return (
     <Box className="w-full flex flex-col items-start my-4">
@@ -24,39 +25,32 @@ const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
       />
 
       <Box className="w-full flex flex-wrap">
-        {filterKeys.map((key, index) => {
+        {filterKeys.map((key) => {
           const value = filters[key];
           if (value) {
-            return (
-              <CategoryChip
-                key={key}
-                text={
-                  value === "true" || value === "false"
-                    ? key
-                    : value.split(",").join(", ")
-                }
-                onRemove={() => removeFilter(key)}
-              />
-            );
+            if (typeof value === 'string') {
+              return (
+                <CategoryChip
+                  key={key}
+                  text={isStringedBool(value) ? key : value}
+                  onRemove={() => removeFilter(key)}
+                />
+              );
+            } else if (Array.isArray(value)) {
+              return value.map((item, index) => (
+                <CategoryChip
+                  key={`${key}-${index}`}
+                  text={item}
+                  onRemove={() => removeFilter(key)}
+                />
+              ));
+            }
           }
           return null;
         })}
       </Box>
-
-      {/* {filterKeys.length > 0 && (
-        <PrimaryButton
-          className="w-1/2 mx-auto"
-          onClick={async () => {
-            const newBooks = await getBooksByQuery(filters);
-            setBooks(newBooks);
-          }}
-        >
-          Použít Filtry
-        </PrimaryButton>
-      )} */}
     </Box>
   );
 };
-
 
 export default FilterOverview;
