@@ -78,11 +78,11 @@ const Searcher: React.FC<SearcherProps> = () => {
       unmountOnExit
     >
       <Paper className={"relative"} elevation={3}>
-        <Box className="border-b-0 border-2 border-solid rounded z-1 mb-16 left-12 absolute border-black pb-2" onClick={() => {
+        {/* <Box className="border-b-0 border-2 border-solid rounded z-1 mb-16 left-12 absolute border-black pb-2" onClick={() => {
           setOpenSearcher(!isOpenSearcher);
         }}>
           Filtry
-        </Box>
+        </Box> */}
         <Fab
           className="ml-auto mr-0"
           onClick={() => {
@@ -92,7 +92,7 @@ const Searcher: React.FC<SearcherProps> = () => {
           <Image src={"icon/cross.svg"} alt="cross" width={"32"} height={32} />
         </Fab>
 
-        <SearchBar />
+        {/* <SearchBar /> */}
 
         <InputLabel shrink>Název: {filters.name || "None"}</InputLabel>
         <TextField

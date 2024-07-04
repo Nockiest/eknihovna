@@ -111,7 +111,6 @@ const CatalogPage = () => {
 
       }}
     >
-      <Checkbox />
       <Box className="w-full">
         <Box
           display="flex"
