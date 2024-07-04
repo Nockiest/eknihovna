@@ -100,11 +100,25 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     );
   }
 
-  const removeFilter = (key: string) => {
-    console.log(filters);
+  const removeFilter = (key: string, value: string) => {
+    console.log(filters,key,value);
     setFilters((prevFilters: Filters) => {
-      const { [key]: removedKey, ...rest } = prevFilters;
-      return rest;
+      const currentFilter = prevFilters[key];
+
+      if (Array.isArray(currentFilter)) {
+        // Remove the specified value from the array
+        const updatedArray = currentFilter.filter((item: string) => item !== value);
+        return {
+          ...prevFilters,
+          [key]: updatedArray.length > 0 ? updatedArray : null,
+        };
+      } else {
+        // Set the value under the key to null
+        return {
+          ...prevFilters,
+          [key]: null,
+        };
+      }
     });
   };
 

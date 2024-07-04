@@ -8,7 +8,7 @@ import SearcherOpenerFab from "./SearcheOpenerFab";
 import { isStringedBool } from "@/types/typeChecks";
 
 interface FilterOverviewProps {
-  removeFilter: (key: string) => void;
+  removeFilter: (key: string, value:any) => void;
 }
 const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
   const { filters, isOpenSearcher, setOpenSearcher } = useSearchContext();
@@ -33,7 +33,7 @@ const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
                 <CategoryChip
                   key={key}
                   text={isStringedBool(value) ? key : value}
-                  onRemove={() => removeFilter(key)}
+                  onRemove={() => removeFilter(key,value)}
                 />
               );
             } else if (Array.isArray(value)) {
@@ -41,7 +41,7 @@ const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
                 <CategoryChip
                   key={`${key}-${index}`}
                   text={item}
-                  onRemove={() => removeFilter(key)}
+                  onRemove={() => removeFilter(key,item)}
                 />
               ));
             }
