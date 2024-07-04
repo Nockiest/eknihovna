@@ -101,13 +101,14 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   }
 
   const removeFilter = (key: string, value: string) => {
-    console.log(filters,key,value);
     setFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
 
       if (Array.isArray(currentFilter)) {
         // Remove the specified value from the array
-        const updatedArray = currentFilter.filter((item: string) => item !== value);
+        const updatedArray = currentFilter.filter(
+          (item: string) => item !== value
+        );
         return {
           ...prevFilters,
           [key]: updatedArray.length > 0 ? updatedArray : null,
@@ -132,11 +133,19 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             spacing={2}
             columns={12}
             alignItems="center"
-            sx={{justifyContent: "center",alignItems: "center",}}
+            sx={{ justifyContent: "center", alignItems: "center" }}
           >
             {shownBooks.map((book, index) => (
-              <Grid sx={{margin:'0 auto', height: 'auto'}} item xs={12} sm={6} md={4} xl={3} key={index}>
-                <BookPreview  book={book} />
+              <Grid
+                sx={{ margin: "0 auto", height: "auto" }}
+                item
+                xs={12}
+                sm={6}
+                md={4}
+                xl={3}
+                key={index}
+              >
+                <BookPreview book={book} />
               </Grid>
             ))}
           </Grid>
@@ -147,9 +156,9 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             folderName="katalog"
           />
         </div>
-       ) : (
-<Typography variant='h6' >Žádné knihy nenalezeny</Typography>
-)}
+      ) : (
+        <Typography variant="h6">Žádné knihy nenalezeny</Typography>
+      )}
     </Box>
   );
 };

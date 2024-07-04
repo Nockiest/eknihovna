@@ -1,7 +1,7 @@
 "use client";
 import BookCatalog from "@/components/catalog/BookCatalog";
 import { getBooksByQuery } from "@/utils/fetchBooks";
-import { Box, Typography, CircularProgress } from "@mui/material";
+import { Box, Typography, CircularProgress, Checkbox } from "@mui/material";
 import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
 import { useEffect, useState } from "react";
@@ -111,6 +111,7 @@ const CatalogPage = () => {
 
       }}
     >
+      <Checkbox />
       <Box className="w-full">
         <Box
           display="flex"
