@@ -8,37 +8,44 @@ import SearcherOpenerFab from "./SearcheOpenerFab";
 interface FilterOverviewProps {
   removeFilter: (key: string) => void;
 }
-
 const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
-  const { filters, setBooks, isOpenSearcher, setOpenSearcher } =
-    useSearchContext();
+  const { filters, setBooks, isOpenSearcher, setOpenSearcher } = useSearchContext();
+
+  const filterKeys = Object.keys(filters);
+  const filtersPerRow = 3; // Number of filters to display per row
+
   return (
-    <Box className="w-full flex flex-row items-center justify-between my-4">
+    <Box className="w-full flex flex-col items-start my-4">
       <SearcherOpenerFab
         css={`flex-0 ${isOpenSearcher ? "hidden" : "block"}`}
         onClick={() => {
           setOpenSearcher(!isOpenSearcher);
         }}
       />
-      <Box className={"  flex-1"}>
-        {Object.entries(filters).map(([key, value], index) =>
-          value ? (
-            <CategoryChip
-              key={index}
-              text={
-                value === "true" || value === "false"
-                  ? key
-                  : value.split(",").join(", ")
-              }
-              onRemove={() => removeFilter(key)}
-            />
-          ) : undefined
-        )}
+
+      <Box className="w-full flex flex-wrap">
+        {filterKeys.map((key, index) => {
+          const value = filters[key];
+          if (value) {
+            return (
+              <CategoryChip
+                key={key}
+                text={
+                  value === "true" || value === "false"
+                    ? key
+                    : value.split(",").join(", ")
+                }
+                onRemove={() => removeFilter(key)}
+              />
+            );
+          }
+          return null;
+        })}
       </Box>
 
-      {Object.keys(filters).length > 0 && (
+      {/* {filterKeys.length > 0 && (
         <PrimaryButton
-          className={"  flex-0"}
+          className="w-1/2 mx-auto"
           onClick={async () => {
             const newBooks = await getBooksByQuery(filters);
             setBooks(newBooks);
@@ -46,9 +53,10 @@ const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
         >
           Použít Filtry
         </PrimaryButton>
-      )}
+      )} */}
     </Box>
   );
 };
+
 
 export default FilterOverview;

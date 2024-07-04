@@ -140,14 +140,14 @@ const Searcher: React.FC<SearcherProps> = () => {
             },
           }}
         />
-        <Button
+        {/* <Button
           variant="contained"
           color="primary"
           onClick={fetchFilteredBooks}
           style={{ marginTop: "16px" }}
         >
           POUŽÍT FILTRY
-        </Button>
+        </Button> */}
       </Paper>
     </Slide>
   );

@@ -48,6 +48,24 @@ const CatalogPage = () => {
     update();
   }, []);
 
+  useEffect(() => {
+    const getNewBooks = async () =>{
+      const newBooks = await getBooksByQuery(filters)
+      setBooks(newBooks)
+    };
+    getNewBooks()
+    // const newBooks = books.filter((book) => {
+    //   let result = true;
+    //   Object.keys(filters).forEach((key) => {
+    //     if (filters[key]?.length > 0) {
+    //       result = result && filters[key].includes(book[key]);
+    //     }
+    //   });
+    //   return result;
+    // });
+    // setBooks(newBooks);
+  }, [ filters]);
+
 
   if (isLoading) {
     return (
@@ -78,13 +96,12 @@ const CatalogPage = () => {
       value={{
         isOpenSearcher,
         setOpenSearcher,
-        filters,
+        filters, // currently active filters
         setFilters,
         books,
         setBooks,
-        filterValues,
-        // genres : allGenres,
-        // categories: allCateories
+        filterValues, // possible filter values
+
       }}
     >
       <Box className="w-full">
