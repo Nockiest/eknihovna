@@ -222,17 +222,17 @@ const theme = createTheme({
           },
           '&:focus': {
             outline: `2px solid ${rootPalette.primary.dark}`, // Outline when focused
-            color: rootPalette.primary.light
+            color: rootPalette.primary.dark
           },
           '&:disabled': {
             color: 'rgba(0, 0, 0, 0.38)', // Color when disabled
           },
           '&.Mui-checked': {
-            outline: `2px solid ${rootPalette.primary.dark}`,
-            color: rootPalette.primary.light, // Tick color when checked
+            // outline: `2px solid ${rootPalette.primary.dark}`,
+            color: rootPalette.primary.dark, // Tick color when checked
             backgroundColor: rootPalette.primary.light, // Background color when checked
             '& .MuiSvgIcon-root': {
-              fill: rootPalette.primary.light, // Tick color when checked
+              fill: rootPalette.primary.dark, // Tick color when checked
             },
             icon: {
               color: 'white',
