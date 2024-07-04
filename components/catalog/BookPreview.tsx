@@ -3,7 +3,6 @@ import { truthyValues } from "@/data/values";
 import theme from "@/theme/theme";
 import { Book } from "@/types/types";
 import { Box, Paper, Typography } from "@mui/material";
-import Image from "next/image";
 import React, { useEffect } from "react";
 import Filter from "./CategoryChip";
 import { useTheme } from "@emotion/react";
@@ -28,7 +27,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`w-auto h-full items-center  relative flex-grow `}
+      className={`w-auto h-full items-center mx-auto  relative flex-grow `}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: truthyValues.includes(available)

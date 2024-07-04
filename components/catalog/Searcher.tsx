@@ -12,6 +12,7 @@ import {
   Button,
   Select,
   MenuItem,
+  Box,
 } from "@mui/material";
 import SearchBar from "./SearchBar";
 import Image from "next/image";
@@ -20,7 +21,6 @@ import { Filters } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
 import { getBooksByQuery } from "@/utils/fetchBooks";
 import SortedGroupedSelect from "./SortedSelect";
-
 
 interface SearcherProps {}
 
@@ -32,8 +32,7 @@ const Searcher: React.FC<SearcherProps> = () => {
     setFilters,
     books,
     setBooks,
-    filterValues
-
+    filterValues,
   } = useSearchContext();
 
   const fetchFilteredBooks = async () => {
@@ -46,11 +45,11 @@ const Searcher: React.FC<SearcherProps> = () => {
     }
   };
 
-  const handleFilterChange = (name: string, value: string | boolean|null) => {
+  const handleFilterChange = (name: string, value: string | boolean | null) => {
     console.log(name, value);
     setFilters((prevFilters: Filters) => ({
       ...prevFilters,
-      [name]: value? value.toString(): null,
+      [name]: value ? value.toString() : null,
     }));
   };
   // const handleGenresChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,18 +59,27 @@ const Searcher: React.FC<SearcherProps> = () => {
   // };
 
   return (
-    <Slide direction="up" in={isOpenSearcher} mountOnEnter unmountOnExit>
-      <Paper className="fixed bottom-0 left-0 right-0 md:left-16 md:right-16 z-50 p-4 h-3/4" elevation={3}>
-          <Fab  onClick={() => {
+    <Slide
+      direction="up"
+      className="fixed bottom-0 left-0 right-0 md:left-16 md:right-16 z-50 p-4 h-3/4"
+      in={isOpenSearcher}
+      mountOnEnter
+      unmountOnExit
+    >
+      <Paper className={"relative"} elevation={3}>
+        <Box className="border-b-0 border-2  border-solid   rounded z-1 mb-16 left-12 absolute border-black pb-2  "  onClick={() => {
             setOpenSearcher(!isOpenSearcher);
           }}>
-            <Image
-              src={"icon/cross.svg"}
-              alt="cross"
-              width={"32"}
-              height={32}
-            />
-          </Fab>
+          Filtry
+        </Box>
+        <Fab
+        className="ml-auto mr-0"
+          onClick={() => {
+            setOpenSearcher(!isOpenSearcher);
+          }}
+        >
+          <Image src={"icon/cross.svg"} alt="cross" width={"32"} height={32} />
+        </Fab>
 
         <SearchBar />
 
@@ -82,10 +90,21 @@ const Searcher: React.FC<SearcherProps> = () => {
           fullWidth
           margin="normal"
         />
-        <SortedGroupedSelect options={filterValues.category}  colName={'category'}handleChange={handleFilterChange} />
-        <SortedGroupedSelect options={filterValues.genres}  colName={'genres'} handleChange={handleFilterChange} />
-        {/* <SortedGroupedSelect options={filterValues.name}  colName={'name'} handleChange={handleFilterChange} /> */}
-        <SortedGroupedSelect options={filterValues.author}  colName={'author'} handleChange={handleFilterChange} />
+        <SortedGroupedSelect
+          options={filterValues.category}
+          colName={"category"}
+          handleChange={handleFilterChange}
+        />
+        <SortedGroupedSelect
+          options={filterValues.genres}
+          colName={"genres"}
+          handleChange={handleFilterChange}
+        />
+        <SortedGroupedSelect
+          options={filterValues.author}
+          colName={"author"}
+          handleChange={handleFilterChange}
+        />
         <FormControlLabel
           control={
             <Checkbox

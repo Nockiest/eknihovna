@@ -26,7 +26,7 @@ export default function RootLayout({
     <html lang="cz">
       <Head>
   {/* Primary Favicon */}
-      <link rel="icon" type="image/x-icon" href="/ico.ico" />
+      <link rel="icon" type="image/x-icon" href="/bookLogo.ico" />
 
       {/* Optional: Additional Favicons for Different Sizes */}
       {/* <link rel="icon" type="image/png" sizes="16x16" href="client/knihovna/public/icon/GO.ico" />

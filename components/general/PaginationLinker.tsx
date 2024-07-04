@@ -55,8 +55,9 @@ const Pagination: React.FC<PaginationProps> = ({
           href={`/${folderName}?page=${pageNumber}`}
           className={`px-3 py-1 rounded ${
             pageNumber === page
-              ? "bg-secondary-500 text-text-100"
-              : "bg-primary-500 text-text-100"
+              ?
+                "bg-primary-400 text-text-950":
+              "bg-secondary-900 text-text-100"
           }`}
         >
           {pageNumber}
