@@ -131,9 +131,7 @@ exports.insertExcelDataToPostgres = insertExcelDataToPostgres;
 function convertQueryResToJson(queryRes) {
     const res = queryRes.rows.map((row) => {
         // Convert boolean values to actual booleans instead of 'true'/'false'
-        return Object.assign(Object.assign({}, row), { 
-            // Example: Assuming 'active' is a boolean column
-            available: row.available === "true" ? "ano" : "ne", formaturita: row.formaturita === "true" ? "ano" : "ne" });
+        return Object.assign(Object.assign({}, row), { available: row.available === "true" ? "ano" : "ne", formaturita: row.formaturita === "true" ? "ano" : "ne" });
     });
     return res;
 }
@@ -241,36 +239,3 @@ const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void
     }
 });
 exports.extractValuesFromArrayColumn = extractValuesFromArrayColumn;
-// export const extractValuesFromArrayColumn = async (
-//   columnName: string,
-//   unique: boolean = false, // Default to false, meaning non-unique by default
-//   tableName: string = 'knihy',
-// ): Promise<ExtractedValues | null> => {
-//   const client: PoolClient = await pool.connect();
-//   try {
-//     const query = `
-//       SELECT unnest(${columnName}) AS ${columnName}
-//       FROM ${tableName}
-//     `;
-//     const result = await client.query(query);
-//     // Extract the values from the result
-//     let values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
-//     // If unique is true, filter the values to only include unique values
-//     if (unique) {
-//       values = Array.from(new Set(values));
-//     }
-//     values.forEach((value, index) => {
-//       console.log(`Value ${index + 1}:`, value);
-//     });
-//     console.log(result.rows);
-//     return {
-//       columnName,
-//       values,
-//     };
-//   } catch (error) {
-//     console.error('Error extracting values:', error);
-//     return null;
-//   } finally {
-//     client.release();
-//   }
-// };

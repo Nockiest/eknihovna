@@ -134,7 +134,6 @@ export function convertQueryResToJson(queryRes) {
     // Convert boolean values to actual booleans instead of 'true'/'false'
     return {
       ...row,
-      // Example: Assuming 'active' is a boolean column
       available: row.available === "true" ? "ano" : "ne", // Convert 'true'/'false' strings to actual booleans
       formaturita: row.formaturita === "true" ? "ano" : "ne", // Convert 'true'/'false' strings to actual booleans
     };
@@ -257,41 +256,4 @@ export const extractValuesFromArrayColumn = async (
     client.release();
   }
 };
-
-// export const extractValuesFromArrayColumn = async (
-//   columnName: string,
-//   unique: boolean = false, // Default to false, meaning non-unique by default
-
-//   tableName: string = 'knihy',
-// ): Promise<ExtractedValues | null> => {
-//   const client: PoolClient = await pool.connect();
-//   try {
-//     const query = `
-//       SELECT unnest(${columnName}) AS ${columnName}
-//       FROM ${tableName}
-//     `;
-//     const result = await client.query(query);
-
-//     // Extract the values from the result
-//     let values = result.rows.map((row) => row[columnName]); // Assuming columnName is correctly set
-
-//     // If unique is true, filter the values to only include unique values
-//     if (unique) {
-//       values = Array.from(new Set(values));
-//     }
-
-//     values.forEach((value, index) => {
-//       console.log(`Value ${index + 1}:`, value);
-//     });
-//     console.log(result.rows);
-//     return {
-//       columnName,
-//       values,
-//     };
-//   } catch (error) {
-//     console.error('Error extracting values:', error);
-//     return null;
-//   } finally {
-//     client.release();
-//   }
-// };
+ 

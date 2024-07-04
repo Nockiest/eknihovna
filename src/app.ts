@@ -28,25 +28,34 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
+
 app.post('/bookList', async (req, res) => {
   const { filters } = req.body;
 
   let sqlQuery = 'SELECT * FROM knihy';
   const queryParams = [];
-  console.log(filters)
+  console.log(filters);
   if (filters) {
     const filterKeys = Object.keys(filters);
     if (filterKeys.length > 0) {
-      const conditions = filterKeys.map((key, index) => {
-        queryParams.push(filters[key]);
-        return `${key} = $${index + 1}`;
-      });
+      const conditions = filterKeys
+        .filter(key => filters[key] !== null) // Filter out keys with null values
+        .map((key, index) => {
+          queryParams.push(filters[key]);
+          if (key === 'genres') { // write a function that would find all array types in the psql
+            return `$${index + 1} = ANY(${key})`;
+          } else {
+            return `${key} = $${index + 1}`;
+          }
+        });
 
-      sqlQuery += ` WHERE ${conditions.join(' AND ')}`;
+      if (conditions.length > 0) {
+        sqlQuery += ' WHERE ' + conditions.join(' AND ');
+      }
     }
   }
-
   try {
+    console.log(sqlQuery,queryParams)
     const result = await query(sqlQuery,queryParams );
     // const result = await pool.query(sqlQuery, queryParams);
     res.json(result.rows);
@@ -55,6 +64,8 @@ app.post('/bookList', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
 
 app.get('/getUniqueValues', async (req, res) => {
   const { columnName } = req.query; // Use req.query to get query parameters

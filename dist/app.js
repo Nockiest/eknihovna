@@ -47,14 +47,24 @@ app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* 
     if (filters) {
         const filterKeys = Object.keys(filters);
         if (filterKeys.length > 0) {
-            const conditions = filterKeys.map((key, index) => {
+            const conditions = filterKeys
+                .filter(key => filters[key] !== null) // Filter out keys with null values
+                .map((key, index) => {
                 queryParams.push(filters[key]);
-                return `${key} = $${index + 1}`;
+                if (key === 'genres') { // write a function that would find all array types in the psql
+                    return `$${index + 1} = ANY(${key})`;
+                }
+                else {
+                    return `${key} = $${index + 1}`;
+                }
             });
-            sqlQuery += ` WHERE ${conditions.join(' AND ')}`;
+            if (conditions.length > 0) {
+                sqlQuery += ' WHERE ' + conditions.join(' AND ');
+            }
         }
     }
     try {
+        console.log(sqlQuery, queryParams);
         const result = yield (0, db_1.query)(sqlQuery, queryParams);
         // const result = await pool.query(sqlQuery, queryParams);
         res.json(result.rows);
