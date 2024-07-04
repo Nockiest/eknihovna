@@ -1,5 +1,4 @@
 "use client";
-
 import BookCatalog from "@/components/catalog/BookCatalog";
 import { getBooksByQuery } from "@/utils/fetchBooks";
 import { Box, Typography, CircularProgress } from "@mui/material";
@@ -23,17 +22,7 @@ const CatalogPage = () => {
     name: [],
     author: [],
   });
-
-
-
-  // }  // genres: fetchUniqueValues('genres'),
-      // category: fetchUniqueValues('category'),
-      // name: fetchUniqueValues('name'),
-      // author: fetchUniqueValues('author'),
-  // const allGenres  =   fetchUniqueValues('genres');
-  // const allCateories  =   fetchUniqueValues('category');
-
-  useEffect(() => {
+   useEffect(() => {
     async function fetchUniqueFilterCol(colName: 'genres'| 'category' |'name'|'author') {
       const res = await fetchUniqueValues(colName);
       setFiltersValues((prevFilters: FiltringValues) => ({ ...prevFilters, [colName]: res }));

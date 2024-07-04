@@ -113,10 +113,17 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       <FilterOverview removeFilter={removeFilter} />
       {shownBooks.length > 0 ? (
         <div className="w-full">
-          <Grid container spacing={2} columns={12}>
+          <Grid
+            container
+            spacing={2}
+            columns={12}
+            // justify="center"
+            alignItems="center"
+            sx={{justifyContent: "center",alignItems: "center"}}
+          >
             {shownBooks.map((book, index) => (
-              <Grid item xs={12} sm={6} md={4} xl={3} key={index}>
-                <BookPreview book={book} />
+              <Grid sx={{margin:'0 auto'}} item xs={12} sm={6} md={4} xl={3} key={index}>
+                <BookPreview  book={book} />
               </Grid>
             ))}
           </Grid>

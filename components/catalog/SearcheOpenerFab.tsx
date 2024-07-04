@@ -18,7 +18,7 @@ type SearcherOpenerFabProps = {
           className={`z-1 ${css}  flex-0 flex justify-center items-center  `}
         >
           <Image
-            src="icon/filter.svg"
+            src="/icon/filter.svg"
             alt="search"
             width={32}
             height={32}

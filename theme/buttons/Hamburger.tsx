@@ -34,7 +34,7 @@ const CustomHamburger: React.FC<CustomHamburgerProps> = ({
 }) => {
   return (
     <CustomIconButton
-      className="border-0 cursor-pointer absolute right-0 top-1 z-3 m-4 p-4 sm:hidden"
+      className="border-0 cursor-pointer bg-primary-900 absolute right-0 top-1 z-3 m-4 p-4 sm:hidden"
       onClick={onClick}
       aria-label={ariaLabel}
     >
