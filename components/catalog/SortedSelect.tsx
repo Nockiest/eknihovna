@@ -1,96 +1,42 @@
 'use client'
-import { Filters } from "@/types/types";
-import { Autocomplete, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Autocomplete,    TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 
-type SortedGroupedSelectProps = {
+interface SortedGroupedSelectProps {
   options: string[];
-  handleChange: (e: string|null) => void;
-  colName:string
-};
-interface GroupedCategories {
-  [key: string]: any;
+  label: string;
+  handleChange: (value: string | null) => void;
 }
+
 const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   options,
-  colName,
+  label,
   handleChange,
 }) => {
   // Sort options alphabetically
   const sortedOptions = options.slice().sort((a, b) => a.localeCompare(b));
-  const [currentValue, setCurrentValue] = useState<string|null>()
-  // Group options if needed
-  // For example, you can group them by the first letter
-  const groupedValues: GroupedCategories = sortedOptions.reduce(
-    (acc: GroupedCategories, value: string) => {
-      const firstLetter = value[0].toUpperCase();
-      if (!acc[firstLetter]) {
-        acc[firstLetter] = [];
-      }
-      acc[firstLetter].push(value);
-      return acc;
-    },
-    {}
-  );
+  const [currentValue, setCurrentValue] = useState<string | null>(null);
 
   return (
-
-<Autocomplete
-  disablePortal
-  id="combo-box-demo"
-  options={sortedOptions}
-  groupBy={(option) => option[0]}
-
-  sx={{ width: 300 }}
-  renderInput={(params) => <TextField {...params} label={colName} />}
-  onChange={(e,newVal) => {
-    handleChange(newVal)}}
-  //   (event: any, newValue: string | null) => {
-  //   handleChange(colName,newValue);
-  // }
-  // }
-/>
+    <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={sortedOptions}
+      groupBy={(option) => option[0]}
+      value={currentValue}
+      sx={{ width: 300 }}
+      renderInput={(params) => <TextField {...params} label={label} />}
+      onChange={(e, newVal) => {
+        handleChange(newVal);
+        if (newVal !== null) {
+          setCurrentValue(''); // Clear the input field only when an option is selected
+        }
+      }}
+      onInputChange={(e, newInputValue) => {
+        setCurrentValue(newInputValue); // Update the input value when typing
+      }}
+    />
   );
 };
 
 export default SortedGroupedSelect;
-        // <optgroup label={letter} key={letter}>
-
- // <option
-            //   // onClick={() => {
-            //   //   setCurrentValue(value)
-            //   //   // handleChange(colName, value);
-            //   // }}
-            //   key={value}
-            //   value={value}
-            // >
-            //   {value}
-            // </option>
-        // </optgroup>
-
-// const SortedSelect: React.FC<CustomSelectProps> = ({ label, value, onChange, options, fullWidth = true, margin = 'dense' }) => {
-//   const groupedOptions = useMemo(() => groupAndSortOptions(options), [options]);
-
-//   return (
-//     <Select
-//       value={value}
-//       onChange={onChange}
-//       fullWidth={fullWidth}
-//       displayEmpty
-//     >
-//       <MenuItem value="">
-//         <em>Žádný</em>
-//       </MenuItem>
-//       {Object.keys(groupedOptions).map((letter) => (
-//         <React.Fragment key={letter}>
-//           <Typography>{letter}</Typography>
-//           {groupedOptions[letter].map((option) => (
-//             <MenuItem key={option} value={option}>
-//               {option}
-//             </MenuItem>
-//           ))}
-//         </React.Fragment>
-//       ))}
-//     </Select>
-//   );
-// };

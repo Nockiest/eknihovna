@@ -39,7 +39,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     >
       <Box p={2} className=" flex flex-col items-center justify-around h-full">
         <BookCover width={"200px"} />
-        <Box className=" flex grow-0 flex-col items-center justify-around  ">
+        <Box className=" flex grow-0 flex-col items-center justify-around w-full  ">
           <Typography variant="h6" align="center">
             {name}
           </Typography>
