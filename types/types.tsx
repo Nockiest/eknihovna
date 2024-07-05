@@ -25,9 +25,9 @@ export  type Filters= {
   author: string[];
   category: string[];
   genres: string[];
-  formaturita: StringedBool|null;
+  formaturita: boolean|null;
   // rating: number;
-  available: StringedBool|null;
+  available: boolean|null;
 };
 
   export type FiltringValues = {

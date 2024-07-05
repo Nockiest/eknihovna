@@ -19,7 +19,7 @@ const CatalogPage = () => {
     category: [],
     genres: [],
     formaturita : null,
-    available: null
+    available:  false
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -57,20 +57,11 @@ const CatalogPage = () => {
 
   useEffect(() => {
     const getNewBooks = async () =>{
+      console.log(filters.available)
       const newBooks = await getBooksByQuery(filters)
       setBooks(newBooks)
     };
     getNewBooks()
-    // const newBooks = books.filter((book) => {
-    //   let result = true;
-    //   Object.keys(filters).forEach((key) => {
-    //     if (filters[key]?.length > 0) {
-    //       result = result && filters[key].includes(book[key]);
-    //     }
-    //   });
-    //   return result;
-    // });
-    // setBooks(newBooks);
   }, [ filters]);
 
 
