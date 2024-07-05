@@ -35,66 +35,116 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-const buildFilterQuery = (filters, filterKeys, sqlQuery) => {
-  const checkColumnNameContainsArrays = (columnName) => {
-    return (
-      columnName === "genres" ||
-      columnName === "category"
-    );
-  };
-  const isValidFilter  = (value) => {
-    return value !== null && !(Array.isArray(value) && value.length === 0);
-  }
-  console.log(1)
-  const queryParams = [];
-  const conditions = filterKeys.filter((key) => {
-      const value = filters[key];
-      console.log(isValidFilter(value), value)
-      return isValidFilter (value)
-    }) // Filter out keys with null values
-    .map((key, index) => {
-      const value = filters[key];
-      console.log(checkColumnNameContainsArrays(key))
-      if (!checkColumnNameContainsArrays(key)) {
-        queryParams.push(value);
-        return `${key} = $${queryParams.length}`;
-      }
-      // Assuming the value is an array
-      const array = value;
-      console.log(array);
+// const buildFilterQuery = (filters, filterKeys, sqlQuery) => {
+//   const checkColumnNameContainsArrays = (columnName) => {
+//     return columnName === "genres" || columnName === "category";
+//   };
 
-      const valuesArray = array.map((v) => v.trim());
-      console.log(valuesArray)
-      queryParams.push(valuesArray);
-      return `${key} = ANY($${queryParams.length}::varchar[])`;
-    });
-    console.log(2)
-  if (conditions.length > 0) {
-    sqlQuery += " WHERE " + conditions.join(" AND ");
+//   const isValidFilter = (value) => {
+//     return value !== null && !(Array.isArray(value) && value.length === 0);
+//   };
+
+//   const queryParams = [];
+//   const conditions = filterKeys
+//     .filter((key) => {
+//       const value = filters[key];
+//       return isValidFilter(value);
+//     }) // Filter out keys with null values
+//     .map((key) => {
+//       const value = filters[key];
+//       if (!checkColumnNameContainsArrays(key)) {
+//         queryParams.push(value);
+//         return `${key} = $${queryParams.length}`;
+//       }
+//       // Assuming the value is an array
+//       const array = value;
+//       const valuesArray = array.map((v) => v.trim());
+//       queryParams.push(valuesArray);
+//       return `${key} && $${queryParams.length}::varchar[]`;
+//     });
+
+//   if (conditions.length > 0) {
+//     sqlQuery += " WHERE " + conditions.join(" AND ");
+//   }
+//   return { sqlQuery, queryParams };
+// };
+
+// app.post("/bookList", async (req, res) => {
+//   const { filters } = req.body;
+//   let sqlQuery = "SELECT * FROM knihy";
+//   let queryParams = [];
+//   if (!filters) {
+//     return res.status(400).json({ error: "Server didn't receive filters" });
+//   }
+//   const filterKeys = Object.keys(filters);
+//   if (filterKeys.length > 0) {
+//     const result = buildFilterQuery(filters, filterKeys, sqlQuery);
+//     sqlQuery = result.sqlQuery;
+//     queryParams = result.queryParams;
+//   }
+//   try {
+//     console.log(sqlQuery,queryParams)
+//     const result = await query(sqlQuery, queryParams);
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error("Error executing search query:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
+const checkIsNull = (value:any) => {
+  if (value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+    return true;
   }
-  return { sqlQuery, queryParams };
+}
+const buildFilterQuery = (filters: Filters) => {
+  const queryParams: any[] = [];
+  const conditions: string[] = [];
+
+  Object.keys(filters).forEach((key) => {
+    const value = filters[key];
+
+    if (checkIsNull(value)) {
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      if (key === 'genres') {  // Adjust these column names based on your schema
+        // Assuming DB column is an array and filter is an array
+        queryParams.push(value);
+        conditions.push(`${key} && $${queryParams.length}::text[]`);
+      } else {
+        // Assuming DB column is a simple value and filter is an array
+        queryParams.push(value);
+        conditions.push(`${key} = ANY($${queryParams.length}::text[])`);
+      }
+    } else {
+      // Assuming DB column is a simple value and filter is a simple value
+      queryParams.push(value);
+      conditions.push(`${key} = $${queryParams.length}`);
+    }
+  });
+
+  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+  return { whereClause, queryParams };
 };
 
-app.post("/bookList", async (req, res) => {
+app.post('/bookList', async (req, res) => {
   const { filters } = req.body;
-  let sqlQuery = "SELECT * FROM knihy";
-  let queryParams = [];
+  let sqlQuery = 'SELECT * FROM knihy';
+
   if (!filters) {
-    res.status(400).json({ error: "Server didn't receive filters" });
+    return res.status(400).json({ error: "Server didn't receive filters" });
   }
-  const filterKeys = Object.keys(filters);
-  if (filterKeys.length > 0) {
-    console.log('building')
-    const result = buildFilterQuery(filters, filterKeys, sqlQuery);
-    sqlQuery = result.sqlQuery; queryParams = result.queryParams
-  }
+
+  const { whereClause, queryParams } = buildFilterQuery(filters);
+  sqlQuery += ` ${whereClause}`;
+  console.log(sqlQuery, queryParams, filters)
   try {
-    console.log(sqlQuery, queryParams);
-    const result = await query(sqlQuery, queryParams);
+    const result = await  query(sqlQuery, queryParams);
     res.json(result.rows);
   } catch (error) {
-    console.error("Error executing search query:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    console.error('Error executing search query:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
