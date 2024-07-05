@@ -100,7 +100,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     );
   }
 
-  const removeFilter = (key: string, value: string) => {
+  const removeFilter = (key: keyof Filters, value: string) => {
     setFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
 
@@ -130,14 +130,14 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
         <div className="w-full">
           <Grid
             container
-            spacing={2}
+            spacing={4}
             columns={12}
-            alignItems="center"
-            sx={{ justifyContent: "center", alignItems: "center" }}
+             alignItems="stretch"
+            sx={{ justifyContent: "center",width: '100%' , display:'flex',alignItems: "center", gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))'  }}
           >
             {shownBooks.map((book, index) => (
               <Grid
-                sx={{ margin: "0 auto", height: "auto" }}
+                sx={{ margin: "0  ", height: "auto", flexGrow: "1" , display:'flex',alignItems: "center"  }}
                 item
                 xs={12}
                 sm={6}

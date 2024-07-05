@@ -6,49 +6,48 @@ import React from "react";
 import CategoryChip from "./CategoryChip";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import { isStringedBool } from "@/types/typeChecks";
+import { Filters } from "@/types/types";
+
+
 
 interface FilterOverviewProps {
-  removeFilter: (key: string, value:any) => void;
+  removeFilter: (key: keyof Filters, value: any) => void;
 }
+
 const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
   const { filters, isOpenSearcher, setOpenSearcher } = useSearchContext();
-
-  const filterKeys = Object.keys(filters);
+  const filterKeys = Object.keys(filters) as (keyof Filters)[];
 
   return (
-    <Box className="w-full flex flex-col items-start my-4">
+    <Box className="w-full flex flex-wrap">
       <SearcherOpenerFab
-        css={`flex-0 ${isOpenSearcher ? "hidden" : "block"}`}
-        onClick={() => {
-          setOpenSearcher(!isOpenSearcher);
-        }}
-      />
+  css={  isOpenSearcher ? "hidden" : "block"  }
+  onClick={() => setOpenSearcher(true)}
+/>
 
-      <Box className="w-full flex flex-wrap">
-        {filterKeys.map((key) => {
-          const value = filters[key];
-          if (value) {
-            if (typeof value === 'string') {
-              return (
-                <CategoryChip
-                  key={key}
-                  text={isStringedBool(value) ? key : value}
-                  onRemove={() => removeFilter(key,value)}
-                />
-              );
-            } else if (Array.isArray(value)) {
-              return value.map((item, index) => (
-                <CategoryChip
-                  key={`${key}-${index}`}
-                  text={item}
-                  onRemove={() => removeFilter(key,item)}
-                />
-              ));
-            }
+      {filterKeys.map((key) => {
+        const value = filters[key];
+        if (value) {
+          if (typeof value === 'string') {
+            return (
+              <CategoryChip
+                key={key}
+                text={isStringedBool(value) ? key : value}
+                onRemove={() => removeFilter(key, value)}
+              />
+            );
+          } else if (Array.isArray(value)) {
+            return value.map((item, index) => (
+              <CategoryChip
+                key={`${key}-${index}`}
+                text={item}
+                onRemove={() => removeFilter(key, item)}
+              />
+            ));
           }
-          return null;
-        })}
-      </Box>
+        }
+        return null;
+      })}
     </Box>
   );
 };

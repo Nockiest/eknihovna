@@ -27,7 +27,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`w-auto h-auto items-center mx-auto  relative flex-grow `}
+      className={`w-auto h-[400px] items-center mx-auto  relative flex-grow `}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: truthyValues.includes(available)
@@ -39,24 +39,26 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     >
       <Box p={2} className=" flex flex-col items-center justify-around h-full">
         <BookCover width={"200px"} />
-        <Typography variant="h6" align="center">
-          {name}
-        </Typography>
-        <Typography variant="body1" align="center">
-          {author ? author : "Neznámý autor"}
-        </Typography>
-        <LineWithCircle />
-        <Box>
-          {genres && genres.length > 0 && (
-            <Box>
-              {genres.map((gen, key) => (
-                <CategoryChip text={gen} key={key} />
-              ))}
-            </Box>
-          )}
+        <Box className=" flex grow-0 flex-col items-center justify-around  ">
+          <Typography variant="h6" align="center">
+            {name}
+          </Typography>
+          <Typography variant="body1" align="center">
+            {author ? author : "Neznámý autor"}
+          </Typography>
+          <LineWithCircle />
+          <Box>
+            {genres && genres.length > 0 && (
+              <Box>
+                {genres.map((gen, key) => (
+                  <CategoryChip text={gen} key={key} />
+                ))}
+              </Box>
+            )}
+          </Box>
+          {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
+          <StarRow rating={rating} />
         </Box>
-        {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
-        <StarRow rating={rating} />
       </Box>
     </Paper>
   );
