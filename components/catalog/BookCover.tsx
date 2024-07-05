@@ -13,13 +13,14 @@ const BookCover: React.FC<BookCoverProps> = ({ width }) => {
       sx={{
         position: 'relative',
         width: width,
-        height: `calc(${width} * 4 / 3)`, // Calculate height to maintain 3:4 aspect ratio
+        height: `auto`, // Calculate height to maintain 3:4 aspect ratio
         '& img': {
           objectFit: 'cover',
           width: '100%',
           height: '100%',
         },
-        margin: '0 auto'
+        margin: '0 auto',
+        flexGrow: '1'
       }}
     >
       <Image

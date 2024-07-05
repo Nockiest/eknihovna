@@ -103,7 +103,7 @@ const Searcher: React.FC<SearcherProps> = () => {
           margin="normal"
         />
 
-        <InputLabel shrink>Kategorie: {filters.category?.join(',') || "None"}</InputLabel>
+        {/* <InputLabel shrink>Kategorie: {filters.category?.join(',') || "None"}</InputLabel> */}
         <SortedGroupedSelect
           options={filterValues.category}
           colName={"category"}
