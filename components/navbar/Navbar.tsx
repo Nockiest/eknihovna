@@ -44,6 +44,8 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
         {navRoutes.map((button) => {
           const isActive = getURLSegment(button.URL, 0) === firstURLSegment;
+          console.log(button.URL==='/report', button.URL)
+        
           return (
             <NavbarButton
               key={button.URL}
