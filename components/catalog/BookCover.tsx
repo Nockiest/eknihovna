@@ -5,8 +5,6 @@ interface BookCoverProps {
 }
 
 const BookCover: React.FC<BookCoverProps> = ({ width }) => {
-  // const width = '200px'; // Set the desired width percentage
-
   return (
     <Box
       p={2}

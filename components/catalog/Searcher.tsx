@@ -56,10 +56,15 @@ const Searcher: React.FC<SearcherProps> = () => {
           [name]: !value ? null : value.toString()
         };
       } else if (Array.isArray(prevFilters[name])) {
-        return {
-          ...prevFilters,
-          [name]: [...prevFilters[name] as string[], value]
-        };
+        const arrayValue = prevFilters[name] as string[];
+        if (!arrayValue.includes(value)) {
+          return {
+            ...prevFilters,
+            [name]: [...arrayValue, value]
+          };
+        } else {
+          return prevFilters; // Return the previous state if the value already exists
+        }
       } else {
         return {
           ...prevFilters,
@@ -67,6 +72,9 @@ const Searcher: React.FC<SearcherProps> = () => {
         };
       }
     });
+  };
+  const getFilteredOptions = (key:keyof Filters) => {
+    return filterValues[key].filter(option => !filters[key]?.includes(option));
   };
 
   return (
@@ -78,11 +86,7 @@ const Searcher: React.FC<SearcherProps> = () => {
       unmountOnExit
     >
       <Paper className={"relative"} elevation={3}>
-        {/* <Box className="border-b-0 border-2 border-solid rounded z-1 mb-16 left-12 absolute border-black pb-2" onClick={() => {
-          setOpenSearcher(!isOpenSearcher);
-        }}>
-          Filtry
-        </Box> */}
+
         <Fab
           className="ml-auto mr-0"
           onClick={() => {
@@ -105,24 +109,24 @@ const Searcher: React.FC<SearcherProps> = () => {
 
         {/* <InputLabel shrink>Kategorie: {filters.category?.join(',') || "None"}</InputLabel> */}
         <SortedGroupedSelect
-          options={filterValues.category}
-          colName={"category"}
-          handleChange={(newVal) => handleFilterChange("category", newVal)}
-        />
+        options={getFilteredOptions('category')}
+        colName={"category"}
+        handleChange={(newVal) => handleFilterChange("category", newVal)}
+      />
 
-        <InputLabel shrink>Žánry: {filters.genres?.join(',') || "None"}</InputLabel>
-        <SortedGroupedSelect
-          options={filterValues.genres}
-          colName={"genres"}
-          handleChange={(newVal) => handleFilterChange("genres", newVal)}
-        />
+      <InputLabel shrink>Žánry: {filters.genres?.join(',') || "None"}</InputLabel>
+      <SortedGroupedSelect
+        options={getFilteredOptions('genres')}
+        colName={"genres"}
+        handleChange={(newVal) => handleFilterChange("genres", newVal)}
+      />
 
-        <InputLabel shrink>Autor: {filters.author || "None"}</InputLabel>
-        <SortedGroupedSelect
-          options={filterValues.author}
-          colName={"author"}
-          handleChange={(newVal) => handleFilterChange("author", newVal)}
-        />
+      <InputLabel shrink>Autor: {filters.author || "None"}</InputLabel>
+      <SortedGroupedSelect
+        options={getFilteredOptions('author')}
+        colName={"author"}
+        handleChange={(newVal) => handleFilterChange("author", newVal)}
+      />
 
         <FormControlLabel
           control={
