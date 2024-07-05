@@ -14,7 +14,7 @@ const CatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
-    name:null,
+    // name:null,
     author: [],
     category: [],
     genres: [],
@@ -26,7 +26,7 @@ const CatalogPage = () => {
   const [filterValues,setFiltersValues] = useState<FiltringValues  >({
     genres: [],
     category: [],
-    name: [],
+    // name: [],
     author: [],
   });
    useEffect(() => {

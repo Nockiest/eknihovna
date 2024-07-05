@@ -126,7 +126,7 @@ const Searcher: React.FC<SearcherProps> = () => {
                 {typeof value === "string" || typeof value === 'boolean' ? (
                   <CategoryChip
                     key={key}
-                    text={typeof value === 'boolean' ? translateBookKey(key) : value.toString()}
+                    text={typeof value === 'boolean' ? translateBookKey(key) : value }
                     onRemove={() => removeFilter(key, value)}
                   />
                 ) : (
@@ -142,12 +142,17 @@ const Searcher: React.FC<SearcherProps> = () => {
             );
           // return null;
         })}
-        <TextField
+        {/* <TextField
           label="Název"
           value={filters.name || ""}
           onChange={(e) => handleFilterChange("name", e.target.value)}
           fullWidth
           margin="normal"
+        /> */}
+          <SortedGroupedSelect
+          options={getFilteredOptions("category")}
+          label={"kategorie"}
+          handleChange={(newVal) => handleFilterChange("category", newVal)}
         />
 
         <SortedGroupedSelect
