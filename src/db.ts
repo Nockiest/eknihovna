@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import xlsx from "xlsx";
 import fs from "fs";
 import { flattenIfArrayOfArrays } from "./utils";
+import { pool } from "./pool";
 dotenv.config();
 // Create a new Pool instance (recommended for handling multiple connections)
 // export const pool = new Pool({
@@ -12,18 +13,7 @@ dotenv.config();
 //   password: process.env.PSQL_PASSWORD,
 //   database: process.env.DB_NAME,
 // });
-// export const pool = new Pool({
-//   connectionString: process.env.POSTGRES_URL,
-// })
-export const pool = new Pool({
-  user: "postgres",
-  host: "localhost", // or your database host
-  database: "eknihovna",
-  password: process.env.PSQL_PASSWORD,
-  port: 5432, // default PostgreSQL port
-});
-// Export a query function to execute SQL queries
-
+ 
 export const query = async (text, params = []) => {
   const client = await pool.connect();
   try {
@@ -55,6 +45,7 @@ export const query = async (text, params = []) => {
 //     client.release();
 //   }
 // }
+
 
 export const insertExcelDataToPostgres = async (
   filePath: string,
@@ -107,21 +98,23 @@ export const insertExcelDataToPostgres = async (
             throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
           }
 
-          // Process each cell value based on its column type
+          // Process each cell value based on its column type and trim it
           const processedRow = row.map((value, index) => {
             const columnName = headers[index];
+            const trimmedValue = typeof value === 'string' ? value.trim() : value;
+
             if (
               columnTypes[columnName] === "ARRAY" ||
               columnTypes[columnName] === "text[]"
             ) {
-              return value
-                ? `{${value
+              return trimmedValue
+                ? `{${trimmedValue
                     .split(",")
                     .map((v: string) => `"${v.trim()}"`)
                     .join(",")}}`
                 : null;
             }
-            return value;
+            return trimmedValue;
           });
 
           // Construct the insert query with ON CONFLICT to handle upserts
@@ -150,6 +143,7 @@ export const insertExcelDataToPostgres = async (
     throw new Error(`Error inserting data into PostgreSQL: ${error.message}`);
   }
 };
+
 
 export function convertQueryResToJson(queryRes) {
   const res = queryRes.rows.map((row) => {

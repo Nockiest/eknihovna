@@ -35,67 +35,17 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// const buildFilterQuery = (filters, filterKeys, sqlQuery) => {
-//   const checkColumnNameContainsArrays = (columnName) => {
-//     return columnName === "genres" || columnName === "category";
-//   };
-
-//   const isValidFilter = (value) => {
-//     return value !== null && !(Array.isArray(value) && value.length === 0);
-//   };
-
-//   const queryParams = [];
-//   const conditions = filterKeys
-//     .filter((key) => {
-//       const value = filters[key];
-//       return isValidFilter(value);
-//     }) // Filter out keys with null values
-//     .map((key) => {
-//       const value = filters[key];
-//       if (!checkColumnNameContainsArrays(key)) {
-//         queryParams.push(value);
-//         return `${key} = $${queryParams.length}`;
-//       }
-//       // Assuming the value is an array
-//       const array = value;
-//       const valuesArray = array.map((v) => v.trim());
-//       queryParams.push(valuesArray);
-//       return `${key} && $${queryParams.length}::varchar[]`;
-//     });
-
-//   if (conditions.length > 0) {
-//     sqlQuery += " WHERE " + conditions.join(" AND ");
-//   }
-//   return { sqlQuery, queryParams };
-// };
-
-// app.post("/bookList", async (req, res) => {
-//   const { filters } = req.body;
-//   let sqlQuery = "SELECT * FROM knihy";
-//   let queryParams = [];
-//   if (!filters) {
-//     return res.status(400).json({ error: "Server didn't receive filters" });
-//   }
-//   const filterKeys = Object.keys(filters);
-//   if (filterKeys.length > 0) {
-//     const result = buildFilterQuery(filters, filterKeys, sqlQuery);
-//     sqlQuery = result.sqlQuery;
-//     queryParams = result.queryParams;
-//   }
-//   try {
-//     console.log(sqlQuery,queryParams)
-//     const result = await query(sqlQuery, queryParams);
-//     res.json(result.rows);
-//   } catch (error) {
-//     console.error("Error executing search query:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
-const checkIsNull = (value:any) => {
-  if (value === null || value === '' || (Array.isArray(value) && value.length === 0)) {
+const checkIfIgnoredValue = (value:any) => {
+  if (value === null || value === '' || value === false|| (Array.isArray(value) && value.length === 0)) {
     return true;
   }
 }
+/**
+ * Builds a SQL filter query based on the provided filters.
+ *
+ * @param {Filters} filters - An object containing filter key-value pairs.
+ * @returns {Object} An object containing the SQL WHERE clause and query parameters.
+ */
 const buildFilterQuery = (filters: Filters) => {
   const queryParams: any[] = [];
   const conditions: string[] = [];
@@ -103,7 +53,7 @@ const buildFilterQuery = (filters: Filters) => {
   Object.keys(filters).forEach((key) => {
     const value = filters[key];
 
-    if (checkIsNull(value)) {
+    if (checkIfIgnoredValue(value)) {
       return;
     }
 
@@ -138,9 +88,12 @@ app.post('/bookList', async (req, res) => {
 
   const { whereClause, queryParams } = buildFilterQuery(filters);
   sqlQuery += ` ${whereClause}`;
-  console.log(sqlQuery, queryParams, filters)
+  console.log('SQL Query:', sqlQuery);
+  console.log('Query Params:', queryParams);
+  console.log('Filters:', filters);
+
   try {
-    const result = await  query(sqlQuery, queryParams);
+    const result = await query(sqlQuery, queryParams);
     res.json(result.rows);
   } catch (error) {
     console.error('Error executing search query:', error);

@@ -12,11 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = exports.pool = void 0;
-const pg_1 = require("pg");
+exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const utils_1 = require("./utils");
+const pool_1 = require("./pool");
 dotenv_1.default.config();
 // Create a new Pool instance (recommended for handling multiple connections)
 // export const pool = new Pool({
@@ -26,19 +26,8 @@ dotenv_1.default.config();
 //   password: process.env.PSQL_PASSWORD,
 //   database: process.env.DB_NAME,
 // });
-// export const pool = new Pool({
-//   connectionString: process.env.POSTGRES_URL,
-// })
-exports.pool = new pg_1.Pool({
-    user: "postgres",
-    host: "localhost", // or your database host
-    database: "eknihovna",
-    password: process.env.PSQL_PASSWORD,
-    port: 5432, // default PostgreSQL port
-});
-// Export a query function to execute SQL queries
 const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void 0, function* (text, params = []) {
-    const client = yield exports.pool.connect();
+    const client = yield pool_1.pool.connect();
     try {
         const result = yield client.query(text, params);
         return result;
@@ -84,7 +73,7 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
             throw new Error("The Excel file does not contain headers");
         }
         // Use the pool to get a client and execute the query
-        const client = yield exports.pool.connect();
+        const client = yield pool_1.pool.connect();
         try {
             // Get column types from the database
             const columnTypesQuery = `
@@ -105,19 +94,20 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
                     if (row.length !== headers.length) {
                         throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
                     }
-                    // Process each cell value based on its column type
+                    // Process each cell value based on its column type and trim it
                     const processedRow = row.map((value, index) => {
                         const columnName = headers[index];
+                        const trimmedValue = typeof value === 'string' ? value.trim() : value;
                         if (columnTypes[columnName] === "ARRAY" ||
                             columnTypes[columnName] === "text[]") {
-                            return value
-                                ? `{${value
+                            return trimmedValue
+                                ? `{${trimmedValue
                                     .split(",")
                                     .map((v) => `"${v.trim()}"`)
                                     .join(",")}}`
                                 : null;
                         }
-                        return value;
+                        return trimmedValue;
                     });
                     // Construct the insert query with ON CONFLICT to handle upserts
                     const insertQuery = `
@@ -208,7 +198,7 @@ function connectAndQuery() {
 exports.connectAndQuery = connectAndQuery;
 const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void 0, [columnName_1, ...args_2], void 0, function* (columnName, unique = false, tableName = "knihy") {
     var _a;
-    const client = yield exports.pool.connect();
+    const client = yield pool_1.pool.connect();
     try {
         // Check if the column type is an array or can be treated as an array
         const columnTypeQuery = `
