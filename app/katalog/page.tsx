@@ -2,15 +2,15 @@
 import BookCatalog from "@/components/catalog/BookCatalog";
 import { getBooksByQuery } from "@/utils/fetchBooks";
 import { Box, Typography, CircularProgress, Checkbox } from "@mui/material";
-import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
 import { useEffect, useState } from "react";
 import { Book, Filters, FiltringValues } from "@/types/types";
 import { fetchUniqueValues } from "@/utils/fetchUniqueValues";
 import { SearchContext } from "./context";
 import ColorCircles from "@/utils/ColorCircles";
+import { Searcher } from "@/components/catalog/Searcher";
 
-const CatalogPage = () => {
+const KatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
@@ -130,4 +130,4 @@ const CatalogPage = () => {
   );
 };
 
-export default CatalogPage;
+export default KatalogPage;

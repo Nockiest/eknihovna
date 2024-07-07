@@ -1,41 +1,27 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   Slide,
-  Paper,
-  useTheme,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
-  Fab,
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  Box,
-  InputLabel,
-  Typography,
+  Paper, Checkbox, FormControlLabel,
+  Fab, InputLabel,
+  Typography
 } from "@mui/material";
-import SearchBar from "./SearchBar";
 import Image from "next/image";
 import theme from "@/theme/theme";
 import { Filters, FiltringValues } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
-import { getBooksByQuery } from "@/utils/fetchBooks";
 import SortedGroupedSelect from "./SortedSelect";
 import CategoryChip from "./CategoryChip";
-import { checkIfIgnoredValue, isStringedBool } from "@/types/typeChecks";
+import { checkIfIgnoredValue } from "@/types/typeChecks";
 import { translateBookKey } from "@/utils/translateBookKeys";
+import FilterLister from "./FilterLister";
 
-interface SearcherProps {}
+type SearcherProps = {
 
-const Searcher: React.FC<SearcherProps> = () => {
+}
+export const Searcher: React.FC<SearcherProps> = () => {
   const {
-    isOpenSearcher,
-    setOpenSearcher,
-    filters,
-    setFilters,
-    filterValues,
+    isOpenSearcher, setOpenSearcher, filters, setFilters, filterValues,
   } = useSearchContext();
 
   const handleFilterChange = (
@@ -71,7 +57,7 @@ const Searcher: React.FC<SearcherProps> = () => {
       (option) => !filters[key]?.includes(option)
     );
   };
-  const removeFilter = (key: keyof Filters, value: string|boolean) => {
+  const removeFilter = (key: keyof Filters, value: string | boolean) => {
     setFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
 
@@ -94,7 +80,7 @@ const Searcher: React.FC<SearcherProps> = () => {
     });
   };
 
-  const filterKeys = Object.keys(filters) as (keyof Filters)[];
+  // const filterKeys = Object.keys(filters) as (keyof Filters)[];
   return (
     <Slide
       direction="up"
@@ -113,53 +99,18 @@ const Searcher: React.FC<SearcherProps> = () => {
           <Image src={"icon/cross.svg"} alt="cross" width={"32"} height={32} />
         </Fab>
 
-        {filterKeys.map((key) => {
-          const value = filters[key];
 
-          if (checkIfIgnoredValue(value)) {
-            return null
-          }
-
-            return (
-              <div key={key}>
-                <Typography variant="subtitle1">{translateBookKey(key)}</Typography>
-                {typeof value === "string" || typeof value === 'boolean' ? (
-                  <CategoryChip
-                    key={key}
-                    text={typeof value === 'boolean' ? translateBookKey(key) : value }
-                    onRemove={() => removeFilter(key, value)}
-                  />
-                ) : (
-                  Array.isArray(value) && value.map((item, index) => (
-                    <CategoryChip
-                      key={`${key}-${index}`}
-                      text={item}
-                      onRemove={() => removeFilter(key, item)}
-                    />
-                  ))
-                )}
-              </div>
-            );
-          // return null;
-        })}
-        {/* <TextField
-          label="Název"
-          value={filters.name || ""}
-          onChange={(e) => handleFilterChange("name", e.target.value)}
-          fullWidth
-          margin="normal"
-        /> */}
-          <SortedGroupedSelect
-          options={getFilteredOptions("category")}
-          label={"kategorie"}
-          handleChange={(newVal) => handleFilterChange("category", newVal)}
-        />
+<FilterLister filters={filters} removeFilter={(key,value) => removeFilter(key,value)}  />
+        {/* <SortedGroupedSelect
+                options={getFilteredOptions("category")}
+                label={"kategorie"}
+                handleChange={(newVal) => handleFilterChange("category", newVal)}
+              /> */}
 
         <SortedGroupedSelect
           options={getFilteredOptions("category")}
           label={"kategorie"}
-          handleChange={(newVal) => handleFilterChange("category", newVal)}
-        />
+          handleChange={(newVal) => handleFilterChange("category", newVal)} />
 
         <InputLabel shrink>
           Žánry: {filters.genres?.join(",") || "None"}
@@ -167,54 +118,38 @@ const Searcher: React.FC<SearcherProps> = () => {
         <SortedGroupedSelect
           options={getFilteredOptions("genres")}
           label={"žánry"}
-          handleChange={(newVal) => handleFilterChange("genres", newVal)}
-        />
+          handleChange={(newVal) => handleFilterChange("genres", newVal)} />
 
         <InputLabel shrink>Autor: {filters.author || "None"}</InputLabel>
         <SortedGroupedSelect
           options={getFilteredOptions("author")}
           label={"autor"}
-          handleChange={(newVal) => handleFilterChange("author", newVal)}
-        />
+          handleChange={(newVal) => handleFilterChange("author", newVal)} />
 
         <FormControlLabel
-          control={
-            <Checkbox
-              checked={Boolean(filters.available)}
-              onChange={(e) =>
-                handleFilterChange("available", e.target.checked)
-              }
-            />
-          }
+          control={<Checkbox
+            checked={Boolean(filters.available)}
+            onChange={(e) => handleFilterChange("available", e.target.checked)} />}
           label="Dostupnost"
           sx={{
             color: theme.palette.primary.main,
             "&.Mui-checked": {
               color: theme.palette.secondary.main,
             },
-          }}
-        />
+          }} />
 
         <FormControlLabel
-          control={
-            <Checkbox
-              checked={Boolean(filters.formaturita)}
-              onChange={(e) =>
-                handleFilterChange("formaturita", e.target.checked)
-              }
-            />
-          }
+          control={<Checkbox
+            checked={Boolean(filters.formaturita)}
+            onChange={(e) => handleFilterChange("formaturita", e.target.checked)} />}
           label="Maturitní"
           sx={{
             color: theme.palette.primary.main,
             "&.Mui-checked": {
               color: theme.palette.secondary.main,
             },
-          }}
-        />
+          }} />
       </Paper>
     </Slide>
   );
 };
-
-export default Searcher;

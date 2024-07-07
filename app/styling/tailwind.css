@@ -10,3 +10,7 @@
 .nav-btn {
   @apply bg-primary-500
 }
+
+.center-flex {
+  @apply flex  justify-center items-center;
+}

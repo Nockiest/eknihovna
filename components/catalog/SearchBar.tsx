@@ -1,37 +1,60 @@
-import Image from "next/image";
-// import { useQuery } from "@/app/context";
+import React, { useState } from 'react';
+import Autocomplete from '@mui/material/Autocomplete';
+import TextField from '@mui/material/TextField';
+import { makeStyles } from '@mui/styles';
+import { InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+const useStyles = makeStyles({
+  searchBox: {
+    '& .MuiOutlinedInput-root': {
+      borderRadius: '25px',
+      padding: '0 10px',
+      margin: '16px',
+      width: 'auto'
+    },
+    '& .MuiOutlinedInput-input': {
+      padding: '10px 0',
+    },
+  },
+});
 
-type AutocompleteSearchBarParamas = {};
-const SearchBar: React.FC<AutocompleteSearchBarParamas> = () => {
-//   const { query, setQuery } = useQuery();
+interface SearchAutocompleteProps {
+  onInputChange: (inputValue: string) => void;
+  bookNames: string[];
+}
+
+const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange, bookNames }) => {
+  const classes = useStyles();
+  const [query, setQuery] = useState<string>('');
 
   return (
-    <div
-      style={{
-        padding: "12px",
-        borderRadius: "8px",
-        border: "1px solid #ccc",
-        width: "300px",
-        display: "flex",
-        justifyContent: "start",
-        gap: "0.5em",
-        alignItems: "center",
-        boxShadow: "0 2px 4px rgba(0, 0, 0, 0.2)",
+    <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={bookNames}
+      groupBy={(option) => option[0]}
+      value={query}
+      onInputChange={(e, newInputValue) => {
+        setQuery(newInputValue);
+        onInputChange(newInputValue); // Update the input value when typing
       }}
-    >
-      <Image src="icon/search.svg" alt='search' width={32} height={32} className="m-1" />
-      <input
-        type="text"
-        // value={query}
-        // onChange={(e) => setQuery(e.target.value)}
-        style={{
-          border: "none",
-          // zIndex: 1,
-          width: "100%",
-        }}
-      />
-    </div>
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          placeholder="Vyhldat knihu..."
+          className={classes.searchBox}
+          InputProps={{
+            ...params.InputProps,
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      )}
+    />
   );
 };
-
-export default SearchBar;
+export default SearchAutocomplete;

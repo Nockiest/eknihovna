@@ -33,20 +33,7 @@ export default function Home() {
           </Link>
         </Button>
       </Box>
-      <Box mt={2}>
-        <Typography variant="body2">
-          Aplikace je v beta verzi. Potenciální problémy prosím hlaste na této
-          stránce.
-        </Typography>
-        <Link
-          href='https://forms.gle/uU2rXgcin7aDjazk8'
-          passHref
-        >
-          <Button variant="outlined" color="secondary">
-            Nahlásit problém
-          </Button>
-        </Link>
-      </Box>
+     
     </Container>
   );
 }
