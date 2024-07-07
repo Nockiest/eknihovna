@@ -1,15 +1,9 @@
 import axios from 'axios';
 import { Book, Filters } from '@/types/types';
+import { defaultFilters } from '@/data/values';
 
 
-export const getBooksByQuery = async (filters: Filters = {
-  name:null,
-  author: [],
-  category: [],
-  genres: [],
-  formaturita : null,
-  available: null
-}): Promise<Book[]> => {
+export const getBooksByQuery = async (filters: Filters = defaultFilters): Promise<Book[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
 
   try {

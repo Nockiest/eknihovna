@@ -1,11 +1,8 @@
-"use client";
-
 import Link from "next/link";
 import { NavbarButton } from "@/theme/buttons/Buttons";
 import { Box, Paper, Typography } from "@mui/material";
 import HamburgerNavList from "./Hamburger";
 import { navRoutes } from "@/data/routeNames";
-import { useState } from "react";
 import CustomHamburger from "@/theme/buttons/Hamburger";
 import { getURLSegment } from "@/utils/getURLSegment";
 import { usePathname } from "next/navigation";
@@ -25,7 +22,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       className="p-2 h-full w-full mx-0 flex flex-col justify-center items-center z-10"
     >
       <Box className="z-3">
-        {/* <CustomHamburger onClick={toggleNav} ariaLabel="toggle navigation" /> */}
+        {/* <CustomHamburger onClick={()=> setIsHamburgerOpen(!isHamburgerOpen)} ariaLabel="toggle navigation" /> */}
         <HamburgerNavList
           isOpen={isHamburgerOpen}
           toggleNav={() => {
@@ -44,8 +41,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
         {navRoutes.map((button) => {
           const isActive = getURLSegment(button.URL, 0) === firstURLSegment;
-          console.log(button.URL==='/report', button.URL)
-        
+
           return (
             <NavbarButton
               key={button.URL}

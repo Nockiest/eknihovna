@@ -10,8 +10,10 @@ type QueryContextType = {
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   books: Book[];
   setBooks: React.Dispatch<React.SetStateAction<Book[] >>;
-
   filterValues: FiltringValues;
+  query:string ,
+  setQuery:React.Dispatch<React.SetStateAction<string >>;
+  bookNames:string[]  ;
 };
 
 // Create the context

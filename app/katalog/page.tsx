@@ -6,7 +6,7 @@ import Searcher from "@/components/catalog/Searcher";
 import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
 import { useEffect, useState } from "react";
 import { Book, Filters, FiltringValues } from "@/types/types";
-import {  fetchUniqueValues } from "@/utils/fetchUniqueValues";
+import { fetchUniqueValues } from "@/utils/fetchUniqueValues";
 import { SearchContext } from "./context";
 import ColorCircles from "@/utils/ColorCircles";
 
@@ -14,56 +14,64 @@ const CatalogPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
-    // name:null,
     author: [],
     category: [],
     genres: [],
-    formaturita : null,
-    available:  false
+    formaturita: null,
+    available: false,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [filterValues,setFiltersValues] = useState<FiltringValues  >({
+  const [filterValues, setFiltersValues] = useState<FiltringValues>({
     genres: [],
     category: [],
     // name: [],
     author: [],
   });
-   useEffect(() => {
-    async function fetchUniqueFilterCol(colName: 'genres'| 'category' |'name'|'author') {
-      const res = await fetchUniqueValues(colName);
-      setFiltersValues((prevFilters: FiltringValues) => ({ ...prevFilters, [colName]: res }));
-    }
+  const [query, setQuery] = useState<string  >('');
+  const [bookNames, setBookNames] = useState<string[]>([]);
+  async function fetchUniqueFilterCol(
+    colName: "genres" | "category" | "name" | "author"
+  ) {
+    const res = await fetchUniqueValues(colName);
+    setFiltersValues((prevFilters: FiltringValues) => ({
+      ...prevFilters,
+      [colName]: res,
+    }));
+  }
 
+  useEffect(() => {
     async function update() {
       try {
+        const bookNames = await fetchUniqueValues("name");
         const newBooks = await getBooksByQuery();
-        await Promise.all([
-          fetchUniqueFilterCol('genres'),
-          fetchUniqueFilterCol('category'),
-          fetchUniqueFilterCol('name'),
-          fetchUniqueFilterCol('author')
-        ]);
         setBooks(newBooks);
+        setBookNames(bookNames);
+        await Promise.all([
+          fetchUniqueFilterCol("genres"),
+          fetchUniqueFilterCol("category"),
+          fetchUniqueFilterCol("name"),
+          fetchUniqueFilterCol("author"),
+        ]);
       } catch (error) {
         setError("Failed to load books.");
       } finally {
         setIsLoading(false);
       }
     }
-
     update();
-  }, []);
+  }, [ ]);
+  useEffect(() =>{
+    async function fetchBoo()   {
+      try {
+        const newBooks = await getBooksByQuery(filters);
+        setBooks(newBooks);
 
-  useEffect(() => {
-    const getNewBooks = async () =>{
-      console.log(filters.available)
-      const newBooks = await getBooksByQuery(filters)
-      setBooks(newBooks)
-    };
-    getNewBooks()
-  }, [ filters]);
-
+      } catch (error) {
+    }
+  }
+  fetchBoo()
+} ,[filters])
 
   if (isLoading) {
     return (
@@ -99,7 +107,9 @@ const CatalogPage = () => {
         books,
         setBooks,
         filterValues, // possible filter values
-
+        query,
+        setQuery,
+        bookNames,
       }}
     >
       <Box className="w-full">
@@ -108,12 +118,11 @@ const CatalogPage = () => {
           alignItems="space-between"
           justifyContent={"center"}
         >
-
           <Typography className="mx-auto text-center my-6" variant={"h2"}>
             Katalog
           </Typography>
         </Box>
-        <BookCatalog   />
+        <BookCatalog />
         <Searcher />
         <ColorCircles />
       </Box>
