@@ -42,7 +42,10 @@ const storage = multer_1.default.diskStorage({
 const upload = (0, multer_1.default)({ storage });
 const defaultQuery = "SELECT * FROM knihy";
 const checkIfIgnoredValue = (value) => {
-    if (value === null || value === '' || value === false || (Array.isArray(value) && value.length === 0)) {
+    if (value === null ||
+        value === "" ||
+        value === false ||
+        (Array.isArray(value) && value.length === 0)) {
         return true;
     }
 };
@@ -61,7 +64,8 @@ const buildFilterQuery = (filters) => {
             return;
         }
         if (Array.isArray(value)) {
-            if (key === 'genres') { // Adjust these column names based on your schema
+            if (key === "genres") {
+                // Adjust these column names based on your schema
                 // Assuming DB column is an array and filter is an array
                 queryParams.push(value);
                 conditions.push(`${key} && $${queryParams.length}::text[]`);
@@ -78,29 +82,27 @@ const buildFilterQuery = (filters) => {
             conditions.push(`${key} = $${queryParams.length}`);
         }
     });
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
     return { whereClause, queryParams };
 };
-app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { filters } = req.body;
     let sqlQuery = defaultQuery;
     if (!filters) {
         return res.status(400).json({ error: "Server didn't receive filters" });
     }
-    // console.log(1)
     const { whereClause, queryParams } = buildFilterQuery(filters);
     sqlQuery += ` ${whereClause}`;
-    // console.log(sqlQuery, queryParams)
-    console.log('SQL Query:', sqlQuery);
-    console.log('Query Params:', queryParams);
-    console.log('Filters:', filters);
+    // console.log("SQL Query:", sqlQuery);
+    // console.log("Query Params:", queryParams);
+    // console.log("Filters:", filters);
     try {
         const result = yield (0, db_1.query)(sqlQuery, queryParams);
         res.json(result.rows);
     }
     catch (error) {
-        console.error('Error executing search query:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        console.error("Error executing search query:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 }));
 app.get("/getUniqueValues", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -128,11 +130,20 @@ app.get("/downloadExcel", (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 }));
 app.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { bookName, filters } = req.query;
+    let { bookName, filters } = req.query;
+    filters = Object.assign(Object.assign({}, filters), { formaturita: filters.formaturita === ('true' || true) ? true : false, available: filters.available === ('true' || true) ? true : false });
     let sqlQuery = defaultQuery;
-    console.log(filters, !(0, utils_1.isFiltersType)(filters), typeof bookName !== 'string', bookName.trim() === '');
-    if (!(0, utils_1.isFiltersType)(filters) || typeof bookName !== 'string' || bookName.trim() === '') {
-        return res.status(400).json({ error: 'Bad Request' });
+    // console.log(
+    //   bookName, 'x',
+    //   filters,
+    //   !isFiltersType(filters),
+    //   typeof bookName !== "string",
+    //   bookName.trim() === ""
+    // );
+    if (!(0, utils_1.isFiltersType)(filters) ||
+        typeof bookName !== "string" ||
+        bookName.trim() === "") {
+        return res.status(400).json({ error: "Bad Request" });
     }
     const { whereClause, queryParams } = buildFilterQuery(filters);
     sqlQuery += ` ${whereClause}`;
@@ -144,7 +155,7 @@ app.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         const sanitizedResults = result.rows.map((value) => {
             return value;
         });
-        const filteredResults = result; //sanitizedResults.filter((result:Book) => {
+        const filteredResults = sanitizedResults; //sanitizedResults.filter((result:Book) => {
         //   return (
         //     // checkSearchRelevant(result.keyword, query as string) ||
         //     checkResultStartWithQuery(result.name, bookName as string)

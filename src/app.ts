@@ -17,7 +17,11 @@ import {
 import bodyParser from "body-parser";
 import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 import { Book, Filters } from "./types";
-import { checkResultStartWithQuery, checkSearchRelevant, getSimilarity } from "./searchinUtils";
+import {
+  checkResultStartWithQuery,
+  checkSearchRelevant,
+  getSimilarity,
+} from "./searchinUtils";
 import { isFiltersType } from "./utils";
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL;
@@ -36,11 +40,16 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 const defaultQuery = "SELECT * FROM knihy";
-const checkIfIgnoredValue = (value:any) => {
-  if (value === null || value === '' || value === false|| (Array.isArray(value) && value.length === 0)) {
+const checkIfIgnoredValue = (value: any) => {
+  if (
+    value === null ||
+    value === "" ||
+    value === false ||
+    (Array.isArray(value) && value.length === 0)
+  ) {
     return true;
   }
-}
+};
 /**
  * Builds a SQL filter query based on the provided filters.
  *
@@ -58,7 +67,8 @@ const buildFilterQuery = (filters: Filters) => {
     }
 
     if (Array.isArray(value)) {
-      if (key === 'genres') {  // Adjust these column names based on your schema
+      if (key === "genres") {
+        // Adjust these column names based on your schema
         // Assuming DB column is an array and filter is an array
         queryParams.push(value);
         conditions.push(`${key} && $${queryParams.length}::text[]`);
@@ -74,32 +84,31 @@ const buildFilterQuery = (filters: Filters) => {
     }
   });
 
-  const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+  const whereClause =
+    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
   return { whereClause, queryParams };
 };
 
-app.post('/bookList', async (req, res) => {
+app.post("/bookList", async (req, res) => {
   const { filters } = req.body;
   let sqlQuery = defaultQuery;
 
   if (!filters) {
     return res.status(400).json({ error: "Server didn't receive filters" });
   }
-  // console.log(1)
   const { whereClause, queryParams } = buildFilterQuery(filters);
   sqlQuery += ` ${whereClause}`;
-  // console.log(sqlQuery, queryParams)
 
-  console.log('SQL Query:', sqlQuery);
-  console.log('Query Params:', queryParams);
-  console.log('Filters:', filters);
+  // console.log("SQL Query:", sqlQuery);
+  // console.log("Query Params:", queryParams);
+  // console.log("Filters:", filters);
 
   try {
     const result = await query(sqlQuery, queryParams);
     res.json(result.rows);
   } catch (error) {
-    console.error('Error executing search query:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    console.error("Error executing search query:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
@@ -137,24 +146,35 @@ app.get("/downloadExcel", async (req: Request, res: Response) => {
 });
 
 app.get("/search", async (req: Request, res: Response) => {
-  const { bookName, filters } = req.query;
+  let { bookName, filters } = req.query;
+  filters = {...filters,  formaturita: filters.formaturita===('true'||true)? true:false, available: filters.available===('true'||true)? true:false};
   let sqlQuery = defaultQuery;
-  console.log(filters,!isFiltersType(filters), typeof bookName !== 'string', bookName.trim()==='')
- if ( !isFiltersType(filters)|| typeof bookName !== 'string'|| bookName.trim()===''){
-   return  res.status(400).json({ error: 'Bad Request' });
+  // console.log(
+  //   bookName, 'x',
+  //   filters,
+  //   !isFiltersType(filters),
+  //   typeof bookName !== "string",
+  //   bookName.trim() === ""
+  // );
+  if (
+    !isFiltersType(filters) ||
+    typeof bookName !== "string" ||
+    bookName.trim() === ""
+  ) {
+    return res.status(400).json({ error: "Bad Request" });
   }
   const { whereClause, queryParams } = buildFilterQuery(filters);
   sqlQuery += ` ${whereClause}`;
-  console.log(bookName, filters)
+  console.log(bookName, filters);
 
   try {
-    console.log(sqlQuery, queryParams)
+    console.log(sqlQuery, queryParams);
     const result = await query(sqlQuery, queryParams);
-    console.log(result.rows.length)
-    const sanitizedResults = result.rows.map((value ) => {
+    console.log(result.rows.length);
+    const sanitizedResults = result.rows.map((value) => {
       return value;
     });
-    const filteredResults =  result //sanitizedResults.filter((result:Book) => {
+    const filteredResults = sanitizedResults; //sanitizedResults.filter((result:Book) => {
     //   return (
     //     // checkSearchRelevant(result.keyword, query as string) ||
     //     checkResultStartWithQuery(result.name, bookName as string)
@@ -173,7 +193,6 @@ app.get("/search", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
