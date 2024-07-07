@@ -15,9 +15,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.saveExcelFile = exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
 const db_1 = require("./db");
 const fs_1 = __importDefault(require("fs"));
-const xlsx = require('xlsx');
-const { v4: uuidv4 } = require('uuid');
-const assignIds = (excelUrl, ignoreHeader = true, idColumn = 'A', numberOfRows = 10) => {
+const xlsx = require("xlsx");
+const { v4: uuidv4 } = require("uuid");
+const assignIds = (excelUrl, ignoreHeader = true, idColumn = "A", numberOfRows = 10) => {
     // Load the Excel file
     const knihyURL = process.env.knihyURL;
     const workbook = xlsx.readFile(knihyURL);
@@ -53,7 +53,7 @@ function copyExcelFile(sourceFilePath, destFilePath) {
         // Create a new workbook for the destination file
         const destWorkbook = xlsx.utils.book_new();
         // Loop through each sheet in the source workbook
-        sourceWorkbook.SheetNames.forEach(sheetName => {
+        sourceWorkbook.SheetNames.forEach((sheetName) => {
             // Get the worksheet from the source workbook
             const worksheet = sourceWorkbook.Sheets[sheetName];
             // Add the worksheet to the destination workbook
@@ -64,7 +64,7 @@ function copyExcelFile(sourceFilePath, destFilePath) {
         console.log(`Data copied from ${sourceFilePath} to ${destFilePath}`);
     }
     catch (error) {
-        console.error('Error copying Excel file:', error);
+        console.error("Error copying Excel file:", error);
     }
 }
 exports.copyExcelFile = copyExcelFile;
@@ -77,7 +77,7 @@ const readExcelFile = (url) => {
         return data;
     }
     catch (error) {
-        console.error('Error reading Excel file:', error);
+        console.error("Error reading Excel file:", error);
     }
 };
 exports.readExcelFile = readExcelFile;
@@ -87,21 +87,26 @@ exports.readExcelFile = readExcelFile;
  * @param {string} columnName - The label of the column you want to change
  */
 const excelWordsToBool = (worksheet, columnName) => {
-    let jsonData = xlsx.utils.sheet_to_json(worksheet, { header: 1, defval: null });
-    const truthyvalues = ['yes', 'true', true, 1, 'ano'];
+    let jsonData = xlsx.utils.sheet_to_json(worksheet, {
+        header: 1,
+        defval: null,
+    });
+    const truthyvalues = ["yes", "true", true, 1, "ano"];
     const header = jsonData[0];
-    const columnIndex = header.findIndex(col => col === columnName);
+    const columnIndex = header.findIndex((col) => col === columnName);
     if (columnIndex === -1) {
         return worksheet; // No 'available' column found, return unchanged worksheet
     }
     // Update values in the 'available' column
-    for (let i = 1; i < jsonData.length; i++) { // start from 1 to skip the header row
+    for (let i = 1; i < jsonData.length; i++) {
+        // start from 1 to skip the header row
         const value = jsonData[i][columnIndex];
-        if (typeof value === 'string') {
+        if (typeof value === "string") {
             // Convert 'yes' to true and 'no' to false
-            jsonData[i][columnIndex] = truthyvalues.indexOf(value.toLowerCase()) >= 0 ? 'true' : 'false';
+            jsonData[i][columnIndex] =
+                truthyvalues.indexOf(value.toLowerCase()) >= 0 ? "true" : "false";
         }
-        else if (typeof value === 'boolean') {
+        else if (typeof value === "boolean") {
             // Normalize boolean values
             jsonData[i][columnIndex] = value;
         }
@@ -112,10 +117,10 @@ const excelWordsToBool = (worksheet, columnName) => {
 };
 exports.excelWordsToBool = excelWordsToBool;
 const fillMissingIds = (worksheet) => {
-    const range = xlsx.utils.decode_range(worksheet['!ref']);
+    const range = xlsx.utils.decode_range(worksheet["!ref"]);
     const idCol = Object.keys(worksheet)
-        .filter((key) => key[0] >= 'A' && key[1] === '1')
-        .find((key) => worksheet[key].v.toLowerCase() === 'id');
+        .filter((key) => key[0] >= "A" && key[1] === "1")
+        .find((key) => worksheet[key].v.toLowerCase() === "id");
     if (!idCol) {
         throw new Error("No 'id' column found");
     }
@@ -123,7 +128,7 @@ const fillMissingIds = (worksheet) => {
     for (let row = range.s.r + 1; row <= range.e.r; row++) {
         const cellAddress = `${idCol[0]}${row + 1}`;
         if (!worksheet[cellAddress]) {
-            worksheet[cellAddress] = { t: 's', v: uuidv4() };
+            worksheet[cellAddress] = { t: "s", v: uuidv4() };
         }
     }
     return worksheet;
@@ -138,12 +143,12 @@ const extractExcelWorksheet = (filePath, sheetnum = 0) => {
 exports.extractExcelWorksheet = extractExcelWorksheet;
 const saveExcelFile = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const buffer = yield (0, db_1.fetchAndCreateExcel)('knihy');
-        fs_1.default.writeFileSync('output.xlsx', buffer);
-        console.log('Excel file created successfully.');
+        const buffer = yield (0, db_1.fetchAndCreateExcel)("knihy");
+        fs_1.default.writeFileSync("output.xlsx", buffer);
+        console.log("Excel file created successfully.");
     }
     catch (error) {
-        console.error('Error creating Excel file:', error);
+        console.error("Error creating Excel file:", error);
     }
 });
 exports.saveExcelFile = saveExcelFile;

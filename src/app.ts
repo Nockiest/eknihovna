@@ -145,54 +145,6 @@ app.get("/downloadExcel", async (req: Request, res: Response) => {
   }
 });
 
-app.get("/search", async (req: Request, res: Response) => {
-  let { bookName, filters } = req.query;
-  filters = {...filters,  formaturita: filters.formaturita===('true'||true)? true:false, available: filters.available===('true'||true)? true:false};
-  let sqlQuery = defaultQuery;
-  // console.log(
-  //   bookName, 'x',
-  //   filters,
-  //   !isFiltersType(filters),
-  //   typeof bookName !== "string",
-  //   bookName.trim() === ""
-  // );
-  if (
-    !isFiltersType(filters) ||
-    typeof bookName !== "string" ||
-    bookName.trim() === ""
-  ) {
-    return res.status(400).json({ error: "Bad Request" });
-  }
-  const { whereClause, queryParams } = buildFilterQuery(filters);
-  sqlQuery += ` ${whereClause}`;
-  console.log(bookName, filters);
-
-  try {
-    console.log(sqlQuery, queryParams);
-    const result = await query(sqlQuery, queryParams);
-    console.log(result.rows.length);
-    const sanitizedResults = result.rows.map((value) => {
-      return value;
-    });
-    const filteredResults = sanitizedResults; //sanitizedResults.filter((result:Book) => {
-    //   return (
-    //     // checkSearchRelevant(result.keyword, query as string) ||
-    //     checkResultStartWithQuery(result.name, bookName as string)
-    //   );
-    // });
-    // console.log(filteredResults);
-    // filteredResults.sort((a, b) => {
-    //   return (
-    //     getSimilarity(b.keyword, bookName as string) -
-    //     getSimilarity(a.keyword, bookName as string)
-    //   );
-    // });
-    res.json(filteredResults);
-  } catch (error) {
-    console.error("Error executing search query:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);

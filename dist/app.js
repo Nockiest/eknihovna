@@ -24,7 +24,6 @@ const db_1 = require("./db");
 // import bcrypt from 'bcrypt';
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
-const utils_1 = require("./utils");
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -126,52 +125,6 @@ app.get("/downloadExcel", (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
     catch (error) {
         console.error("Error generating or sending Excel file:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-}));
-app.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let { bookName, filters } = req.query;
-    filters = Object.assign(Object.assign({}, filters), { formaturita: filters.formaturita === ('true' || true) ? true : false, available: filters.available === ('true' || true) ? true : false });
-    let sqlQuery = defaultQuery;
-    // console.log(
-    //   bookName, 'x',
-    //   filters,
-    //   !isFiltersType(filters),
-    //   typeof bookName !== "string",
-    //   bookName.trim() === ""
-    // );
-    if (!(0, utils_1.isFiltersType)(filters) ||
-        typeof bookName !== "string" ||
-        bookName.trim() === "") {
-        return res.status(400).json({ error: "Bad Request" });
-    }
-    const { whereClause, queryParams } = buildFilterQuery(filters);
-    sqlQuery += ` ${whereClause}`;
-    console.log(bookName, filters);
-    try {
-        console.log(sqlQuery, queryParams);
-        const result = yield (0, db_1.query)(sqlQuery, queryParams);
-        console.log(result.rows.length);
-        const sanitizedResults = result.rows.map((value) => {
-            return value;
-        });
-        const filteredResults = sanitizedResults; //sanitizedResults.filter((result:Book) => {
-        //   return (
-        //     // checkSearchRelevant(result.keyword, query as string) ||
-        //     checkResultStartWithQuery(result.name, bookName as string)
-        //   );
-        // });
-        // console.log(filteredResults);
-        // filteredResults.sort((a, b) => {
-        //   return (
-        //     getSimilarity(b.keyword, bookName as string) -
-        //     getSimilarity(a.keyword, bookName as string)
-        //   );
-        // });
-        res.json(filteredResults);
-    }
-    catch (error) {
-        console.error("Error executing search query:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 }));
