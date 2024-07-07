@@ -24,6 +24,7 @@ import { getBooksByQuery } from "@/utils/fetchBooks";
 import FilterOverview from "./FilterOverview";
 import { queryBookName } from "@/utils/queryBookName";
 import getRelevancy from "@/utils/searchingUtils";
+import SearchAutocomplete from "./SearchBar";
 
 interface BookCatalogProps {}
 
@@ -149,67 +150,49 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
 
   return (
     <Box className="w-full">
-      <FilterOverview removeFilter={removeFilter} />
+      {/* <FilterOverview removeFilter={removeFilter} /> */}
 
-      <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={bookNames}
-      groupBy={(option) => option[0]}
-      value={query}
-      onInputChange={async (e, newInputValue) => {
-        setQuery(newInputValue); // Update the input value when typing
-        // const res = await queryBookName(newInputValue === null ? '' : newInputValue, filters);
-        // console.log(res)
-        // if(res){
-        //   setBooks(res);
 
-        // }
-      }}
-      sx={{ width: 300 }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Search Books"
-          variant="outlined"
-        />
-      )}
-    />
+    <SearchAutocomplete onInputChange={(e)=>setQuery(e)} bookNames={bookNames} />
       {shownBooks.length > 0 ? (
         <div className="w-full">
-          <Grid
-            container
-            spacing={4}
-            columns={12}
-            alignItems="stretch"
-            sx={{
-              justifyContent: "center",
-              width: "100%",
-              display: "flex",
-              alignItems: "center",
-              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            }}
-          >
-            {shownBooks.map((book, index) => (
-              <Grid
-                sx={{
-                  margin: "0  ",
-                  height: "auto",
-                  flexGrow: "1",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-                item
-                xs={12}
-                sm={6}
-                md={4}
-                xl={3}
-                key={index}
-              >
-                <BookPreview book={book} />
-              </Grid>
-            ))}
-          </Grid>
+        <Grid
+  container
+  spacing={4}
+  columns={12}
+  alignItems="stretch"
+  sx={{
+    justifyContent: "center",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    margin: "1rem auto",
+    gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+  }}
+>
+  {shownBooks.map((book, index) => (
+    <Grid
+      sx={{
+        margin: "0 auto",
+        height: "auto",
+        flexGrow: "1",
+        display: "flex",
+        justifyContent: "center",
+      }}
+      item
+      xs={12}
+      sm={6}
+      md={4}
+      xl={3}
+      key={index}
+      alignItems={'center'}
+
+    >
+      <BookPreview book={book} />
+    </Grid>
+  ))}
+</Grid>
+
 
           <PaginationLinker
             allItems={allBooks}

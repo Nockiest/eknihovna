@@ -9,7 +9,7 @@ const Footer = () => {
   return (
     <footer className="bg-gray-800 text-white py-4">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-        <Box className="flex flex-wrap space-x-4">
+        <Box className="flex flex-wrap  flex-col md:flex-row  space-x-4">
           {navRoutes.map((button, key) => (
             <Link className="hover:text-gray-400" key={key} href={button.URL}>
               {button.label}
@@ -21,7 +21,7 @@ const Footer = () => {
         </Box>
 
         {/* Social Media Links */}
-        <div className="mt-4 md:mt-0">
+        {/* <div className="mt-4 md:mt-0">
           <a href="#" className="text-gray-400 hover:text-white">
             <svg
               className="w-6 h-6"
@@ -50,8 +50,7 @@ const Footer = () => {
               />
             </svg>
           </a>
-          {/* Add more social media icons and links as needed */}
-        </div>
+        </div> */}
       </div>
     </footer>
   );

@@ -35,6 +35,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           : 0,
         color: theme.palette.text.primary,
         maxWidth: "311px",
+        
       }}
     >
       <Box p={2} className=" flex flex-col items-center justify-around h-full">
