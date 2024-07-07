@@ -15,7 +15,7 @@ import PaginationLinker from "../general/PaginationLinker";
 import { getURLSegment } from "@/utils/getURLSegment";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import CategoryChip from "./CategshownBooksoryChip";
+import CategoryChip from "./CategoryChip";
 import { useSearchContext } from "@/app/katalog/context";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { getBooksByQuery } from "@/utils/fetchBooks";
@@ -101,6 +101,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     const fetchBooks = async () => {
       try {
         const resolvedBooks = await books;
+        console.log(resolvedBooks);
         setAllBooks(
           resolvedBooks.filter((book) => {
             if (book && book.name) {
