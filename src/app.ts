@@ -88,6 +88,30 @@ const buildFilterQuery = (filters: Filters) => {
     conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
   return { whereClause, queryParams };
 };
+
+
+app.post("/bookList", async (req, res) => {
+  const { filters } = req.body;
+  let sqlQuery = "SELECT DISTINCT name FROM knihy";
+
+  if (!filters) {
+    return res.status(400).json({ error: "Server didn't receive filters" });
+  }
+  const { whereClause, queryParams } = buildFilterQuery(filters);
+  sqlQuery += ` ${whereClause}`;
+
+  // console.log("SQL Query:", sqlQuery);
+  // console.log("Query Params:", queryParams);
+  // console.log("Filters:", filters);
+
+  try {
+    const result = await query(sqlQuery, queryParams);
+    res.json(result.rows);
+  } catch (error) {
+    console.error("Error executing search query:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
 app.post("/authenticate", (req, res) => {
   const { password } = req.body;
   console.log(password, password.trim() === process.env.UPLOAD_PASSWORD);
@@ -110,30 +134,6 @@ app.post("/authenticate", (req, res) => {
   //   res.status(200).json({ message: 'Uživatel autorizován' });
   // });
 });
-
-app.post("/bookList", async (req, res) => {
-  const { filters } = req.body;
-  let sqlQuery = defaultQuery;
-
-  if (!filters) {
-    return res.status(400).json({ error: "Server didn't receive filters" });
-  }
-  const { whereClause, queryParams } = buildFilterQuery(filters);
-  sqlQuery += ` ${whereClause}`;
-
-  // console.log("SQL Query:", sqlQuery);
-  // console.log("Query Params:", queryParams);
-  // console.log("Filters:", filters);
-
-  try {
-    const result = await query(sqlQuery, queryParams);
-    res.json(result.rows);
-  } catch (error) {
-    console.error("Error executing search query:", error);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
 app.get("/getUniqueValues", async (req, res) => {
   const { columnName } = req.query; // Use req.query to get query parameters
   try {
