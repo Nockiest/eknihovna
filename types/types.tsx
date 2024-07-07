@@ -22,12 +22,12 @@ export type StringedBool = "true" | "false";
 export  type Filters= {
   // [key: string]: string[]| Omit<string | 'false' | 'true', 'false' | 'true'>| StringedBool|null ;
   // name: string|null ;
-  author: string[];
-  category: string[];
-  genres: string[];
-  formaturita: boolean|null;
+  author?: string[];
+  category?: string[];
+  genres?: string[];
+  formaturita?: boolean|null;
   // rating: number;
-  available: boolean|null;
+  available?: boolean|null;
 };
 
   export type FiltringValues = {

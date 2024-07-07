@@ -1,6 +1,15 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Box, Grid, Typography, useTheme, Breakpoint } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  useTheme,
+  Breakpoint,
+  Autocomplete,
+  TextField,
+  styled,
+} from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "../general/DotsShower";
@@ -13,6 +22,8 @@ import { useSearchContext } from "@/app/katalog/context";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { getBooksByQuery } from "@/utils/fetchBooks";
 import FilterOverview from "./FilterOverview";
+import { queryBookName } from "@/utils/queryBookName";
+import getRelevancy from "@/utils/searchingUtils";
 
 interface BookCatalogProps {}
 
@@ -24,11 +35,13 @@ const shownBooksBySize: Record<Breakpoint, number> = {
   xl: 36,
 };
 
+
 const BookCatalog: React.FC<BookCatalogProps> = () => {
   const theme = useTheme();
   const size = useCurrentBreakpoint() || "xs";
   const router = useRouter();
-  const { books, setBooks, filters, setFilters } = useSearchContext();
+  const { books,bookNames, setBooks, filters, setFilters, query, setQuery } =
+    useSearchContext();
 
   const [allBooks, setAllBooks] = useState<Book[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +54,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     const newLastBookIndex = page * itemsPerPage;
     return [indexOfFirstBook, newLastBookIndex];
   };
+
   const setNewBookSlice = (
     page: number,
     itemsPerPage: number,
@@ -48,14 +62,14 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   ) => {
     const [indexOfFirstBook, newLastBookIndex] = getStartAndEndIndexes(
       page,
-      itemsPerPage
-    );
+      itemsPerPage );
     setShownBooks(
       allBooks === undefined
         ? []
         : allBooks?.slice(indexOfFirstBook, newLastBookIndex)
     );
   };
+
   useEffect(() => {
     if (size) {
       const newItemsPerPage = shownBooksBySize[size];
@@ -73,17 +87,27 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
 
   // Fetch books on initial render
   useEffect(() => {
-    router.push(`/katalog?page=1`); // reset page number on every query
+    router.push('/katalog?page=1'); // reset page number on every query
+
     const fetchBooks = async () => {
       try {
         const resolvedBooks = await books;
-        setAllBooks(resolvedBooks);
+        console.log(resolvedBooks);
+        setAllBooks(
+          resolvedBooks.filter((book) => {
+            if (book && book.name) {
+              return  getRelevancy(book.name, query)
+            }
+            return false;
+          })
+        );
       } catch (err: any) {
-        setError(err.message || "Failed to fetch books");
+        setError(err.message || 'Failed to fetch books');
       }
     };
+
     fetchBooks();
-  }, [books, router]);
+  }, [books, query, router]);
 
   // Update shown books based on currentPage and itemsPerPage
   useEffect(() => {
@@ -126,18 +150,55 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   return (
     <Box className="w-full">
       <FilterOverview removeFilter={removeFilter} />
+
+      <Autocomplete
+      disablePortal
+      id="combo-box-demo"
+      options={bookNames}
+      groupBy={(option) => option[0]}
+      value={query}
+      onInputChange={async (e, newInputValue) => {
+        setQuery(newInputValue); // Update the input value when typing
+        // const res = await queryBookName(newInputValue === null ? '' : newInputValue, filters);
+        // console.log(res)
+        // if(res){
+        //   setBooks(res);
+
+        // }
+      }}
+      sx={{ width: 300 }}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          label="Search Books"
+          variant="outlined"
+        />
+      )}
+    />
       {shownBooks.length > 0 ? (
         <div className="w-full">
           <Grid
             container
             spacing={4}
             columns={12}
-             alignItems="stretch"
-            sx={{ justifyContent: "center",width: '100%' , display:'flex',alignItems: "center", gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))'  }}
+            alignItems="stretch"
+            sx={{
+              justifyContent: "center",
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+            }}
           >
             {shownBooks.map((book, index) => (
               <Grid
-                sx={{ margin: "0  ", height: "auto", flexGrow: "1" , display:'flex',alignItems: "center"  }}
+                sx={{
+                  margin: "0  ",
+                  height: "auto",
+                  flexGrow: "1",
+                  display: "flex",
+                  alignItems: "center",
+                }}
                 item
                 xs={12}
                 sm={6}
