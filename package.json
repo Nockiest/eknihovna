@@ -16,10 +16,12 @@
     "axios": "^1.7.2",
     "emailjs-com": "^3.2.0",
     "glob": "^10.4.1",
+    "lodash": "^4.17.21",
     "next": "^14.2.4",
     "react": "^18",
     "react-dom": "^18",
     "react-responsive": "^10.0.0",
+    "react-window": "^1.8.10",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
