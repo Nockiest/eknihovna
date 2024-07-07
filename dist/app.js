@@ -24,6 +24,7 @@ const db_1 = require("./db");
 // import bcrypt from 'bcrypt';
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
+const utils_1 = require("./utils");
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -39,6 +40,7 @@ const storage = multer_1.default.diskStorage({
     },
 });
 const upload = (0, multer_1.default)({ storage });
+const defaultQuery = "SELECT * FROM knihy";
 const checkIfIgnoredValue = (value) => {
     if (value === null || value === '' || value === false || (Array.isArray(value) && value.length === 0)) {
         return true;
@@ -81,12 +83,14 @@ const buildFilterQuery = (filters) => {
 };
 app.post('/bookList', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { filters } = req.body;
-    let sqlQuery = 'SELECT * FROM knihy';
+    let sqlQuery = defaultQuery;
     if (!filters) {
         return res.status(400).json({ error: "Server didn't receive filters" });
     }
+    // console.log(1)
     const { whereClause, queryParams } = buildFilterQuery(filters);
     sqlQuery += ` ${whereClause}`;
+    // console.log(sqlQuery, queryParams)
     console.log('SQL Query:', sqlQuery);
     console.log('Query Params:', queryParams);
     console.log('Filters:', filters);
@@ -123,27 +127,43 @@ app.get("/downloadExcel", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json({ error: "Internal Server Error" });
     }
 }));
-app.post("/authenticate", (req, res) => {
-    console.log("hello world x");
-    const { password } = req.body;
-    console.log(password, password.trim() === process.env.UPLOAD_PASSWORD);
-    if (!password) {
-        return res.status(400).json({ error: "vyžadováno heslo" });
+app.get("/search", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { bookName, filters } = req.query;
+    let sqlQuery = defaultQuery;
+    console.log(filters, !(0, utils_1.isFiltersType)(filters), typeof bookName !== 'string', bookName.trim() === '');
+    if (!(0, utils_1.isFiltersType)(filters) || typeof bookName !== 'string' || bookName.trim() === '') {
+        return res.status(400).json({ error: 'Bad Request' });
     }
-    if (password === process.env.UPLOAD_PASSWORD) {
-        return res.status(200).json({ message: "Uživatel autorizován" });
+    const { whereClause, queryParams } = buildFilterQuery(filters);
+    sqlQuery += ` ${whereClause}`;
+    console.log(bookName, filters);
+    try {
+        console.log(sqlQuery, queryParams);
+        const result = yield (0, db_1.query)(sqlQuery, queryParams);
+        console.log(result.rows.length);
+        const sanitizedResults = result.rows.map((value) => {
+            return value;
+        });
+        const filteredResults = result; //sanitizedResults.filter((result:Book) => {
+        //   return (
+        //     // checkSearchRelevant(result.keyword, query as string) ||
+        //     checkResultStartWithQuery(result.name, bookName as string)
+        //   );
+        // });
+        // console.log(filteredResults);
+        // filteredResults.sort((a, b) => {
+        //   return (
+        //     getSimilarity(b.keyword, bookName as string) -
+        //     getSimilarity(a.keyword, bookName as string)
+        //   );
+        // });
+        res.json(filteredResults);
     }
-    else {
-        return res.status(401).json({ error: "Špatné heslo" });
+    catch (error) {
+        console.error("Error executing search query:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-    // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-    //   if (err || !result) {
-    //     return res.status(401).json({ error: 'Špatné heslo' });
-    //   }
-    // Password correct, return success
-    //   res.status(200).json({ message: 'Uživatel autorizován' });
-    // });
-});
+}));
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });

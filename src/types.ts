@@ -8,3 +8,17 @@ export  type Filters= {
     formaturita: StringedBool|null;
     available: StringedBool|null;
   };
+
+  export type Book = {
+    id: string
+    book_code: number
+    name: string
+    author: string
+    description?: string
+    category: string
+    genres?:string[]
+    rating?: number
+    available: boolean
+    formaturita: boolean
+    bookCoverURL?: string
+}

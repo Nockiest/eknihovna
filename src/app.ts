@@ -16,8 +16,9 @@ import {
 // import bcrypt from 'bcrypt';
 import bodyParser from "body-parser";
 import { excelWordsToBool, fillMissingIds } from "./excelUtils";
-import { Filters } from "./types";
-
+import { Book, Filters } from "./types";
+import { checkResultStartWithQuery, checkSearchRelevant, getSimilarity } from "./searchinUtils";
+import { isFiltersType } from "./utils";
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -34,7 +35,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage });
-
+const defaultQuery = "SELECT * FROM knihy";
 const checkIfIgnoredValue = (value:any) => {
   if (value === null || value === '' || value === false|| (Array.isArray(value) && value.length === 0)) {
     return true;
@@ -49,7 +50,6 @@ const checkIfIgnoredValue = (value:any) => {
 const buildFilterQuery = (filters: Filters) => {
   const queryParams: any[] = [];
   const conditions: string[] = [];
-
   Object.keys(filters).forEach((key) => {
     const value = filters[key];
 
@@ -80,14 +80,16 @@ const buildFilterQuery = (filters: Filters) => {
 
 app.post('/bookList', async (req, res) => {
   const { filters } = req.body;
-  let sqlQuery = 'SELECT * FROM knihy';
+  let sqlQuery = defaultQuery;
 
   if (!filters) {
     return res.status(400).json({ error: "Server didn't receive filters" });
   }
-
+  // console.log(1)
   const { whereClause, queryParams } = buildFilterQuery(filters);
   sqlQuery += ` ${whereClause}`;
+  // console.log(sqlQuery, queryParams)
+
   console.log('SQL Query:', sqlQuery);
   console.log('Query Params:', queryParams);
   console.log('Filters:', filters);
@@ -100,7 +102,6 @@ app.post('/bookList', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-
 
 app.get("/getUniqueValues", async (req, res) => {
   const { columnName } = req.query; // Use req.query to get query parameters
@@ -135,30 +136,44 @@ app.get("/downloadExcel", async (req: Request, res: Response) => {
   }
 });
 
-app.post("/authenticate", (req, res) => {
-  console.log("hello world x");
-
-  const { password } = req.body;
-  console.log(password, password.trim() === process.env.UPLOAD_PASSWORD);
-
-  if (!password) {
-    return res.status(400).json({ error: "vyžadováno heslo" });
+app.get("/search", async (req: Request, res: Response) => {
+  const { bookName, filters } = req.query;
+  let sqlQuery = defaultQuery;
+  console.log(filters,!isFiltersType(filters), typeof bookName !== 'string', bookName.trim()==='')
+ if ( !isFiltersType(filters)|| typeof bookName !== 'string'|| bookName.trim()===''){
+   return  res.status(400).json({ error: 'Bad Request' });
   }
+  const { whereClause, queryParams } = buildFilterQuery(filters);
+  sqlQuery += ` ${whereClause}`;
+  console.log(bookName, filters)
 
-  if (password === process.env.UPLOAD_PASSWORD) {
-    return res.status(200).json({ message: "Uživatel autorizován" });
-  } else {
-    return res.status(401).json({ error: "Špatné heslo" });
+  try {
+    console.log(sqlQuery, queryParams)
+    const result = await query(sqlQuery, queryParams);
+    console.log(result.rows.length)
+    const sanitizedResults = result.rows.map((value ) => {
+      return value;
+    });
+    const filteredResults =  result //sanitizedResults.filter((result:Book) => {
+    //   return (
+    //     // checkSearchRelevant(result.keyword, query as string) ||
+    //     checkResultStartWithQuery(result.name, bookName as string)
+    //   );
+    // });
+    // console.log(filteredResults);
+    // filteredResults.sort((a, b) => {
+    //   return (
+    //     getSimilarity(b.keyword, bookName as string) -
+    //     getSimilarity(a.keyword, bookName as string)
+    //   );
+    // });
+    res.json(filteredResults);
+  } catch (error) {
+    console.error("Error executing search query:", error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
-  // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-  //   if (err || !result) {
-  //     return res.status(401).json({ error: 'Špatné heslo' });
-  //   }
-
-  // Password correct, return success
-  //   res.status(200).json({ message: 'Uživatel autorizován' });
-  // });
 });
+
 
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
