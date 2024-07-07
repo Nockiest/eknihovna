@@ -63,26 +63,26 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { makeStyles } from '@mui/styles';
+// import { makeStyles } from '@mui/styles';
 import { InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { debounce } from 'lodash';
 import { FixedSizeList } from 'react-window';
 import getRelevancy from '@/utils/searchingUtils';
 
-const useStyles = makeStyles({
-  searchBox: {
-    '& .MuiOutlinedInput-root': {
-      borderRadius: '25px',
-      padding: '0 10px',
-      margin: '16px',
-      width: 'auto'
-    },
-    '& .MuiOutlinedInput-input': {
-      padding: '10px 0',
-    },
-  },
-});
+// const useStyles = makeStyles({
+//   searchBox: {
+//     '& .MuiOutlinedInput-root': {
+//       borderRadius: '25px',
+//       padding: '0 10px',
+//       margin: '16px',
+//       width: 'auto'
+//     },
+//     '& .MuiOutlinedInput-input': {
+//       padding: '10px 0',
+//     },
+//   },
+// });
 
 interface SearchAutocompleteProps {
   onInputChange: (inputValue: string) => void;
@@ -90,7 +90,7 @@ interface SearchAutocompleteProps {
 }
 
 const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange, bookNames }) => {
-  const classes = useStyles();
+  // const classes = useStyles();
   const [query, setQuery] = useState<string>('');
 
   // Debounce the input change handler to limit the number of calls
@@ -149,7 +149,7 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange, 
           {...params}
           variant="outlined"
           placeholder="Vyhldat knihu..."
-          className={classes.searchBox}
+          // className={classes.searchBox}
           InputProps={{
             ...params.InputProps,
             startAdornment: (
