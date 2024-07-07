@@ -1,9 +1,8 @@
 import { checkIfIgnoredValue } from '@/types/typeChecks'
 import { Filters } from '@/types/types'
 import { translateBookKey } from '@/utils/translateBookKeys'
-import React from 'react'
 import CategoryChip from './CategoryChip'
-import { Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 
 type FilterListerProps = {
     filters: Filters;
@@ -14,7 +13,7 @@ const FilterLister: React.FC<FilterListerProps> = ({ filters, removeFilter }) =>
   const filterKeys = Object.keys(filters) as (keyof Filters)[];
 
   return (
-    <div>
+    <Box className='m-2'>
       {filterKeys.map((key) => {
         const value = filters[key];
         if (checkIfIgnoredValue(value)) {
@@ -39,7 +38,7 @@ const FilterLister: React.FC<FilterListerProps> = ({ filters, removeFilter }) =>
           </div>
         );
       })}
-    </div>
+    </Box>
   )
 }
 

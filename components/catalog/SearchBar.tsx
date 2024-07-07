@@ -31,6 +31,7 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange, 
     <Autocomplete
       disablePortal
       id="combo-box-demo"
+      className='w-full'
       options={bookNames}
       groupBy={(option) => option[0]}
       value={query}

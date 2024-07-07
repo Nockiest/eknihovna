@@ -16,7 +16,7 @@ const Footer = () => {
             </Link>
           ))}
           <Link className="hover:text-gray-400" href={"/upload"}>
-            Dev
+            API
           </Link>
         </Box>
 

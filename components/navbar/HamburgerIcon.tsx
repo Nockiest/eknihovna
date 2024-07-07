@@ -9,7 +9,8 @@ interface CustomHamburgerProps {
 }
 
 const CustomIconButton = styled(Button)(({ theme }) => ({
-  margin: '0'
+  margin: '0',
+  zIndex: '2',
   //   backgroundColor: 'transparent',
   //   border: 0,
   //   cursor: 'pointer',
@@ -34,11 +35,11 @@ const CustomHamburger: React.FC<CustomHamburgerProps> = ({
 }) => {
   return (
     <CustomIconButton
-      className="border-0 cursor-pointer bg-primary-900 fixed right-0 top-1 z-3 m-4 p-4 sm:hidden"
+      className="border-0 cursor-pointer  fixed right-0 top-1   sm:hidden"
       onClick={onClick}
       aria-label={ariaLabel}
     >
-      <HamburgerSpan className="hamburger z-2  mt-6 mr-6 block relative my-4 mx-2  bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out   ">
+      <HamburgerSpan className="hamburger z-2  mt-6 mr-6 block relative my-4 mx-2       h-1.5 rounded-full transition-transform duration-250 ease-in-out   ">
         {/* <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out"></span>
         <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out mt-3.5 absolute"></span>
         <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out mb-3.5 absolute"></span> */}
