@@ -3,8 +3,8 @@ import { Fab } from '@mui/material';
 import Image from 'next/image';
 import React from 'react'
 type SearcherOpenerFabProps = {
-    onClick: () => void;
-    css:string
+    onClick?: () => void;
+    css?:string
   };
 
   const SearcherOpenerFab: React.FC<SearcherOpenerFabProps> = ({onClick, css}) => {

@@ -6,17 +6,17 @@ import Image from "next/image";
 
 import { useState } from "react";
 import axios from "axios";
-import PasswordEntry from "./PasswordHolder";
+import PasswordEntry from "./PasswordEntry";
 import { authenticate } from "@/utils/authenticate";
 import { knihyURL } from "@/data/values";
 import { useTheme } from "@emotion/react";
+import PasswordHandler from "./PasswordHandler";
+import { useAuthContext } from "@/app/upload/authContext";
 
 const ExcelSheetUpdater = () => {
-  const [responseMessage, setResponseMessage] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [authenticated, setAuthenticated] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
+  const {isAuth, setIsAuth } = useAuthContext();
+  const [responseMessage, setResponseMessage] = useState("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFile(event.target.files[0]);
@@ -73,31 +73,8 @@ const ExcelSheetUpdater = () => {
 
   return (
     <Box className="flex flex-col items-center justify-center">
-      {!authenticated ? (
-        <form
-          onSubmit={async (e) => {
-            const res = await authenticate(e, password);
-            if (res) {
-              setResponseMessage("Authentication successful");
-              setAuthenticated(true);
-            } else {
-              setResponseMessage("Authentication failed");
-            }
-          }}
-          className="w-1/2 flex flex-col items-center justify-center mt-16 mx-auto"
-        >
-          <label htmlFor="password" className="block mb-2">
-            Pro práci s daty vepište heslo:
-          </label>
-          <PasswordEntry
-            label="heslo"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-
-          <PrimaryButton type="submit">Autorizovat</PrimaryButton>
-          <div id="response">{responseMessage}</div>
-        </form>
+      {!isAuth ? (
+        <PasswordHandler />
       ) : (
         <div className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="w-full md:w-1/2 p-6 flex flex-col items-center">
@@ -144,13 +121,44 @@ const ExcelSheetUpdater = () => {
               </SecondaryButton>
             </form>
           </Box>
+            <Typography variant="body1" color="textSecondary">
+              {responseMessage}
+            </Typography>
+
         </div>
       )}
-      <div id="response" className="mt-8 text-center">
-        {responseMessage}
-      </div>
     </Box>
   );
 };
 
 export default ExcelSheetUpdater;
+
+{
+  /* <form
+onSubmit={async (e) => {
+  const res = await authenticate(e, password);
+  if (res) {
+    setResponseMessage("Authentication successful");
+    setAuthenticated(true);
+  } else {
+    setResponseMessage("Authentication failed");
+  }
+}}
+className="w-1/2 flex flex-col items-center justify-center mt-16 mx-auto"
+>
+<label htmlFor="password" className="block mb-2">
+  Pro práci s daty vepište heslo:
+</label>
+<PasswordHandler */
+}
+{
+  /* <PasswordEntry
+  label="heslo"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+/> */
+}
+
+//   <PrimaryButton type="submit">Autorizovat</PrimaryButton>
+//   <div id="response">{responseMessage}</div>
+// </form>

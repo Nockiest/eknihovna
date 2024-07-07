@@ -1,7 +1,7 @@
 'use client'
 import { Box } from "@mui/material";
 import Image from "next/image";
-import CustomHamburger from "@/theme/buttons/Hamburger";
+import CustomHamburger from "../navbar/HamburgerIcon";
 import { useState } from "react";
 import { HeaderContext } from "../navbar/headerConntext";
 import { getURLSegment } from "@/utils/getURLSegment";

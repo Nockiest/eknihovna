@@ -2,9 +2,14 @@
 import React from "react";
 import {
   Slide,
-  Paper, Checkbox, FormControlLabel,
-  Fab, InputLabel,
-  Typography
+  Paper,
+  Checkbox,
+  FormControlLabel,
+  Fab,
+  InputLabel,
+  Typography,
+  IconButton,
+  Box,
 } from "@mui/material";
 import Image from "next/image";
 import theme from "@/theme/theme";
@@ -14,15 +19,12 @@ import SortedGroupedSelect from "./SortedSelect";
 import CategoryChip from "./CategoryChip";
 import { checkIfIgnoredValue } from "@/types/typeChecks";
 import { translateBookKey } from "@/utils/translateBookKeys";
+import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
-
-type SearcherProps = {
-
-}
+type SearcherProps = {};
 export const Searcher: React.FC<SearcherProps> = () => {
-  const {
-    isOpenSearcher, setOpenSearcher, filters, setFilters, filterValues,
-  } = useSearchContext();
+  const { isOpenSearcher, setOpenSearcher, filters, setFilters, filterValues } =
+    useSearchContext();
 
   const handleFilterChange = (
     name: keyof Filters,
@@ -58,6 +60,7 @@ export const Searcher: React.FC<SearcherProps> = () => {
     );
   };
   const removeFilter = (key: keyof Filters, value: string | boolean) => {
+    console.log(key , value )
     setFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
 
@@ -80,7 +83,6 @@ export const Searcher: React.FC<SearcherProps> = () => {
     });
   };
 
-  // const filterKeys = Object.keys(filters) as (keyof Filters)[];
   return (
     <Slide
       direction="up"
@@ -90,65 +92,75 @@ export const Searcher: React.FC<SearcherProps> = () => {
       unmountOnExit
     >
       <Paper className={"relative"} elevation={3}>
-        <Fab
-          className="ml-auto mr-0"
+        <IconButton
+          className="absolute top-0 right-0 m-2"
           onClick={() => {
             setOpenSearcher(!isOpenSearcher);
           }}
         >
-          <Image src={"icon/cross.svg"} alt="cross" width={"32"} height={32} />
-        </Fab>
+          <Close />
+        </IconButton>
+        <FilterLister filters={filters} removeFilter={removeFilter} />
 
+        <Box className="m-2">
+          <SortedGroupedSelect
+            options={getFilteredOptions("category")}
+            label={"kategorie"}
+            handleChange={(newVal) => handleFilterChange("category", newVal)}
+          />
 
-<FilterLister filters={filters} removeFilter={(key,value) => removeFilter(key,value)}  />
-        {/* <SortedGroupedSelect
-                options={getFilteredOptions("category")}
-                label={"kategorie"}
-                handleChange={(newVal) => handleFilterChange("category", newVal)}
-              /> */}
+          <InputLabel shrink>
+            Žánry: {filters.genres?.join(",") || "None"}
+          </InputLabel>
+          <SortedGroupedSelect
+            options={getFilteredOptions("genres")}
+            label={"žánry"}
+            handleChange={(newVal) => handleFilterChange("genres", newVal)}
+          />
 
-        <SortedGroupedSelect
-          options={getFilteredOptions("category")}
-          label={"kategorie"}
-          handleChange={(newVal) => handleFilterChange("category", newVal)} />
-
-        <InputLabel shrink>
-          Žánry: {filters.genres?.join(",") || "None"}
-        </InputLabel>
-        <SortedGroupedSelect
-          options={getFilteredOptions("genres")}
-          label={"žánry"}
-          handleChange={(newVal) => handleFilterChange("genres", newVal)} />
-
-        <InputLabel shrink>Autor: {filters.author || "None"}</InputLabel>
-        <SortedGroupedSelect
-          options={getFilteredOptions("author")}
-          label={"autor"}
-          handleChange={(newVal) => handleFilterChange("author", newVal)} />
+          <InputLabel shrink>Autor: {filters.author || "None"}</InputLabel>
+          <SortedGroupedSelect
+            options={getFilteredOptions("author")}
+            label={"autor"}
+            handleChange={(newVal) => handleFilterChange("author", newVal)}
+          />
+        </Box>
 
         <FormControlLabel
-          control={<Checkbox
-            checked={Boolean(filters.available)}
-            onChange={(e) => handleFilterChange("available", e.target.checked)} />}
+          control={
+            <Checkbox
+              checked={Boolean(filters.available)}
+              onChange={(e) =>
+                handleFilterChange("available", e.target.checked)
+              }
+            />
+          }
           label="Dostupnost"
           sx={{
             color: theme.palette.primary.main,
             "&.Mui-checked": {
               color: theme.palette.secondary.main,
             },
-          }} />
+          }}
+        />
 
         <FormControlLabel
-          control={<Checkbox
-            checked={Boolean(filters.formaturita)}
-            onChange={(e) => handleFilterChange("formaturita", e.target.checked)} />}
+          control={
+            <Checkbox
+              checked={Boolean(filters.formaturita)}
+              onChange={(e) =>
+                handleFilterChange("formaturita", e.target.checked)
+              }
+            />
+          }
           label="Maturitní"
           sx={{
             color: theme.palette.primary.main,
             "&.Mui-checked": {
               color: theme.palette.secondary.main,
             },
-          }} />
+          }}
+        />
       </Paper>
     </Slide>
   );

@@ -3,7 +3,6 @@ import { NavbarButton } from "@/theme/buttons/Buttons";
 import { Box, Paper, Typography } from "@mui/material";
 import HamburgerNavList from "./Hamburger";
 import { navRoutes } from "@/data/routeNames";
-import CustomHamburger from "@/theme/buttons/Hamburger";
 import { getURLSegment } from "@/utils/getURLSegment";
 import { usePathname } from "next/navigation";
 import { HeaderContext, useHeaderContext } from "./headerConntext";
