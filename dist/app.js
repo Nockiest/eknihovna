@@ -84,6 +84,26 @@ const buildFilterQuery = (filters) => {
     const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
     return { whereClause, queryParams };
 };
+app.post("/authenticate", (req, res) => {
+    const { password } = req.body;
+    console.log(password, password.trim() === process.env.UPLOAD_PASSWORD);
+    if (!password) {
+        return res.status(400).json({ error: "vyžadováno heslo" });
+    }
+    if (password === process.env.UPLOAD_PASSWORD) {
+        res.status(200).json({ message: "Uživatel autorizován" });
+    }
+    else {
+        return res.status(401).json({ error: "Špatné heslo" });
+    }
+    // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
+    //   if (err || !result) {
+    //     return res.status(401).json({ error: 'Špatné heslo' });
+    //   }
+    // Password correct, return success
+    //   res.status(200).json({ message: 'Uživatel autorizován' });
+    // });
+});
 app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { filters } = req.body;
     let sqlQuery = defaultQuery;
