@@ -8,8 +8,6 @@ export async function queryBookName(bookName: string, filters: Filters=defaultFi
         bookName,
         filters: {...filters   }
     };
-    console.log(params.filters.available === false)
-
     try {
         const response = await axios.get(`${apiUrl}/search`, { params });
         console.log(response.data);

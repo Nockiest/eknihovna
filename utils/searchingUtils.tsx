@@ -1,17 +1,22 @@
+export const standardizeText = (text:string) => {
+    return text.replace(/\s+/g, ' ').trim().toLocaleLowerCase();
+}
+
+
 export const checkSearchRelevant = (keyword: string, query: string) => {
     if (query.replace(/\s/g, '') === '') {
       return false;
     }
-    const keywordWithoutSpaces = keyword.replace(/\s+/g, ' ').trim();
-    const queryWithoutSpaces = query.replace(/\s+/g, ' ').trim();
+    const keywordWithoutSpaces =standardizeText(keyword)
+    const queryWithoutSpaces = standardizeText(query)
     return (
-      keywordWithoutSpaces.toLocaleLowerCase().indexOf(queryWithoutSpaces.toLocaleLowerCase()) >= 0 ||
-      queryWithoutSpaces.toLocaleLowerCase().indexOf(keywordWithoutSpaces.toLocaleLowerCase()) >= 0
+      keywordWithoutSpaces.indexOf(queryWithoutSpaces) >= 0 ||
+      queryWithoutSpaces.indexOf(keywordWithoutSpaces) >= 0
     );
   };
 
 export   const checkResultIncludesQuery = (result: string, query: string): boolean => {
-    return result.replace(/\s+/g, ' ').trim().toLocaleLowerCase().includes(query.replace(/\s+/g, ' ').trim().toLocaleLowerCase())  ;
+    return  standardizeText(result).includes( standardizeText(query))  ;
   };
 
  export  function getSimilarity(result: string, query: string) {

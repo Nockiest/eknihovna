@@ -11,6 +11,7 @@ export const getBooksByQuery = async (
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
   try {
     const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit });
+    console.log(response.data)
     return response.data || [];
   } catch (error: any) {
     throw new Error(`Problem with fetching data: ${error.message}`);
