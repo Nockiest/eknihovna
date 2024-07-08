@@ -124,7 +124,7 @@ const KatalogPage = () => {
         </Box>
         <BookCatalog />
         <Searcher />
-        <ColorCircles />
+        {/* <ColorCircles /> */}
       </Box>
     </SearchContext.Provider>
   );

@@ -78,13 +78,30 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
         : allBooks?.slice(indexOfFirstBook, newLastBookIndex)
     );
   };
+  useEffect(() => {
+    const fetchBooks = async () => {
+      // setLoading(true);
+      setError(null);
+      try {
+        const newBooks = await getBooksByQuery(filters, page, shownBooksBySize[size]);
+        setShownBooks((prevBooks) => [...prevBooks, ...newBooks]);
+      } catch (err:any) {
+        setError(err?.message || 'unknown error occurred');
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchBooks();
+  }, [filters, page, size]);
+
 
   useEffect(() => {
     if (size) {
       const newItemsPerPage = shownBooksBySize[size];
       const [indexOfFirstBook] = getStartAndEndIndexes(page, newItemsPerPage);
       const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
-      setNewBookSlice(page, newItemsPerPage, allBooks);
+      // setNewBookSlice(page, newItemsPerPage, allBooks);
       router.push(
         `/katalog?page=${Math.min(
           Math.ceil(allBooks.length / newItemsPerPage),

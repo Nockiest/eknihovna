@@ -100,7 +100,6 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange, 
     }, 300),
     [onInputChange]
   );
-  console.log('1')
   const handleInputChange = useCallback(
     (e: React.SyntheticEvent, newInputValue: string) => {
       setQuery(newInputValue);
