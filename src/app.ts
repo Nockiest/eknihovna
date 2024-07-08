@@ -47,9 +47,12 @@ app.post("/bookList", async (req, res) => {
   if (!filters) {
     return res.status(400).json({ error: "Server didn't receive filters" });
   }
+  if (page<=0) {
+    return res.status(400).json({ error: "page number to low" });
+  }
   const { whereClause, queryParams } = buildFilterQuery(filters);
   sqlQuery += ` ${whereClause} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
-  console.log(sqlQuery)
+  console.log(sqlQuery,page , limit  )
   // Calculate offset
   const offset = (page - 1) * limit;
   queryParams.push(limit, offset);
