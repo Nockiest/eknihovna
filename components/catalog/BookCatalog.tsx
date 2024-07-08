@@ -1,13 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Grid,
-  Typography,
-  useTheme,
-  Breakpoint,
-
-} from "@mui/material";
+import { Box, Grid, Typography, useTheme, Breakpoint } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import DotsShower from "../general/DotsShower";
@@ -24,6 +17,7 @@ import { queryBookName } from "@/utils/queryBookName";
 import getRelevancy from "@/utils/searchingUtils";
 import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
+import FilterLister from "./FilterLister";
 
 interface BookCatalogProps {}
 
@@ -83,10 +77,14 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       // setLoading(true);
       setError(null);
       try {
-        const newBooks = await getBooksByQuery(filters, page, shownBooksBySize[size]);
+        const newBooks = await getBooksByQuery(
+          filters,
+          page,
+          shownBooksBySize[size]
+        );
         setShownBooks((prevBooks) => [...prevBooks, ...newBooks]);
-      } catch (err:any) {
-        setError(err?.message || 'unknown error occurred');
+      } catch (err: any) {
+        setError(err?.message || "unknown error occurred");
       } finally {
         // setLoading(false);
       }
@@ -94,7 +92,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
 
     fetchBooks();
   }, [filters, page, size]);
-
 
   useEffect(() => {
     if (size) {
@@ -150,18 +147,20 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     );
   }
 
-  const removeFilter = (key: keyof Filters, value: string) => {
+  const removeFilter = (key: keyof Filters, value: string | boolean) => {
     setFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
+      console.log(key, value, prevFilters[key]);
 
       if (Array.isArray(currentFilter)) {
         // Remove the specified value from the array
         const updatedArray = currentFilter.filter(
           (item: string) => item !== value
         );
+        console.log(updatedArray);
         return {
           ...prevFilters,
-          [key]: updatedArray.length > 0 ? updatedArray : null,
+          [key]: updatedArray,
         };
       } else {
         // Set the value under the key to null
@@ -176,19 +175,20 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   return (
     <Box className="w-full">
       {/* <FilterOverview removeFilter={removeFilter} /> */}
-    <Box className='flex flex-row w-full'>
-    <SearcherOpenerFab
-        css={  isOpenSearcher ? "z-0" : "z-1"  }
-        onClick={() => setOpenSearcher(!isOpenSearcher)}
-      />
-      <SearchAutocomplete
-        onInputChange={(e) => setQuery(e)}
-        bookNames={bookNames}
-      />
-      </ Box>
+      <FilterLister filters={filters} removeFilter={removeFilter} />
+      <Box className=" flex-row flex-wrap w-full  gap-4">
+        <SearcherOpenerFab
+          css={"z-0 mb-2"}
+          onClick={() => setOpenSearcher(!isOpenSearcher)}
+        />
+        <SearchAutocomplete
+          onInputChange={(e) => setQuery(e)}
+          bookNames={bookNames}
+        />
+      </Box>
 
       {shownBooks.length > 0 ? (
-        <div className="w-full">
+        <Box className="w-full">
           <Grid
             container
             spacing={4}
@@ -230,9 +230,9 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             itemsPerPage={shownBooksBySize[size]}
             folderName="katalog"
           />
-        </div>
+        </Box>
       ) : (
-        <Typography variant="h6">Žádné knihy nenalezeny</Typography>
+        <Typography variant="h6" sx={{margin: '2rem'}}>Žádné knihy nenalezeny</Typography>
       )}
     </Box>
   );

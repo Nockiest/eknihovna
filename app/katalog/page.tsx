@@ -118,7 +118,7 @@ const KatalogPage = () => {
           alignItems="space-between"
           justifyContent={"center"}
         >
-          <Typography className="mx-auto text-center my-6" variant={"h2"}>
+          <Typography className="mx-auto text-center mb-3" variant={"h2"}>
             Katalog
           </Typography>
         </Box>
