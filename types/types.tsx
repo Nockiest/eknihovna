@@ -1,8 +1,8 @@
 export type Book = {
     id: string
     book_code: number
-    name: string
-    author: string
+    name?: string
+    author?: string
     description?: string
     category: string
     genres?:string[]

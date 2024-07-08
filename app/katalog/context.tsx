@@ -8,12 +8,12 @@ type QueryContextType = {
   setOpenSearcher: React.Dispatch<React.SetStateAction<boolean>>;
   filters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-  // books: Book[];
+  books: Book[];
   // setBooks: React.Dispatch<React.SetStateAction<Book[] >>;
   totalBookNum: number|Promise<number>;
   filterValues: FiltringValues;
-  query:string;
-  setQuery:React.Dispatch<React.SetStateAction<string >>;
+  // query:string;
+  // setQuery:React.Dispatch<React.SetStateAction<string >>;
   bookNames:string[]   ;
 };
 

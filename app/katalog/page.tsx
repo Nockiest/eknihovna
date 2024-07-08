@@ -14,7 +14,7 @@ import { genUniqueBookCount } from "@/utils/getBookCount";
 import { getBookNames } from "@/utils/getBookNames";
 
 const KatalogPage = () => {
-  // const [books, setBooks] = useState<Book[]>([]);
+  const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
     author: [],
@@ -30,9 +30,7 @@ const KatalogPage = () => {
     category: [],
     author: [],
   });
-  const [query, setQuery] = useState<string  >('');
-
-
+  // const [query, setQuery] = useState<string  >('');
   const [ bookNames,setBookNames] = useState<string[]>([]) //useMemo(() => getBookNames(), []);
   const [totalBookNum, setTotalBookNum] = useState<number >(0)
   //= useMemo(() => genUniqueBookCount(), []);
@@ -53,7 +51,7 @@ const KatalogPage = () => {
         const newBooks = await getBooksByQuery();
         const  bookNames =  await fetchUniqueValues('name')
         setTotalBookNum(bookNames.length)
-        // setBooks(newBooks);
+        setBooks(newBooks);
         setBookNames(bookNames);
         await Promise.all([
           fetchUniqueFilterCol("genres"),
@@ -102,11 +100,10 @@ const KatalogPage = () => {
         filters, // currently active filters
         setFilters,
         totalBookNum,
-        // books,
+        books,
         // setBooks,
         filterValues, // possible filter values
-        query,
-        setQuery,
+
         bookNames,
       }}
     >
