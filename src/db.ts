@@ -4,6 +4,7 @@ import xlsx from "xlsx";
 import fs from "fs";
 import { flattenIfArrayOfArrays } from "./utils";
 import { pool } from "./pool";
+import { Filters } from "./types";
 dotenv.config();
 // Create a new Pool instance (recommended for handling multiple connections)
 // export const pool = new Pool({
@@ -13,7 +14,7 @@ dotenv.config();
 //   password: process.env.PSQL_PASSWORD,
 //   database: process.env.DB_NAME,
 // });
- 
+
 export const query = async (text, params = []) => {
   const client = await pool.connect();
   try {
@@ -271,4 +272,54 @@ export const extractValuesFromArrayColumn = async (
   } finally {
     client.release();
   }
+};
+
+
+export const checkIfIgnoredValue = (value: any) => {
+  if (
+    value === null ||
+    value === "" ||
+    value === false ||
+    (Array.isArray(value) && value.length === 0)
+  ) {
+    return true;
+  }
+};
+/**
+ * Builds a SQL filter query based on the provided filters.
+ *
+ * @param {Filters} filters - An object containing filter key-value pairs.
+ * @returns {Object} An object containing the SQL WHERE clause and query parameters.
+ */
+export const buildFilterQuery = (filters: Filters) => {
+  const queryParams: any[] = [];
+  const conditions: string[] = [];
+  Object.keys(filters).forEach((key) => {
+    const value = filters[key];
+
+    if (checkIfIgnoredValue(value)) {
+      return;
+    }
+
+    if (Array.isArray(value)) {
+      if (key === "genres") {
+        // Adjust these column names based on your schema
+        // Assuming DB column is an array and filter is an array
+        queryParams.push(value);
+        conditions.push(`${key} && $${queryParams.length}::text[]`);
+      } else {
+        // Assuming DB column is a simple value and filter is an array
+        queryParams.push(value);
+        conditions.push(`${key} = ANY($${queryParams.length}::text[])`);
+      }
+    } else {
+      // Assuming DB column is a simple value and filter is a simple value
+      queryParams.push(value);
+      conditions.push(`${key} = $${queryParams.length}`);
+    }
+  });
+
+  const whereClause =
+    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+  return { whereClause, queryParams };
 };

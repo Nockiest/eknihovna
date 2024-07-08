@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = void 0;
+exports.buildFilterQuery = exports.checkIfIgnoredValue = exports.extractValuesFromArrayColumn = exports.connectAndQuery = exports.fetchAndCreateExcel = exports.convertQueryResToJson = exports.insertExcelDataToPostgres = exports.query = void 0;
 const dotenv_1 = __importDefault(require("dotenv"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const utils_1 = require("./utils");
@@ -249,3 +249,49 @@ const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void
     }
 });
 exports.extractValuesFromArrayColumn = extractValuesFromArrayColumn;
+const checkIfIgnoredValue = (value) => {
+    if (value === null ||
+        value === "" ||
+        value === false ||
+        (Array.isArray(value) && value.length === 0)) {
+        return true;
+    }
+};
+exports.checkIfIgnoredValue = checkIfIgnoredValue;
+/**
+ * Builds a SQL filter query based on the provided filters.
+ *
+ * @param {Filters} filters - An object containing filter key-value pairs.
+ * @returns {Object} An object containing the SQL WHERE clause and query parameters.
+ */
+const buildFilterQuery = (filters) => {
+    const queryParams = [];
+    const conditions = [];
+    Object.keys(filters).forEach((key) => {
+        const value = filters[key];
+        if ((0, exports.checkIfIgnoredValue)(value)) {
+            return;
+        }
+        if (Array.isArray(value)) {
+            if (key === "genres") {
+                // Adjust these column names based on your schema
+                // Assuming DB column is an array and filter is an array
+                queryParams.push(value);
+                conditions.push(`${key} && $${queryParams.length}::text[]`);
+            }
+            else {
+                // Assuming DB column is a simple value and filter is an array
+                queryParams.push(value);
+                conditions.push(`${key} = ANY($${queryParams.length}::text[])`);
+            }
+        }
+        else {
+            // Assuming DB column is a simple value and filter is a simple value
+            queryParams.push(value);
+            conditions.push(`${key} = $${queryParams.length}`);
+        }
+    });
+    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+    return { whereClause, queryParams };
+};
+exports.buildFilterQuery = buildFilterQuery;

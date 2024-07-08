@@ -1,4 +1,3 @@
-// make sure you run npx tsc -w before using this file
 import express, { Request, Response } from "express";
 import cors from "cors";
 import xlsx from "xlsx";
@@ -7,22 +6,21 @@ import multer from "multer";
 import path from "path";
 import fs from "fs";
 import {
+  buildFilterQuery,
   connectAndQuery,
   extractValuesFromArrayColumn,
   fetchAndCreateExcel,
   insertExcelDataToPostgres,
   query,
 } from "./db";
-// import bcrypt from 'bcrypt';
+import bcrypt from 'bcrypt';
 import bodyParser from "body-parser";
 import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 import { Book, Filters } from "./types";
-import {
-  checkResultStartWithQuery,
-  checkSearchRelevant,
-  getSimilarity,
-} from "./searchinUtils";
-import { isFiltersType } from "./utils";
+
+// make sure you run npx tsc -w before using this file
+
+
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -40,69 +38,21 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 const defaultQuery = "SELECT * FROM knihy";
-const checkIfIgnoredValue = (value: any) => {
-  if (
-    value === null ||
-    value === "" ||
-    value === false ||
-    (Array.isArray(value) && value.length === 0)
-  ) {
-    return true;
-  }
-};
-/**
- * Builds a SQL filter query based on the provided filters.
- *
- * @param {Filters} filters - An object containing filter key-value pairs.
- * @returns {Object} An object containing the SQL WHERE clause and query parameters.
- */
-const buildFilterQuery = (filters: Filters) => {
-  const queryParams: any[] = [];
-  const conditions: string[] = [];
-  Object.keys(filters).forEach((key) => {
-    const value = filters[key];
-
-    if (checkIfIgnoredValue(value)) {
-      return;
-    }
-
-    if (Array.isArray(value)) {
-      if (key === "genres") {
-        // Adjust these column names based on your schema
-        // Assuming DB column is an array and filter is an array
-        queryParams.push(value);
-        conditions.push(`${key} && $${queryParams.length}::text[]`);
-      } else {
-        // Assuming DB column is a simple value and filter is an array
-        queryParams.push(value);
-        conditions.push(`${key} = ANY($${queryParams.length}::text[])`);
-      }
-    } else {
-      // Assuming DB column is a simple value and filter is a simple value
-      queryParams.push(value);
-      conditions.push(`${key} = $${queryParams.length}`);
-    }
-  });
-
-  const whereClause =
-    conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-  return { whereClause, queryParams };
-};
 
 
 app.post("/bookList", async (req, res) => {
-  const { filters } = req.body;
+  const { filters, page = 1, limit = 10 } = req.body;
   let sqlQuery = "SELECT DISTINCT name FROM knihy";
 
   if (!filters) {
     return res.status(400).json({ error: "Server didn't receive filters" });
   }
   const { whereClause, queryParams } = buildFilterQuery(filters);
-  sqlQuery += ` ${whereClause}`;
-
-  // console.log("SQL Query:", sqlQuery);
-  // console.log("Query Params:", queryParams);
-  // console.log("Filters:", filters);
+  sqlQuery += ` ${whereClause} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
+  console.log(sqlQuery)
+  // Calculate offset
+  const offset = (page - 1) * limit;
+  queryParams.push(limit, offset);
 
   try {
     const result = await query(sqlQuery, queryParams);
@@ -112,27 +62,41 @@ app.post("/bookList", async (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
+// app.post("/bookList", async (req, res) => {
+//   const { filters } = req.body;
+//   let sqlQuery = "SELECT DISTINCT name FROM knihy";
+
+//   if (!filters) {
+//     return res.status(400).json({ error: "Server didn't receive filters" });
+//   }
+//   const { whereClause, queryParams } = buildFilterQuery(filters);
+//   sqlQuery += ` ${whereClause}`;
+
+//   // console.log("SQL Query:", sqlQuery);
+//   // console.log("Query Params:", queryParams);
+//   // console.log("Filters:", filters);
+
+//   try {
+//     const result = await query(sqlQuery, queryParams);
+//     res.json(result.rows);
+//   } catch (error) {
+//     console.error("Error executing search query:", error);
+//     res.status(500).json({ error: "Internal Server Error" });
+//   }
+// });
 app.post("/authenticate", (req, res) => {
   const { password } = req.body;
-  console.log(password, password.trim() === process.env.UPLOAD_PASSWORD);
 
   if (!password) {
     return res.status(400).json({ error: "vyžadováno heslo" });
   }
-
-  if (password === process.env.UPLOAD_PASSWORD) {
-    res.status(200).json({ message: "Uživatel autorizován" });
-  } else {
-    return res.status(401).json({ error: "Špatné heslo" });
-  }
-  // bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-  //   if (err || !result) {
-  //     return res.status(401).json({ error: 'Špatné heslo' });
-  //   }
-
+  bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
+    if (err || !result) {
+      return res.status(401).json({ error: 'Špatné heslo' });
+    }
   // Password correct, return success
-  //   res.status(200).json({ message: 'Uživatel autorizován' });
-  // });
+    res.status(200).json({ message: 'Uživatel autorizován' });
+  });
 });
 app.get("/getUniqueValues", async (req, res) => {
   const { columnName } = req.query; // Use req.query to get query parameters
