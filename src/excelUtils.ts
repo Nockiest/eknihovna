@@ -3,40 +3,12 @@ import fs from "fs";
 const xlsx = require("xlsx");
 const { v4: uuidv4 } = require("uuid");
 
-export const assignIds = (
-  excelUrl: string,
-  ignoreHeader: boolean = true,
-  idColumn: string = "A",
-  numberOfRows: number = 10
-) => {
-  // Load the Excel file
-  const knihyURL = process.env.knihyURL;
-  const workbook = xlsx.readFile(knihyURL);
-
-  // Get the first sheet name
-  const sheetName = workbook.SheetNames[0];
-
-  // Get the worksheet
+export const loadExcelSheet = (filePath: string) => {
+  const workbook = xlsx.readFile(filePath);
+  const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
   const worksheet = workbook.Sheets[sheetName];
-
-  // Fill the specified column with UUIDs
-  for (let i = ignoreHeader ? 2 : 1; i <= numberOfRows; i++) {
-    const cellAddress = `A${i}`;
-    worksheet[cellAddress] = { t: idColumn, v: uuidv4() };
-  }
-
-  // Write the updated workbook to a new file
-  xlsx.writeFile(workbook, excelUrl);
-
-  // Fill the specified column with UUIDs
-  for (let i = ignoreHeader ? 2 : 1; i <= numberOfRows; i++) {
-    const cellAddress = `A${i}`;
-    worksheet[cellAddress] = { t: idColumn, v: uuidv4() };
-  }
-
-  // Write the updated workbook to a new file
-  xlsx.writeFile(workbook, excelUrl);
-};
+  return { workbook, sheetName, worksheet };
+}
 
 /**
  * Copies all cells from a source Excel file to a destination Excel file.
@@ -46,7 +18,7 @@ export const assignIds = (
 export function copyExcelFile(sourceFilePath, destFilePath) {
   try {
     // Read the source Excel file
-    const sourceWorkbook = xlsx.readFile(sourceFilePath);
+    const {workbook:sourceWorkbook} = loadExcelSheet(sourceFilePath )
 
     // Create a new workbook for the destination file
     const destWorkbook = xlsx.utils.book_new();
@@ -71,9 +43,7 @@ export function copyExcelFile(sourceFilePath, destFilePath) {
 
 export const readExcelFile = (url: string) => {
   try {
-    const workbook = xlsx.readFile(url);
-    const sheetName = workbook.SheetNames[0];
-    const worksheet = workbook.Sheets[sheetName];
+    const {workbook,sheetName, worksheet} = loadExcelSheet(url);
     const data = xlsx.utils.sheet_to_json(worksheet);
     return data;
   } catch (error) {
@@ -91,7 +61,7 @@ export const excelWordsToBool = (worksheet, columnName) => {
     header: 1,
     defval: null,
   });
-  const truthyvalues = ["yes", "true", true, 1, "ano"];
+  const truthyvalues = ["yes", "true", true,'dostupný', 1, "ano"];
   const header = jsonData[0];
   const columnIndex = header.findIndex((col) => col === columnName);
 
@@ -156,25 +126,3 @@ export const saveExcelFile = async () => {
     console.error("Error creating Excel file:", error);
   }
 };
-// // Convert JSON back to sheet
-// const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
-// workbook.Sheets[sheetName] = newWorksheet;
-
-// // Write the updated workbook to a new file
-// const updatedFilePath = path.join(__dirname, 'uploads', `updated_${req.file.originalname}`);
-// xlsx.writeFile(workbook, updatedFilePath);
-
-// // Send response with the updated file path
-// res.status(200).json({ message: 'Values processed and file updated successfully', filePath: updatedFilePath });
-
-// // Clean up: Remove the uploaded file from the temporary storage
-// fs.unlinkSync(filePath);
-// } catch (error) {
-// console.error('Error processing data:', error);
-// res.status(500).json({ error: 'Internal Server Error' });
-// }
-
-// Example usage
-// const sourceFilePath = 'path/to/source/file.xlsx';
-// const destFilePath = 'path/to/dest/file.xlsx';
-// copyExcelFile(sourceFilePath, destFilePath);

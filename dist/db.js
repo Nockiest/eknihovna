@@ -17,15 +17,8 @@ const dotenv_1 = __importDefault(require("dotenv"));
 const xlsx_1 = __importDefault(require("xlsx"));
 const utils_1 = require("./utils");
 const pool_1 = require("./pool");
+const excelUtils_1 = require("./excelUtils");
 dotenv_1.default.config();
-// Create a new Pool instance (recommended for handling multiple connections)
-// export const pool = new Pool({
-//   host: process.env.DB_HOST,
-//   port: parseInt(process.env.DB_PORT, 10),
-//   user: process.env.DB_USER,
-//   password: process.env.PSQL_PASSWORD,
-//   database: process.env.DB_NAME,
-// });
 const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void 0, function* (text, params = []) {
     const client = yield pool_1.pool.connect();
     try {
@@ -37,32 +30,10 @@ const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void
     }
 });
 exports.query = query;
-// export async function findArrayColumns(db: Pool = pool) {
-//   const client = await db.connect();
-//   try {
-//     const query = `
-//       SELECT column_name
-//       FROM information_schema.columns
-//       WHERE table_schema = 'public'
-//         AND data_type LIKE '%[]%';
-//     `;
-//     const result = await client.query(query);
-//     console.log(result);
-//     const arrayColumns = result.rows.map(row => row.column_name);
-//     return arrayColumns;
-//   } catch (error) {
-//     console.error('Error finding array columns:', error);
-//     return [];
-//   } finally {
-//     client.release();
-//   }
-// }
 const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Read the Excel file
-        const workbook = xlsx_1.default.readFile(filePath);
-        const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
-        const worksheet = workbook.Sheets[sheetName];
+        const { worksheet } = (0, excelUtils_1.loadExcelSheet)(filePath);
         const jsonData = xlsx_1.default.utils.sheet_to_json(worksheet, {
             header: 1,
             defval: null,

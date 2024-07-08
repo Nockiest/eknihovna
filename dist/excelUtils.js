@@ -12,35 +12,18 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.saveExcelFile = exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.assignIds = void 0;
+exports.saveExcelFile = exports.extractExcelWorksheet = exports.fillMissingIds = exports.excelWordsToBool = exports.readExcelFile = exports.copyExcelFile = exports.loadExcelSheet = void 0;
 const db_1 = require("./db");
 const fs_1 = __importDefault(require("fs"));
 const xlsx = require("xlsx");
 const { v4: uuidv4 } = require("uuid");
-const assignIds = (excelUrl, ignoreHeader = true, idColumn = "A", numberOfRows = 10) => {
-    // Load the Excel file
-    const knihyURL = process.env.knihyURL;
-    const workbook = xlsx.readFile(knihyURL);
-    // Get the first sheet name
-    const sheetName = workbook.SheetNames[0];
-    // Get the worksheet
+const loadExcelSheet = (filePath) => {
+    const workbook = xlsx.readFile(filePath);
+    const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
     const worksheet = workbook.Sheets[sheetName];
-    // Fill the specified column with UUIDs
-    for (let i = ignoreHeader ? 2 : 1; i <= numberOfRows; i++) {
-        const cellAddress = `A${i}`;
-        worksheet[cellAddress] = { t: idColumn, v: uuidv4() };
-    }
-    // Write the updated workbook to a new file
-    xlsx.writeFile(workbook, excelUrl);
-    // Fill the specified column with UUIDs
-    for (let i = ignoreHeader ? 2 : 1; i <= numberOfRows; i++) {
-        const cellAddress = `A${i}`;
-        worksheet[cellAddress] = { t: idColumn, v: uuidv4() };
-    }
-    // Write the updated workbook to a new file
-    xlsx.writeFile(workbook, excelUrl);
+    return { workbook, sheetName, worksheet };
 };
-exports.assignIds = assignIds;
+exports.loadExcelSheet = loadExcelSheet;
 /**
  * Copies all cells from a source Excel file to a destination Excel file.
  * @param {string} sourceFilePath - The path to the source Excel file.
@@ -49,7 +32,7 @@ exports.assignIds = assignIds;
 function copyExcelFile(sourceFilePath, destFilePath) {
     try {
         // Read the source Excel file
-        const sourceWorkbook = xlsx.readFile(sourceFilePath);
+        const { workbook: sourceWorkbook } = (0, exports.loadExcelSheet)(sourceFilePath);
         // Create a new workbook for the destination file
         const destWorkbook = xlsx.utils.book_new();
         // Loop through each sheet in the source workbook
@@ -70,9 +53,7 @@ function copyExcelFile(sourceFilePath, destFilePath) {
 exports.copyExcelFile = copyExcelFile;
 const readExcelFile = (url) => {
     try {
-        const workbook = xlsx.readFile(url);
-        const sheetName = workbook.SheetNames[0];
-        const worksheet = workbook.Sheets[sheetName];
+        const { workbook, sheetName, worksheet } = (0, exports.loadExcelSheet)(url);
         const data = xlsx.utils.sheet_to_json(worksheet);
         return data;
     }
@@ -91,7 +72,7 @@ const excelWordsToBool = (worksheet, columnName) => {
         header: 1,
         defval: null,
     });
-    const truthyvalues = ["yes", "true", true, 1, "ano"];
+    const truthyvalues = ["yes", "true", true, 'dostupný', 1, "ano"];
     const header = jsonData[0];
     const columnIndex = header.findIndex((col) => col === columnName);
     if (columnIndex === -1) {
@@ -152,21 +133,3 @@ const saveExcelFile = () => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.saveExcelFile = saveExcelFile;
-// // Convert JSON back to sheet
-// const newWorksheet = xlsx.utils.aoa_to_sheet(jsonData);
-// workbook.Sheets[sheetName] = newWorksheet;
-// // Write the updated workbook to a new file
-// const updatedFilePath = path.join(__dirname, 'uploads', `updated_${req.file.originalname}`);
-// xlsx.writeFile(workbook, updatedFilePath);
-// // Send response with the updated file path
-// res.status(200).json({ message: 'Values processed and file updated successfully', filePath: updatedFilePath });
-// // Clean up: Remove the uploaded file from the temporary storage
-// fs.unlinkSync(filePath);
-// } catch (error) {
-// console.error('Error processing data:', error);
-// res.status(500).json({ error: 'Internal Server Error' });
-// }
-// Example usage
-// const sourceFilePath = 'path/to/source/file.xlsx';
-// const destFilePath = 'path/to/dest/file.xlsx';
-// copyExcelFile(sourceFilePath, destFilePath);

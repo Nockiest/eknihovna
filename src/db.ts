@@ -5,15 +5,8 @@ import fs from "fs";
 import { flattenIfArrayOfArrays } from "./utils";
 import { pool } from "./pool";
 import { Filters } from "./types";
+import {   loadExcelSheet } from "./excelUtils";
 dotenv.config();
-// Create a new Pool instance (recommended for handling multiple connections)
-// export const pool = new Pool({
-//   host: process.env.DB_HOST,
-//   port: parseInt(process.env.DB_PORT, 10),
-//   user: process.env.DB_USER,
-//   password: process.env.PSQL_PASSWORD,
-//   database: process.env.DB_NAME,
-// });
 
 export const query = async (text, params = []) => {
   const client = await pool.connect();
@@ -25,38 +18,13 @@ export const query = async (text, params = []) => {
   }
 };
 
-// export async function findArrayColumns(db: Pool = pool) {
-//   const client = await db.connect();
-
-//   try {
-//     const query = `
-//       SELECT column_name
-//       FROM information_schema.columns
-//       WHERE table_schema = 'public'
-//         AND data_type LIKE '%[]%';
-//     `;
-//     const result = await client.query(query);
-//     console.log(result);
-//     const arrayColumns = result.rows.map(row => row.column_name);
-//     return arrayColumns;
-//   } catch (error) {
-//     console.error('Error finding array columns:', error);
-//     return [];
-//   } finally {
-//     client.release();
-//   }
-// }
-
-
 export const insertExcelDataToPostgres = async (
   filePath: string,
   tableName: string
 ): Promise<void> => {
   try {
     // Read the Excel file
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0]; // Assuming data is in the first sheet
-    const worksheet = workbook.Sheets[sheetName];
+    const { worksheet} = loadExcelSheet (filePath)
     const jsonData: any[][] = xlsx.utils.sheet_to_json(worksheet, {
       header: 1,
       defval: null,

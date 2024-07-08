@@ -47,7 +47,7 @@ app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         return res.status(400).json({ error: "Server didn't receive filters" });
     }
     if (page <= 0) {
-        return res.status(400).json({ error: "page number to low" });
+        return {};
     }
     const { whereClause, queryParams } = (0, db_1.buildFilterQuery)(filters);
     sqlQuery += ` ${whereClause} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
@@ -64,25 +64,6 @@ app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* 
         res.status(500).json({ error: "Internal Server Error" });
     }
 }));
-// app.post("/bookList", async (req, res) => {
-//   const { filters } = req.body;
-//   let sqlQuery = "SELECT DISTINCT name FROM knihy";
-//   if (!filters) {
-//     return res.status(400).json({ error: "Server didn't receive filters" });
-//   }
-//   const { whereClause, queryParams } = buildFilterQuery(filters);
-//   sqlQuery += ` ${whereClause}`;
-//   // console.log("SQL Query:", sqlQuery);
-//   // console.log("Query Params:", queryParams);
-//   // console.log("Filters:", filters);
-//   try {
-//     const result = await query(sqlQuery, queryParams);
-//     res.json(result.rows);
-//   } catch (error) {
-//     console.error("Error executing search query:", error);
-//     res.status(500).json({ error: "Internal Server Error" });
-//   }
-// });
 app.post("/authenticate", (req, res) => {
     const { password } = req.body;
     if (!password) {
