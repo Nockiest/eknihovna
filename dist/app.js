@@ -42,12 +42,12 @@ const upload = (0, multer_1.default)({ storage });
 const defaultQuery = "SELECT * FROM knihy";
 app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { filters, page = 1, limit = 10 } = req.body;
-    let sqlQuery = "SELECT DISTINCT name FROM knihy";
+    let sqlQuery = "SELECT DISTINCT ON (name) * FROM knihy";
     if (!filters) {
         return res.status(400).json({ error: "Server didn't receive filters" });
     }
     if (page <= 0) {
-        return {};
+        return res.status(400).json({ error: "page number was set to 0" });
     }
     const { whereClause, queryParams } = (0, db_1.buildFilterQuery)(filters);
     sqlQuery += ` ${whereClause} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
@@ -61,6 +61,23 @@ app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
     catch (error) {
         console.error("Error executing search query:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+}));
+app.get("/uniqueNamesCount", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const sqlQuery = "SELECT COUNT(DISTINCT name) AS uniqueNamesCount FROM knihy";
+    try {
+        const result = yield (0, db_1.query)(sqlQuery);
+        if (result.rows.length > 0) {
+            // @ts-ignore
+            res.json(result.rows[0].uniquenamescount);
+        }
+        else {
+            res.status(404).json({ error: "No data found" });
+        }
+    }
+    catch (error) {
+        console.error("Error executing count query:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 }));
