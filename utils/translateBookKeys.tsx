@@ -14,9 +14,5 @@ export function translateBookKey(bookKey: keyof Book ): string {
         formaturita: 'maturitní',
         bookCoverURL: 'URL_obálky'
     };
-
-    const translatedBook: Partial<Book> = {};
-
-
     return translationDict[bookKey]
 }

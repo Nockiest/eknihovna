@@ -40,9 +40,6 @@ const CustomHamburger: React.FC<CustomHamburgerProps> = ({
       aria-label={ariaLabel}
     >
       <HamburgerSpan className="hamburger z-2  mt-6 mr-6 block relative my-4 mx-2       h-1.5 rounded-full transition-transform duration-250 ease-in-out   ">
-        {/* <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out"></span>
-        <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out mt-3.5 absolute"></span>
-        <span className="block bg-secondary-300 w-12 h-1.5 rounded-full transition-transform duration-250 ease-in-out mb-3.5 absolute"></span> */}
       </HamburgerSpan>
     </CustomIconButton>
   );

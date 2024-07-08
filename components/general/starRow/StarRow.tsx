@@ -1,7 +1,10 @@
 import { Box } from "@mui/material";
-import StarEmpty from "./star-empty.svg";
-import StarFull from "./star-full.svg";
+// import StarEmpty from "./star-empty.svg";
+// import StarFull from "./star-full.svg";
 import Image from "next/image";
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
+
 interface StarRowProps {
   rating: number;
 }
@@ -18,19 +21,15 @@ const StarRow: React.FC<StarRowProps> = ({ rating }) => {
       width="100%"
       sx={{ padding: "0 12px" }}
     >
-      {[...Array(5)].map((key, index) => (
-        <Image
-          key={key}
-          src={index < filledStars ? StarFull : StarEmpty}
-          alt={"star"}
-          height={32}
-          width={32}
-        />
+      {[...Array(5)].map((_, index) => (
+        index < filledStars ? (
+          <StarIcon key={index} style={{ fontSize: 32 }} />
+        ) : (
+          <StarBorderIcon key={index} style={{ fontSize: 32 }} />
+        )
       ))}
     </Box>
   );
 };
 
 export default StarRow;
-
- 

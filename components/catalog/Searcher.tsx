@@ -31,20 +31,37 @@ export const Searcher: React.FC<SearcherProps> = () => {
     value: string | boolean | null
   ) => {
     setFilters((prevFilters: Filters) => {
-      if (typeof value === "boolean" || value === null) {
+      console.log(prevFilters[name], Array.isArray(prevFilters[name]), value);
+      if (
+        (typeof value === "boolean" || value === null) &&
+        !Array.isArray(prevFilters[name])
+      ) {
         return {
           ...prevFilters,
           [name]: !value ? null : value,
         };
-      } else if (Array.isArray(prevFilters[name])) {
+      }
+      if (Array.isArray(prevFilters[name])) {
         const arrayValue = prevFilters[name] as string[];
+        if (
+          typeof value === "boolean" ||
+          value === null ||
+          value === undefined
+        ) {
+          console.error("value has unexpected value: " + value);
+          return {
+            ...prevFilters,
+            [name]: [],
+          };
+        }
+
         if (!arrayValue.includes(value)) {
           return {
             ...prevFilters,
             [name]: [...arrayValue, value],
           };
         } else {
-          return prevFilters; // Return the previous state if the value already exists
+          return prevFilters;
         }
       } else {
         return {
@@ -60,18 +77,19 @@ export const Searcher: React.FC<SearcherProps> = () => {
     );
   };
   const removeFilter = (key: keyof Filters, value: string | boolean) => {
-    console.log(key , value )
     setFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
+      console.log(key, value, prevFilters[key]);
 
       if (Array.isArray(currentFilter)) {
         // Remove the specified value from the array
         const updatedArray = currentFilter.filter(
           (item: string) => item !== value
         );
+        console.log(updatedArray);
         return {
           ...prevFilters,
-          [key]: updatedArray.length > 0 ? updatedArray : null,
+          [key]: updatedArray,
         };
       } else {
         // Set the value under the key to null

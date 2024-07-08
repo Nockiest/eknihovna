@@ -76,11 +76,11 @@ const ExcelSheetUpdater = () => {
       {!isAuth ? (
         <PasswordHandler />
       ) : (
-        <div className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="w-full md:w-1/2 p-6 flex flex-col items-center">
-            <h2 className="text-xl font-semibold mb-4">
+        <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
+          <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
+            <Typography variant="h2" className="text-xl font-semibold mb-4">
               Stáhnout data ze serveru
-            </h2>
+            </Typography>
             <PrimaryButton onClick={fetchDataFromServer}>
               <Image
                 src={"icon/download.svg"}
@@ -90,11 +90,11 @@ const ExcelSheetUpdater = () => {
               />
               {/* Stáhnout data ze serveru */}
             </PrimaryButton>
-          </div>
+          </Box>
           <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
-            <h2 className="text-xl font-semibold mb-4">
+            <Typography variant="h2" className="text-xl font-semibold mb-4">
               Přepsat data na serveru
-            </h2>
+            </Typography>
 
             <form
               onSubmit={handleSubmit}
@@ -125,7 +125,7 @@ const ExcelSheetUpdater = () => {
               {responseMessage}
             </Typography>
 
-        </div>
+        </Box>
       )}
     </Box>
   );

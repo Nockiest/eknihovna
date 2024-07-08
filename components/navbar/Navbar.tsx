@@ -18,7 +18,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
   return (
     <Paper
       elevation={3}
-      className="p-2 h-full w-full mx-0 flex flex-col justify-center items-center z-10"
+      className="p-2 h-full w-full mx-0 flex flex-col justify-center items-center "
     >
       <Box className="z-3">
         {/* <CustomHamburger onClick={()=> setIsHamburgerOpen(!isHamburgerOpen)} ariaLabel="toggle navigation" /> */}
