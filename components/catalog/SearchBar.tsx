@@ -192,12 +192,12 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange }
   );
 
   const handleInputChange = useCallback(
-    (e: React.SyntheticEvent, newInputValue: string) => {
-      setQuery(newInputValue);
-      debouncedOnInputChange(newInputValue); // Update the input value when typing
-    },
-    [debouncedOnInputChange]
-  );
+        (e: React.SyntheticEvent, newInputValue: string) => {
+          setQuery(newInputValue);
+          debouncedOnInputChange(newInputValue); // Update the input value when typing
+        },
+        [debouncedOnInputChange]
+      );
   const filteredBookNames = bookNames.filter((bookName) => getRelevancy(bookName, query))
   //  Array.isArray(bookNames)
   //   ? bookNames.filter((bookName) => getRelevancy(bookName, query))
@@ -211,22 +211,23 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange }
         style={style}
         key={index}
         onClick={() => {
+          console.log('click',filteredBookNames[index])
           const selectedValue = filteredBookNames[index];
-          setQuery(selectedValue);
+          // setQuery(selectedValue);
           onInputChange(selectedValue);
         }}
       >
         {filteredBookNames[index]}
       </li>
     ),
-    [filteredBookNames, setQuery, onInputChange]
+    [filteredBookNames,  onInputChange]
   );
 
   return (
     <Autocomplete
       disablePortal
       id="combo-box-demo"
-      className="w-full"
+      className="w-full "
       options={filteredBookNames}
       groupBy={(option) => option[0]}
       value={query}
@@ -238,8 +239,8 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange }
         <FixedSizeList
           height={250}
           width="100%"
+          className="cursor-pointer"
           itemSize={46}
-          
           itemCount={filteredBookNames.length}
           {...props}
         >
