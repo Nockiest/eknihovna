@@ -36,8 +36,7 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const visiblePageNumbers = getVisiblePageNumbers();
   if (totalPages <= 1) {
-    return <h1>{totalPages} { totalEntries},...
-     { itemsPerPage}</h1>; // If there's only one page or no pages, don't render pagination
+    return  null  // If there's only one page or no pages, don't render pagination
   }
 
   if (totalPages <=5) {
