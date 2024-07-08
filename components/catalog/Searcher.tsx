@@ -76,31 +76,7 @@ export const Searcher: React.FC<SearcherProps> = () => {
       (option) => !filters[key]?.includes(option)
     );
   };
-  const removeFilter = (key: keyof Filters, value: string | boolean) => {
-    setFilters((prevFilters: Filters) => {
-      const currentFilter = prevFilters[key];
-      console.log(key, value, prevFilters[key]);
-
-      if (Array.isArray(currentFilter)) {
-        // Remove the specified value from the array
-        const updatedArray = currentFilter.filter(
-          (item: string) => item !== value
-        );
-        console.log(updatedArray);
-        return {
-          ...prevFilters,
-          [key]: updatedArray,
-        };
-      } else {
-        // Set the value under the key to null
-        return {
-          ...prevFilters,
-          [key]: null,
-        };
-      }
-    });
-  };
-
+  
   return (
     <Slide
       direction="up"
@@ -111,16 +87,16 @@ export const Searcher: React.FC<SearcherProps> = () => {
     >
       <Paper className={"relative"} elevation={3}>
         <IconButton
-          className="absolute top-0 right-0 m-2"
+          className="absolute top-0 overflow-y-auto right-0 m-2"
           onClick={() => {
             setOpenSearcher(!isOpenSearcher);
           }}
         >
           <Close />
         </IconButton>
-        <FilterLister filters={filters} removeFilter={removeFilter} />
+        {/* <FilterLister filters={filters} removeFilter={removeFilter} /> */}
 
-        <Box className="m-2">
+        <Box className="m-2 mt-8 center-flex flex-col mx-4">
           <SortedGroupedSelect
             options={getFilteredOptions("category")}
             label={"kategorie"}
