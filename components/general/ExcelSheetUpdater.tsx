@@ -121,12 +121,13 @@ const ExcelSheetUpdater = () => {
               </SecondaryButton>
             </form>
           </Box>
-            <Typography variant="body1" color="textSecondary">
-              {responseMessage}
-            </Typography>
+
 
         </Box>
       )}
+       <Typography variant="body1" className="m-2"  >
+              {responseMessage}
+            </Typography>
     </Box>
   );
 };
