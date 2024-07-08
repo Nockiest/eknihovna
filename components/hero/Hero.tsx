@@ -15,24 +15,27 @@ const Hero = () => {
   const toggleNav = () => {
     setIsHamburgerOpen(!isHamburgerOpen);
   };
+
   return (
     <HeaderContext.Provider
-    value={{
-      isHamburgerOpen,
-      setIsHamburgerOpen
-    }} >
-    <Box className={"w-full relative  flex flex-col align-center"}>
-      <CustomHamburger  onClick={toggleNav} ariaLabel="toggle navigation"  />
-      <Box className="w-auto h-64 -z-1">
-        <img
-          src="/img/books.jpg"
-          className="w-full h-full object-cover"
-          alt="Books"
-        />
+      value={{
+        isHamburgerOpen,
+        setIsHamburgerOpen,
+      }}
+    >
+      <Box className="w-full relative flex flex-col align-center">
+        <CustomHamburger onClick={toggleNav} ariaLabel="toggle navigation" />
+        <Box className="w-auto h-64 -z-1 relative">
+          <Image
+            src="/img/books.jpg"
+            layout="fill"
+            objectFit="cover"
+            alt="Books"
+          />
+        </Box>
+        <NavBar />
       </Box>
-      <NavBar />
-    </Box>
-     </HeaderContext.Provider>
+    </HeaderContext.Provider>
   );
 };
 
