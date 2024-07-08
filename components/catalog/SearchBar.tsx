@@ -60,14 +60,14 @@
 // };
 // export default SearchAutocomplete;
 
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, UIEventHandler } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 // import { makeStyles } from '@mui/styles';
 import { InputAdornment } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { debounce } from 'lodash';
-import { FixedSizeList } from 'react-window';
+import { FixedSizeList, ListOnScrollProps } from 'react-window';
 import getRelevancy from '@/utils/searchingUtils';
 
 // const useStyles = makeStyles({
@@ -123,7 +123,8 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange, 
     ),
     [filteredBookNames]
   );
-
+  const handleScroll = (  ) => {
+  };
   return (
     <Autocomplete
       disablePortal
@@ -135,14 +136,18 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = ({ onInputChange, 
       onInputChange={(e, newInputValue) => { handleInputChange(e, newInputValue) }}
       ListboxComponent={(props) => (
         <FixedSizeList
-          height={250}
-          width="100%"
-          itemSize={46}
-          itemCount={filteredBookNames.length}
-          {...props}
-        >
-          {renderRow}
-        </FixedSizeList>
+        height={250}
+        width="100%"
+        itemSize={46}
+        itemCount={filteredBookNames.length}
+        // @ts-ignore
+        onScroll={(props ) => {
+          console.log(props);
+        }}
+        {...props}
+      >
+        {renderRow}
+      </FixedSizeList>
       )}
       renderInput={(params) => (
         <TextField

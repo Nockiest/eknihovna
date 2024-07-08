@@ -40,7 +40,7 @@ const ExcelSheetUpdater = () => {
     // Create FormData object
     const formData = new FormData();
     formData.append("file", file); // Append the file to FormData
-    formData.append("password", password); // Append other form data as needed
+    // formData.append("password", password); // Append other form data as needed
 
     try {
       const response = await axios.post(`${knihyURL}/update`, formData, {
