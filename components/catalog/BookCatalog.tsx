@@ -32,40 +32,61 @@ const shownBooksBySize: Record<Breakpoint, number> = {
 const BookCatalog: React.FC<BookCatalogProps> = () => {
   const size = useCurrentBreakpoint() || "xs";
   const router = useRouter();
+  const pathname = usePathname();
   const {
     totalBookNum,
     isOpenSearcher,
     setOpenSearcher,
     filters,
     setFilters,
-    query,
-    setQuery,
+    bookNames,
   } = useSearchContext();
 
   const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
+  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page") || "1", 10) === 0 ? 1 : parseInt(searchParams.get("page") || "1", 10);
-
+  const page =
+    parseInt(searchParams.get("page") || "1", 10) === 0
+      ? 1
+      : parseInt(searchParams.get("page") || "1", 10);
+  const query = searchParams.get("query") || "";
   const getStartAndEndIndexes = (page: number, itemsPerPage: number) => {
     const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
     const newLastBookIndex = page * itemsPerPage;
     return [indexOfFirstBook, newLastBookIndex];
   };
+  const changePage = (newPage: number) => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("page", newPage.toString());
+    // changePage(currentQuery)
+    router.push(`${pathname}?${currentQuery.toString()}`);
+  };
 
+  // set visible books from filtered books
+  useEffect(() => {
+    changePage(1);
+    const [startIndex, endIndex] = getStartAndEndIndexes(
+      1,
+      shownBooksBySize[size]
+    );
+    const visibleBooks = filteredBooks
+      .filter((book: Book) => getRelevancy(book.name, query))
+      .slice(startIndex, endIndex);
+    console.log(startIndex, endIndex, visibleBooks, filteredBooks);
+    setShownBooks(visibleBooks);
+  }, [filteredBooks, page, router, query, size]);
+
+  // fetch books by filter
   useEffect(() => {
     const fetchBooks = async () => {
       setLoading(true);
       setError(null);
       try {
-        const newBooks = await getBooksByQuery(
-          filters,
-          page,
-          shownBooksBySize[size]
-        );
+        const newBooks = await getBooksByQuery(filters);
+        setFilteredBooks(newBooks);
         console.log(newBooks);
-        setShownBooks(newBooks.filter((book) => getRelevancy(book.name, query)));
       } catch (err: any) {
         console.log(err?.message);
         setError(err?.message || "unknown error occurred");
@@ -74,12 +95,14 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       }
     };
     fetchBooks();
-  }, [filters, page, router,  size]);
+  }, [filters]);
 
   useEffect(() => {
-    router.push("/katalog?page=1"); // reset page number on every query
-    setShownBooks(prev => prev.filter((book:Book) => getRelevancy(book.name, query)));
-  }, [query])
+    changePage(1); // reset page number on every query
+    setFilteredBooks((prev) =>
+      prev.filter((book: Book) => getRelevancy(book.name, query))
+    );
+  }, [query]);
 
   // Memoize the shownBooks to avoid unnecessary recalculations
   const memoizedShownBooks = useMemo(() => shownBooks, [shownBooks]);
@@ -89,11 +112,18 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     if (size) {
       const newItemsPerPage = shownBooksBySize[size];
       const pageNum = page === 0 ? 1 : page;
-      const [indexOfFirstBook] = getStartAndEndIndexes(pageNum, newItemsPerPage);
+      const [indexOfFirstBook] = getStartAndEndIndexes(
+        pageNum,
+        newItemsPerPage
+      );
       const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
       router.push(
         `/katalog?page=${Math.min(
-          Math.ceil(typeof totalBookNum === 'number' ? totalBookNum : 0 / newItemsPerPage),
+          Math.ceil(
+            typeof totalBookNum === "number"
+              ? totalBookNum
+              : 0 / newItemsPerPage
+          ),
           newCurrentPage + 1 || 1
         )}`
       );
@@ -143,7 +173,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
-        <SearchAutocomplete onInputChange={(e) => setQuery(e)} />
+        <SearchAutocomplete />
       </Box>
 
       {memoizedShownBooks.length > 0 ? (
@@ -162,7 +192,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
               gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
             }}
           >
-            {memoizedShownBooks.map((book:Book, index: any) => (
+            {memoizedShownBooks.map((book: Book, index: any) => (
               <Grid
                 sx={{
                   margin: "0 auto",
@@ -183,48 +213,54 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
               </Grid>
             ))}
           </Grid>
-            <h1>{totalBookNum} {(totalBookNum instanceof Promise) .toString()}  ... </h1>
+          <h1>
+            {totalBookNum} {(totalBookNum instanceof Promise).toString()} ...{" "}
+          </h1>
           <PaginationLinker
-            totalEntries={totalBookNum instanceof Promise ? 0: totalBookNum }
+            totalEntries={
+              bookNames.filter((name) => getRelevancy(name, query)).length
+            }
             itemsPerPage={shownBooksBySize[size]}
             folderName="katalog"
           />
         </Box>
       ) : (
-        <Typography variant="h6" sx={{ margin: '2rem' }}>Žádné knihy nenalezeny</Typography>
+        <Typography variant="h6" sx={{ margin: "2rem" }}>
+          Žádné knihy nenalezeny
+        </Typography>
       )}
     </Box>
   );
 };
 
 export default BookCatalog;
-  // Fetch books on initial render
-  // useEffect(() => {
-  //   console.log('run')
-  //   router.push("/katalog?page=1"); // reset page number on every query
-  // }, [filters, router]);
-  // Update shown books based on currentPage and itemsPerPage
-  // useEffect(() => {
-  //   setNewBookSlice(page, shownBooksBySize[size], allBooks);
-  // }, [page, router, size, allBooks]);
+// Fetch books on initial render
+// useEffect(() => {
+//   console.log('run')
+//   router.push("/katalog?page=1"); // reset page number on every query
+// }, [filters, router]);
+// Update shown books based on currentPage and itemsPerPage
+// useEffect(() => {
+//   setNewBookSlice(page, shownBooksBySize[size], allBooks);
+// }, [page, router, size, allBooks]);
 
-    // const setNewBookSlice = (
-  //   page: number,
-  //   itemsPerPage: number,
-  //   totalBooks: Book[] | undefined
-  // ) => {
-  //   const [indexOfFirstBook, newLastBookIndex] = getStartAndEndIndexes(
-  //     page,
-  //     itemsPerPage
-  //   );
-  //   setShownBooks(
-  //     allBooks === undefined
-  //       ? []
-  //       : allBooks?.slice(indexOfFirstBook, newLastBookIndex)
-  //   );
-  // };
+// const setNewBookSlice = (
+//   page: number,
+//   itemsPerPage: number,
+//   totalBooks: Book[] | undefined
+// ) => {
+//   const [indexOfFirstBook, newLastBookIndex] = getStartAndEndIndexes(
+//     page,
+//     itemsPerPage
+//   );
+//   setShownBooks(
+//     allBooks === undefined
+//       ? []
+//       : allBooks?.slice(indexOfFirstBook, newLastBookIndex)
+//   );
+// };
 
-  //   useEffect(() =>{
+//   useEffect(() =>{
 //     async function fetchBoo()   {
 //       try {
 //         const newBooks = await getBooksByQuery(filters);
