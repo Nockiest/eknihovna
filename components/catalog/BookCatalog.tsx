@@ -60,7 +60,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   const changePage = (newPage: number) => {
     const currentQuery = new URLSearchParams(searchParams.toString());
     currentQuery.set("page", newPage.toString());
-    // changePage(currentQuery)
     router.push(`${pathname}?${currentQuery.toString()}`);
   };
 
@@ -74,9 +73,10 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     const visibleBooks = filteredBooks
       .filter((book: Book) => getRelevancy(book.name, query))
       .slice(startIndex, endIndex);
-    console.log(startIndex, endIndex, visibleBooks, filteredBooks);
+    console.log(startIndex, endIndex, visibleBooks, filteredBooks.length,filters);
     setShownBooks(visibleBooks);
   }, [filteredBooks, page, router, query, size]);
+
 
   // fetch books by filter
   useEffect(() => {
@@ -95,7 +95,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       }
     };
     fetchBooks();
-  }, [filters]);
+  }, [filters, query]);
 
   useEffect(() => {
     changePage(1); // reset page number on every query
@@ -176,7 +176,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
         <SearchAutocomplete />
       </Box>
 
-      {memoizedShownBooks.length > 0 ? (
+      {shownBooks.length > 0 ? (
         <Box className="w-full">
           <Grid
             container
@@ -192,7 +192,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
               gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
             }}
           >
-            {memoizedShownBooks.map((book: Book, index: any) => (
+            {shownBooks.map((book: Book, index: any) => (
               <Grid
                 sx={{
                   margin: "0 auto",
@@ -213,9 +213,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
               </Grid>
             ))}
           </Grid>
-          <h1>
-            {totalBookNum} {(totalBookNum instanceof Promise).toString()} ...{" "}
-          </h1>
           <PaginationLinker
             totalEntries={
               bookNames.filter((name) => getRelevancy(name, query)).length
