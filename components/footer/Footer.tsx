@@ -23,14 +23,10 @@ const Footer = () => {
             isAdmin={isAdmin}
             renderButton={renderButton}
           />
-          {/* {navRoutes.map((button, key) => (
-            <Link className="hover:text-gray-400" key={key} href={button.URL}>
-              {button.label}
-            </Link>
-          ))} */}
-          <Link className="hover:text-gray-400" href={"/upload"}>
+
+          {/* <Link className="hover:text-gray-400" href={"/upload"}>
             API
-          </Link>
+          </Link> */}
         </Box>
 
         {/* Social Media Links */}
