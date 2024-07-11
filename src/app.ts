@@ -13,13 +13,12 @@ import {
   insertExcelDataToPostgres,
   query,
 } from "./db";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 import bodyParser from "body-parser";
-import { excelWordsToBool, fillMissingIds } from "./excelUtils";
-import { Book, Filters } from "./types";
-
+import { excelWordsToBool, fillMissingIds, loadExcelSheet } from "./excelUtils";
+// const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken'
 // make sure you run npx tsc -w before using this file
-
 
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL;
@@ -39,21 +38,21 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 const defaultQuery = "SELECT * FROM knihy";
 
-
 app.post("/bookList", async (req, res) => {
   const { filters, page = 1, limit = 10 } = req.body;
   let sqlQuery = "SELECT DISTINCT ON (name) * FROM knihy";
 
-
   if (!filters) {
     return res.status(400).json({ error: "Server didn't receive filters" });
   }
-  if (page<=0) {
+  if (page <= 0) {
     return res.status(400).json({ error: "page number was set to 0" });
   }
   const { whereClause, queryParams } = buildFilterQuery(filters);
-  sqlQuery += ` ${whereClause} LIMIT $${queryParams.length + 1} OFFSET $${queryParams.length + 2}`;
-  console.log(sqlQuery,page , limit  )
+  sqlQuery += ` ${whereClause} LIMIT $${queryParams.length + 1} OFFSET $${
+    queryParams.length + 2
+  }`;
+  console.log(sqlQuery, page, limit);
   // Calculate offset
   const offset = (page - 1) * limit;
   queryParams.push(limit, offset);
@@ -70,10 +69,10 @@ app.post("/bookList", async (req, res) => {
 app.get("/uniqueNamesCount", async (req, res) => {
   const sqlQuery = "SELECT COUNT(DISTINCT name) AS uniqueNamesCount FROM knihy";
   try {
-    const result   = await query (sqlQuery);
+    const result = await query(sqlQuery);
     if (result.rows.length > 0) {
       // @ts-ignore
-      res.json( result.rows[0].uniquenamescount  );
+      res.json(result.rows[0].uniquenamescount);
     } else {
       res.status(404).json({ error: "No data found" });
     }
@@ -89,13 +88,17 @@ app.post("/authenticate", (req, res) => {
   if (!password) {
     return res.status(400).json({ error: "vyžadováno heslo" });
   }
-  bcrypt.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-    if (err || !result) {
-      return res.status(401).json({ error: 'Špatné heslo' });
+  bcrypt.compare(
+    password,
+    process.env.UPLOAD_PASSWORD_HASHED,
+    (err, result) => {
+      if (err || !result) {
+        return res.status(401).json({ error: "Špatné heslo" });
+      }
+      // Password correct, return success
+      res.status(200).json({ message: "Uživatel autorizován" });
     }
-  // Password correct, return success
-    res.status(200).json({ message: 'Uživatel autorizován' });
-  });
+  );
 });
 app.get("/getUniqueValues", async (req, res) => {
   const { columnName } = req.query; // Use req.query to get query parameters
@@ -130,7 +133,6 @@ app.get("/downloadExcel", async (req: Request, res: Response) => {
   }
 });
 
-
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
@@ -150,16 +152,11 @@ app.post("/update", upload.single("file"), async (req, res) => {
       throw new Error(`File not found at path: ${filePath}`);
     }
 
-    // Read the uploaded file
-    const workbook = xlsx.readFile(filePath);
-    const sheetName = workbook.SheetNames[0];
-    let worksheet = workbook.Sheets[sheetName];
-
+    let { worksheet } = loadExcelSheet(filePath);
     // Apply data transformations
     worksheet = excelWordsToBool(worksheet, "available");
     worksheet = excelWordsToBool(worksheet, "formaturita");
     worksheet = fillMissingIds(worksheet);
-    console.log("x");
     // Insert data into PostgreSQL
     await insertExcelDataToPostgres(filePath, "knihy"); // Assuming insertExcelDataToPostgres is async
 
@@ -188,3 +185,23 @@ app.post("/update", upload.single("file"), async (req, res) => {
     res.status(500).json({ error: errorMessage });
   }
 });
+
+app.post('/login', (req, res) => {
+  const { username, password } = req.body;
+  console.log(username, password);
+
+  if (username === 'admin' && password === process.env.JWT_SECRET) {
+    const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    console.log('passed');
+
+    // Set the cookie with the token
+    res.cookie('authToken', token, { httpOnly: true, maxAge: 3600 * 1000 });
+
+    return res.status(200).json({ message: 'Login successful', token });
+  }
+
+  return res.status(401).json({ message: 'Invalid credentials' });
+});
+// app.use((req, res) => {
+//   res.status(405).json({ message: 'Method not allowed' });
+// });

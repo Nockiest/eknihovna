@@ -14,7 +14,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const cors_1 = __importDefault(require("cors"));
-const xlsx_1 = __importDefault(require("xlsx"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
@@ -23,6 +22,8 @@ const db_1 = require("./db");
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
+// const jwt = require('jsonwebtoken');
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 // make sure you run npx tsc -w before using this file
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
@@ -88,10 +89,10 @@ app.post("/authenticate", (req, res) => {
     }
     bcrypt_1.default.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
         if (err || !result) {
-            return res.status(401).json({ error: 'Špatné heslo' });
+            return res.status(401).json({ error: "Špatné heslo" });
         }
         // Password correct, return success
-        res.status(200).json({ message: 'Uživatel autorizován' });
+        res.status(200).json({ message: "Uživatel autorizován" });
     });
 });
 app.get("/getUniqueValues", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -133,15 +134,11 @@ app.post("/update", upload.single("file"), (req, res) => __awaiter(void 0, void 
         if (!fs_1.default.existsSync(filePath)) {
             throw new Error(`File not found at path: ${filePath}`);
         }
-        // Read the uploaded file
-        const workbook = xlsx_1.default.readFile(filePath);
-        const sheetName = workbook.SheetNames[0];
-        let worksheet = workbook.Sheets[sheetName];
+        let { worksheet } = (0, excelUtils_1.loadExcelSheet)(filePath);
         // Apply data transformations
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, "available");
         worksheet = (0, excelUtils_1.excelWordsToBool)(worksheet, "formaturita");
         worksheet = (0, excelUtils_1.fillMissingIds)(worksheet);
-        console.log("x");
         // Insert data into PostgreSQL
         yield (0, db_1.insertExcelDataToPostgres)(filePath, "knihy"); // Assuming insertExcelDataToPostgres is async
         // Respond with success message
@@ -166,3 +163,18 @@ app.post("/update", upload.single("file"), (req, res) => __awaiter(void 0, void 
         res.status(500).json({ error: errorMessage });
     }
 }));
+app.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    console.log(username, password);
+    if (username === 'admin' && password === process.env.JWT_SECRET) {
+        const token = jsonwebtoken_1.default.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        console.log('passed');
+        // Set the cookie with the token
+        res.cookie('authToken', token, { httpOnly: true, maxAge: 3600 * 1000 });
+        return res.status(200).json({ message: 'Login successful', token });
+    }
+    return res.status(401).json({ message: 'Invalid credentials' });
+});
+// app.use((req, res) => {
+//   res.status(405).json({ message: 'Method not allowed' });
+// });

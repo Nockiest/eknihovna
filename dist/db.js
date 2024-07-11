@@ -33,7 +33,8 @@ exports.query = query;
 const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Read the Excel file
-        const { worksheet } = (0, excelUtils_1.loadExcelSheet)(filePath);
+        let { worksheet } = (0, excelUtils_1.loadExcelSheet)(filePath);
+        worksheet = (0, excelUtils_1.fillMissingIds)(worksheet);
         const jsonData = xlsx_1.default.utils.sheet_to_json(worksheet, {
             header: 1,
             defval: null,
@@ -65,31 +66,46 @@ const insertExcelDataToPostgres = (filePath, tableName) => __awaiter(void 0, voi
                     if (row.length !== headers.length) {
                         throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
                     }
-                    // Process each cell value based on its column type and trim it
-                    const processedRow = row.map((value, index) => {
-                        const columnName = headers[index];
-                        const trimmedValue = typeof value === 'string' ? value.trim() : value;
-                        if (columnTypes[columnName] === "ARRAY" ||
-                            columnTypes[columnName] === "text[]") {
-                            return trimmedValue
-                                ? `{${trimmedValue
-                                    .split(",")
-                                    .map((v) => `"${v.trim()}"`)
-                                    .join(",")}}`
-                                : null;
-                        }
-                        return trimmedValue;
-                    });
-                    // Construct the insert query with ON CONFLICT to handle upserts
-                    const insertQuery = `
+                    const processExcelRow = (row) => {
+                        return row.map((value, index) => {
+                            const columnName = headers[index];
+                            const trimmedValue = typeof value === 'string' ? value.trim() : value;
+                            if (columnTypes[columnName] === "ARRAY" ||
+                                columnTypes[columnName] === "text[]") {
+                                return trimmedValue
+                                    ? `{${trimmedValue
+                                        .split(",")
+                                        .map((v) => `"${v.trim()}"`)
+                                        .join(",")}}`
+                                    : null;
+                            }
+                            return trimmedValue;
+                        });
+                    };
+                    const insertRow = (row, headers) => __awaiter(void 0, void 0, void 0, function* () {
+                        const insertQuery = `
             INSERT INTO ${tableName} (${headers.join(", ")})
             VALUES (${headers.map((_, i) => `$${i + 1}`).join(", ")})
             ON CONFLICT (id) DO UPDATE SET ${headers
-                        .map((header, i) => `${header} = EXCLUDED.${header}`)
-                        .join(", ")}
+                            .map((header, i) => `${header} = EXCLUDED.${header}`)
+                            .join(", ")}
           `;
-                    // Execute the query
-                    yield client.query(insertQuery, processedRow);
+                        // Execute the query
+                        yield client.query(insertQuery, processedRow);
+                    });
+                    // Process each cell value based on its column type and trim it
+                    const processedRow = processExcelRow(row);
+                    yield insertRow(processedRow, headers);
+                    // Construct the insert query with ON CONFLICT to handle upserts
+                    // const insertQuery = `
+                    //   INSERT INTO ${tableName} (${headers.join(", ")})
+                    //   VALUES (${headers.map((_, i) => `$${i + 1}`).join(", ")})
+                    //   ON CONFLICT (id) DO UPDATE SET ${headers
+                    //     .map((header, i) => `${header} = EXCLUDED.${header}`)
+                    //     .join(", ")}
+                    // `;
+                    // // Execute the query
+                    // await client.query(insertQuery, processedRow);
                 }
                 catch (rowError) {
                     console.error("Error processing row:", rowError.message);

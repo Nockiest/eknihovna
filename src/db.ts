@@ -5,7 +5,7 @@ import fs from "fs";
 import { flattenIfArrayOfArrays } from "./utils";
 import { pool } from "./pool";
 import { Filters } from "./types";
-import {   loadExcelSheet } from "./excelUtils";
+import {   fillMissingIds, loadExcelSheet } from "./excelUtils";
 dotenv.config();
 
 export const query = async (text, params = []) => {
@@ -24,7 +24,9 @@ export const insertExcelDataToPostgres = async (
 ): Promise<void> => {
   try {
     // Read the Excel file
-    const { worksheet} = loadExcelSheet (filePath)
+    let { worksheet} = loadExcelSheet (filePath)
+    worksheet = fillMissingIds  (worksheet)
+
     const jsonData: any[][] = xlsx.utils.sheet_to_json(worksheet, {
       header: 1,
       defval: null,
@@ -66,28 +68,27 @@ export const insertExcelDataToPostgres = async (
           if (row.length !== headers.length) {
             throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
           }
+          const processExcelRow = (row) => {
+            return row.map((value, index) => {
+              const columnName = headers[index];
+              const trimmedValue = typeof value === 'string' ? value.trim() : value;
 
-          // Process each cell value based on its column type and trim it
-          const processedRow = row.map((value, index) => {
-            const columnName = headers[index];
-            const trimmedValue = typeof value === 'string' ? value.trim() : value;
-
-            if (
-              columnTypes[columnName] === "ARRAY" ||
-              columnTypes[columnName] === "text[]"
-            ) {
-              return trimmedValue
-                ? `{${trimmedValue
-                    .split(",")
-                    .map((v: string) => `"${v.trim()}"`)
-                    .join(",")}}`
-                : null;
-            }
-            return trimmedValue;
-          });
-
-          // Construct the insert query with ON CONFLICT to handle upserts
-          const insertQuery = `
+              if (
+                columnTypes[columnName] === "ARRAY" ||
+                columnTypes[columnName] === "text[]"
+              ) {
+                return trimmedValue
+                  ? `{${trimmedValue
+                      .split(",")
+                      .map((v: string) => `"${v.trim()}"`)
+                      .join(",")}}`
+                  : null;
+              }
+              return trimmedValue;
+            });
+          }
+          const insertRow = async (row,headers) => {
+            const insertQuery = `
             INSERT INTO ${tableName} (${headers.join(", ")})
             VALUES (${headers.map((_, i) => `$${i + 1}`).join(", ")})
             ON CONFLICT (id) DO UPDATE SET ${headers
@@ -97,6 +98,21 @@ export const insertExcelDataToPostgres = async (
 
           // Execute the query
           await client.query(insertQuery, processedRow);
+           }
+          // Process each cell value based on its column type and trim it
+          const processedRow = processExcelRow(row)
+           await insertRow(processedRow, headers);
+          // Construct the insert query with ON CONFLICT to handle upserts
+          // const insertQuery = `
+          //   INSERT INTO ${tableName} (${headers.join(", ")})
+          //   VALUES (${headers.map((_, i) => `$${i + 1}`).join(", ")})
+          //   ON CONFLICT (id) DO UPDATE SET ${headers
+          //     .map((header, i) => `${header} = EXCLUDED.${header}`)
+          //     .join(", ")}
+          // `;
+
+          // // Execute the query
+          // await client.query(insertQuery, processedRow);
         } catch (rowError) {
           console.error("Error processing row:", rowError.message);
           // Throw error to stop further processing or log as needed
