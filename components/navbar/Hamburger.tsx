@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { navRoutes } from "@/data/routeNames";
 import { Box } from "@mui/material";
 import Cookies from "js-cookie";
+import NavbarMapper from "./NavbarMaper";
+import { NavButton } from "@/types/types";
 interface HamburgerNavListProps {
   isOpen: boolean;
   toggleNav: () => void;
@@ -17,6 +19,18 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
 }) => {
 
   const isAdmin = Cookies.get("authToken") !== undefined;
+
+  const renderButton = (button: NavButton, isActive: boolean) => (
+    <li key={button.URL} className="nav__item mx-auto">
+              <Link
+                href={button.URL}
+                className="nav__link text-current hover:white text-5xl text-center no-underline font-bold"
+                onClick={toggleNav}
+              >
+                {button.label}
+              </Link>
+            </li>
+  );
   return (
     <Box
       className={`fixed bg-[var(--text-color)] text-white top-0 bottom-0 left-0 right-0 z-100 transform transition-transform duration-250 ease-[cubic-bezier(0.5,0,0.5,1)]  ${
@@ -24,7 +38,13 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
       } sm:hidden`}
     >
       <ul className="nav__list absolute list-none flex flex-col justify-evenly items-center top-0 left-0 h-screen w-screen z-100 bg-black text-white">
-        {navRoutes
+      <NavbarMapper
+      navRoutes={navRoutes}
+      isAdmin={isAdmin}
+      renderButton={renderButton}
+    />
+
+        {/* {navRoutes
           .filter((route) => {
             if (route.URL === "/upload" && !isAdmin) {
               return false;
@@ -42,7 +62,7 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
                 {button.label}
               </Link>
             </li>
-        )}
+        )} */}
       </ul>
     </Box>
   );

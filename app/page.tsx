@@ -5,8 +5,31 @@ import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { checkAuth } from "@/utils/checkAuth";
 // import Cookies from 'js-cookie';
-export default function Home() {
+
+
+// export const getServerSideProps: GetServerSideProps = withServerSideProps(async (context) => {
+//   // Your specific logic for this page
+//   const specificData =checkAuth(context.req)
+
+//   return {
+//     props: {
+//       specificData,
+//     },
+//   };
+// });
+
+// export const getServerSideProps: GetServerSideProps = async (context) => {
+//   const isAdmin = checkAuth(context.req);
+
+//   return {
+//     props: {
+//       isAuthenticated,
+//     },
+//   };
+// };
+export default function Home( ) {
 
 
   return (
