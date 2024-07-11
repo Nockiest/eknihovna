@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { navRoutes } from "@/data/routeNames";
 import { Box } from "@mui/material";
-
+import Cookies from "js-cookie";
 interface HamburgerNavListProps {
   isOpen: boolean;
   toggleNav: () => void;
@@ -15,6 +15,8 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
   isOpen,
   toggleNav,
 }) => {
+
+  const isAdmin = Cookies.get("authToken") !== undefined;
   return (
     <Box
       className={`fixed bg-[var(--text-color)] text-white top-0 bottom-0 left-0 right-0 z-100 transform transition-transform duration-250 ease-[cubic-bezier(0.5,0,0.5,1)]  ${
@@ -22,7 +24,14 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
       } sm:hidden`}
     >
       <ul className="nav__list absolute list-none flex flex-col justify-evenly items-center top-0 left-0 h-screen w-screen z-100 bg-black text-white">
-        {navRoutes.map((button, key) =>
+        {navRoutes
+          .filter((route) => {
+            if (route.URL === "/upload" && !isAdmin) {
+              return false;
+            }
+            return true;
+          })
+          .map((button, key) =>
 
             <li key={key} className="nav__item mx-auto">
               <Link

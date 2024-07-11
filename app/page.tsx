@@ -1,10 +1,14 @@
+'use client'
 import BookPreview from "@/components/catalog/BookPreview";
 import OpeningHours from "@/components/general/OpeningHours";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+// import Cookies from 'js-cookie';
 export default function Home() {
+
+
   return (
     <Container maxWidth={"lg"}>
       <Typography variant="body1">
@@ -21,6 +25,7 @@ export default function Home() {
         zvědavost. Přijďte navštívit naši knihovnu a objevte, co všechno pro vás
         máme připraveného. Těšíme se na vaši návštěvu!
       </Typography>
+      {/* <Login onSubmit={onSubmit} /> */}
       <OpeningHours />
       <Box mt={2} display="flex" justifyContent="center">
         <Button
@@ -33,7 +38,7 @@ export default function Home() {
           </Link>
         </Button>
       </Box>
-     
+
     </Container>
   );
 }
