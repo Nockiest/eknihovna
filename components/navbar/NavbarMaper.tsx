@@ -23,7 +23,7 @@ const NavbarMapper: React.FC<NavbarProps> = ({ navRoutes, isAdmin,   renderButto
     <nav>
       {navRoutes
         .filter((route) => {
-          if (route.URL === "/upload" && !isAdmin) {
+          if ((route.URL === "/upload" && !isAdmin)|| (route.URL === "/login" &&isAdmin)) {
             return false;
           }
           return true;
