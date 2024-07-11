@@ -1,23 +1,37 @@
+'use client'
 import Link from "next/link";
 import { NavbarButton } from "@/theme/buttons/Buttons";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import HamburgerNavList from "./Hamburger";
 import { navRoutes } from "@/data/routeNames";
-import { getURLSegment } from "@/utils/getURLSegment";
 import { usePathname } from "next/navigation";
 import { HeaderContext, useHeaderContext } from "./headerConntext";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import Image from "next/image";
 import Cookies from "js-cookie"; // Make sure to install js-cookie if you haven't already
+import NavbarMapper from "./NavbarMaper";
+import { NavButton } from "@/types/types";
+import { getURLSegment } from "@/utils/getURLSegment";
+import { checkAuth } from "@/utils/checkAuth";
+import { GetServerSideProps } from "next";
 
 interface NavListProps {}
 
 const NavBar: React.FC<NavListProps> = ({}) => {
-  const firstURLSegment = getURLSegment(usePathname(), 0);
   const { isHamburgerOpen, setIsHamburgerOpen } = useHeaderContext();
   const size = useCurrentBreakpoint();
   const isAdmin = Cookies.get("authToken") !== undefined;
   console.log(isAdmin)
+
+  const renderButton = (button: NavButton, isActive: boolean) => (
+    <NavbarButton
+      key={button.URL}
+      variant={isActive ? 'contained' : 'outlined'}
+      size="small"
+    >
+      <Link href={button.URL}>{button.label}</Link>
+    </NavbarButton>
+  );
   return (
     <Paper
       elevation={3}
@@ -42,7 +56,13 @@ const NavBar: React.FC<NavListProps> = ({}) => {
 
       {/* Navigation menu for larger screens */}
       <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
-        {navRoutes
+      <NavbarMapper
+      navRoutes={navRoutes}
+      isAdmin={isAdmin}
+
+      renderButton={renderButton}
+    />
+        {/* {navRoutes
           .filter((route) => {
             if (route.URL === "/upload" && !isAdmin) {
               return false;
@@ -58,10 +78,10 @@ const NavBar: React.FC<NavListProps> = ({}) => {
                 variant={isActive ? "contained" : "outlined"}
                 size="small"
               >
-                <Link href={button.URL}>{button.label} {isAdmin.toString()}</Link>
+                <Link href={button.URL}>{button.label}  </Link>
               </NavbarButton>
             );
-          })}
+          })} */}
       </Box>
     </Paper>
   );

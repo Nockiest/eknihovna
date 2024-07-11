@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { GetServerSideProps, Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./styling/globals.css";
 import theme from "@/theme/theme";
@@ -7,9 +7,11 @@ import dynamic from "next/dynamic";
 import Footer from "@/components/footer/Footer";
 import Head from "next/head";
 import BugReportSection from "@/components/sections/BugReport";
+import { checkAuth } from "@/utils/checkAuth";
 
 // import NavBar from "@/components/navbar/Navbar";
 const inter = Inter({ subsets: ["latin"] });
+
 
 export const metadata: Metadata = {
   title: "G.O. eknihovna",

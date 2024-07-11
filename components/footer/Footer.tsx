@@ -1,20 +1,33 @@
 // components/Footer.tsx
-
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { navRoutes } from "@/data/routeNames";
 import { Box } from "@mui/material";
-
+import NavbarMapper from "../navbar/NavbarMaper";
+import Cookies from "js-cookie"; // Make sure to install js-cookie if you haven't already
+import { NavButton } from "@/types/types";
 const Footer = () => {
+  const isAdmin = Cookies.get("authToken") !== undefined;
+  const renderButton = (button: NavButton, isActive: boolean) => (
+    <Link className="hover:text-gray-400 mx-2" key={button.URL} href={button.URL}>
+      {button.label}
+    </Link>
+  );
   return (
     <footer className="bg-gray-800 text-white py-4">
       <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
         <Box className="flex flex-wrap  flex-col md:flex-row  space-x-4">
-          {navRoutes.map((button, key) => (
+          <NavbarMapper
+            navRoutes={navRoutes}
+            isAdmin={isAdmin}
+            renderButton={renderButton}
+          />
+          {/* {navRoutes.map((button, key) => (
             <Link className="hover:text-gray-400" key={key} href={button.URL}>
               {button.label}
             </Link>
-          ))}
+          ))} */}
           <Link className="hover:text-gray-400" href={"/upload"}>
             API
           </Link>
