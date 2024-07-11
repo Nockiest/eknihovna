@@ -28,6 +28,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       key={button.URL}
       variant={isActive ? 'contained' : 'outlined'}
       size="small"
+      className="mx-2"
     >
       <Link href={button.URL}>{button.label}</Link>
     </NavbarButton>
