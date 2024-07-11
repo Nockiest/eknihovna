@@ -15,7 +15,7 @@ import { useAuthContext } from "@/app/upload/authContext";
 
 const ExcelSheetUpdater = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const {isAuth, setIsAuth } = useAuthContext();
+  // const {isAuth, setIsAuth } = useAuthContext();
   const [responseMessage, setResponseMessage] = useState("");
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -73,9 +73,9 @@ const ExcelSheetUpdater = () => {
 
   return (
     <Box className="flex flex-col items-center justify-center">
-      {!isAuth ? (
+      {/* {!isAuth ? (
         <PasswordHandler />
-      ) : (
+      ) : ( */}
         <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
           <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
             <Typography variant="h2" className="text-xl font-semibold mb-4">
@@ -124,7 +124,7 @@ const ExcelSheetUpdater = () => {
 
 
         </Box>
-      )}
+      {/* )} */}
        <Typography variant="body1" className="m-2"  >
               {responseMessage}
             </Typography>
