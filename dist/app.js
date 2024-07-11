@@ -165,7 +165,7 @@ app.post("/update", upload.single("file"), (req, res) => __awaiter(void 0, void 
 }));
 app.post('/login', (req, res) => {
     const { username, password } = req.body;
-    console.log(username, password);
+    console.log(username, password, password === process.env.JWT_SECRET);
     if (username === 'admin' && password === process.env.JWT_SECRET) {
         const token = jsonwebtoken_1.default.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
         console.log('passed');
@@ -175,6 +175,6 @@ app.post('/login', (req, res) => {
     }
     return res.status(401).json({ message: 'Invalid credentials' });
 });
-// app.use((req, res) => {
-//   res.status(405).json({ message: 'Method not allowed' });
-// });
+app.use((req, res) => {
+    res.status(405).json({ message: 'Method not allowed' });
+});
