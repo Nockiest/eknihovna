@@ -13,7 +13,7 @@ const Page = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
-
+    console.log(apiUrl);
     try {
       const response = await axios.post(`${apiUrl}/login`, {
         username,
@@ -25,7 +25,7 @@ const Page = () => {
       if (response.status === 200) {
         // Set the token received from the server
         Cookies.set('authToken', data.token, { expires: 1 }); // Expires in 1 day
-        console.log('Login successful, auth set');
+        console.log('Login successful, auth set', data.token);
         router.push('/upload'); // Redirect to /upload
       } else {
         console.log(data.message);
@@ -34,6 +34,7 @@ const Page = () => {
       console.error('Unexpected error:', error);
     }
   };
+
 
   return (
     <Box
