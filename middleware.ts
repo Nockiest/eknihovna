@@ -1,18 +1,34 @@
 import { NextRequest, NextResponse } from 'next/server';
-import jwt from 'jsonwebtoken';
-import { jwtVerify } from 'jose';
+import { jwtVerify, decodeJwt } from 'jose';
+
 const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
 async function verifyToken(token: string): Promise<boolean> {
   try {
+    // Decode the token without verifying it to access the payload
+    const decodedToken = decodeJwt(token);
+    const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
+
+    console.log('Decoded token:', decodedToken);
+
+    // Check if the token has expired
+    if (decodedToken.exp && decodedToken.exp < currentTime) {
+      console.log('Token has expired');
+      return false;
+    }
+
+    // Verify the token
     const { payload } = await jwtVerify(token, secret);
-    console.log('Decoded token:', payload);
+
+    console.log('Verified token payload:', payload);
+
     return typeof payload === 'object' && payload.role === 'admin';
   } catch (error) {
     console.error('Token verification error:', error);
     return false;
   }
 }
+
 export async function middleware(request: NextRequest) {
   const tokenCookie = request.cookies.get('authToken');
   const token = tokenCookie ? tokenCookie.value : null;
@@ -25,20 +41,10 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(url.toString());
   }
 
-  return NextResponse.next();
+  const response = NextResponse.next();
+  response.headers.set('X-Auth-Token', token);
+  return response;
 }
-// function verifyToken(token: string): boolean {
-//   // Your token verification logic (e.g., JWT verification)
-//   try {
-//     // Example: JWT verification
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
-//     // Check if the decoded token is an object and has the role 'admin'
-//     return typeof decoded === 'object' && (decoded as any).role === 'admin';
-//   } catch (error) {
-//     // If there's an error during verification, return false
-//     return false;
-//   }
-// }
 
 export const config = {
   matcher: ['/upload/:path*'], // Protect all routes under /upload

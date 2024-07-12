@@ -7,11 +7,8 @@ import dynamic from "next/dynamic";
 import Footer from "@/components/footer/Footer";
 import Head from "next/head";
 import BugReportSection from "@/components/sections/BugReport";
-import { checkAuth } from "@/utils/checkAuth";
 
-// import NavBar from "@/components/navbar/Navbar";
 const inter = Inter({ subsets: ["latin"] });
-
 
 export const metadata: Metadata = {
   title: "G.O. eknihovna",
@@ -28,38 +25,34 @@ export default function RootLayout({
   return (
     <html lang="cz">
       <Head>
-  {/* Primary Favicon */}
-      <link rel="icon" type="image/x-icon" href="/bookLogo.ico" />
+        {/* Primary Favicon */}
+        <link rel="icon" type="image/x-icon" href="/bookLogo.ico" />
 
-      {/* Optional: Additional Favicons for Different Sizes */}
-      {/* <link rel="icon" type="image/png" sizes="16x16" href="client/knihovna/public/icon/GO.ico" />
+        {/* Optional: Additional Favicons for Different Sizes */}
+        {/* <link rel="icon" type="image/png" sizes="16x16" href="client/knihovna/public/icon/GO.ico" />
       <link rel="icon" type="image/png" sizes="32x32" href="client/knihovna/public/icon/GO.ico" /> */}
 
-      {/* Optional: Apple Touch Icon */}
-      {/* <link rel="apple-touch-icon" sizes="180x180" href="client/knihovna/public/icon/GO.ico" /> */}
+        {/* Optional: Apple Touch Icon */}
+        {/* <link rel="apple-touch-icon" sizes="180x180" href="client/knihovna/public/icon/GO.ico" /> */}
 
-      {/* Optional: Manifest File */}
-      {/* <link rel="manifest" href="client/knihovna/public/icon/GO.ico" /> */}
+        {/* Optional: Manifest File */}
+        {/* <link rel="manifest" href="client/knihovna/public/icon/GO.ico" /> */}
 
-      {/* Optional: Theme Color */}
-      <meta name="theme-color" content="#413330" />
-    </Head>
+        {/* Optional: Theme Color */}
+        <meta name="theme-color" content="#413330" />
+      </Head>
       <body className={inter.className}>
-      {/* <QueryContextProvider> */}
+        {/* <QueryContextProvider> */}
         <ThemeProvider theme={theme}>
-
-
           <NoSSRHero />
           <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
-          {children}
+            {children}
           </main>
           <BugReportSection />
 
           <Footer />
-
         </ThemeProvider>
-      {/* </QueryContextProvider> */}
-
+        {/* </QueryContextProvider> */}
       </body>
     </html>
   );
