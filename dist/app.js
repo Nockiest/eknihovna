@@ -19,12 +19,12 @@ const multer_1 = __importDefault(require("multer"));
 const path_1 = __importDefault(require("path"));
 const fs_1 = __importDefault(require("fs"));
 const db_1 = require("./db");
-const bcrypt_1 = __importDefault(require("bcrypt"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
-// const jwt = require('jsonwebtoken');
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const jose_1 = require("jose");
 // make sure you run npx tsc -w before using this file
+const cookieParser = require('cookie-parser');
+// const verifyToken = require('./verifyToken'); // Path to your verifyToken middleware
 dotenv_1.default.config();
 const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
@@ -82,19 +82,23 @@ app.get("/uniqueNamesCount", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ error: "Internal Server Error" });
     }
 }));
-app.post("/authenticate", (req, res) => {
-    const { password } = req.body;
-    if (!password) {
-        return res.status(400).json({ error: "vyžadováno heslo" });
-    }
-    bcrypt_1.default.compare(password, process.env.UPLOAD_PASSWORD_HASHED, (err, result) => {
-        if (err || !result) {
-            return res.status(401).json({ error: "Špatné heslo" });
-        }
-        // Password correct, return success
-        res.status(200).json({ message: "Uživatel autorizován" });
-    });
-});
+// app.post("/authenticate", (req, res) => {
+//   const { password } = req.body;
+//   if (!password) {
+//     return res.status(400).json({ error: "vyžadováno heslo" });
+//   }
+//   bcrypt.compare(
+//     password,
+//     process.env.UPLOAD_PASSWORD_HASHED,
+//     (err, result) => {
+//       if (err || !result) {
+//         return res.status(401).json({ error: "Špatné heslo" });
+//       }
+//       // Password correct, return success
+//       res.status(200).json({ message: "Uživatel autorizován" });
+//     }
+//   );
+// });
 app.get("/getUniqueValues", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { columnName } = req.query; // Use req.query to get query parameters
     try {
@@ -119,9 +123,6 @@ app.get("/downloadExcel", (req, res) => __awaiter(void 0, void 0, void 0, functi
         res.status(500).json({ error: "Internal Server Error" });
     }
 }));
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
 app.post("/update", upload.single("file"), (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         // Handle file upload with Multer
@@ -163,18 +164,35 @@ app.post("/update", upload.single("file"), (req, res) => __awaiter(void 0, void 
         res.status(500).json({ error: errorMessage });
     }
 }));
-app.post('/login', (req, res) => {
+// Public route (no token required)
+app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { username, password } = req.body;
-    console.log(username, password, password === process.env.JWT_SECRET);
+    console.log(username, password);
     if (username === 'admin' && password === process.env.JWT_SECRET) {
-        const token = jsonwebtoken_1.default.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
-        console.log('passed');
-        // Set the cookie with the token
+        const token = yield new jose_1.SignJWT({ role: 'admin' })
+            .setProtectedHeader({ alg: 'HS256' })
+            .setExpirationTime('1h')
+            .sign(new TextEncoder().encode(process.env.JWT_SECRET));
         res.cookie('authToken', token, { httpOnly: true, maxAge: 3600 * 1000 });
         return res.status(200).json({ message: 'Login successful', token });
     }
     return res.status(401).json({ message: 'Invalid credentials' });
-});
+}));
+// app.post('/login', (req, res) => {
+//   const { username, password } = req.body;
+//   console.log(username, password,  password === process.env.JWT_SECRET);
+//   if (username === 'admin' && password === process.env.JWT_SECRET) {
+//     const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+//     console.log('passed');
+//     // Set the cookie with the token
+//     res.cookie('authToken', token, { httpOnly: true, maxAge: 3600 * 1000 });
+//     return res.status(200).json({ message: 'Login successful', token });
+//   }
+//   return res.status(401).json({ message: 'Invalid credentials' });
+// });
 app.use((req, res) => {
     res.status(405).json({ message: 'Method not allowed' });
+});
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });

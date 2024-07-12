@@ -35,3 +35,41 @@ const saltRounds = 10; // Adjust according to your security requirements
 //       next();
 //     });
 //   };
+
+import { jwtVerify, decodeJwt }   from 'jose';
+const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+
+async function verifyToken(req, res, next) {
+  const token = req.cookies.authToken;
+
+  if (!token) {
+    return res.status(401).json({ message: 'Missing token' });
+  }
+
+  try {
+    // Decode the token without verifying it to access the payload
+    const decodedToken = decodeJwt(token);
+    const currentTime = Math.floor(Date.now() / 1000); // Get current time in seconds
+
+    // Check if the token has expired
+    if (decodedToken.exp && decodedToken.exp < currentTime) {
+      return res.status(401).json({ message: 'Token has expired' });
+    }
+
+    // Verify the token
+    const { payload } = await jwtVerify(token, secret);
+
+    if (typeof payload !== 'object' || payload.role !== 'admin') {
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+
+    // Attach user info to the request object
+    req.user = payload;
+    next();
+  } catch (error) {
+    console.error('Token verification error:', error);
+    return res.status(401).json({ message: 'Invalid token' });
+  }
+}
+
+export default verifyToken;

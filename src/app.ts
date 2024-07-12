@@ -18,7 +18,11 @@ import bodyParser from "body-parser";
 import { excelWordsToBool, fillMissingIds, loadExcelSheet } from "./excelUtils";
 // const jwt = require('jsonwebtoken');
 import jwt from 'jsonwebtoken'
+import { SignJWT } from "jose";
 // make sure you run npx tsc -w before using this file
+const cookieParser = require('cookie-parser');
+// const verifyToken = require('./verifyToken'); // Path to your verifyToken middleware
+
 
 dotenv.config();
 const knihyURL = process.env.KNIHY_URL;
@@ -82,24 +86,24 @@ app.get("/uniqueNamesCount", async (req, res) => {
   }
 });
 
-app.post("/authenticate", (req, res) => {
-  const { password } = req.body;
+// app.post("/authenticate", (req, res) => {
+//   const { password } = req.body;
 
-  if (!password) {
-    return res.status(400).json({ error: "vyžadováno heslo" });
-  }
-  bcrypt.compare(
-    password,
-    process.env.UPLOAD_PASSWORD_HASHED,
-    (err, result) => {
-      if (err || !result) {
-        return res.status(401).json({ error: "Špatné heslo" });
-      }
-      // Password correct, return success
-      res.status(200).json({ message: "Uživatel autorizován" });
-    }
-  );
-});
+//   if (!password) {
+//     return res.status(400).json({ error: "vyžadováno heslo" });
+//   }
+//   bcrypt.compare(
+//     password,
+//     process.env.UPLOAD_PASSWORD_HASHED,
+//     (err, result) => {
+//       if (err || !result) {
+//         return res.status(401).json({ error: "Špatné heslo" });
+//       }
+//       // Password correct, return success
+//       res.status(200).json({ message: "Uživatel autorizován" });
+//     }
+//   );
+// });
 app.get("/getUniqueValues", async (req, res) => {
   const { columnName } = req.query; // Use req.query to get query parameters
   try {
@@ -133,9 +137,6 @@ app.get("/downloadExcel", async (req: Request, res: Response) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 
 app.post("/update", upload.single("file"), async (req, res) => {
   try {
@@ -186,22 +187,45 @@ app.post("/update", upload.single("file"), async (req, res) => {
   }
 });
 
-app.post('/login', (req, res) => {
+
+// Public route (no token required)
+app.post('/login', async (req, res) => {
   const { username, password } = req.body;
-  console.log(username, password,  password === process.env.JWT_SECRET);
-
+  console.log(username,password)
   if (username === 'admin' && password === process.env.JWT_SECRET) {
-    const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
-    console.log('passed');
+    const token = await new SignJWT({ role: 'admin' })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime('1h')
+      .sign(new TextEncoder().encode(process.env.JWT_SECRET));
 
-    // Set the cookie with the token
     res.cookie('authToken', token, { httpOnly: true, maxAge: 3600 * 1000 });
-
     return res.status(200).json({ message: 'Login successful', token });
   }
 
   return res.status(401).json({ message: 'Invalid credentials' });
 });
+
+// app.post('/login', (req, res) => {
+//   const { username, password } = req.body;
+//   console.log(username, password,  password === process.env.JWT_SECRET);
+
+//   if (username === 'admin' && password === process.env.JWT_SECRET) {
+//     const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
+//     console.log('passed');
+
+//     // Set the cookie with the token
+//     res.cookie('authToken', token, { httpOnly: true, maxAge: 3600 * 1000 });
+
+//     return res.status(200).json({ message: 'Login successful', token });
+//   }
+
+//   return res.status(401).json({ message: 'Invalid credentials' });
+// });
 app.use((req, res) => {
   res.status(405).json({ message: 'Method not allowed' });
+});
+
+
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
