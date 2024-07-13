@@ -9,18 +9,18 @@ export const options: NextAuthOptions = {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     }),
-    GitHubProvider({
-      clientId: process.env.GITHUB_ID as string,
-      clientSecret: process.env.GITHUB_SECRET as string,
-    }),
+    // GitHubProvider({
+    //   clientId: process.env.GITHUB_ID as string,
+    //   clientSecret: process.env.GITHUB_SECRET as string,
+    // }),
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
         email: { label: 'Email', type: 'email' }, // Add email field
         Username: {
           type: 'text',
-          label: 'GitHub Username',
-          placeholder: 'GitHub username',
+          label: 'Uživatelské jméno',
+          placeholder: 'Uživatelské heslo',
         },
         password: {
           label: 'Password',
