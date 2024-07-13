@@ -36,3 +36,4 @@ const NavbarMapper: React.FC<NavbarProps> = ({ navRoutes, isAdmin,   renderButto
   );
 };
  export default NavbarMapper;
+ 
