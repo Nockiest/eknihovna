@@ -84,7 +84,7 @@ const ExcelSheetUpdater = () => {
     return (
       <>
         <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Neplatný admin účet {session?.user?.email} {process.env.ADMIN_EMAIL}
+          Neplatný admin účet {session?.user?.email} {process.env.ADMIN_EMAIL === 'ondralukes06@seznam.cz'}
         </Typography>
         <PrimaryButton
           onClick={() => {
