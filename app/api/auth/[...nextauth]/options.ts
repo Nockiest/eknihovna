@@ -51,13 +51,13 @@ export const options: NextAuthOptions = {
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
-    session({ session, user }) {
-        // if ( session.user && user&&['ondralukes06@seznam.cz', 'bauerova@gopat.cz'].includes(user.email) ) {
-        //  session.user.role = 'admin'
+    // session({ session, user }) {
+    //     // if ( session.user && user&&['ondralukes06@seznam.cz', 'bauerova@gopat.cz'].includes(user.email) ) {
+    //     //  session.user.role = 'admin'
 
-        // }
-        return session
-      }
+    //     // }
+    //     return session
+    //   }
   },
 
 };
