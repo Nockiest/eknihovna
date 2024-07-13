@@ -44,13 +44,13 @@ export const options: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    // async redirect({ url, baseUrl }) {
-    //   // Allows relative callback URLs
-    //   if (url.startsWith('/')) return `${baseUrl}${url}`;
-    //   // Allows callback URLs on the same origin
-    //   else if (new URL(url).origin === baseUrl) return url;
-    //   return baseUrl;
-    // },
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
+    },
     // session({ session, user }) {
     //     // if ( session.user && user&&['ondralukes06@seznam.cz', 'bauerova@gopat.cz'].includes(user.email) ) {
     //     //  session.user.role = 'admin'
