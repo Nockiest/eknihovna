@@ -87,13 +87,13 @@ const ExcelSheetUpdater = () => {
       alert("Error fetching data from Server: " + error.message);
     }
   };
-  if (session?.user?.email !==process.env.ADMIN_EMAIL) {
+  if (session?.user?.email !== 'ondralukes06@seznam.cz') {
     console.log((session?.user?.email === "ondralukes06@seznam.cz").toString(),(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString())
     return (
       <>
         <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Neplatný admin účet {session?.user?.email === "ondralukes06@seznam.cz"}
-          {(session?.user?.email === "ondralukes06@seznam.cz").toString()} 
+          Neplatný admin účet {session?.user?.email === "ondralukes06@seznam.cz"} x
+          {(session?.user?.email === "ondralukes06@seznam.cz").toString()}x
           {(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()}
         </Typography>
         <PrimaryButton
