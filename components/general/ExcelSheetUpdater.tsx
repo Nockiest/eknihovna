@@ -7,25 +7,32 @@ import { useState } from "react";
 import axios from "axios";
 import { knihyURL } from "@/data/values";
 import { signIn, signOut, useSession } from "next-auth/react";
+import { redirect } from "next/dist/server/api-utils";
+import { useRouter } from "next/navigation";
 // import { useAuthContext } from "@/app/upload/authContext";
 
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
+  const router = useRouter();
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
-
-  if (!session || !session?.user) {
-    return (
-      <PrimaryButton
-        onClick={() => {
-          signIn("google");
-        }}
-      >
-        <Typography>Přihlaste se pro vstup</Typography>
-      </PrimaryButton>
-    );
+  console.log(session)
+  if (!session) {
+    // redirect("/api/auth/signin?callbackUrl=/upload");
+    // router.push("/api/auth/signin?callbackUrl=/upload");
+      return (
+          <PrimaryButton
+            onClick={() => {
+              // signIn("google");
+              router.push("/api/auth/signin?callbackUrl=/upload");
+            }}
+          >
+            <Typography>Přihlaste se pro vstup</Typography>
+          </PrimaryButton>
+        );;
   }
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -162,7 +169,17 @@ const ExcelSheetUpdater = () => {
 };
 
 export default ExcelSheetUpdater;
-
+  // if (!session || !session?.user) {
+  //   return (
+  //     <PrimaryButton
+  //       onClick={() => {
+  //         signIn("google");
+  //       }}
+  //     >
+  //       <Typography>Přihlaste se pro vstup</Typography>
+  //     </PrimaryButton>
+  //   );
+  // }
 {
   /* <form
 onSubmit={async (e) => {
