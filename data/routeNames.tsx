@@ -7,5 +7,4 @@ export const navRoutes: NavButton[] = [
     { URL: "/news", label: "Zprávy" },
     { URL: "/contact", label: "Kontakt" },
     { URL: "/upload", label: "API" },
-    { URL: "/login", label: "Přihlásit" },
   ]
