@@ -4,24 +4,18 @@ import { NavbarButton } from "@/theme/buttons/Buttons";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import HamburgerNavList from "./Hamburger";
 import { navRoutes } from "@/data/routeNames";
-import { usePathname } from "next/navigation";
 import { HeaderContext, useHeaderContext } from "./headerConntext";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import Image from "next/image";
-import Cookies from "js-cookie"; // Make sure to install js-cookie if you haven't already
 import NavbarMapper from "./NavbarMaper";
 import { NavButton } from "@/types/types";
 import { getURLSegment } from "@/utils/getURLSegment";
-import { checkAuth } from "@/utils/checkAuth";
-import { GetServerSideProps } from "next";
 
 interface NavListProps {}
 
 const NavBar: React.FC<NavListProps> = ({}) => {
   const { isHamburgerOpen, setIsHamburgerOpen } = useHeaderContext();
   const size = useCurrentBreakpoint();
-  const isAdmin = Cookies.get("authToken") !== undefined;
-  console.log(isAdmin)
 
   const renderButton = (button: NavButton, isActive: boolean) => (
     <NavbarButton
@@ -59,7 +53,6 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
       <NavbarMapper
       navRoutes={navRoutes}
-      isAdmin={isAdmin}
 
       renderButton={renderButton}
     />
