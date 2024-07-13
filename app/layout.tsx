@@ -44,17 +44,12 @@ export default function RootLayout({
         <meta name="theme-color" content="#413330" />
       </Head>
       <body className={inter.className}>
-<<<<<<< HEAD
-        {/* <QueryContextProvider> */}
-        <ThemeProvider theme={theme}>
-=======
 
       {/* <QueryContextProvider> */}
         <ThemeProvider theme={theme}>
 
         {/* <SessionWrapper > */}
 
->>>>>>> nextauth
           <NoSSRHero />
           <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
             {children}
@@ -62,11 +57,7 @@ export default function RootLayout({
           <BugReportSection />
 
           <Footer />
-<<<<<<< HEAD
-=======
-    {/* </SessionWrapper> */}
-
->>>>>>> nextauth
+ 
         </ThemeProvider>
         {/* </QueryContextProvider> */}
       </body>
