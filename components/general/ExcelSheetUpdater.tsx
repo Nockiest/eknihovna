@@ -3,20 +3,30 @@ import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import * as XLSX from "xlsx";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
-
 import { useState } from "react";
 import axios from "axios";
-import PasswordEntry from "./PasswordEntry";
-import { authenticate } from "@/utils/authenticate";
 import { knihyURL } from "@/data/values";
-import { useTheme } from "@emotion/react";
-import PasswordHandler from "./PasswordHandler";
-import { useAuthContext } from "@/app/upload/authContext";
+import { signIn, signOut, useSession } from "next-auth/react";
+// import { useAuthContext } from "@/app/upload/authContext";
 
 const ExcelSheetUpdater = () => {
+  const { data: session, status } = useSession({ required: true });
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const {isAuth, setIsAuth } = useAuthContext();
   const [responseMessage, setResponseMessage] = useState("");
+
+  if (!session || !session?.user) {
+    return (
+      <PrimaryButton
+        onClick={() => {
+          signIn("google");
+        }}
+      >
+        <Typography>Přihlaste se pro vstup</Typography>
+      </PrimaryButton>
+    );
+  }
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFile(event.target.files[0]);
@@ -70,64 +80,80 @@ const ExcelSheetUpdater = () => {
       alert("Error fetching data from Server: " + error.message);
     }
   };
-
+  if (session?.user?.email !== process.env.ADMIN_EMAIL) {
+    return (
+      <>
+        <Typography variant="h2" className="text-xl font-semibold mb-4">
+          Neplatný admin účet {session?.user?.email} {process.env.ADMIN_EMAIL}
+        </Typography>
+        <PrimaryButton
+          onClick={() => {
+            signOut();
+          }}
+        >
+          <Typography>Odhlásit se</Typography>
+        </PrimaryButton>
+      </>
+    );
+  }
   return (
     <Box className="flex flex-col items-center justify-center">
-      {!isAuth ? (
-        <PasswordHandler />
-      ) : (
-        <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
-          <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
-            <Typography variant="h2" className="text-xl font-semibold mb-4">
-              Stáhnout data ze serveru
-            </Typography>
-            <PrimaryButton onClick={fetchDataFromServer}>
+      <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
+        <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
+          <Typography variant="h2" className="text-xl font-semibold mb-4">
+            Stáhnout data ze serveru
+          </Typography>
+          <PrimaryButton onClick={fetchDataFromServer}>
+            <Image
+              src={"icon/download.svg"}
+              alt="download"
+              width={32}
+              height={32}
+            />
+            {/* Stáhnout data ze serveru */}
+          </PrimaryButton>
+        </Box>
+        <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
+          <Typography variant="h2" className="text-xl font-semibold mb-4">
+            Přepsat data na serveru
+          </Typography>
+
+          <form
+            onSubmit={handleSubmit}
+            encType="multipart/form-data"
+            className="flex flex-col items-center"
+          >
+            <input
+              type="file"
+              id="fileInput"
+              name="file"
+              accept=".xlsx"
+              className="mb-4"
+              onChange={handleFileChange}
+            />
+            <SecondaryButton type="submit" disabled={!selectedFile}>
+              Nahrát
               <Image
-                src={"icon/download.svg"}
-                alt="download"
+                className="m-1"
+                src="icon/upload.svg"
+                alt="upload"
                 width={32}
                 height={32}
               />
-              {/* Stáhnout data ze serveru */}
-            </PrimaryButton>
-          </Box>
-          <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
-            <Typography variant="h2" className="text-xl font-semibold mb-4">
-              Přepsat data na serveru
-            </Typography>
-
-            <form
-              onSubmit={handleSubmit}
-              encType="multipart/form-data"
-              className="flex flex-col items-center"
-            >
-              <input
-                type="file"
-                id="fileInput"
-                name="file"
-                accept=".xlsx"
-                className="mb-4"
-                onChange={handleFileChange}
-              />
-              <SecondaryButton type="submit" disabled={!selectedFile}>
-                Nahrát{" "}
-                <Image
-                  className="m-1"
-                  src="icon/upload.svg"
-                  alt="upload"
-                  width={32}
-                  height={32}
-                />
-              </SecondaryButton>
-            </form>
-          </Box>
-
-
+            </SecondaryButton>
+          </form>
         </Box>
-      )}
-       <Typography variant="body1" className="m-2"  >
-              {responseMessage}
-            </Typography>
+      </Box>
+      <Typography variant="body1" className="m-2">
+        {responseMessage}
+      </Typography>
+      <PrimaryButton
+        onClick={() => {
+          signOut();
+        }}
+      >
+        <Typography>Odhlásit se</Typography>
+      </PrimaryButton>
     </Box>
   );
 };
