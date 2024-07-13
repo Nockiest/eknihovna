@@ -5,7 +5,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { navRoutes } from "@/data/routeNames";
 import { Box } from "@mui/material";
-import Cookies from "js-cookie";
 import NavbarMapper from "./NavbarMaper";
 import { NavButton } from "@/types/types";
 interface HamburgerNavListProps {
@@ -18,7 +17,6 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
   toggleNav,
 }) => {
 
-  const isAdmin = Cookies.get("authToken") !== undefined;
 
   const renderButton = (button: NavButton, isActive: boolean) => (
     <li key={button.URL} className="nav__item mx-auto">
@@ -40,7 +38,6 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
       <ul className="nav__list absolute list-none flex flex-col justify-evenly items-center top-0 left-0 h-screen w-screen z-100 bg-black text-white">
       <NavbarMapper
       navRoutes={navRoutes}
-      isAdmin={isAdmin}
       renderButton={renderButton}
     />
 

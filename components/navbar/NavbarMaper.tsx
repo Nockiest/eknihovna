@@ -12,22 +12,16 @@ interface NavRoute {
 
 interface NavbarProps {
   navRoutes: NavRoute[];
-  isAdmin: boolean;
   renderButton: (button: NavRoute, isActive: boolean) => React.ReactNode;
 }
 
-const NavbarMapper: React.FC<NavbarProps> = ({ navRoutes, isAdmin,   renderButton }) => {
+const NavbarMapper: React.FC<NavbarProps> = ({ navRoutes,    renderButton }) => {
   const firstURLSegment = getURLSegment(usePathname(), 0);
 
   return (
     <nav>
       {navRoutes
-        .filter((route) => {
-          if ((route.URL === "/upload" && !isAdmin)|| (route.URL === "/login" &&isAdmin)) {
-            return false;
-          }
-          return true;
-        })
+
         .map((button) => {
           const isActive = getURLSegment(button.URL, 0) === firstURLSegment;
           return renderButton(button, isActive);
@@ -36,4 +30,3 @@ const NavbarMapper: React.FC<NavbarProps> = ({ navRoutes, isAdmin,   renderButto
   );
 };
  export default NavbarMapper;
- 
