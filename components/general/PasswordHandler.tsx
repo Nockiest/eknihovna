@@ -3,21 +3,19 @@ import React, { useState } from 'react'
 import PasswordEntry from './PasswordEntry';
 import { PrimaryButton } from '@/theme/buttons/Buttons';
 import { authenticate } from '@/utils/authenticate';
-import { useAuthContext } from '@/app/upload/authContext';
 
 const PasswordHandler = () => {
     const [password, setPassword] = useState<string>("");
     const [responseMessage, setResponseMessage] = useState<string>("");
-    const {setIsAuth}= useAuthContext();
+    // const {setIsAuth}= useAuthContext();
 
-    
+
   return (
     <form
           onSubmit={async (e) => {
             const res = await authenticate(e, password);
             if (res) {
               setResponseMessage("Authentication successful");
-              setIsAuth(true);
             } else {
               setResponseMessage("Authentication failed");
             }
