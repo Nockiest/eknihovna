@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon dist/app.js",
-    "start": "node dist/app.js"
+    "start": "node dist/app.js",
+    "prod": "pm2 start dist/app.js"
   },
   "dependencies": {
     "@types/pg": "^8.11.6",
