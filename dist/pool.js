@@ -9,17 +9,7 @@ const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 let pool;
 // console.log(process.env.NODE_ENV === 'production')
-if (process.env.NODE_ENV === 'production') {
-    exports.pool = pool = new pg_1.Pool({
-        connectionString: process.env.POSTGRES_URL,
-    });
-}
-else {
-    exports.pool = pool = new pg_1.Pool({
-        user: "postgres",
-        host: "localhost", // or your database host
-        database: "eknihovna",
-        password: process.env.PSQL_PASSWORD,
-        port: 5432, // default PostgreSQL port
-    });
-}
+// if (process.env.NODE_ENV === 'production') {
+exports.pool = pool = new pg_1.Pool({
+    connectionString: process.env.POSTGRES_URL,
+});
