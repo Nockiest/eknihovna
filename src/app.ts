@@ -45,7 +45,8 @@ const defaultQuery = "SELECT * FROM knihy";
 app.post("/bookList", async (req, res) => {
   const { filters, page = 1, limit = 10 } = req.body;
   let sqlQuery = "SELECT DISTINCT ON (name) * FROM knihy";
-
+  console.log(process.env.NODE_ENV === 'production')
+  console.log('x')
   if (!filters) {
     return res.status(400).json({ error: "Server didn't receive filters" });
   }

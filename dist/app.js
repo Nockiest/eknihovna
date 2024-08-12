@@ -44,6 +44,8 @@ const defaultQuery = "SELECT * FROM knihy";
 app.post("/bookList", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { filters, page = 1, limit = 10 } = req.body;
     let sqlQuery = "SELECT DISTINCT ON (name) * FROM knihy";
+    console.log(process.env.NODE_ENV === 'production');
+    console.log('x');
     if (!filters) {
         return res.status(400).json({ error: "Server didn't receive filters" });
     }
@@ -194,5 +196,7 @@ app.use((req, res) => {
     res.status(405).json({ message: 'Method not allowed' });
 });
 app.listen(port, () => {
+    console.log(process.env.NODE_ENV === 'production');
+    console.log('x');
     console.log(`Server is running on port ${port}`);
 });

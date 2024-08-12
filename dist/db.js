@@ -19,7 +19,7 @@ const utils_1 = require("./utils");
 const pool_1 = require("./pool");
 const excelUtils_1 = require("./excelUtils");
 dotenv_1.default.config();
-const query = (text, params = []) => __awaiter(void 0, void 0, void 0, function* () {
+const query = (text_1, ...args_1) => __awaiter(void 0, [text_1, ...args_1], void 0, function* (text, params = []) {
     const client = yield pool_1.pool.connect();
     try {
         const result = yield client.query(text, params);
@@ -183,7 +183,7 @@ function connectAndQuery() {
     });
 }
 exports.connectAndQuery = connectAndQuery;
-const extractValuesFromArrayColumn = (columnName, unique = false, tableName = "knihy") => __awaiter(void 0, void 0, void 0, function* () {
+const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void 0, [columnName_1, ...args_2], void 0, function* (columnName, unique = false, tableName = "knihy") {
     var _a;
     const client = yield pool_1.pool.connect();
     try {
