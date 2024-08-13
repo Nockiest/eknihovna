@@ -8,8 +8,13 @@ const pg_1 = require("pg");
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
 let pool;
-// console.log(process.env.NODE_ENV === 'production')
-// if (process.env.NODE_ENV === 'production') {
-exports.pool = pool = new pg_1.Pool({
-    connectionString: process.env.POSTGRES_URL,
-});
+if (process.env.NODE_ENV === 'production') {
+    exports.pool = pool = new pg_1.Pool({
+        connectionString: process.env.POSTGRES_URL,
+    });
+}
+else {
+    exports.pool = pool = new pg_1.Pool({
+        connectionString: "postgres://postgres:" + process.env.PSQL_PASSWORD + "@localhost:5432/eknihovna",
+    });
+}

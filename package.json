@@ -5,7 +5,7 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon dist/app.js",
+    "dev": "start nodemon dist/app.js && start npx tsc -w",
     "start": "node dist/app.js",
     "prod": "pm2 start dist/app.js"
   },

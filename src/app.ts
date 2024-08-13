@@ -45,8 +45,8 @@ const defaultQuery = "SELECT * FROM knihy";
 app.post("/bookList", async (req, res) => {
   const { filters, page = 1, limit = 10 } = req.body;
   let sqlQuery = "SELECT DISTINCT ON (name) * FROM knihy";
-  console.log(process.env.NODE_ENV === 'production')
-  console.log('x')
+  console.log('hello')
+debugger
   if (!filters) {
     return res.status(400).json({ error: "Server didn't receive filters" });
   }
@@ -61,9 +61,9 @@ app.post("/bookList", async (req, res) => {
   // Calculate offset
   const offset = (page - 1) * limit;
   queryParams.push(limit, offset);
-
   try {
     const result = await query(sqlQuery, queryParams);
+    console.log(result.rows.length)
     res.json(result.rows);
   } catch (error) {
     console.error("Error executing search query:", error);
@@ -228,7 +228,5 @@ app.use((req, res) => {
 
 
 app.listen(port, () => {
-console.log(process.env.NODE_ENV === 'production')
-console.log('x')
   console.log(`Server is running on port ${port}`);
 });
