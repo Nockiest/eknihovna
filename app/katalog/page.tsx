@@ -12,9 +12,10 @@ import { Searcher } from "@/components/catalog/Searcher";
 import axios from "axios";
 import { genUniqueBookCount } from "@/utils/getBookCount";
 import { getBookNames } from "@/utils/getBookNames";
+import ErrorReporter from "@/theme/ErrorReprter";
 
 const KatalogPage = () => {
-  const [books, setBooks] = useState<Book[]>([]);
+  // const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
     author: [],
@@ -24,18 +25,19 @@ const KatalogPage = () => {
     available: false,
   });
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
   const [filterValues, setFiltersValues] = useState<FiltringValues>({
     genres: [],
     category: [],
     author: [],
   });
   // const [query, setQuery] = useState<string  >('');
-  const [ bookNames,setBookNames] = useState<string[]>([]) //useMemo(() => getBookNames(), []);
-  const [totalBookNum, setTotalBookNum] = useState<number >(0)
+  const [bookNames, setBookNames] = useState<string[]>([]); //useMemo(() => getBookNames(), []);
+  const [totalBookNum, setTotalBookNum] = useState<number>(0);
   //= useMemo(() => genUniqueBookCount(), []);
   async function fetchUniqueFilterCol(
-    colName: "genres" | "category" |  "author"
+    colName: "genres" | "category" | "author"
   ) {
     const res = await fetchUniqueValues(colName);
     setFiltersValues((prevFilters: FiltringValues) => ({
@@ -47,11 +49,11 @@ const KatalogPage = () => {
   useEffect(() => {
     async function update() {
       try {
-
-        const newBooks = await getBooksByQuery();
-        const  bookNames =  await fetchUniqueValues('name')
-        setTotalBookNum(bookNames.length)
-        setBooks(newBooks);
+        debugger;
+        // const newBooks = await getBooksByQuery();
+        const bookNames = await fetchUniqueValues("name");
+        setTotalBookNum(bookNames.length);
+        // setBooks(newBooks);
         setBookNames(bookNames);
         await Promise.all([
           fetchUniqueFilterCol("genres"),
@@ -59,14 +61,13 @@ const KatalogPage = () => {
           fetchUniqueFilterCol("author"),
         ]);
       } catch (error) {
-        setError("Failed to load books.");
+        setErrorMessage("Failed to load books.");
       } finally {
         setIsLoading(false);
       }
     }
     update();
-  }, [ ]);
-
+  }, []);
 
   if (isLoading) {
     return (
@@ -79,17 +80,8 @@ const KatalogPage = () => {
     );
   }
 
-  if (error) {
-    return (
-      <Box
-        className="w-full flex justify-center items-center"
-        style={{ height: "100vh" }}
-      >
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      </Box>
-    );
+  if (errorMessage) {
+    return <ErrorReporter errorMessage={errorMessage} />;
   }
 
   return (
@@ -100,7 +92,9 @@ const KatalogPage = () => {
         filters, // currently active filters
         setFilters,
         totalBookNum,
-        books,
+        errorMessage, //
+        setErrorMessage,
+        // books,
         // setBooks,
         filterValues, // possible filter values
 
@@ -119,7 +113,6 @@ const KatalogPage = () => {
         </Box>
         <BookCatalog />
         <Searcher />
-        {/* <ColorCircles /> */}
       </Box>
     </SearchContext.Provider>
   );

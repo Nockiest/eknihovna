@@ -18,16 +18,10 @@ import getRelevancy from "@/utils/searchingUtils";
 import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
+import { shownBooksBySize } from "@/data/values";
 
 interface BookCatalogProps {}
 
-const shownBooksBySize: Record<Breakpoint, number> = {
-  xs: 12,
-  sm: 12,
-  md: 24,
-  lg: 36,
-  xl: 36,
-};
 
 const BookCatalog: React.FC<BookCatalogProps> = () => {
   const size = useCurrentBreakpoint() || "xs";
@@ -40,9 +34,9 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     filters,
     setFilters,
     bookNames,
+    setErrorMessage
   } = useSearchContext();
 
-  const [error, setError] = useState<string | null>(null);
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
   const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
@@ -80,16 +74,17 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
 
   // fetch books by filter
   useEffect(() => {
+    debugger
     const fetchBooks = async () => {
       setLoading(true);
-      setError(null);
+      setErrorMessage(null);
       try {
         const newBooks = await getBooksByQuery(filters);
         setFilteredBooks(newBooks);
         console.log(newBooks);
       } catch (err: any) {
         console.log(err?.message);
-        setError(err?.message || "unknown error occurred");
+        setErrorMessage(err?.message || "unknown error occurred");
       } finally {
         setLoading(false);
       }
@@ -129,16 +124,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       );
     }
   }, [size, totalBookNum, router, page]);
-
-  if (error) {
-    return (
-      <div>
-        <Typography variant="body1" color="error">
-          {error}
-        </Typography>
-      </div>
-    );
-  }
 
   const removeFilter = (key: keyof Filters, value: string | boolean) => {
     setFilters((prevFilters: Filters) => {

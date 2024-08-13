@@ -3,90 +3,100 @@ import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import * as XLSX from "xlsx";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
-import { useState } from "react";
+// import { useState } from "react";
 import axios from "axios";
 import { knihyURL } from "@/data/values";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 // import { useAuthContext } from "@/app/upload/authContext";
+import ReroutToAUth from "./ReroutToAUth";
 
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
-  const router = useRouter();
 
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [responseMessage, setResponseMessage] = useState("");
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [responseMessage, setResponseMessage] = useState("");
   console.log(session)
   if (!session) {
     // redirect("/api/auth/signin?callbackUrl=/upload");
     // router.push("/api/auth/signin?callbackUrl=/upload");
       return (
-          <PrimaryButton
-            onClick={() => {
-              // signIn("google");
-              router.push("/api/auth/signin?callbackUrl=/upload");
-            }}
-          >
-            <Typography>Přihlaste se pro vstup</Typography>
-          </PrimaryButton>
+          <ReroutToAUth />
+
+
         );;
   }
 
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
-    } else {
-      setSelectedFile(null);
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (event.target.files && event.target.files.length > 0) {
+  //     setSelectedFile(event.target.files[0]);
+  //   } else {
+  //     setSelectedFile(null);
+  //   }
+  // };
 
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
 
-    // Assuming you have a file input with id "fileInput"
-    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-    const file = fileInput.files && fileInput.files[0];
+  //   // Assuming you have a file input with id "fileInput"
+  //   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+  //   const file = fileInput.files && fileInput.files[0];
 
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
+  //   if (!file) {
+  //     console.error("No file selected");
+  //     return;
+  //   }
 
-    // Create FormData object
-    const formData = new FormData();
-    formData.append("file", file); // Append the file to FormData
-    // formData.append("password", password); // Append other form data as needed
+  //   // Create FormData object
+  //   const formData = new FormData();
+  //   formData.append("file", file); // Append the file to FormData
+  //   // formData.append("password", password); // Append other form data as needed
 
-    try {
-      const response = await axios.post(`${knihyURL}/update`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
-        },
-      });
+  //   try {
+  //      // rewrite to prisma
+  //     const response = await axios.post(`${knihyURL}/update`, formData, {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
+  //       },
+  //     });
 
-      setResponseMessage(JSON.stringify(response.data, null, 2));
-    } catch (error: any) {
-      console.error("Error:", error);
-      setResponseMessage("Error: " + error.message);
-    }
-  };
+  //     setResponseMessage(JSON.stringify(response.data, null, 2));
+  //   } catch (error: any) {
+  //     console.error("Error:", error);
+  //     setResponseMessage("Error: " + error.message);
+  //   }
+  // };
+
+  // rewrite to prisma
   const fetchDataFromServer = async () => {
+
+
+
     console.log("Fetching data from server...");
     try {
-      const response = await axios.get(`${knihyURL}/downloadExcel`, {
-        responseType: "arraybuffer",
-      });
-      const data = new Uint8Array(response.data);
-      const workbook = XLSX.read(data, { type: "array" });
-      XLSX.writeFile(workbook, "data ze serveru.xlsx");
-      console.log("Data fetched and saved locally.");
+      // const response = await axios.get("/api/getBooks");
+
+    // const firstBook = books[0];
+    // const totalBooks = books.length;
+  // console.log(books)
+    // console.log("First Book:", firstBook);
+    // console.log("Total Books:", totalBooks);
+
+      // const response = await axios.get(`${knihyURL}/downloadExcel`, {
+      //   responseType: "arraybuffer",
+      // });
+      // const data = new Uint8Array(response.data);
+      // const workbook = XLSX.read(data, { type: "array" });
+      // XLSX.writeFile(workbook, "data_ze_serveru.xlsx");
+      // console.log("Data fetched and saved locally.");
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
       alert("Error fetching data from Server: " + error.message);
     }
   };
+
   if (session?.user?.email !== 'ondralukes06@seznam.cz') {
     console.log((session?.user?.email === "ondralukes06@seznam.cz").toString(),(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString())
     return (
@@ -120,7 +130,6 @@ const ExcelSheetUpdater = () => {
               width={32}
               height={32}
             />
-            {/* Stáhnout data ze serveru */}
           </PrimaryButton>
         </Box>
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
@@ -128,7 +137,7 @@ const ExcelSheetUpdater = () => {
             Přepsat data na serveru
           </Typography>
 
-          <form
+          {/* <form
             onSubmit={handleSubmit}
             encType="multipart/form-data"
             className="flex flex-col items-center"
@@ -151,12 +160,12 @@ const ExcelSheetUpdater = () => {
                 height={32}
               />
             </SecondaryButton>
-          </form>
+          </form> */}
         </Box>
       </Box>
-      <Typography variant="body1" className="m-2">
-        {responseMessage}
-      </Typography>
+      {/* <Typography variant="body1" className="m-2"> */}
+        {/* {responseMessage} */}
+      {/* </Typography> */}
       <PrimaryButton
         onClick={() => {
           signOut();

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Book, Filters } from '@/types/types';
-import { defaultFilters } from '@/data/values';
+import { defaultFilters, prisma } from '@/data/values';
 
 
 export const getBooksByQuery = async (
@@ -10,9 +10,12 @@ export const getBooksByQuery = async (
 ): Promise<Book[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
   try {
+    // debugger
     const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit });
-    console.log(response.data)
-    return response.data || [];
+    // console.log(response.data)
+  //  const books = await prisma.knihy.findMany()
+  //  console.log(books)
+    return  response.data || [];
   } catch (error: any) {
     throw new Error(`Problem with fetching data: ${error.message}`);
   }
