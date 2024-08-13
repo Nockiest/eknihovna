@@ -12,7 +12,7 @@ import { Searcher } from "@/components/catalog/Searcher";
 import axios from "axios";
 import { genUniqueBookCount } from "@/utils/getBookCount";
 import { getBookNames } from "@/utils/getBookNames";
-import ErrorReporter from "@/theme/ErrorReprter";
+import ErrorReporter from "@/theme/Announcer";
 
 const KatalogPage = () => {
   // const [books, setBooks] = useState<Book[]>([]);
@@ -81,7 +81,7 @@ const KatalogPage = () => {
   }
 
   if (errorMessage) {
-    return <ErrorReporter errorMessage={errorMessage} />;
+    return <ErrorReporter message={errorMessage}  type='error'/>;
   }
 
   return (

@@ -11,12 +11,14 @@ import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
 // import { useAuthContext } from "@/app/upload/authContext";
 import ReroutToAUth from "./ReroutToAUth";
+import Announcer from "@/theme/Announcer";
+import { useState } from "react";
 
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
 
   // const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  // const [responseMessage, setResponseMessage] = useState("");
+  const [responseMessage, setResponseMessage] = useState("");
   console.log(session)
   if (!session) {
     // redirect("/api/auth/signin?callbackUrl=/upload");
@@ -163,6 +165,7 @@ const ExcelSheetUpdater = () => {
           </form> */}
         </Box>
       </Box>
+      <Announcer message={responseMessage }type='normal' />
       {/* <Typography variant="body1" className="m-2"> */}
         {/* {responseMessage} */}
       {/* </Typography> */}
