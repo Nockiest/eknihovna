@@ -14,7 +14,7 @@ export const knihyURL =
     available: null
   }
 
-  export  const prisma = new PrismaClient();
+  // export  const prisma = new PrismaClient();
 
 export  const shownBooksBySize: Record<Breakpoint, number> = {
     xs: 12,
