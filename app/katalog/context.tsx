@@ -1,20 +1,20 @@
-import { Book, Filters, FiltringValues  } from "@/types/types";
-import { useContext,createContext } from "react";
-
-
+import { Book, Filters, FiltringValues } from "@/types/types";
+import { useContext, createContext } from "react";
 
 type QueryContextType = {
   isOpenSearcher: boolean;
   setOpenSearcher: React.Dispatch<React.SetStateAction<boolean>>;
   filters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
-  books: Book[];
+  errorMessage: string | null;
+  setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
+  // books: Book[];
   // setBooks: React.Dispatch<React.SetStateAction<Book[] >>;
-  totalBookNum: number|Promise<number>;
+  totalBookNum: number | Promise<number>;
   filterValues: FiltringValues;
   // query:string;
   // setQuery:React.Dispatch<React.SetStateAction<string >>;
-  bookNames:string[]   ;
+  bookNames: string[];
 };
 
 // Create the context

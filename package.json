@@ -13,6 +13,7 @@
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.21",
     "@mui/material": "^5.15.19",
+    "@prisma/client": "^5.18.0",
     "axios": "^1.7.2",
     "emailjs-com": "^3.2.0",
     "glob": "^10.4.1",
@@ -23,6 +24,8 @@
     "react": "^18",
     "react-dom": "^18",
     "react-responsive": "^10.0.0",
+    "uuid": "^10.0.0",
+    "uuidv4": "^6.2.13",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
@@ -37,6 +40,7 @@
     "eslint-config-next": "14.2.3",
     "jsonwebtoken": "^9.0.2",
     "postcss": "^8",
+    "prisma": "^5.18.0",
     "react-window": "^1.8.10",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
