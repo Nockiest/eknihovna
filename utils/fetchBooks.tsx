@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { Book, Filters } from '@/types/types';
-import { defaultFilters, prisma } from '@/data/values';
+import { defaultFilters  } from '@/data/values';
 
 
 export const getBooksByQuery = async (
