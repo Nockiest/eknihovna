@@ -1,4 +1,4 @@
-import { prisma } from '@/data/values';
+// import { prisma } from '@/data/values';
 import { NextResponse } from 'next/server';
 // import { PrismaClient } from '@prisma/client';
 
@@ -10,6 +10,6 @@ export async function GET() {
   } catch (error) {
     return NextResponse.json({ error: "Error fetching books" }, { status: 500 });
   } finally {
-    await prisma.$disconnect();
+    // await prisma.$disconnect();
   }
 }
