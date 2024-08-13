@@ -186,6 +186,7 @@ exports.connectAndQuery = connectAndQuery;
 const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void 0, [columnName_1, ...args_2], void 0, function* (columnName, unique = false, tableName = "knihy") {
     var _a;
     const client = yield pool_1.pool.connect();
+    console.log(1);
     try {
         // Check if the column type is an array or can be treated as an array
         const columnTypeQuery = `
@@ -197,6 +198,7 @@ const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void
             tableName,
             columnName,
         ]);
+        console.log(2);
         const columnType = (_a = columnTypeResult.rows[0]) === null || _a === void 0 ? void 0 : _a.data_type;
         let values = [];
         if (columnType && columnType.includes("[]")) {
@@ -219,9 +221,11 @@ const extractValuesFromArrayColumn = (columnName_1, ...args_2) => __awaiter(void
             // Extract the values from the result
             values = result.rows.map((row) => row.value);
         }
+        console.log(3);
         // Filter out null values
         values = values.filter((value) => value !== null);
         values = (0, utils_1.flattenIfArrayOfArrays)(values);
+        console.log(4);
         return {
             columnName,
             values,

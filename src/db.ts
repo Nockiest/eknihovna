@@ -205,7 +205,7 @@ export const extractValuesFromArrayColumn = async (
   tableName: string = "knihy"
 ): Promise<ExtractedValues | null> => {
   const client: PoolClient = await pool.connect();
-
+  console.log(1)
   try {
     // Check if the column type is an array or can be treated as an array
     const columnTypeQuery = `
@@ -217,11 +217,13 @@ export const extractValuesFromArrayColumn = async (
       tableName,
       columnName,
     ]);
+    console.log(2)
     const columnType = columnTypeResult.rows[0]?.data_type;
 
     let values: string[] = [];
 
     if (columnType && columnType.includes("[]")) {
+
       // Column is an array type, unnest the array
       const query = `
           SELECT DISTINCT unnest(${columnName}) AS value
@@ -242,10 +244,11 @@ export const extractValuesFromArrayColumn = async (
       // Extract the values from the result
       values = result.rows.map((row) => row.value);
     }
-
+    console.log(3)
     // Filter out null values
     values = values.filter((value) => value !== null);
     values = flattenIfArrayOfArrays(values);
+    console.log(4)
     return {
       columnName,
       values,

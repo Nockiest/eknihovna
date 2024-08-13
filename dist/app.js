@@ -197,5 +197,6 @@ app.use((req, res) => {
     res.status(405).json({ message: 'Method not allowed' });
 });
 app.listen(port, () => {
+    console.log(process.env.NODE_ENV === 'production');
     console.log(`Server is running on port ${port}`);
 });

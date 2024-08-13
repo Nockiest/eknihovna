@@ -5,10 +5,21 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "start nodemon dist/app.js && start npx tsc -w",
+    "dev": "set NODE_ENV=DEVELOPMENT && start nodemon dist/app.js && start npx tsc -w",
+
     "start": "node dist/app.js",
-    "prod": "pm2 start dist/app.js"
+    "prod":  "set NODE_ENV=PRODUCTION  && start nodemon dist/app.js"
   },
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Server (Production)",
+      "program": " C:/Users/ondra/OneDrive - GymnÃ¡zium Opatov, Praha 4, Konstantinova 1500/Plocha/eknihovna/server/index.js",
+      "env": {
+        "NODE_ENV": "production"
+      } }
+    ],
   "dependencies": {
     "@types/pg": "^8.11.6",
     "@types/xlsx": "^0.0.36",
