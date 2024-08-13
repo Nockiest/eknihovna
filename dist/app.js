@@ -23,10 +23,7 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const excelUtils_1 = require("./excelUtils");
 const jose_1 = require("jose");
 // make sure you run npx tsc -w before using this file
-const cookieParser = require('cookie-parser');
-// const verifyToken = require('./verifyToken'); // Path to your verifyToken middleware
 dotenv_1.default.config();
-const knihyURL = process.env.KNIHY_URL;
 const port = 3002;
 const app = (0, express_1.default)();
 app.use((0, cors_1.default)());
@@ -85,23 +82,6 @@ app.get("/uniqueNamesCount", (req, res) => __awaiter(void 0, void 0, void 0, fun
         res.status(500).json({ error: "Internal Server Error" });
     }
 }));
-// app.post("/authenticate", (req, res) => {
-//   const { password } = req.body;
-//   if (!password) {
-//     return res.status(400).json({ error: "vyžadováno heslo" });
-//   }
-//   bcrypt.compare(
-//     password,
-//     process.env.UPLOAD_PASSWORD_HASHED,
-//     (err, result) => {
-//       if (err || !result) {
-//         return res.status(401).json({ error: "Špatné heslo" });
-//       }
-//       // Password correct, return success
-//       res.status(200).json({ message: "Uživatel autorizován" });
-//     }
-//   );
-// });
 app.get("/getUniqueValues", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { columnName } = req.query; // Use req.query to get query parameters
     try {
@@ -181,22 +161,13 @@ app.post('/login', (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     return res.status(401).json({ message: 'Invalid credentials' });
 }));
-// app.post('/login', (req, res) => {
-//   const { username, password } = req.body;
-//   console.log(username, password,  password === process.env.JWT_SECRET);
-//   if (username === 'admin' && password === process.env.JWT_SECRET) {
-//     const token = jwt.sign({ role: 'admin' }, process.env.JWT_SECRET, { expiresIn: '1h' });
-//     console.log('passed');
-//     // Set the cookie with the token
-//     res.cookie('authToken', token, { httpOnly: true, maxAge: 3600 * 1000 });
-//     return res.status(200).json({ message: 'Login successful', token });
-//   }
-//   return res.status(401).json({ message: 'Invalid credentials' });
-// });
 app.use((req, res) => {
     res.status(405).json({ message: 'Method not allowed' });
 });
 app.listen(port, () => {
-    console.log(process.env.NODE_ENV === 'production');
+    var _a;
+    const nodeEnv = (_a = process.env.NODE_ENV) === null || _a === void 0 ? void 0 : _a.toUpperCase();
+    console.log(process.env);
+    console.log(process.env.POSTGRES_URL, nodeEnv, nodeEnv === 'PRODUCTION');
     console.log(`Server is running on port ${port}`);
 });

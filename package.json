@@ -5,10 +5,10 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set NODE_ENV=DEVELOPMENT && start nodemon dist/app.js && start npx tsc -w",
+    "dev": "   start npx tsc -w && start nodemon dist/app.js ",
 
     "start": "node dist/app.js",
-    "prod":  "set NODE_ENV=PRODUCTION  && start nodemon dist/app.js"
+    "prod":  "start nodemon dist/app.js"
   },
   "configurations": [
     {
