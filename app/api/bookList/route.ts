@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { Book } from '@/types/types';
+// import { Book } from '@/types/types';
 import { prisma } from '@/data/values';
 import { buildPrismaFilter } from '@/utils/buildPrismaFilter';
 
