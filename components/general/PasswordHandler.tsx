@@ -2,7 +2,7 @@
 import React, { useState } from 'react'
 import PasswordEntry from './PasswordEntry';
 import { PrimaryButton } from '@/theme/buttons/Buttons';
-import { authenticate } from '@/utils/authenticate';
+import { authenticate } from '@/utils/apiConections/authenticate';
 
 const PasswordHandler = () => {
     const [password, setPassword] = useState<string>("");
