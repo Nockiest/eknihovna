@@ -18,13 +18,12 @@ interface BookCatalogProps {}
 
 const BookCatalog: React.FC<BookCatalogProps> = () => {
   // const size = useCurrentBreakpoint() || "xs";
-  const router = useRouter();
-  const pathname = usePathname();
+  // const router = useRouter();
+  // const pathname = usePathname();
   const {
     isOpenSearcher,
     setOpenSearcher,
     filters,
-    bookNames,
     setIsLoading,
     setErrorMessage
   } = useSearchContext();
@@ -36,12 +35,12 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     parseInt(searchParams.get("page") || "1", 10) === 0
       ? 1
       : parseInt(searchParams.get("page") || "1", 10);
-  const query = searchParams.get("query") || "";
-  const getStartAndEndIndexes = (page: number, itemsPerPage: number) => {
-    const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
-    const newLastBookIndex = page * itemsPerPage;
-    return [indexOfFirstBook, newLastBookIndex];
-  };
+  // const query = searchParams.get("query") || "";
+  // const getStartAndEndIndexes = (page: number, itemsPerPage: number) => {
+  //   const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
+  //   const newLastBookIndex = page * itemsPerPage;
+  //   return [indexOfFirstBook, newLastBookIndex];
+  // };
 
   // fetch books by filter
   useEffect(() => {
