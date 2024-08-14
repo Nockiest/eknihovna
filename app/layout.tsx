@@ -6,7 +6,7 @@ import { ThemeProvider } from "@mui/material";
 import dynamic from "next/dynamic";
 
 import Head from "next/head";
-// import BugReportSection from "@/layouts/sections/BugReport";
+import BugReportSection from "@/components/sections/BugReport";
 import SessionWrapper from "@/components/SessionWrapper";
 import Footer from "@/components/footer/Footer";
 import Hero from "@/components/hero/Hero";
@@ -56,7 +56,7 @@ export default function RootLayout({
           <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
             {children}
           </main>
-          {/* <BugReportSection /> */}
+          <BugReportSection />
 
           <Footer />
 
