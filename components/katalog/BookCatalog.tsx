@@ -50,22 +50,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     return [indexOfFirstBook, newLastBookIndex];
   };
 
-
-  // set visible books from filtered books
-  // useEffect(() => {
-  //   changePage(1);
-  //   const [startIndex, endIndex] = getStartAndEndIndexes(
-  //     1,
-  //     shownBooksBySize[size]
-  //   );
-  //   const visibleBooks = filteredBooks
-  //     .filter((book: Book) => getRelevancy(book.name, query))
-  //     .slice(startIndex, endIndex);
-  //   console.log(startIndex, endIndex, visibleBooks, filteredBooks.length,filters);
-  //   setShownBooks(visibleBooks);
-  // }, [filteredBooks, page, router, query, size]);
-
-
   // fetch books by filter
   useEffect(() => {
     const fetchBooks = async () => {

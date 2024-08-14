@@ -15,8 +15,8 @@ type QueryContextType = {
   filterValues: FiltringValues;
   setFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  // query:string;
-  // setQuery:React.Dispatch<React.SetStateAction<string >>;
+  query:string;
+  setQuery:React.Dispatch<React.SetStateAction<string >>;
   bookNames: string[];
 };
 
