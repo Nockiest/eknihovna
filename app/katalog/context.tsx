@@ -10,8 +10,11 @@ type QueryContextType = {
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
   // books: Book[];
   // setBooks: React.Dispatch<React.SetStateAction<Book[] >>;
-  totalBookNum: number | Promise<number>;
+  // totalBookNum: number | Promise<number>;
+  setBookNames: React.Dispatch<React.SetStateAction<string[]>>;
   filterValues: FiltringValues;
+  setFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
   // query:string;
   // setQuery:React.Dispatch<React.SetStateAction<string >>;
   bookNames: string[];

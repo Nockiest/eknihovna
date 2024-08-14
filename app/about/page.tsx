@@ -1,9 +1,9 @@
 import React from "react";
-import NavBar from "@/components/navbar/Navbar";
+import NavBar from "@/layouts/navbar/Navbar";
 const page = () => {
   return (
     <div>
-      
+
       page
     </div>
   );

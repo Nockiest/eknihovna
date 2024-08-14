@@ -4,10 +4,12 @@ import "./styling/globals.css";
 import theme from "@/theme/theme";
 import { ThemeProvider } from "@mui/material";
 import dynamic from "next/dynamic";
-import Footer from "@/components/footer/Footer";
+
 import Head from "next/head";
-import BugReportSection from "@/components/sections/BugReport";
+// import BugReportSection from "@/layouts/sections/BugReport";
 import SessionWrapper from "@/components/SessionWrapper";
+import Footer from "@/layouts/footer/Footer";
+import Hero from "@/layouts/hero/Hero";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,7 +17,7 @@ export const metadata: Metadata = {
   title: "G.O. eknihovna",
   description: "Školní knihovna Gymnázia Opatov",
 };
-const NoSSRHero = dynamic(() => import("@/components/hero/Hero"), {
+const NoSSRHero = dynamic(() => import("@/layouts/hero/Hero"), {
   ssr: false,
 });
 export default function RootLayout({
@@ -49,15 +51,15 @@ export default function RootLayout({
         <ThemeProvider theme={theme}>
 
         {/* <SessionWrapper > */}
-
-          <NoSSRHero />
+<Hero />
+          {/* <NoSSRHero /> */}
           <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
             {children}
           </main>
-          <BugReportSection />
+          {/* <BugReportSection /> */}
 
           <Footer />
- 
+
         </ThemeProvider>
         {/* </QueryContextProvider> */}
       </body>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const fetchUniqueValues = async (columnName: string): Promise<string[]> => {
+const fetchUniqueValues = async (columnName: string): Promise<string[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
 
   try {
@@ -13,3 +13,5 @@ export const fetchUniqueValues = async (columnName: string): Promise<string[]> =
     throw error; // Rethrow the error if necessary
   }
 };
+
+export default  fetchUniqueValues;
