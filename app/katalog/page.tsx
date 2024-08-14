@@ -30,7 +30,7 @@ const KatalogPage = () => {
     category: [],
     author: [],
   });
-  // const [query, setQuery] = useState<string  >('');
+  const [query, setQuery] = useState<string  >('');
   const [bookNames, setBookNames] = useState<string[]>([]); //useMemo(() => getBookNames(), []);
   // const [totalBookNum, setTotalBookNum] = useState<number>(0);
   //= useMemo(() => genUniqueBookCount(), []);
@@ -83,6 +83,8 @@ const KatalogPage = () => {
         filterValues, // possible filter values
         setFiltersValues,
         bookNames,
+        query,
+        setQuery,
       }}
     >
       <Box className="w-full">

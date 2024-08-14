@@ -1,23 +1,34 @@
-import React, { useCallback, useMemo } from 'react';
-import { usePathname, useRouter } from 'next/navigation';
-import { useSearchParams } from 'next/navigation';
-import debounce from 'lodash';
-import Autocomplete from '@mui/material/Autocomplete';
-import TextField from '@mui/material/TextField';
-import InputAdornment from '@mui/material/InputAdornment';
-import SearchIcon from '@mui/icons-material/Search';
-import { FixedSizeList } from 'react-window';
-import { useSearchContext } from '@/app/katalog/context';
+import React, { useCallback, useEffect, useMemo } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
+import debounce from "lodash";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import SearchIcon from "@mui/icons-material/Search";
+import { FixedSizeList } from "react-window";
+import { useSearchContext } from "@/app/katalog/context";
+import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 
 interface SearchAutocompleteProps {}
 
 const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
-  const { bookNames } = useSearchContext();
+  const { bookNames, setQuery, setBookNames, setErrorMessage } = useSearchContext();
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
-
+  useEffect(() => {
+    async function update() {
+      try {
+        const bookNames = await fetchUniqueValues("name");
+        setBookNames(bookNames);
+      } catch (error) {
+        setErrorMessage("Failed to load book names.");
+      }
+    }
+    update();
+  }, []);
   // Debounce the input change handler to limit the number of calls
   // const debouncedOnInputChange = useMemo(
   //   () =>
@@ -50,7 +61,7 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
         onClick={() => {
           console.log("click", bookNames[index]);
           const selectedValue = bookNames[index];
-          // setQuery(selectedValue);
+          setQuery(selectedValue);
 
           // onInputChange(selectedValue);
         }}
@@ -62,55 +73,54 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
   );
   const changeQuery = (newPage: string) => {
     const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set('query', newPage );
+    currentQuery.set("query", newPage);
     // changePage(currentQuery)
     router.push(`${pathName}?${currentQuery.toString()}`);
   };
   return (
     <Autocomplete
-    disablePortal
-    id="combo-box-demo"
-    className="w-full"
-    options={bookNames}
-    groupBy={(option) => option[0]}
-    value={query}
-    onInputChange={(e, newInputValue) => {
-      changeQuery   (newInputValue);
-    }}
-    ListboxComponent={(props) => (
-      // @ts-ignore
-      <FixedSizeList
-        height={250}
-        width="100%"
-        className="cursor-pointer"
-        itemSize={46}
-        itemCount={bookNames.length}
-        {...props}
-      >
-        {renderRow}
-      </FixedSizeList>
-    )}
-    renderInput={(params) => (
-      <TextField
-        {...params}
-        variant="outlined"
-        placeholder="Vyhldat knihu..."
-        InputProps={{
-          ...params.InputProps,
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
-        }}
-      />
-    )}
-  />
+      disablePortal
+      id="combo-box-demo"
+      className="w-full"
+      options={bookNames}
+      groupBy={(option) => option[0]}
+      value={query}
+      onInputChange={(e, newInputValue) => {
+        changeQuery(newInputValue);
+      }}
+      ListboxComponent={(props) => (
+        // @ts-ignore
+        <FixedSizeList
+          height={250}
+          width="100%"
+          className="cursor-pointer"
+          itemSize={46}
+          itemCount={bookNames.length}
+          {...props}
+        >
+          {renderRow}
+        </FixedSizeList>
+      )}
+      renderInput={(params) => (
+        <TextField
+          {...params}
+          variant="outlined"
+          placeholder="Vyhldat knihu..."
+          InputProps={{
+            ...params.InputProps,
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            ),
+          }}
+        />
+      )}
+    />
   );
 };
 
 export default SearchAutocomplete;
-
 
 // const useStyles = makeStyles({
 //   searchBox: {
