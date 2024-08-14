@@ -49,11 +49,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     const newLastBookIndex = page * itemsPerPage;
     return [indexOfFirstBook, newLastBookIndex];
   };
-  const changePage = (newPage: number) => {
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("page", newPage.toString());
-    router.push(`${pathname}?${currentQuery.toString()}`);
-  };
+
 
   // set visible books from filtered books
   // useEffect(() => {
@@ -177,9 +173,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
           </Grid>
           <PaginationLinker
           totalEntries ={ BooksInFilterNum}
-            // totalEntries={
-            //   bookNames.filter((name) => getRelevancy(name, query)).length
-            // }
             itemsPerPage={24} //shownBooksBySize[size]
             folderName="katalog"
           />

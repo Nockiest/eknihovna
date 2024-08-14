@@ -1,4 +1,4 @@
-
+'use client'
 import { checkIfIgnoredValue } from "@/types/typeChecks";
 import { Filters, FiltringValues } from "@/types/types";
 import { translateBookKey } from "@/utils/translateBookKeys";
@@ -11,7 +11,7 @@ import { useEffect } from "react";
 type FilterListerProps = {
 };
 
-const FilterLister: React.FC<FilterListerProps> = async ({
+const FilterLister: React.FC<FilterListerProps> =   ({
 
 }) => {
   const { filters, setFilters, setFiltersValues, setErrorMessage } = useSearchContext();
@@ -32,6 +32,7 @@ const FilterLister: React.FC<FilterListerProps> = async ({
   //  await fetchUniqueFilterCol("author")
   // ]);
   useEffect(() => {
+    console.log('fetching filters')
     async function update() {
       try {
         await Promise.all([
