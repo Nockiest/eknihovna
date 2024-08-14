@@ -1,22 +1,28 @@
-
-import React, { useEffect } from 'react'
+'use client'
+import React, { useEffect, useState } from 'react';
 import { Container } from '@mui/material';
 import Message from '@/components/general/Message';
-import { prisma } from '@/data/values';
+import axios from 'axios';
 
-const NewsPage: React.FC = async () => {
-  const messages = [
-    { message: "Vítáme vás v první verzi stránky. Můžete si prohlédnout aktuální stav knihovního katalogu, nebo zjistit užitečné informace o naší knihovně.", date: "2023-06-24" },
-  ];
-  // const books =  await prisma.knihy.findMany()
-  // console.log(books)
-  // useEffect(() => {
-  //   const findBooks = async ()=> {
+const NewsPage: React.FC = () => {
+  const [messages, setMessages] = useState([
+    { message: "Vítáme vás v první verzi stránky. Můžete si prohlédnout aktuální stav knihovního katalogu, nebo zjistit užitečné informace o naší knihovně.", date: "2023-06-24" }
+  ]);
 
-  //   }
-  //   findBooks()
-  // }, [])
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/api/test');
+        console.log(response.data);
+        // Update messages state if needed based on the API response
+        // setMessages(response.data.books);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
+    fetchData();
+  }, []);
 
   return (
     <Container maxWidth="sm">
@@ -28,3 +34,26 @@ const NewsPage: React.FC = async () => {
 };
 
 export default NewsPage;
+
+// const books =  await prisma.knihy.findMany()
+  // console.log(books)
+  // useEffect(() => {
+  //   const findBooks = async ()=> {
+
+  //   }
+  //   findBooks()
+  // }, [])
+
+    // useEffect(() => {
+  //   const fetchMessages = async () => {
+  //     try {
+  //       console.log(response)
+  //       // setMessages(response.data);
+  //     } catch (err: any) {
+  //       // setError('Failed to fetch messages');
+  //       console.error(err.message);
+  //     }
+  //   };
+
+  //   fetchMessages();
+  // }, []);

@@ -10,7 +10,7 @@ import { SearchContext } from "./context";
 import ColorCircles from "@/components/general/ColorCircles";
 import { Searcher } from "@/components/katalog/Searcher";
 import axios from "axios";
-import { genUniqueBookCount } from "@/utils/apiConections/getBookCount";
+// import { genUniqueBookCount } from "@/utils/apiConections/getBookCount";
 import { getBookNames } from "@/utils/apiConections/getBookNames";
 import ErrorReporter from "@/theme/Announcer";
 
@@ -31,9 +31,8 @@ const KatalogPage = () => {
     author: [],
   });
   const [query, setQuery] = useState<string  >('');
-  const [bookNames, setBookNames] = useState<string[]>([]); //useMemo(() => getBookNames(), []);
+  const [bookNames, setBookNames] = useState<string[]>([]);  
   // const [totalBookNum, setTotalBookNum] = useState<number>(0);
-  //= useMemo(() => genUniqueBookCount(), []);
   // useEffect(() => {
   //   async function update() {
   //     try {
