@@ -7,29 +7,35 @@ import {
   FormControlLabel,
   Fab,
   InputLabel,
-  Typography,
   IconButton,
   Box,
 } from "@mui/material";
-import Image from "next/image";
 import theme from "@/theme/theme";
 import { Filters, FiltringValues } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
 import SortedGroupedSelect from "./SortedSelect";
-import CategoryChip from "./CategoryChip";
-import { checkIfIgnoredValue } from "@/types/typeChecks";
-import { translateBookKey } from "@/utils/translateBookKeys";
 import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 type SearcherProps = {};
 export const Searcher: React.FC<SearcherProps> = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
   const { isOpenSearcher, setOpenSearcher, filters, setFilters, filterValues } =
     useSearchContext();
-
+    
+  const changePage = (newPage: number) => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("page", newPage.toString());
+    router.push(`${pathname}?${currentQuery.toString()}`);
+  };
   const handleFilterChange = (
     name: keyof Filters,
     value: string | boolean | null
   ) => {
+    changePage(1);
     setFilters((prevFilters: Filters) => {
       console.log(prevFilters[name], Array.isArray(prevFilters[name]), value);
       if (
@@ -76,7 +82,7 @@ export const Searcher: React.FC<SearcherProps> = () => {
       (option) => !filters[key]?.includes(option)
     );
   };
-  
+
   return (
     <Slide
       direction="up"
@@ -94,7 +100,7 @@ export const Searcher: React.FC<SearcherProps> = () => {
         >
           <Close />
         </IconButton>
-        {/* <FilterLister filters={filters} removeFilter={removeFilter} /> */}
+        <FilterLister />
 
         <Box className="m-2 mt-8 center-flex flex-col mx-4">
           <SortedGroupedSelect
