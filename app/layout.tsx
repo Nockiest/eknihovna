@@ -8,8 +8,8 @@ import dynamic from "next/dynamic";
 import Head from "next/head";
 // import BugReportSection from "@/layouts/sections/BugReport";
 import SessionWrapper from "@/components/SessionWrapper";
-import Footer from "@/layouts/footer/Footer";
-import Hero from "@/layouts/hero/Hero";
+import Footer from "@/components/footer/Footer";
+import Hero from "@/components/hero/Hero";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   title: "G.O. eknihovna",
   description: "Školní knihovna Gymnázia Opatov",
 };
-const NoSSRHero = dynamic(() => import("@/layouts/hero/Hero"), {
+const NoSSRHero = dynamic(() => import("@/components/hero/Hero"), {
   ssr: false,
 });
 export default function RootLayout({
