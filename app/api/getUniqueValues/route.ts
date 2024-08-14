@@ -33,33 +33,36 @@ console.log(req.method, req.body )
 console.log(3, columnName);
   try {
     let uniqueValues: UniqueBookValue[] = [];
-
-    switch (columnName) {
-      case 'name':
-        uniqueValues = await prisma.knihy.findMany({
-          select: { name: true },
-          distinct: ['name'],
-        });
-        break;
-      case 'author':
-        uniqueValues = await prisma.knihy.findMany({
-          select: { author: true },
-          distinct: ['author'],
-        });
-        break;
-      case 'category':
-        uniqueValues = await prisma.knihy.findMany({
-          select: { category: true },
-          distinct: ['category'],
-        });
-        break;
-      case 'genres':
-        uniqueValues = await prisma.knihy.findMany({
-          select: { genres: true },
-          distinct: ['genres'],
-        });
-        break;
-    }
+    uniqueValues = await prisma.knihy.findMany({
+        select: { name: true },
+        distinct: [columnName as 'name'| 'author'| 'category'| 'genres'],
+      });
+    // switch (columnName) {
+    //   case 'name':
+    //     uniqueValues = await prisma.knihy.findMany({
+    //       select: { name: true },
+    //       distinct: ['name'],
+    //     });
+    //     break;
+    //   case 'author':
+    //     uniqueValues = await prisma.knihy.findMany({
+    //       select: { author: true },
+    //       distinct: ['author'],
+    //     });
+    //     break;
+    //   case 'category':
+    //     uniqueValues = await prisma.knihy.findMany({
+    //       select: { category: true },
+    //       distinct: ['category'],
+    //     });
+    //     break;
+    //   case 'genres':
+    //     uniqueValues = await prisma.knihy.findMany({
+    //       select: { genres: true },
+    //       distinct: ['genres'],
+    //     });
+    //     break;
+    // }
 
     // Safely access the columnName property
     const values = uniqueValues.map(item => {
