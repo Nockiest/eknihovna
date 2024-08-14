@@ -3,8 +3,9 @@
 import { prisma } from '@/data/values';
 import { buildPrismaFilter } from '@/utils/buildPrismaFilter';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+export default async function POST(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -31,7 +32,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       distinct: ['name'], // Select distinct on the 'name' field
     });
 
-    res.status(200).json(books);
+    NextResponse.json(books);
   } catch (error) {
     console.error("Error fetching books:", error);
     res.status(500).json({ error: "Internal Server Error" });
