@@ -11,9 +11,9 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import CategoryChip from "./CategoryChip";
 import { useSearchContext } from "@/app/katalog/context";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
-import { getBooksByQuery } from "@/utils/fetchBooks";
+import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
 import FilterOverview from "./FilterOverview";
-import { queryBookName } from "@/utils/queryBookName";
+import { queryBookName } from "@/utils/apiConections/queryBookName";
 import getRelevancy from "@/utils/searchingUtils";
 import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
@@ -24,22 +24,20 @@ interface BookCatalogProps {}
 
 
 const BookCatalog: React.FC<BookCatalogProps> = () => {
-  const size = useCurrentBreakpoint() || "xs";
+  // const size = useCurrentBreakpoint() || "xs";
   const router = useRouter();
   const pathname = usePathname();
   const {
-    totalBookNum,
     isOpenSearcher,
     setOpenSearcher,
     filters,
-    setFilters,
     bookNames,
+    setIsLoading,
     setErrorMessage
   } = useSearchContext();
 
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
-  const [filteredBooks, setFilteredBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [BooksInFilterNum, setBooksInFilterNum] = useState<number>(0);
   const searchParams = useSearchParams();
   const page =
     parseInt(searchParams.get("page") || "1", 10) === 0
@@ -58,101 +56,80 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
   };
 
   // set visible books from filtered books
-  useEffect(() => {
-    changePage(1);
-    const [startIndex, endIndex] = getStartAndEndIndexes(
-      1,
-      shownBooksBySize[size]
-    );
-    const visibleBooks = filteredBooks
-      .filter((book: Book) => getRelevancy(book.name, query))
-      .slice(startIndex, endIndex);
-    console.log(startIndex, endIndex, visibleBooks, filteredBooks.length,filters);
-    setShownBooks(visibleBooks);
-  }, [filteredBooks, page, router, query, size]);
+  // useEffect(() => {
+  //   changePage(1);
+  //   const [startIndex, endIndex] = getStartAndEndIndexes(
+  //     1,
+  //     shownBooksBySize[size]
+  //   );
+  //   const visibleBooks = filteredBooks
+  //     .filter((book: Book) => getRelevancy(book.name, query))
+  //     .slice(startIndex, endIndex);
+  //   console.log(startIndex, endIndex, visibleBooks, filteredBooks.length,filters);
+  //   setShownBooks(visibleBooks);
+  // }, [filteredBooks, page, router, query, size]);
 
 
   // fetch books by filter
   useEffect(() => {
-    debugger
     const fetchBooks = async () => {
-      setLoading(true);
+      setIsLoading(true);
       setErrorMessage(null);
       try {
-        const newBooks = await getBooksByQuery(filters);
-        setFilteredBooks(newBooks);
-        console.log(newBooks);
+        const newBooks = await getBooksByQuery(filters, page, 24 ); //shownBooksBySize[size]
+        const allPossibleBooks = await getBooksByQuery(filters, );
+        setBooksInFilterNum ( allPossibleBooks.length)
+        // setFilteredBooks(newBooks);
+        setShownBooks(newBooks);
       } catch (err: any) {
         console.log(err?.message);
         setErrorMessage(err?.message || "unknown error occurred");
-      } finally {
-        setLoading(false);
+      }
+      finally {
+        setIsLoading(false);
       }
     };
     fetchBooks();
-  }, [filters, query]);
-
-  useEffect(() => {
-    changePage(1); // reset page number on every query
-    setFilteredBooks((prev) =>
-      prev.filter((book: Book) => getRelevancy(book.name, query))
-    );
-  }, [query]);
+  }, [filters,page  ]);
+//filters, query, page, size,
+  // useEffect(() => {
+  //   changePage(1); // reset page number on every query
+  //   setFilteredBooks((prev) =>
+  //     prev.filter((book: Book) => getRelevancy(book.name, query))
+  //   );
+  // }, [query, filters]);
 
   // Memoize the shownBooks to avoid unnecessary recalculations
-  const memoizedShownBooks = useMemo(() => shownBooks, [shownBooks]);
+  // const memoizedShownBooks = useMemo(() => shownBooks, [shownBooks]);
 
   // Update page on resize
-  useEffect(() => {
-    if (size) {
-      const newItemsPerPage = shownBooksBySize[size];
-      const pageNum = page === 0 ? 1 : page;
-      const [indexOfFirstBook] = getStartAndEndIndexes(
-        pageNum,
-        newItemsPerPage
-      );
-      const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
-      router.push(
-        `/katalog?page=${Math.min(
-          Math.ceil(
-            typeof totalBookNum === "number"
-              ? totalBookNum
-              : 0 / newItemsPerPage
-          ),
-          newCurrentPage + 1 || 1
-        )}`
-      );
-    }
-  }, [size, totalBookNum, router, page]);
+  // useEffect(() => {
+  //   if (size) {
+  //     const newItemsPerPage = shownBooksBySize[size];
+  //     const pageNum = page === 0 ? 1 : page;
+  //     const [indexOfFirstBook] = getStartAndEndIndexes(
+  //       pageNum,
+  //       newItemsPerPage
+  //     );
+  //     const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
+  //     router.push(
+  //       `/katalog?page=${Math.min(
+  //         Math.ceil(
+  //           typeof totalBookNum === "number"
+  //             ? totalBookNum
+  //             : 0 / newItemsPerPage
+  //         ),
+  //         newCurrentPage + 1 || 1
+  //       )}`
+  //     );
+  //   }
+  // }, [size, totalBookNum, router, page]);
 
-  const removeFilter = (key: keyof Filters, value: string | boolean) => {
-    setFilters((prevFilters: Filters) => {
-      const currentFilter = prevFilters[key];
-      console.log(key, value, prevFilters[key]);
 
-      if (Array.isArray(currentFilter)) {
-        // Remove the specified value from the array
-        const updatedArray = currentFilter.filter(
-          (item: string) => item !== value
-        );
-        console.log(updatedArray);
-        return {
-          ...prevFilters,
-          [key]: updatedArray,
-        };
-      } else {
-        // Set the value under the key to null
-        return {
-          ...prevFilters,
-          [key]: null,
-        };
-      }
-    });
-  };
 
   return (
     <Box className="w-full">
-      <FilterLister filters={filters} removeFilter={removeFilter} />
+      <FilterLister />
       <Box className="flex-row flex-wrap w-full gap-4">
         <SearcherOpenerFab
           css={"z-0 mb-2"}
@@ -199,10 +176,11 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             ))}
           </Grid>
           <PaginationLinker
-            totalEntries={
-              bookNames.filter((name) => getRelevancy(name, query)).length
-            }
-            itemsPerPage={shownBooksBySize[size]}
+          totalEntries ={ BooksInFilterNum}
+            // totalEntries={
+            //   bookNames.filter((name) => getRelevancy(name, query)).length
+            // }
+            itemsPerPage={24} //shownBooksBySize[size]
             folderName="katalog"
           />
         </Box>

@@ -1,21 +1,20 @@
 "use client";
-import BookCatalog from "@/components/catalog/BookCatalog";
-import { getBooksByQuery } from "@/utils/fetchBooks";
+import BookCatalog from "@/components/katalog/BookCatalog";
+import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
 import { Box, Typography, CircularProgress, Checkbox } from "@mui/material";
-import SearcherOpenerFab from "@/components/catalog/SearcheOpenerFab";
+import SearcherOpenerFab from "@/components/katalog/SearcheOpenerFab";
 import { useEffect, useMemo, useState } from "react";
 import { Book, Filters, FiltringValues } from "@/types/types";
-import { fetchUniqueValues } from "@/utils/fetchUniqueValues";
+import   fetchUniqueValues   from "@/utils/apiConections/fetchUniqueValues";
 import { SearchContext } from "./context";
-import ColorCircles from "@/utils/ColorCircles";
-import { Searcher } from "@/components/catalog/Searcher";
+import ColorCircles from "@/components/general/ColorCircles";
+import { Searcher } from "@/components/katalog/Searcher";
 import axios from "axios";
-import { genUniqueBookCount } from "@/utils/getBookCount";
-import { getBookNames } from "@/utils/getBookNames";
+import { genUniqueBookCount } from "@/utils/apiConections/getBookCount";
+import { getBookNames } from "@/utils/apiConections/getBookNames";
 import ErrorReporter from "@/theme/Announcer";
 
 const KatalogPage = () => {
-  // const [books, setBooks] = useState<Book[]>([]);
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [filters, setFilters] = useState<Filters>({
     author: [],
@@ -24,9 +23,8 @@ const KatalogPage = () => {
     formaturita: null,
     available: false,
   });
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-
   const [filterValues, setFiltersValues] = useState<FiltringValues>({
     genres: [],
     category: [],
@@ -34,51 +32,35 @@ const KatalogPage = () => {
   });
   // const [query, setQuery] = useState<string  >('');
   const [bookNames, setBookNames] = useState<string[]>([]); //useMemo(() => getBookNames(), []);
-  const [totalBookNum, setTotalBookNum] = useState<number>(0);
+  // const [totalBookNum, setTotalBookNum] = useState<number>(0);
   //= useMemo(() => genUniqueBookCount(), []);
-  async function fetchUniqueFilterCol(
-    colName: "genres" | "category" | "author"
-  ) {
-    const res = await fetchUniqueValues(colName);
-    setFiltersValues((prevFilters: FiltringValues) => ({
-      ...prevFilters,
-      [colName]: res,
-    }));
-  }
+  // useEffect(() => {
+  //   async function update() {
+  //     try {
 
-  useEffect(() => {
-    async function update() {
-      try {
-        debugger;
-        // const newBooks = await getBooksByQuery();
-        const bookNames = await fetchUniqueValues("name");
-        setTotalBookNum(bookNames.length);
-        // setBooks(newBooks);
-        setBookNames(bookNames);
-        await Promise.all([
-          fetchUniqueFilterCol("genres"),
-          fetchUniqueFilterCol("category"),
-          fetchUniqueFilterCol("author"),
-        ]);
-      } catch (error) {
-        setErrorMessage("Failed to load books.");
-      } finally {
-        setIsLoading(false);
-      }
-    }
-    update();
-  }, []);
+  //       const bookNames = await fetchUniqueValues("name");
+  //       // setTotalBookNum(bookNames.length);
+  //       setBookNames(bookNames);
+  //     } catch (error) {
+  //       setErrorMessage("Failed to load books.");
+  //     }
+  //     // finally {
+  //     //   setIsLoading(false);
+  //     // }
+  //   }
+  //   update();
+  // }, []);
 
-  if (isLoading) {
-    return (
-      <Box
-        className="w-full flex justify-center items-center"
-        style={{ height: "100vh" }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <Box
+  //       className="w-full flex justify-center items-center"
+  //       style={{ height: "100vh" }}
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
 
   if (errorMessage) {
     return <ErrorReporter message={errorMessage}  type='error'/>;
@@ -91,13 +73,15 @@ const KatalogPage = () => {
         setOpenSearcher,
         filters, // currently active filters
         setFilters,
-        totalBookNum,
+        // totalBookNum,
         errorMessage, //
         setErrorMessage,
+        setBookNames,
         // books,
         // setBooks,
+        setIsLoading,
         filterValues, // possible filter values
-
+        setFiltersValues,
         bookNames,
       }}
     >

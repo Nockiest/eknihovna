@@ -1,6 +1,6 @@
 import { useSearchContext } from "@/app/katalog/context";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
-import { getBooksByQuery } from "@/utils/fetchBooks";
+import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
 import { Box } from "@mui/material";
 import React from "react";
 import CategoryChip from "./CategoryChip";

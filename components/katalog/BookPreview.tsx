@@ -7,7 +7,7 @@ import React, { useEffect } from "react";
 import Filter from "./CategoryChip";
 import { useTheme } from "@emotion/react";
 import BookCover from "./BookCover";
-import StarRow from "../general/starRow/StarRow";
+import StarRow from "./starRow/StarRow";
 import CategoryChip from "./CategoryChip";
 import LineWithCircle from "../general/LineWithCircle";
 
@@ -35,7 +35,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           : 0,
         color: theme.palette.text.primary,
         maxWidth: "311px",
-        
+
       }}
     >
       <Box p={2} className=" flex flex-col items-center justify-around h-full">

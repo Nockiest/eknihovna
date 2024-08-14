@@ -1,5 +1,5 @@
 'use client'
-import BookPreview from "@/components/catalog/BookPreview";
+import BookPreview from "@/components/katalog/BookPreview";
 import OpeningHours from "@/components/general/OpeningHours";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import { Container, Typography, Button, Box } from "@mui/material";

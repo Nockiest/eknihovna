@@ -7,6 +7,7 @@ import { HeaderContext } from "../navbar/headerConntext";
 import { getURLSegment } from "@/utils/getURLSegment";
 import { usePathname } from "next/navigation";
 import NavBar from "../navbar/Navbar";
+// import NavBar from "../navbar/Navbar";
 
 const Hero = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
