@@ -1,26 +1,20 @@
-// File: /pages/api/bookList.ts
-
+import { NextRequest, NextResponse } from 'next/server';
+import { Book } from '@/types/types';
 import { prisma } from '@/data/values';
 import { buildPrismaFilter } from '@/utils/buildPrismaFilter';
-import { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from 'next/server';
 
-export default async function POST(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
-
-  const { filters, page = 1, limit = 10 } = req.body;
-
-  if (!filters) {
-    return res.status(400).json({ error: "Server didn't receive filters" });
-  }
-
-  if (page <= 0) {
-    return res.status(400).json({ error: "Page number was set to 0 or less" });
-  }
-
+export async function POST(req: NextRequest) {
   try {
+    const { filters, page = 1, limit = 10 } = await req.json();
+
+    if (!filters) {
+      return NextResponse.json({ error: "Server didn't receive filters" }, { status: 400 });
+    }
+
+    if (page <= 0) {
+      return NextResponse.json({ error: "Page number was set to 0 or less" }, { status: 400 });
+    }
+
     // Build the Prisma filter query
     const where = buildPrismaFilter(filters);
 
@@ -31,10 +25,13 @@ export default async function POST(req: NextApiRequest, res: NextApiResponse) {
       take: limit,
       distinct: ['name'], // Select distinct on the 'name' field
     });
-
-    NextResponse.json(books);
+    console.log(books)
+    return NextResponse.json(books);
   } catch (error) {
     console.error("Error fetching books:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }
+
+
+// debugger

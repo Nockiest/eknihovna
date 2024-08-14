@@ -12,36 +12,12 @@ export const getBooksByQuery = async (
   try {
     // debugger
     const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit });
-    // console.log(response.data)
-  //  const books = await prisma.knihy.findMany()
-  //  console.log(books)
     return  response.data || [];
   } catch (error: any) {
     throw new Error(`Problem with fetching data: ${error.message}`);
   }
 };
 
-function buildPrismaFilter(filters: Filters): any {
-  let prismaFilters: any = {};
-
-  if (filters.category) {
-    prismaFilters.category = filters.category;
-  }
-  if (filters.author) {
-    prismaFilters.author = filters.author;
-  }
-  // if (filters.rating) {
-  //   prismaFilters.rating = filters.rating;
-  // }
-  if (filters.genres && filters.genres.length > 0) {
-    prismaFilters.genres = {
-      hasSome: filters.genres,
-    };
-  }
-
-  // Add more conditions based on your filters structure
-  return prismaFilters;
-}
 
 // export const getBooksByQuery = async (
 //   filters: Filters = defaultFilters,
