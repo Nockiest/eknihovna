@@ -12,7 +12,7 @@ const NewsPage: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/api/test`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/test`);
         console.log(response.data);
         // Update messages state if needed based on the API response
         // setMessages(response.data.books);

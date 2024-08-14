@@ -1,11 +1,10 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Box, Grid, Typography, useTheme, Breakpoint } from "@mui/material";
+import { Box, Grid, Typography  } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
-import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {  useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
 import SearchAutocomplete from "./SearchBar";
@@ -17,9 +16,6 @@ interface BookCatalogProps {}
 
 
 const BookCatalog: React.FC<BookCatalogProps> = () => {
-  // const size = useCurrentBreakpoint() || "xs";
-  // const router = useRouter();
-  // const pathname = usePathname();
   const {
     isOpenSearcher,
     setOpenSearcher,
@@ -63,42 +59,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     };
     fetchBooks();
   }, [filters,page  ]);
-//filters, query, page, size,
-  // useEffect(() => {
-  //   changePage(1); // reset page number on every query
-  //   setFilteredBooks((prev) =>
-  //     prev.filter((book: Book) => getRelevancy(book.name, query))
-  //   );
-  // }, [query, filters]);
-
-  // Memoize the shownBooks to avoid unnecessary recalculations
-  // const memoizedShownBooks = useMemo(() => shownBooks, [shownBooks]);
-
-  // Update page on resize
-  // useEffect(() => {
-  //   if (size) {
-  //     const newItemsPerPage = shownBooksBySize[size];
-  //     const pageNum = page === 0 ? 1 : page;
-  //     const [indexOfFirstBook] = getStartAndEndIndexes(
-  //       pageNum,
-  //       newItemsPerPage
-  //     );
-  //     const newCurrentPage = Math.ceil(indexOfFirstBook / newItemsPerPage);
-  //     router.push(
-  //       `/katalog?page=${Math.min(
-  //         Math.ceil(
-  //           typeof totalBookNum === "number"
-  //             ? totalBookNum
-  //             : 0 / newItemsPerPage
-  //         ),
-  //         newCurrentPage + 1 || 1
-  //       )}`
-  //     );
-  //   }
-  // }, [size, totalBookNum, router, page]);
-
-
-
   return (
     <Box className="w-full">
       <FilterLister />

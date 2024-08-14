@@ -10,7 +10,10 @@ type UniqueBookValue = {
   genres?: string[];
 };
 
-export default async function GET(req: NextApiRequest, res: NextApiResponse) {
+
+ 
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'GET') {
     return res.status(405).json({ error: 'Method Not Allowed' });
   }
@@ -64,11 +67,11 @@ export default async function GET(req: NextApiRequest, res: NextApiResponse) {
       if (columnName === 'category') return item.category;
       if (columnName === 'genres') return item.genres;
       return null; // Fallback
-    });
+    }).filter(value => value !== null);
 
-    NextResponse.json(values);
+    return res.status(200).json(values);
   } catch (error) {
     console.error("Error retrieving values:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 }
