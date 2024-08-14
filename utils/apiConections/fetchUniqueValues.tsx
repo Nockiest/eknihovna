@@ -4,8 +4,8 @@ const fetchUniqueValues = async (columnName: string): Promise<string[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
 
   try {
-    const response = await axios.get(`${apiUrl}/api/getUniqueValues`, {
-      params: { columnName }
+    const response = await axios.post(`${apiUrl}/getUniqueValues`, {
+      columnName
     });
     return response.data; // Adjust this line if the structure of the response changes
   } catch (error: any) {

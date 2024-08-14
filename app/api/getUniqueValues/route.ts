@@ -1,7 +1,7 @@
 import { prisma } from '@/data/values';
 import { Book } from '@/types/types';
 import { NextApiRequest, NextApiResponse } from 'next';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 type UniqueBookValue = {
   name?: string | null;
@@ -11,25 +11,26 @@ type UniqueBookValue = {
 };
 
 
- 
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
-  }
 
-  const { columnName } = req.query;
+export   async function POST(req: NextRequest) {
+
+const { columnName } = await req.json();
+
+console.log(req.method, req.body )
 
   if (!columnName || typeof columnName !== 'string') {
-    return res.status(400).json({ error: 'Invalid or missing columnName parameter' });
+    console.log(1)
+    return NextResponse.json({ error: 'Invalid or missing columnName parameter' });
   }
 
   // Ensure columnName is a valid key of Book
   const validColumnNames: (keyof Book)[] = ['name', 'author', 'category', 'genres'];
   if (!validColumnNames.includes(columnName as keyof Book)) {
-    return res.status(400).json({ error: 'Invalid column name' });
+    console.log(2)
+    return NextResponse.json({ error: 'Invalid column name' });
   }
-
+console.log(3, columnName);
   try {
     let uniqueValues: UniqueBookValue[] = [];
 
@@ -69,9 +70,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return null; // Fallback
     }).filter(value => value !== null);
 
-    return res.status(200).json(values);
+    return NextResponse.json(values);
   } catch (error) {
     console.error("Error retrieving values:", error);
-    return res.status(500).json({ error: "Internal Server Error" });
+    return NextResponse.json({ error: "Internal Server Error" });
   }
 }
