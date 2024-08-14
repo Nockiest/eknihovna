@@ -1,5 +1,4 @@
-// File: /lib/buildPrismaFilter.ts
-
+'use client'
 import { Filters } from "@/types/types";
 
 export function buildPrismaFilter(filters: Filters) {
@@ -32,11 +31,5 @@ export function buildPrismaFilter(filters: Filters) {
     if (filters.available !== undefined) {
       where.available = filters.available;
     }
-
-    // Example for integer fields:
-    // if (filters.rating) {
-    //   where.rating = filters.rating;
-    // }
-
     return where;
   }
