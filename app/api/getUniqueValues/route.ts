@@ -1,6 +1,5 @@
-import { prisma } from '@/data/values';
+import prisma from '@/app/lib/prisma';
 import { Book } from '@/types/types';
-import { NextApiRequest, NextApiResponse } from 'next';
 import { NextRequest, NextResponse } from 'next/server';
 
 type UniqueBookValue = {

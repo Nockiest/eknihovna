@@ -1,6 +1,6 @@
 // File: /pages/api/bookList.ts
 
-import { prisma } from '@/data/values';
+import prisma from '@/app/lib/prisma';
 import { buildPrismaFilter } from '@/utils/buildPrismaFilter';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
