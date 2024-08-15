@@ -2,7 +2,9 @@
 // import prisma from '@/app/lib/prisma';
 // import { buildPrismaFilter } from '@/utils/buildPrismaFilter';
 
-// export async function POST(req: NextRequest) {
+import { NextRequest } from "next/server";
+
+export async function POST(req: NextRequest) {
 //   try {
 //     const { filters, page = 1, limit = 10 } = await req.json();
 
@@ -29,20 +31,6 @@
 //     console.error("Error fetching books:", error);
 //     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 //   }
-// }
-import { NextRequest, NextResponse } from 'next/server';
-
-export async function GET(req: NextRequest) {
-  // Create a JSON response
-  const responseData = { message: 'Hello World' };
-
-  // Return the response as JSON
-  return new NextResponse(JSON.stringify(responseData), {
-    status: 200,
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
 }
 
 // export default function GET(
