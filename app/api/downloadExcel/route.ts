@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server';
 export  async function GET(req: NextApiRequest, res: NextApiResponse) {
   try {
     const data = await prisma.knihy.findMany();
-    console.log(data)
+    console.log(data.length)
     if (data.length === 0) {
       return NextResponse.json({ error: 'No data found in the table.' });
     }
@@ -36,9 +36,14 @@ export  async function GET(req: NextApiRequest, res: NextApiResponse) {
     const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
     // Set headers and send the buffer as a downloadable Excel file
-    res.setHeader('Content-Disposition', 'attachment; filename="table_data.xlsx"');
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    res.send(buffer);
+    // res.setHeader('Content-Disposition', 'attachment; filename="table_data.xlsx"');
+    // res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    return new NextResponse(buffer, {
+        headers: {
+          'Content-Disposition': 'attachment; filename="table_data.xlsx"',
+          'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        },
+      });
   } catch (error) {
     console.error('Error fetching data or creating Excel file:', error);
     NextResponse.json({ error: 'Internal Server Error' });
