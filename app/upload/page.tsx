@@ -7,7 +7,7 @@ import { redirect } from "next/dist/server/api-utils";
 import { useSession } from "next-auth/react";
 import SessionWrapper from "@/components/SessionWrapper";
 import AuthProvider from "@/components/AuthProvider";
-// import { PrismaClient } from '@prisma/client'
+ 
 
 export default async function Page() {
 

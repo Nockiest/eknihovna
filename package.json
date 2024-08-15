@@ -1,14 +1,13 @@
 {
   "name": "knihovna",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
-"engines": {
+  "engines": {
     "node": "18.x"
   },
   "dependencies": {
@@ -19,6 +18,7 @@
     "@prisma/client": "^5.18.0",
     "axios": "^1.7.2",
     "emailjs-com": "^3.2.0",
+    "formidable": "^3.5.1",
     "glob": "^10.4.1",
     "jose": "^5.6.3",
     "lodash": "^4.17.21",
@@ -32,6 +32,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/formidable": "^3.4.5",
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash": "^4.17.6",

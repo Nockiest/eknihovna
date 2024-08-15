@@ -1,4 +1,4 @@
-'use client'
+
 import { Filters } from "@/types/types";
 
 export function buildPrismaFilter(filters: Filters) {

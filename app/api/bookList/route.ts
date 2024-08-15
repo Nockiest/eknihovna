@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 // import { Book } from '@/types/types';
-import { prisma } from '@/data/values';
+import prisma from '@/app/lib/prisma';
 import { buildPrismaFilter } from '@/utils/buildPrismaFilter';
 
 export async function POST(req: NextRequest) {

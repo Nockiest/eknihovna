@@ -1,11 +1,8 @@
 "use client";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
-import * as XLSX from "xlsx";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
-// import { useState } from "react";
 import axios from "axios";
-import { knihyURL } from "@/data/values";
 import { signIn, signOut, useSession } from "next-auth/react";
 import { redirect } from "next/dist/server/api-utils";
 import { useRouter } from "next/navigation";
@@ -17,7 +14,7 @@ import { useState } from "react";
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
 
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
   console.log(session)
   if (!session) {
@@ -31,45 +28,45 @@ const ExcelSheetUpdater = () => {
   }
 
 
-  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (event.target.files && event.target.files.length > 0) {
-  //     setSelectedFile(event.target.files[0]);
-  //   } else {
-  //     setSelectedFile(null);
-  //   }
-  // };
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files.length > 0) {
+      setSelectedFile(event.target.files[0]);
+    } else {
+      setSelectedFile(null);
+    }
+  };
 
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
 
-  //   // Assuming you have a file input with id "fileInput"
-  //   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-  //   const file = fileInput.files && fileInput.files[0];
+    // Assuming you have a file input with id "fileInput"
+    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+    const file = fileInput.files && fileInput.files[0];
 
-  //   if (!file) {
-  //     console.error("No file selected");
-  //     return;
-  //   }
+    if (!file) {
+      console.error("No file selected");
+      return;
+    }
 
-  //   // Create FormData object
-  //   const formData = new FormData();
-  //   formData.append("file", file); // Append the file to FormData
-  //   // formData.append("password", password); // Append other form data as needed
+    // Create FormData object
+    const formData = new FormData();
+    formData.append("file", file); // Append the file to FormData
+    // formData.append("password", password); // Append other form data as needed
 
-  //   try {
-  //      // rewrite to prisma
-  //     const response = await axios.post(`${knihyURL}/update`, formData, {
-  //       headers: {
-  //         "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
-  //       },
-  //     });
+    try {
+       // rewrite to prisma
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
+        },
+      });
 
-  //     setResponseMessage(JSON.stringify(response.data, null, 2));
-  //   } catch (error: any) {
-  //     console.error("Error:", error);
-  //     setResponseMessage("Error: " + error.message);
-  //   }
-  // };
+      setResponseMessage(JSON.stringify(response.data, null, 2));
+    } catch (error: any) {
+      console.error("Error:", error);
+      setResponseMessage("Error: " + error.message);
+    }
+  };
 
   // rewrite to prisma
   const fetchDataFromServer = async () => {
