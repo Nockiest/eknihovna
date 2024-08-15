@@ -101,6 +101,8 @@ export const insertExcelDataToPostgres = async (
   } catch (error: any) {
     console.error("Error inserting data into PostgreSQL:", error.message);
     throw new Error(`Error inserting data into PostgreSQL: ${error.message}`);
+  } finally {
+    await prisma.$disconnect();
   }
 }
 
