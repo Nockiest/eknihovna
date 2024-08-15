@@ -1,11 +1,10 @@
-import { knihyURL } from "@/data/values";
 import axios from "axios";
 
 export const authenticate = async (event: React.FormEvent<HTMLFormElement>,password:string) => {
     event.preventDefault();
     try {
       const response = await axios.post(
-        `${knihyURL}/authenticate`,
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/authenticate`,
         { password },
         {
           headers: {
