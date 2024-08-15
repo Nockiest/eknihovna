@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { prisma } from '@/lib/prisma';
 import * as xlsx from "xlsx";
 import { fillMissingIds, loadExcelSheet } from "./excelHandelUtils";
-const prisma = new PrismaClient();
+
 
 type TableName = "knihy"; // Add all your table names here
 
