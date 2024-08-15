@@ -2,6 +2,7 @@ import * as xlsx from 'xlsx';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
 import prisma from '@/app/lib/prisma';
+import { truthyValues } from '@/data/values';
 
 export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
     // Get the range of the worksheet
@@ -67,7 +68,7 @@ export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
 
   export const readExcelFile = (url: string) => {
     try {
-      const {workbook,sheetName, worksheet} = loadExcelSheet(url);
+      const {worksheet} = loadExcelSheet(url);
       const data = xlsx.utils.sheet_to_json(worksheet);
       return data;
     } catch (error) {
@@ -88,7 +89,7 @@ export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
     });
 
     // Define values considered as truthy
-    const truthyValues = ["yes", "true", true, 'dostupný', 1, "ano"];
+    // const truthyValues = ["yes", "true", true, 'dostupný', 1, "ano"];
     const header = jsonData[0] as string[]; // Header row
     const columnIndex = header.findIndex((col) => col.toLowerCase() === columnName.toLowerCase());
 
