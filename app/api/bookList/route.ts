@@ -44,3 +44,10 @@ export async function GET(req: NextRequest) {
     },
   });
 }
+
+// export default function GET(
+//   // req: NextApiRequest,
+//   // res: NextApiResponse<ResponseData>
+// ) {
+//   res.status(200).json({ message: 'Hello from Next.js!' })
+// }
