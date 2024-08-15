@@ -14,57 +14,47 @@ import { NextRequest, NextResponse } from 'next/server';
 const pipeline = util.promisify(require('stream').pipeline);
 
 export async function parseMultipartForm(req: IncomingMessage): Promise<{ fields: any, files: any }> {
-  return new Promise((resolve, reject) => {
-    console.log(req.headers['content-type'])
-    if (req.headers['content-type'] === undefined || !req.headers['content-type'].startsWith('multipart/form-data')) {
-      return reject(new Error('Content-Type must be multipart/form-data'));
-    }
-
-    const boundary = req.headers['content-type']?.split('boundary=')[1];
-    if (!boundary) {
-      return reject(new Error('Boundary not found'));
-    }
-
-    const chunks: Buffer[] = [];
-    req.on('data', chunk => chunks.push(chunk));
-    req.on('end', async () => {
-      const buffer = Buffer.concat(chunks);
-      const parts = buffer.split(`--${boundary}`);
-      const fields: any = {};
-      const files: any = {};
-
-      for (const part of parts) {
-        const [headers, body] = part.split('\r\n\r\n');
-        if (!body) continue;
-
-        // Handle file uploads
-        if (headers.includes('Content-Disposition: form-data')) {
-          const dispositionMatch = /Content-Disposition: form-data; name="([^"]+)"; filename="([^"]+)"/.exec(headers);
-          if (dispositionMatch) {
-            const fieldName = dispositionMatch[1];
-            const fileName = dispositionMatch[2];
-            const filePath = path.join(process.cwd(), 'uploads', fileName);
-
-            // Save file
-            const writeStream = fs.createWriteStream(filePath);
-            await pipeline(Readable.from([body]), writeStream);
-            files[fieldName] = { filePath };
-          } else {
-            // Handle regular fields
-            const nameMatch = /Content-Disposition: form-data; name="([^"]+)"/.exec(headers);
-            if (nameMatch) {
-              const fieldName = nameMatch[1];
-              fields[fieldName] = body.toString();
-            }
-          }
+    return new Promise((resolve, reject) => {
+        console.log(req.headers['content-type']);
+        if (req.headers['content-type'] === undefined || !req.headers['content-type'].startsWith('multipart/form-data')) {
+          return reject(new Error('Content-Type must be multipart/form-data'));
         }
-      }
 
-      resolve({ fields, files });
-    });
+        const boundary = req.headers['content-type']?.split('boundary=')[1];
+        if (!boundary) {
+          return reject(new Error('Boundary not found'));
+        }
 
-    req.on('error', err => reject(err));
-  });
+        const chunks: Buffer[] = [];
+        req.on('data', chunk => chunks.push(chunk));
+        req.on('end', async () => {
+          const buffer = Buffer.concat(chunks);
+          // Convert buffer to string before using split
+          const parts = buffer.toString().split(`--${boundary}`);
+          const fields: any = {};
+          const files: any = {};
+
+          // Process each part of the multipart form data
+          parts.forEach(part => {
+            if (!part.trim().length) return; // Skip empty parts
+
+            const [headers, body] = part.split('\r\n\r\n');
+            const contentDisposition = headers.split('\r\n')[0];
+            const [_, name, filename] = contentDisposition.split('; ');
+
+            if (filename) {
+              // This is a file
+              const [_, fileName] = filename.split('filename=');
+              files[name.split('name=')[1]] = body;
+            } else {
+              // This is a field
+              fields[name.split('name=')[1]] = body;
+            }
+          });
+
+          resolve({ fields, files });
+        });
+      });
 }
 // Disable body parsing to allow Formidable to handle file uploads
   // Handle file upload
