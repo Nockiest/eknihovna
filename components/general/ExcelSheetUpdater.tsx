@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import ReroutToAUth from "./ReroutToAUth";
 import Announcer from "@/theme/Announcer";
 import { useState } from "react";
-
+import * as XLSX from 'xlsx'
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
 
@@ -70,26 +70,24 @@ const ExcelSheetUpdater = () => {
 
   // rewrite to prisma
   const fetchDataFromServer = async () => {
-
-
-
     console.log("Fetching data from server...");
     try {
-      // const response = await axios.get("/api/getBooks");
+  //     const res = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/getBooks`  );
 
-    // const firstBook = books[0];
-    // const totalBooks = books.length;
+  //   const firstBook = books[0];
+  //   const totalBooks = books.length;
   // console.log(books)
-    // console.log("First Book:", firstBook);
-    // console.log("Total Books:", totalBooks);
-
-      // const response = await axios.get(`${knihyURL}/downloadExcel`, {
-      //   responseType: "arraybuffer",
-      // });
-      // const data = new Uint8Array(response.data);
-      // const workbook = XLSX.read(data, { type: "array" });
-      // XLSX.writeFile(workbook, "data_ze_serveru.xlsx");
-      // console.log("Data fetched and saved locally.");
+  //   console.log("First Book:", firstBook);
+  //   console.log("Total Books:", totalBooks);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/downloadExcel`,
+         {
+        responseType: "arraybuffer",
+      }
+    );
+      const data = new Uint8Array(response.data);
+      const workbook = XLSX.read(data, { type: "array" });
+      XLSX.writeFile(workbook, "data_ze_serveru.xlsx");
+      console.log("Data fetched and saved locally.");
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
       alert("Error fetching data from Server: " + error.message);
@@ -136,7 +134,7 @@ const ExcelSheetUpdater = () => {
             Přepsat data na serveru
           </Typography>
 
-          {/* <form
+          <form
             onSubmit={handleSubmit}
             encType="multipart/form-data"
             className="flex flex-col items-center"
@@ -159,13 +157,11 @@ const ExcelSheetUpdater = () => {
                 height={32}
               />
             </SecondaryButton>
-          </form> */}
+          </form>
         </Box>
       </Box>
       <Announcer message={responseMessage }type='normal' />
-      {/* <Typography variant="body1" className="m-2"> */}
-        {/* {responseMessage} */}
-      {/* </Typography> */}
+
       <PrimaryButton
         onClick={() => {
           signOut();
