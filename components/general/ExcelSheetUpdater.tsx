@@ -13,10 +13,8 @@ import { useState } from "react";
 import * as XLSX from 'xlsx'
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
-
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
-  console.log(session)
   if (!session) {
     // redirect("/api/auth/signin?callbackUrl=/upload");
     // router.push("/api/auth/signin?callbackUrl=/upload");
@@ -35,50 +33,64 @@ const ExcelSheetUpdater = () => {
       setSelectedFile(null);
     }
   };
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    // Assuming you have a file input with id "fileInput"
-    const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-    const file = fileInput.files && fileInput.files[0];
-
-    if (!file) {
-      console.error("No file selected");
-      return;
-    }
-
-    // Create FormData object
-    const formData = new FormData();
-    formData.append("file", file); // Append the file to FormData
-    // formData.append("password", password); // Append other form data as needed
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    if (!selectedFile) return
 
     try {
-       // rewrite to prisma
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data", // Set content type to multipart/form-data
-        },
-      });
-
-      setResponseMessage(JSON.stringify(response.data, null, 2));
-    } catch (error: any) {
-      console.error("Error:", error);
-      setResponseMessage("Error: " + error.message);
+      const data = new FormData()
+      console.log(selectedFile)
+      data.set('file', selectedFile)
+      console.log(1)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, {
+        method: 'POST',
+        body: data
+      })
+      console.log(2)
+      // handle the error
+      if (!res.ok) throw new Error(await res.text())
+    } catch (e: any) {
+      // Handle errors here
+      console.error(e)
     }
-  };
+  }
+  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+
+  //   // Assuming you have a file input with id "fileInput"
+  //   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+  //   const file = fileInput.files && fileInput.files[0];
+
+  //   if (!file) {
+  //     console.error("No file selected");
+  //     return;
+  //   }
+
+  //   // Create FormData object
+  //   const formData = new FormData();
+  //   formData.append("file", file); // Append the file to FormData
+  //   // formData.append("password", password); // Append other form data as needed
+  //   //https://eknihovna.onrender.com/api
+  //   //${process.env.NEXT_PUBLIC_APP_API_URL}/update
+  //   try {
+  //      // rewrite to prisma
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
+  //       headers: {
+  //         "content-type": "multipart/form-data", // Set content type to multipart/form-data
+  //       },
+  //     });
+
+  //     setResponseMessage(JSON.stringify(response.data, null, 2));
+  //   } catch (error: any) {
+  //     console.error("Error:", error);
+  //     setResponseMessage("Error: " + error.message);
+  //   }
+  // };
 
   // rewrite to prisma
   const fetchDataFromServer = async () => {
     console.log("Fetching data from server...");
     try {
-  //     const res = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/getBooks`  );
-
-  //   const firstBook = books[0];
-  //   const totalBooks = books.length;
-  // console.log(books)
-  //   console.log("First Book:", firstBook);
-  //   console.log("Total Books:", totalBooks);
       const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/downloadExcel`,
          {
         responseType: "arraybuffer",

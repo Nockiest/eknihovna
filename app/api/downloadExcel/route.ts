@@ -6,7 +6,6 @@ import { NextResponse } from 'next/server';
 
 
 export  async function GET(req: NextApiRequest, res: NextApiResponse) {
-  console.log('GET');
   try {
     const data = await prisma.knihy.findMany();
     console.log(data)
