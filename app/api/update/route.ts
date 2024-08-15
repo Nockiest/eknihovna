@@ -5,15 +5,12 @@ import { excelWordsToBool, fillMissingIds } from './excelHandelUtils';
 
 import { IncomingMessage } from 'http';
 import * as fs from 'fs';
-import * as path from 'path';
-import * as util from 'util';
-import { Readable } from 'stream';
 import { NextRequest, NextResponse } from 'next/server';
 
 // Promisify fs functions
-const pipeline = util.promisify(require('stream').pipeline);
+// const pipeline = util.promisify(require('stream').pipeline);
 
-export async function parseMultipartForm(req: IncomingMessage): Promise<{ fields: any, files: any }> {
+  async function parseMultipartForm(req: IncomingMessage): Promise<{ fields: any, files: any }> {
     return new Promise((resolve, reject) => {
         console.log(req.headers['content-type']);
         if (req.headers['content-type'] === undefined || !req.headers['content-type'].startsWith('multipart/form-data')) {
