@@ -1,4 +1,4 @@
-import prisma from '@/app/lib/prisma';
+import prisma from '@/lib/prisma';
 import { Book } from '@/types/types';
 import { NextRequest, NextResponse } from 'next/server';
 

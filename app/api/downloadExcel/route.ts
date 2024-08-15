@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import prisma from '@/app/lib/prisma';
+import prisma from '@/lib/prisma';
 import * as xlsx from 'xlsx';
 import { NextResponse } from 'next/server';
 //req: NextApiRequest, res: NextApiResponse

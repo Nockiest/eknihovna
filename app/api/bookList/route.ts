@@ -30,3 +30,17 @@
 //     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
 //   }
 // }
+import { NextRequest, NextResponse } from 'next/server';
+
+export async function GET(req: NextRequest) {
+  // Create a JSON response
+  const responseData = { message: 'Hello World' };
+
+  // Return the response as JSON
+  return new NextResponse(JSON.stringify(responseData), {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+}

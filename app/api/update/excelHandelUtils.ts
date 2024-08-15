@@ -1,7 +1,7 @@
 import * as xlsx from 'xlsx';
 import { v4 as uuidv4 } from 'uuid';
 import fs from 'fs';
-import prisma from '@/app/lib/prisma';
+import prisma from '@/lib/prisma';
 import { truthyValues } from '@/data/values';
 
 export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
