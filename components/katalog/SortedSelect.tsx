@@ -1,9 +1,10 @@
 'use client'
+import { falsyValues } from "@/data/values";
 import { Autocomplete,    TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 
 interface SortedGroupedSelectProps {
-  options: string[];
+  options: Array<string|null>;
   label: string;
   handleChange: (value: string | null) => void;
 }
@@ -14,7 +15,10 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   handleChange,
 }) => {
   // Sort options alphabetically
-  const sortedOptions = options.slice().sort((a, b) => a.localeCompare(b));
+
+  const sortedOptions = options
+  .filter((option): option is string => option !== null) // Type guard to remove nulls
+  .sort((a, b) => a.localeCompare(b));
   const [currentValue, setCurrentValue] = useState<string | null>(null);
 
   return (

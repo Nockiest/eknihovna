@@ -20,7 +20,9 @@ const FilterLister: React.FC<FilterListerProps> =   ({
   async function fetchUniqueFilterCol(
     colName: "genres" | "category" | "author"
   ) {
+
     const res = await fetchUniqueValues(colName);
+
     setFiltersValues((prevFilters: FiltringValues) => ({
       ...prevFilters,
       [colName]: res,

@@ -31,24 +31,7 @@ const KatalogPage = () => {
   });
   const [query, setQuery] = useState<string  >('');
   const [bookNames, setBookNames] = useState<string[]>([]);
-  // const [totalBookNum, setTotalBookNum] = useState<number>(0);
-  // useEffect(() => {
-  //   async function update() {
-  //     try {
-
-  //       const bookNames = await fetchUniqueValues("name");
-  //       // setTotalBookNum(bookNames.length);
-  //       setBookNames(bookNames);
-  //     } catch (error) {
-  //       setErrorMessage("Failed to load books.");
-  //     }
-  //     // finally {
-  //     //   setIsLoading(false);
-  //     // }
-  //   }
-  //   update();
-  // }, []);
-
+  
   // if (isLoading) {
   //   return (
   //     <Box
