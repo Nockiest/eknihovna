@@ -13,7 +13,7 @@ const Announcer: React.FC<{ message: string | null, type: 'normal' | 'error' | '
 
   return (
     <Box
-      className="w-full border-2 flex justify-center items-center"
+      className="w-full border-2 flex justify-center items-center "
     >
       <Typography variant="h6" color={textColor}>
         {message}
