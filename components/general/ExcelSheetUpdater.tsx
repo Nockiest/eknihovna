@@ -10,7 +10,7 @@ import { useRouter } from "next/navigation";
 import ReroutToAUth from "./ReroutToAUth";
 import Announcer from "@/theme/Announcer";
 import { useState } from "react";
-import * as XLSX from 'xlsx'
+import * as XLSX from "xlsx";
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -18,13 +18,8 @@ const ExcelSheetUpdater = () => {
   if (!session) {
     // redirect("/api/auth/signin?callbackUrl=/upload");
     // router.push("/api/auth/signin?callbackUrl=/upload");
-      return (
-          <ReroutToAUth />
-
-
-        );;
+    return <ReroutToAUth />;
   }
-
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -34,58 +29,64 @@ const ExcelSheetUpdater = () => {
     }
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    if (!selectedFile) return
+    e.preventDefault();
+    console.log(0);
+    if (!selectedFile) return;
 
     try {
-      const data = new FormData()
-      console.log(selectedFile)
-      data.set('file', selectedFile)
-      console.log(1)
-      setResponseMessage('data se nahrávají')
+      const data = new FormData();
+      console.log(selectedFile);
+      data.set("file", selectedFile);
+      console.log(1);
+      setResponseMessage("data se nahrávají");
       const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, {
-        method: 'POST',
-        body: data
-      })
-      setResponseMessage('data úspěšně nahrána')
-      console.log(2)
+        method: "POST",
+        body: data,
+      });
+      setResponseMessage("data úspěšně nahrána");
+      console.log(2);
       // handle the error
-      if (!res.ok) throw new Error(await res.text())
+      if (!res.ok) throw new Error(await res.text());
     } catch (e: any) {
       // Handle errors here
-      console.error(e)
+      console.error(e);
+      setResponseMessage("problém s nahráním dat: " + e.message);
     }
-  }
-
+  };
 
   // rewrite to prisma
   const fetchDataFromServer = async () => {
     console.log("Fetching data from server...");
     try {
-      setResponseMessage('nahrávám data ze serveru')
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/downloadExcel`,
-         {
-        responseType: "arraybuffer",
-      }
-    );
+      setResponseMessage("nahrávám data ze serveru");
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/downloadExcel`,
+        {
+          responseType: "arraybuffer",
+        }
+      );
       const data = new Uint8Array(response.data);
       const workbook = XLSX.read(data, { type: "array" });
-      setResponseMessage('vytvárřím tabulku')
+      setResponseMessage("vytvárřím tabulku");
       XLSX.writeFile(workbook, "data_ze_serveru.xlsx");
-      setResponseMessage('data úspěšně stažena')
+      setResponseMessage("data úspěšně stažena");
       console.log("Data fetched and saved locally.");
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
-      alert("Error fetching data from Server: " + error.message);
+      setResponseMessage("problém se stažením dat: " + error.message);
     }
   };
 
-  if (session?.user?.email !== 'ondralukes06@seznam.cz') {
-    console.log((session?.user?.email === "ondralukes06@seznam.cz").toString(),(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString())
+  if (session?.user?.email !== "ondralukes06@seznam.cz") {
+    console.log(
+      (session?.user?.email === "ondralukes06@seznam.cz").toString(),
+      (process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()
+    );
     return (
       <>
         <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Neplatný admin účet {session?.user?.email === "ondralukes06@seznam.cz"} x
+          Neplatný admin účet{" "}
+          {session?.user?.email === "ondralukes06@seznam.cz"} x
           {(session?.user?.email === "ondralukes06@seznam.cz").toString()}x
           {(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()}
         </Typography>
@@ -101,6 +102,15 @@ const ExcelSheetUpdater = () => {
   }
   return (
     <Box className="flex flex-col items-center justify-center">
+      <PrimaryButton
+        onClick={() => {
+          signOut();
+        }}
+        sx={{ margin: "2em" }}
+      >
+        <Typography>Odhlásit se</Typography>
+      </PrimaryButton>
+
       <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
           <Typography variant="h2" className="text-xl font-semibold mb-4">
@@ -146,31 +156,23 @@ const ExcelSheetUpdater = () => {
           </form>
         </Box>
       </Box>
-      <Announcer message={responseMessage }type='normal' />
-
-      <PrimaryButton
-        onClick={() => {
-          signOut();
-        }}
-      >
-        <Typography>Odhlásit se</Typography>
-      </PrimaryButton>
+      <Announcer message={responseMessage} type="normal" />
     </Box>
   );
 };
 
 export default ExcelSheetUpdater;
-  // if (!session || !session?.user) {
-  //   return (
-  //     <PrimaryButton
-  //       onClick={() => {
-  //         signIn("google");
-  //       }}
-  //     >
-  //       <Typography>Přihlaste se pro vstup</Typography>
-  //     </PrimaryButton>
-  //   );
-  // }
+// if (!session || !session?.user) {
+//   return (
+//     <PrimaryButton
+//       onClick={() => {
+//         signIn("google");
+//       }}
+//     >
+//       <Typography>Přihlaste se pro vstup</Typography>
+//     </PrimaryButton>
+//   );
+// }
 {
   /* <form
 onSubmit={async (e) => {
@@ -201,35 +203,35 @@ className="w-1/2 flex flex-col items-center justify-center mt-16 mx-auto"
 //   <div id="response">{responseMessage}</div>
 // </form>
 
- // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
+// const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+//   event.preventDefault();
 
-  //   // Assuming you have a file input with id "fileInput"
-  //   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-  //   const file = fileInput.files && fileInput.files[0];
+//   // Assuming you have a file input with id "fileInput"
+//   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+//   const file = fileInput.files && fileInput.files[0];
 
-  //   if (!file) {
-  //     console.error("No file selected");
-  //     return;
-  //   }
+//   if (!file) {
+//     console.error("No file selected");
+//     return;
+//   }
 
-  //   // Create FormData object
-  //   const formData = new FormData();
-  //   formData.append("file", file); // Append the file to FormData
-  //   // formData.append("password", password); // Append other form data as needed
-  //   //https://eknihovna.onrender.com/api
-  //   //${process.env.NEXT_PUBLIC_APP_API_URL}/update
-  //   try {
-  //      // rewrite to prisma
-  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
-  //       headers: {
-  //         "content-type": "multipart/form-data", // Set content type to multipart/form-data
-  //       },
-  //     });
+//   // Create FormData object
+//   const formData = new FormData();
+//   formData.append("file", file); // Append the file to FormData
+//   // formData.append("password", password); // Append other form data as needed
+//   //https://eknihovna.onrender.com/api
+//   //${process.env.NEXT_PUBLIC_APP_API_URL}/update
+//   try {
+//      // rewrite to prisma
+//     const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
+//       headers: {
+//         "content-type": "multipart/form-data", // Set content type to multipart/form-data
+//       },
+//     });
 
-  //     setResponseMessage(JSON.stringify(response.data, null, 2));
-  //   } catch (error: any) {
-  //     console.error("Error:", error);
-  //     setResponseMessage("Error: " + error.message);
-  //   }
-  // };
+//     setResponseMessage(JSON.stringify(response.data, null, 2));
+//   } catch (error: any) {
+//     console.error("Error:", error);
+//     setResponseMessage("Error: " + error.message);
+//   }
+// };

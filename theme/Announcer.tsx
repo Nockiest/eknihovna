@@ -3,7 +3,7 @@ import { Box, Typography } from '@mui/material'
 import React from 'react'
 
 const Announcer: React.FC<{ message: string | null, type: 'normal' | 'error' | 'warning' }> = ({ message, type }) => {
-  let textColor = 'inherit'; // Default color
+  let textColor = 'black'; // Default color
 
   if (type === 'error') {
     textColor = 'error';
@@ -13,8 +13,8 @@ const Announcer: React.FC<{ message: string | null, type: 'normal' | 'error' | '
 
   return (
     <Box
-      className="w-full flex justify-center items-center"
-      style={{ height: "100vh" }}
+      className="w-full border-2 flex justify-center items-center"
+      // style={{ height: "100vh" }}
     >
       <Typography variant="h6" color={textColor}>
         {message}
