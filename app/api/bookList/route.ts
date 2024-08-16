@@ -1,7 +1,3 @@
-// import { NextRequest, NextResponse } from 'next/server';
-// import prisma from '@/app/lib/prisma';
-// import { buildPrismaFilter } from '@/utils/buildPrismaFilter';
-
 // import prisma from "@/lib/prisma";
 import { buildPrismaFilter } from "@/utils/buildPrismaFilter";
 import { prisma } from '@/lib/prisma';

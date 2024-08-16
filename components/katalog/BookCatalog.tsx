@@ -1,10 +1,10 @@
 "use client";
 import React, { useState, useEffect, useMemo } from "react";
-import { Box, Grid, Typography  } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
-import {  useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
 import SearchAutocomplete from "./SearchBar";
@@ -14,14 +14,13 @@ import { shownBooksBySize } from "@/data/values";
 
 interface BookCatalogProps {}
 
-
 const BookCatalog: React.FC<BookCatalogProps> = () => {
   const {
     isOpenSearcher,
     setOpenSearcher,
     filters,
     setIsLoading,
-    setErrorMessage
+    setErrorMessage,
   } = useSearchContext();
 
   const [shownBooks, setShownBooks] = useState<Book[]>([]);
@@ -31,12 +30,6 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
     parseInt(searchParams.get("page") || "1", 10) === 0
       ? 1
       : parseInt(searchParams.get("page") || "1", 10);
-  // const query = searchParams.get("query") || "";
-  // const getStartAndEndIndexes = (page: number, itemsPerPage: number) => {
-  //   const indexOfFirstBook = page * itemsPerPage - itemsPerPage;
-  //   const newLastBookIndex = page * itemsPerPage;
-  //   return [indexOfFirstBook, newLastBookIndex];
-  // };
 
   // fetch books by filter
   useEffect(() => {
@@ -44,21 +37,21 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
       setIsLoading(true);
       setErrorMessage(null);
       try {
-        const newBooks = await getBooksByQuery(filters, page, 24 ); //shownBooksBySize[size]
-        const allPossibleBooks = await getBooksByQuery(filters, );
-        setBooksInFilterNum ( allPossibleBooks.length)
+        const newBooks = await getBooksByQuery(filters, page, 24); //shownBooksBySize[size]
+        const allPossibleBooks = await getBooksByQuery(filters);
+        console.log('all books and shown books',allPossibleBooks.length, newBooks.length);
+        setBooksInFilterNum(allPossibleBooks.length);
         // setFilteredBooks(newBooks);
         setShownBooks(newBooks);
       } catch (err: any) {
         console.log(err?.message);
         setErrorMessage(err?.message || "unknown error occurred");
-      }
-      finally {
+      } finally {
         setIsLoading(false);
       }
     };
     fetchBooks();
-  }, [filters,page  ]);
+  }, [filters, page, setErrorMessage, setIsLoading]);
   return (
     <Box className="w-full">
       <FilterLister />
@@ -108,7 +101,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
             ))}
           </Grid>
           <PaginationLinker
-          totalEntries ={ BooksInFilterNum}
+            totalEntries={BooksInFilterNum}
             itemsPerPage={24} //shownBooksBySize[size]
             folderName="katalog"
           />

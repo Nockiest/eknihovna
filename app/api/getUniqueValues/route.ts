@@ -19,7 +19,6 @@ const { columnName } = await req.json();
 console.log(req.method, req.body )
 
   if (!columnName || typeof columnName !== 'string') {
-    console.log(1)
     return NextResponse.json({ error: 'Invalid or missing columnName parameter' });
   }
 
@@ -29,48 +28,15 @@ console.log(req.method, req.body )
     console.log(2)
     return NextResponse.json({ error: 'Invalid column name' });
   }
-console.log(3, columnName);
   try {
     let uniqueValues: UniqueBookValue[] = [];
     uniqueValues = await prisma.knihy.findMany({
         select: { name: true },
         distinct: [columnName as 'name'| 'author'| 'category'| 'genres'],
       });
-    // switch (columnName) {
-    //   case 'name':
-    //     uniqueValues = await prisma.knihy.findMany({
-    //       select: { name: true },
-    //       distinct: ['name'],
-    //     });
-    //     break;
-    //   case 'author':
-    //     uniqueValues = await prisma.knihy.findMany({
-    //       select: { author: true },
-    //       distinct: ['author'],
-    //     });
-    //     break;
-    //   case 'category':
-    //     uniqueValues = await prisma.knihy.findMany({
-    //       select: { category: true },
-    //       distinct: ['category'],
-    //     });
-    //     break;
-    //   case 'genres':
-    //     uniqueValues = await prisma.knihy.findMany({
-    //       select: { genres: true },
-    //       distinct: ['genres'],
-    //     });
-    //     break;
-    // }
 
     // Safely access the columnName property
-    const values = uniqueValues.map(item => {
-      if (columnName === 'name') return item.name;
-      if (columnName === 'author') return item.author;
-      if (columnName === 'category') return item.category;
-      if (columnName === 'genres') return item.genres;
-      return null; // Fallback
-    }).filter(value => value !== null);
+    const values = uniqueValues.filter(value => value !== null);
 
     return NextResponse.json(values);
   } catch (error) {

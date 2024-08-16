@@ -5,7 +5,6 @@ import {
   Paper,
   Checkbox,
   FormControlLabel,
-  Fab,
   InputLabel,
   IconButton,
   Box,
@@ -18,6 +17,7 @@ import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+
 type SearcherProps = {};
 export const Searcher: React.FC<SearcherProps> = () => {
   const searchParams = useSearchParams();
@@ -25,7 +25,8 @@ export const Searcher: React.FC<SearcherProps> = () => {
   const pathname = usePathname();
   const { isOpenSearcher, setOpenSearcher, filters, setFilters, filterValues } =
     useSearchContext();
-    
+    console.log(filterValues)
+
   const changePage = (newPage: number) => {
     const currentQuery = new URLSearchParams(searchParams.toString());
     currentQuery.set("page", newPage.toString());
