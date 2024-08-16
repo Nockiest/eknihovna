@@ -28,11 +28,8 @@ const FilterLister: React.FC<FilterListerProps> =   ({
       [colName]: res,
     }));
   }
-  // await Promise.all([
-  //   await  fetchUniqueFilterCol("genres")
-  //   await fetchUniqueFilterCol("category")
-  //  await fetchUniqueFilterCol("author")
-  // ]);
+
+
   useEffect(() => {
     console.log('fetching filters')
     async function update() {

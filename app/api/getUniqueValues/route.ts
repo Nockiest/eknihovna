@@ -36,7 +36,10 @@ console.log(req.method, req.body )
       });
 
     // Safely access the columnName property
-    const values = uniqueValues.filter(value => value !== null);
+    const values = uniqueValues.map(item => {
+
+      return item.name
+    }).filter(value => value !== null);
 
     return NextResponse.json(values);
   } catch (error) {

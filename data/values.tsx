@@ -1,7 +1,7 @@
 import { Breakpoint } from "@mui/material";
 
 export const truthyValues = [true,'true', "ano", "yes", 1, "dostupný"];
-export const falsyValues = [false,'false', "ne", "no", 0, "nedostupný"];
+export const falsyValues = [false,'false', "ne", "no", 0, "nedostupný",undefined, null];
 // export const knihyURL =
 //   process.env.NEXT_PUBLIC_APP_API_URL || "http://localhost:3002"; // Adjust URL as per your backend setup
 
@@ -36,4 +36,4 @@ export  const shownBooksBySize: Record<Breakpoint, number> = {
         formaturita: true,      // Replace with true or false depending on whether it's formal
         available: true,        // Replace with true or false depending on availability
         rating: 5               // Replace with the actual rating
-      } 
+      }
