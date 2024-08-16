@@ -1,35 +1,67 @@
 
+import { falsyValues } from "@/data/values";
 import { Filters } from "@/types/types";
 
 export function buildPrismaFilter(filters: Filters) {
-    // Construct the Prisma 'where' clause based on your filters
-    debugger
-      const where: any = {}; // Use a more specific type if available
-      if (filters?.author && filters?.author?.length > 0) {
+  const where: any = {}; // Use a more specific type if available
 
-        where.author = {
-          contains: filters.author  || undefined,
+  // Handle the 'author' filter
+  if (filters?.author && filters?.author.length > 0) {
+    if (Array.isArray(filters.author)) {
+      // If 'author' is an array, create an OR condition
+      where.OR = filters.author.map((author) => ({
+        author: {
+          contains: author,
           mode: 'insensitive',
-        };
-      }
-
-      if (filters.category  && filters?.category?.length > 0){
-        where.category = {
-          contains: filters.category  || undefined,
-          mode: 'insensitive',
-        };
-      }
-
-      if (filters.genres  && filters?.genres?.length > 0) {
-        where.genres = {
-          hasSome: filters.genres.length > 0 ? filters.genres : undefined,
-        };
-      }
-
-    // Add other filters as necessary
-    // Example for boolean fields:
-    if (filters.available !== undefined) {
-      where.available = filters.available;
+        },
+      }));
+    } else {
+      // If 'author' is a single string
+      where.author = {
+        contains: filters.author,
+        mode: 'insensitive',
+      };
     }
-    return where;
   }
+
+  // Handle the 'category' filter
+  if (filters?.category && filters?.category.length > 0) {
+    if (Array.isArray(filters.category)) {
+      // If 'category' is an array, create an OR condition
+      where.OR = [
+        ...(where.OR || []),
+        ...filters.category.map((category) => ({
+          category: {
+            contains: category,
+            mode: 'insensitive',
+          },
+        })),
+      ];
+    } else {
+      // If 'category' is a single string
+      where.category = {
+        contains: filters.category,
+        mode: 'insensitive',
+      };
+    }
+  }
+
+  // Handle the 'genres' filter
+  if (filters?.genres && filters.genres.length > 0) {
+    where.genres = {
+      hasSome: filters.genres,
+    };
+  }
+
+  // // Handle the 'available' filter
+  if ( falsyValues.indexOf( filters.available ) <  0) {
+    where.available = filters.available;
+  }
+
+  if ( falsyValues.indexOf( filters.formaturita )< 0) {
+    where.formaturita = filters.formaturita;
+  }
+  // Return the constructed 'where' clause
+  return where;
+}
+ 
