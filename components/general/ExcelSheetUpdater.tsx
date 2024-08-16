@@ -70,7 +70,7 @@ const ExcelSheetUpdater = () => {
       setResponseMessage("vytvárřím tabulku");
       XLSX.writeFile(workbook, "data_ze_serveru.xlsx");
       setResponseMessage("data úspěšně stažena");
-      console.log("Data fetched and saved locally.");
+      console.log("Data fetched and saved locally.", workbook);
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
       setResponseMessage("problém se stažením dat: " + error.message);
