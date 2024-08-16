@@ -2,10 +2,8 @@ import { NextApiRequest, NextApiResponse } from "next";
 import * as xlsx from "xlsx";
 import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // Assuming this function exists
 import { excelWordsToBool, fillMissingIds } from "./excelHandelUtils";
-
-import { IncomingMessage } from "http";
-import * as fs from "fs";
 import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
 
 // Promisify fs functions
 // const pipeline = util.promisify(require('stream').pipeline);
@@ -81,6 +79,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     worksheet = fillMissingIds(worksheet);
 
     // Insert data into PostgreSQL
+    await deleteDuplicates()
     await insertExcelDataToPostgres(worksheet, "knihy");
     // Respond with success
     res
@@ -92,6 +91,39 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     res.status(500).json({ error: error.message });
   }
 }
+
+async function findDuplicates() {
+  const books = await prisma.knihy.findMany();
+  const bookCodes = books.map(book => book.book_code);
+  const uniqueBookCodes = [...new Set(bookCodes)];
+
+  const duplicates = uniqueBookCodes.filter(code => bookCodes.indexOf(code) !== bookCodes.lastIndexOf(code));
+
+  return duplicates;
+}
+
+async function deleteDuplicates() {
+  const duplicates = await findDuplicates();
+
+  for (const duplicate of duplicates) {
+    // Delete all occurrences of the duplicate except the first one
+    const booksToDelete = await prisma.knihy.findMany({
+      where: {
+        book_code: duplicate,
+      },
+      skip: 1, // Skip the first occurrence
+    });
+
+    for (const book of booksToDelete) {
+      await prisma.knihy.delete({
+        where: {
+          id: book.id,
+        },
+      });
+    }
+  }
+}
+
 
 // // Determine the appropriate error response
 // let errorMessage = 'Internal Server Error';

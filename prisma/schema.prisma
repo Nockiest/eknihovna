@@ -10,7 +10,7 @@ datasource db {
 
 model knihy {
   id             String   @id @db.VarChar(255)
-  book_code      Int?
+  book_code      Int?     @unique
   name           String?  @db.VarChar(100)
   author         String?  @db.VarChar(100)
   category       String?  @db.VarChar(50)
