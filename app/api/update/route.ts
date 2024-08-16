@@ -4,125 +4,85 @@ import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // As
 import { excelWordsToBool, fillMissingIds } from "./excelHandelUtils";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-
-// Promisify fs functions
-// const pipeline = util.promisify(require('stream').pipeline);
-
-//   async function parseMultipartForm(req: IncomingMessage): Promise<{ fields: any, files: any }> {
-//     return new Promise((resolve, reject) => {
-//         console.log(req.headers['content-type']);
-//         if (req.headers['content-type'] === undefined || !req.headers['content-type'].startsWith('multipart/form-data')) {
-//           return reject(new Error('Content-Type must be multipart/form-data'));
-//         }
-
-//         const boundary = req.headers['content-type']?.split('boundary=')[1];
-//         if (!boundary) {
-//           return reject(new Error('Boundary not found'));
-//         }
-
-//         const chunks: Buffer[] = [];
-//         req.on('data', chunk => chunks.push(chunk));
-//         req.on('end', async () => {
-//           const buffer = Buffer.concat(chunks);
-//           // Convert buffer to string before using split
-//           const parts = buffer.toString().split(`--${boundary}`);
-//           const fields: any = {};
-//           const files: any = {};
-
-//           // Process each part of the multipart form data
-//           parts.forEach(part => {
-//             if (!part.trim().length) return; // Skip empty parts
-
-//             const [headers, body] = part.split('\r\n\r\n');
-//             const contentDisposition = headers.split('\r\n')[0];
-//             const [_, name, filename] = contentDisposition.split('; ');
-
-//             if (filename) {
-//               // This is a file
-//               const [_, fileName] = filename.split('filename=');
-//               files[name.split('name=')[1]] = body;
-//             } else {
-//               // This is a field
-//               fields[name.split('name=')[1]] = body;
-//             }
-//           });
-
-//           resolve({ fields, files });
-//         });
-//       });
-// }
-// Disable body parsing to allow Formidable to handle file uploads
-// Handle file upload
-//   const { fields, files } = await parseMultipartForm(req);
-//   const filePath = files['file']?.filePath;
-//   console.log('File path:', filePath);
-
-export async function POST(req: NextRequest, res: NextApiResponse) {
+export async function POST(req: NextRequest) {
   console.log("POST request received");
   try {
     const data = await req.formData();
     const file: File | null = data.get("file") as unknown as File;
-    console.log(file);
     if (!file) {
-      return NextResponse.json({ success: false });
+      console.error("No file uploaded");
+      return NextResponse.json({ success: false, message: "No file uploaded" });
     }
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    // Load the Excel sheet directly from the buffer
     const workbook = xlsx.read(buffer, { type: "buffer" });
     let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-    // Apply data transformations
-    worksheet = excelWordsToBool(worksheet, "available");
-    worksheet = excelWordsToBool(worksheet, "formaturita");
-    worksheet = fillMissingIds(worksheet);
-
-    // Insert data into PostgreSQL
-    await deleteDuplicates()
-    await insertExcelDataToPostgres(worksheet, "knihy");
-    // Respond with success
-    res
-      .status(200)
-      .json({ message: "File processed and uploaded successfully" });
-  } catch (error: any) {
-    console.error("Error processing data:", error);
-
-    res.status(500).json({ error: error.message });
-  }
-}
-
-async function findDuplicates() {
-  const books = await prisma.knihy.findMany();
-  const bookCodes = books.map(book => book.book_code);
-  const uniqueBookCodes = [...new Set(bookCodes)];
-
-  const duplicates = uniqueBookCodes.filter(code => bookCodes.indexOf(code) !== bookCodes.lastIndexOf(code));
-
-  return duplicates;
-}
-
-async function deleteDuplicates() {
-  const duplicates = await findDuplicates();
-
-  for (const duplicate of duplicates) {
-    // Delete all occurrences of the duplicate except the first one
-    const booksToDelete = await prisma.knihy.findMany({
-      where: {
-        book_code: duplicate,
-      },
-      skip: 1, // Skip the first occurrence
-    });
-
-    for (const book of booksToDelete) {
-      await prisma.knihy.delete({
-        where: {
-          id: book.id,
-        },
+    // Ensure transformations succeed
+    try {
+      worksheet = excelWordsToBool(worksheet, "available");
+      worksheet = excelWordsToBool(worksheet, "formaturita");
+      worksheet = fillMissingIds(worksheet);
+    } catch (transformError:any) {
+      console.error("Error transforming data:", transformError);
+      return NextResponse.json({
+        success: false,
+        error: "Data transformation error",
+        details: transformError?.message,
       });
     }
+
+    // Insert data into PostgreSQL
+    try {
+      await insertExcelDataToPostgres(worksheet, "knihy");
+    } catch (dbError: any) {
+      console.error("Database insertion error:", dbError);
+      return NextResponse.json({
+        success: false,
+        error: "Database insertion error",
+        details: dbError.message,
+      });
+    }
+
+    return NextResponse.json({ success: true, message: "File processed and uploaded successfully" });
+  } catch (error: any) {
+    console.error("Error processing data:", error);
+    return NextResponse.json({ success: false, error: "Server error", details: error.message });
   }
 }
+// async function findDuplicates() {
+//   const books = await prisma.knihy.findMany();
+//   const bookCodes = books.map(book => book.book_code);
+//   const uniqueBookCodes = [...new Set(bookCodes)];
+
+//   const duplicates = uniqueBookCodes.filter(code => bookCodes.indexOf(code) !== bookCodes.lastIndexOf(code));
+
+//   return duplicates;
+// }
+
+// async function deleteDuplicates() {
+//   const duplicates = await findDuplicates();
+
+//   for (const duplicate of duplicates) {
+//     // Delete all occurrences of the duplicate except the first one
+//     const booksToDelete = await prisma.knihy.findMany({
+//       where: {
+//         book_code: duplicate,
+//       },
+//       skip: 1, // Skip the first occurrence
+//     });
+
+//     for (const book of booksToDelete) {
+//       await prisma.knihy.delete({
+//         where: {
+//           id: book.id,
+//         },
+//       });
+//     }
+//   }
+// }
 
 
 // // Determine the appropriate error response

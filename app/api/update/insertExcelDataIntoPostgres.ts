@@ -1,10 +1,5 @@
 import { prisma } from '@/lib/prisma';
 import * as xlsx from "xlsx";
-import { fillMissingIds, loadExcelSheet } from "./excelHandelUtils";
-
-
-type TableName = "knihy"; // Add all your table names here
-
 import { v4 as uuidv4 } from "uuid";
 import { truthyValues } from "@/data/values";
 export const insertExcelDataToPostgres = async (
@@ -24,7 +19,7 @@ export const insertExcelDataToPostgres = async (
     if (!headers || headers.length === 0) {
       throw new Error("The Excel file does not contain headers");
     }
-
+    await prisma.knihy.deleteMany();
     // Validate and insert data into the database
     for (const row of rows) {
       try {
@@ -43,27 +38,20 @@ export const insertExcelDataToPostgres = async (
               value = uuidv4(); // Generate a new unique ID if the value is malformed
               break;
             case 'book_code':
-              if (value && !isNaN(parseInt(value, 10))) {
-                value = parseInt(value, 10);
-              } else {
-                value = null; // Clear the value if it's malformed
-              }
+              value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
               break;
             case 'formaturita':
-              value = truthyValues.includes(value)? true:false
-            break
+              value = truthyValues.includes(value) ? true : false;
+              break;
             case 'available':
-              value = truthyValues.includes(value)? true:false
-            break
+              value = truthyValues.includes(value) ? true : false;
+              break;
             case 'genres':
-              // Split the genres string by ','
               value = value ? value.toString().split(',').map((v: string) => v.trim()) : [];
               break;
-              case 'rating':
-                // Split the genres string by ','
-                value = value ? parseFloat(value ): -1
-                break;
-            // Add more cases as needed to handle specific fields
+            case 'rating':
+              value = value ? parseFloat(value) : -1;
+              break;
             default:
               value = value ? value.toString().trim() : null;
               break;
@@ -105,7 +93,6 @@ export const insertExcelDataToPostgres = async (
     await prisma.$disconnect();
   }
 }
-
 // let model: any;
 // switch (tableName) {
 //   case 'knihy':
