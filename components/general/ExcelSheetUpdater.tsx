@@ -42,10 +42,12 @@ const ExcelSheetUpdater = () => {
       console.log(selectedFile)
       data.set('file', selectedFile)
       console.log(1)
+      setResponseMessage('data se nahrávají')
       const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, {
         method: 'POST',
         body: data
       })
+      setResponseMessage('data úspěšně nahrána')
       console.log(2)
       // handle the error
       if (!res.ok) throw new Error(await res.text())
@@ -54,43 +56,13 @@ const ExcelSheetUpdater = () => {
       console.error(e)
     }
   }
-  // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
 
-  //   // Assuming you have a file input with id "fileInput"
-  //   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-  //   const file = fileInput.files && fileInput.files[0];
-
-  //   if (!file) {
-  //     console.error("No file selected");
-  //     return;
-  //   }
-
-  //   // Create FormData object
-  //   const formData = new FormData();
-  //   formData.append("file", file); // Append the file to FormData
-  //   // formData.append("password", password); // Append other form data as needed
-  //   //https://eknihovna.onrender.com/api
-  //   //${process.env.NEXT_PUBLIC_APP_API_URL}/update
-  //   try {
-  //      // rewrite to prisma
-  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
-  //       headers: {
-  //         "content-type": "multipart/form-data", // Set content type to multipart/form-data
-  //       },
-  //     });
-
-  //     setResponseMessage(JSON.stringify(response.data, null, 2));
-  //   } catch (error: any) {
-  //     console.error("Error:", error);
-  //     setResponseMessage("Error: " + error.message);
-  //   }
-  // };
 
   // rewrite to prisma
   const fetchDataFromServer = async () => {
     console.log("Fetching data from server...");
     try {
+      setResponseMessage('nahrávám data ze serveru')
       const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/downloadExcel`,
          {
         responseType: "arraybuffer",
@@ -98,7 +70,9 @@ const ExcelSheetUpdater = () => {
     );
       const data = new Uint8Array(response.data);
       const workbook = XLSX.read(data, { type: "array" });
+      setResponseMessage('vytvárřím tabulku')
       XLSX.writeFile(workbook, "data_ze_serveru.xlsx");
+      setResponseMessage('data úspěšně stažena')
       console.log("Data fetched and saved locally.");
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
@@ -226,3 +200,36 @@ className="w-1/2 flex flex-col items-center justify-center mt-16 mx-auto"
 //   <PrimaryButton type="submit">Autorizovat</PrimaryButton>
 //   <div id="response">{responseMessage}</div>
 // </form>
+
+ // const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
+
+  //   // Assuming you have a file input with id "fileInput"
+  //   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
+  //   const file = fileInput.files && fileInput.files[0];
+
+  //   if (!file) {
+  //     console.error("No file selected");
+  //     return;
+  //   }
+
+  //   // Create FormData object
+  //   const formData = new FormData();
+  //   formData.append("file", file); // Append the file to FormData
+  //   // formData.append("password", password); // Append other form data as needed
+  //   //https://eknihovna.onrender.com/api
+  //   //${process.env.NEXT_PUBLIC_APP_API_URL}/update
+  //   try {
+  //      // rewrite to prisma
+  //     const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
+  //       headers: {
+  //         "content-type": "multipart/form-data", // Set content type to multipart/form-data
+  //       },
+  //     });
+
+  //     setResponseMessage(JSON.stringify(response.data, null, 2));
+  //   } catch (error: any) {
+  //     console.error("Error:", error);
+  //     setResponseMessage("Error: " + error.message);
+  //   }
+  // };
