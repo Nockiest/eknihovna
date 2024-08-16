@@ -4,37 +4,92 @@ import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // As
 import { excelWordsToBool, fillMissingIds } from "./excelHandelUtils";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+// export async function POST(req: NextRequest) {
+//   console.log("POST request received");
+//   try {
+//     const data = await req.formData();
+//     const file: File | null = data.get("file") as unknown as File;
+//     if (!file) {
+//       console.error("No file uploaded");
+//       return NextResponse.json({ success: false, message: "No file uploaded" });
+//     }
+
+//     const bytes = await file.arrayBuffer();
+//     const buffer = Buffer.from(bytes);
+
+//     const workbook = xlsx.read(buffer, { type: "buffer" });
+//     let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+//     // Ensure transformations succeed
+//     try {
+//       worksheet = excelWordsToBool(worksheet, "available");
+//       worksheet = excelWordsToBool(worksheet, "formaturita");
+//       worksheet = fillMissingIds(worksheet);
+//     } catch (transformError:any) {
+//       console.error("Error transforming data:", transformError);
+//       return NextResponse.json({
+//         success: false,
+//         error: "Data transformation error",
+//         details: transformError?.message,
+//       });
+//     }
+
+//     // Insert data into PostgreSQL
+//     try {
+//       await insertExcelDataToPostgres(worksheet, "knihy");
+//     } catch (dbError: any) {
+//       console.error("Database insertion error:", dbError);
+//       return NextResponse.json({
+//         success: false,
+//         error: "Database insertion error",
+//         details: dbError.message,
+//       });
+//     }
+
+//     return NextResponse.json({ success: true, message: "File processed and uploaded successfully" });
+//   } catch (error: any) {
+//     console.error("Error processing data:", error);
+//     return NextResponse.json({ success: false, error: "Server error", details: error.message });
+//   }
+// }
+
 export async function POST(req: NextRequest) {
   console.log("POST request received");
+
   try {
-    const data = await req.formData();
-    const file: File | null = data.get("file") as unknown as File;
+    // Ensure the request is a FormData request
+    console.log(1)
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
+    console.log(2)
     if (!file) {
       console.error("No file uploaded");
       return NextResponse.json({ success: false, message: "No file uploaded" });
     }
-
+    console.log(3)
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
-
+    console.log(4)
     const workbook = xlsx.read(buffer, { type: "buffer" });
     let worksheet = workbook.Sheets[workbook.SheetNames[0]];
 
-    // Ensure transformations succeed
+    // Apply transformations safely
     try {
+      console.log(5)
       worksheet = excelWordsToBool(worksheet, "available");
       worksheet = excelWordsToBool(worksheet, "formaturita");
       worksheet = fillMissingIds(worksheet);
-    } catch (transformError:any) {
+      console.log(6)
+    } catch (transformError: any) {
       console.error("Error transforming data:", transformError);
       return NextResponse.json({
         success: false,
         error: "Data transformation error",
-        details: transformError?.message,
+        details: transformError.message,
       });
     }
 
-    // Insert data into PostgreSQL
+    // Insert the transformed data into PostgreSQL
     try {
       await insertExcelDataToPostgres(worksheet, "knihy");
     } catch (dbError: any) {
