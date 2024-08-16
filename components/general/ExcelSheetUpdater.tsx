@@ -28,29 +28,58 @@ const ExcelSheetUpdater = () => {
       setSelectedFile(null);
     }
   };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   console.log(0);
+  //   if (!selectedFile) return;
+
+  //   try {
+  //     const data = new FormData();
+  //     console.log(selectedFile);
+  //     data.set("file", selectedFile);
+  //     console.log(1);
+  //     setResponseMessage("data se nahrávají");
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, {
+  //       method: "POST",
+  //       body: data,
+  //     });
+  //     setResponseMessage("data úspěšně nahrána");
+  //     console.log(2);
+  //     // handle the error
+  //     if (!res.ok) throw new Error(await res.text());
+  //   } catch (e: any) {
+  //     // Handle errors here
+  //     console.error(e);
+  //     setResponseMessage("problém s nahráním dat: " + e.message);
+  //   }
+  // };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(0);
-    if (!selectedFile) return;
+    setResponseMessage("Starting upload...");
+
+    if (!selectedFile) {
+      setResponseMessage("No file selected");
+      return;
+    }
 
     try {
       const data = new FormData();
-      console.log(selectedFile);
-      data.set("file", selectedFile);
-      console.log(1);
-      setResponseMessage("data se nahrávají");
-      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, {
+      data.append("file", selectedFile);
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
         method: "POST",
         body: data,
       });
-      setResponseMessage("data úspěšně nahrána");
-      console.log(2);
-      // handle the error
-      if (!res.ok) throw new Error(await res.text());
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.message || "Upload failed");
+      }
+
+      setResponseMessage("Data uploaded successfully");
     } catch (e: any) {
-      // Handle errors here
-      console.error(e);
-      setResponseMessage("problém s nahráním dat: " + e.message);
+      console.error("Upload error:", e);
+      setResponseMessage(`Error uploading data: ${e.message}`);
     }
   };
 
