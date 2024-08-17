@@ -11,7 +11,7 @@ export async function middleware(req: NextRequest) {
   //   return NextResponse.redirect(new URL('/api/auth/signin', req.url));
   // }
 
-  // Allow the request to proceed
+  // Allow the request to procee 
   return NextResponse.next();
 }
 
