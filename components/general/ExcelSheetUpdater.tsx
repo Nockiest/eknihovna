@@ -9,14 +9,14 @@ import Announcer from "@/theme/Announcer";
 import { useState } from "react";
 import * as XLSX from "xlsx";
 const ExcelSheetUpdater = () => {
-  // const { data: session, status } = useSession({ required: true });
+  const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
-  // if (!session) {
-  //   // redirect("/api/auth/signin?callbackUrl=/upload");
-  //   // router.push("/api/auth/signin?callbackUrl=/upload");
-  //   return <ReroutToAUth />;
-  // }
+  if (!session) {
+    // redirect("/api/auth/signin?callbackUrl=/upload");
+    // router.push("/api/auth/signin?callbackUrl=/upload");
+    return <ReroutToAUth />;
+  }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -80,29 +80,29 @@ const ExcelSheetUpdater = () => {
     }
   };
 
-  // if (session?.user?.email !== "ondralukes06@seznam.cz") {
-  //   console.log(
-  //     (session?.user?.email === "ondralukes06@seznam.cz").toString(),
-  //     (process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()
-  //   );
-  //   return (
-  //     <>
-  //       <Typography variant="h2" className="text-xl font-semibold mb-4">
-  //         Neplatný admin účet{" "}
-  //         {session?.user?.email === "ondralukes06@seznam.cz"} x
-  //         {(session?.user?.email === "ondralukes06@seznam.cz").toString()}x
-  //         {(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()}
-  //       </Typography>
-  //       <PrimaryButton
-  //         onClick={() => {
-  //           signOut();
-  //         }}
-  //       >
-  //         <Typography>Odhlásit se</Typography>
-  //       </PrimaryButton>
-  //     </>
-  //   );
-  // }
+  if (session?.user?.email !== "ondralukes06@seznam.cz") {
+    console.log(
+      (session?.user?.email === "ondralukes06@seznam.cz").toString(),
+      (process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()
+    );
+    return (
+      <>
+        <Typography variant="h2" className="text-xl font-semibold mb-4">
+          Neplatný admin účet{" "}
+          {session?.user?.email === "ondralukes06@seznam.cz"} x
+          {(session?.user?.email === "ondralukes06@seznam.cz").toString()}x
+          {(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()}
+        </Typography>
+        <PrimaryButton
+          onClick={() => {
+            signOut();
+          }}
+        >
+          <Typography>Odhlásit se</Typography>
+        </PrimaryButton>
+      </>
+    );
+  }
   return (
     <Box className="flex flex-col items-center justify-center">
       <PrimaryButton

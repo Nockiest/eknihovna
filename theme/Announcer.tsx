@@ -19,7 +19,6 @@ const Announcer: React.FC<{ message: string | null, type: 'normal' | 'error' | '
       {message}
 
       </Typography>
-      <p className='text-black'>{message}</p>
     </Box>
   );
 }
