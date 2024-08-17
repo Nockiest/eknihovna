@@ -15,7 +15,6 @@ export const insertExcelDataToPostgres = async (
 
     // Extract headers and rows
     const [headers, ...rows] = jsonData;
-
     if (!headers || headers.length === 0) {
       throw new Error("The Excel file does not contain headers");
     }
@@ -31,7 +30,6 @@ export const insertExcelDataToPostgres = async (
         // Map the row data to the Prisma model
         const data: any = headers.reduce((acc: any, header: string, index: number) => {
           let value = row[index];
-
           // Perform type checks and handle malformed values
           switch (header) {
             case 'id':
