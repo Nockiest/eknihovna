@@ -6,7 +6,7 @@ import AuthProvider from "@/components/AuthProvider";
 
 
 export default async function Page() {
- 
+
   return (
     <Box className="w-full">
       <AuthProvider>

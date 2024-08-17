@@ -6,13 +6,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "postinstall": "prisma generate"
-
+    "postinstall": "prisma generate",
+    "dev:prod": "dotenv -e .env.production -- next dev"
   },
   "engines": {
     "node": "18.x"
   },
-
   "dependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
@@ -21,6 +20,7 @@
     "@prisma/client": "^5.18.0",
     "axios": "^1.7.2",
     "busboy": "^1.6.0",
+    "dotenv": "^16.4.5",
     "glob": "^10.4.1",
     "lodash": "^4.17.21",
     "next": "^14.2.4",

@@ -1,4 +1,4 @@
-import { useSearchContext } from '@/app/katalog/context'
+
 import { Box, Typography } from '@mui/material'
 import React from 'react'
 
@@ -16,8 +16,10 @@ const Announcer: React.FC<{ message: string | null, type: 'normal' | 'error' | '
       className="w-full border-2 flex justify-center items-center "
     >
       <Typography variant="h6" color={textColor}>
-        {message}
+      {message}
+
       </Typography>
+      <p className='text-black'>{message}</p>
     </Box>
   );
 }

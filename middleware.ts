@@ -16,5 +16,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
+  // matcher: ['/x/:path*']
   matcher: ['/upload/:path*'], // Apply the middleware to the /upload path
 };
