@@ -3,10 +3,7 @@ import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
-import { signIn, signOut, useSession } from "next-auth/react";
-import { redirect } from "next/dist/server/api-utils";
-import { useRouter } from "next/navigation";
-// import { useAuthContext } from "@/app/upload/authContext";
+import {signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "./ReroutToAUth";
 import Announcer from "@/theme/Announcer";
 import { useState } from "react";
@@ -28,34 +25,11 @@ const ExcelSheetUpdater = () => {
       setSelectedFile(null);
     }
   };
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   console.log(0);
-  //   if (!selectedFile) return;
 
-  //   try {
-  //     const data = new FormData();
-  //     console.log(selectedFile);
-  //     data.set("file", selectedFile);
-  //     console.log(1);
-  //     setResponseMessage("data se nahrávají");
-  //     const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, {
-  //       method: "POST",
-  //       body: data,
-  //     });
-  //     setResponseMessage("data úspěšně nahrána");
-  //     console.log(2);
-  //     // handle the error
-  //     if (!res.ok) throw new Error(await res.text());
-  //   } catch (e: any) {
-  //     // Handle errors here
-  //     console.error(e);
-  //     setResponseMessage("problém s nahráním dat: " + e.message);
-  //   }
-  // };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    debugger
     e.preventDefault();
-    setResponseMessage("Starting upload...");
+    setResponseMessage("data se nahrávají");
 
     if (!selectedFile) {
       setResponseMessage("No file selected");
@@ -65,7 +39,7 @@ const ExcelSheetUpdater = () => {
     try {
       const data = new FormData();
       data.append("file", selectedFile);
-
+      console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`)
       const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
         method: "POST",
         body: data,
@@ -76,7 +50,7 @@ const ExcelSheetUpdater = () => {
         throw new Error(errorData.message || "Upload failed");
       }
 
-      setResponseMessage("Data uploaded successfully");
+      setResponseMessage("data úspěšně nahrána");
     } catch (e: any) {
       console.error("Upload error:", e);
       setResponseMessage(`Error uploading data: ${e.message}`);
@@ -191,76 +165,3 @@ const ExcelSheetUpdater = () => {
 };
 
 export default ExcelSheetUpdater;
-// if (!session || !session?.user) {
-//   return (
-//     <PrimaryButton
-//       onClick={() => {
-//         signIn("google");
-//       }}
-//     >
-//       <Typography>Přihlaste se pro vstup</Typography>
-//     </PrimaryButton>
-//   );
-// }
-{
-  /* <form
-onSubmit={async (e) => {
-  const res = await authenticate(e, password);
-  if (res) {
-    setResponseMessage("Authentication successful");
-    setAuthenticated(true);
-  } else {
-    setResponseMessage("Authentication failed");
-  }
-}}
-className="w-1/2 flex flex-col items-center justify-center mt-16 mx-auto"
->
-<label htmlFor="password" className="block mb-2">
-  Pro práci s daty vepište heslo:
-</label>
-<PasswordHandler */
-}
-{
-  /* <PasswordEntry
-  label="heslo"
-  value={password}
-  onChange={(e) => setPassword(e.target.value)}
-/> */
-}
-
-//   <PrimaryButton type="submit">Autorizovat</PrimaryButton>
-//   <div id="response">{responseMessage}</div>
-// </form>
-
-// const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-//   event.preventDefault();
-
-//   // Assuming you have a file input with id "fileInput"
-//   const fileInput = document.getElementById("fileInput") as HTMLInputElement;
-//   const file = fileInput.files && fileInput.files[0];
-
-//   if (!file) {
-//     console.error("No file selected");
-//     return;
-//   }
-
-//   // Create FormData object
-//   const formData = new FormData();
-//   formData.append("file", file); // Append the file to FormData
-//   // formData.append("password", password); // Append other form data as needed
-//   //https://eknihovna.onrender.com/api
-//   //${process.env.NEXT_PUBLIC_APP_API_URL}/update
-//   try {
-//      // rewrite to prisma
-//     const response = await axios.post(`${process.env.NEXT_PUBLIC_APP_API_URL}/update`, formData, {
-//       headers: {
-//         "content-type": "multipart/form-data", // Set content type to multipart/form-data
-//       },
-//     });
-
-//     setResponseMessage(JSON.stringify(response.data, null, 2));
-//   } catch (error: any) {
-//     console.error("Error:", error);
-//     setResponseMessage("Error: " + error.message);
-//   }
-// };
