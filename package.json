@@ -7,7 +7,9 @@
     "start": "next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
-    "dev:prod": "dotenv -e .env.production -- next dev"
+    "dev:prod": "dotenv -e .env.production -- next dev",
+    "test": "jest",
+    "test:watch": "jest --watchAll"
   },
   "engines": {
     "node": "18.x"
@@ -33,7 +35,15 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.25.2",
+    "@babel/preset-env": "^7.25.3",
+    "@babel/preset-react": "^7.24.7",
+    "@babel/preset-typescript": "^7.24.7",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
     "@types/formidable": "^3.4.5",
+    "@types/jest": "^29.5.12",
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/lodash": "^4.17.6",
@@ -44,12 +54,19 @@
     "@types/react-window": "^1.8.8",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
+    "eslint-plugin-jest-dom": "^5.4.0",
+    "eslint-plugin-testing-library": "^6.3.0",
+    "jest": "^29.7.0",
+    "jest-environment-jsdom": "^29.7.0",
     "jsonwebtoken": "^9.0.2",
     "postcss": "^8",
     "prisma": "^5.18.0",
     "react-window": "^1.8.10",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5"
+    "typescript": "^5",
+
+    "@testing-library/user-event": "^14.5.2"
+
   }
 }
