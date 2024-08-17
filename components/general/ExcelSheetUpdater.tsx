@@ -76,7 +76,7 @@ const ExcelSheetUpdater = () => {
       console.log("Data fetched and saved locally.", workbook);
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
-      setResponseMessage("problém se stažením dat: " + error.message);
+      setResponseMessage("Problém se stažením dat: " + error.message);
     }
   };
 
