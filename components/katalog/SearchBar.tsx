@@ -18,6 +18,7 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
+
   useEffect(() => {
     async function update() {
       try {
@@ -28,30 +29,7 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
       }
     }
     update();
-  }, []);
-  // Debounce the input change handler to limit the number of calls
-  // const debouncedOnInputChange = useMemo(
-  //   () =>
-  //     debounce((value: string) => {
-  //       router.push({
-  //         pathname: router.pathname,
-  //         query: { ...router.query, query: value },
-  //       });
-  //     } ), // Adjust the debounce delay as needed
-  //   [router]
-  // );
-
-  // const handleInputChange =
-  // useCallback(
-  //   (e: React.SyntheticEvent, newInputValue: string) => {
-  //     router.push({
-  //       pathname: router.pathname,
-  //       query: { ...router.query, query: newInputValue },
-  //     });
-  //     // debouncedOnInputChange(newInputValue); // Update the input value when typing
-  //   },
-  //   [debouncedOnInputChange]
-  // );
+  }, [setBookNames, setErrorMessage]);
 
   const renderRow = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => (
@@ -59,24 +37,22 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
         style={style}
         key={index}
         onClick={() => {
-          console.log("click", bookNames[index]);
           const selectedValue = bookNames[index];
           setQuery(selectedValue);
-
-          // onInputChange(selectedValue);
         }}
       >
         {bookNames[index]}
       </li>
     ),
-    [bookNames]
+    [bookNames, setQuery]
   );
+
   const changeQuery = (newPage: string) => {
     const currentQuery = new URLSearchParams(searchParams.toString());
     currentQuery.set("query", newPage);
-    // changePage(currentQuery)
     router.push(`${pathName}?${currentQuery.toString()}`);
   };
+
   return (
     <Autocomplete
       disablePortal
@@ -88,8 +64,15 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
       onInputChange={(e, newInputValue) => {
         changeQuery(newInputValue);
       }}
+ 
+      onChange={(e, newValue) => {
+        if (newValue) {
+          setQuery(newValue);
+          changeQuery(newValue);
+        }
+      }}
       ListboxComponent={(props) => (
-        // @ts-ignore
+       // @ts-ignore
         <FixedSizeList
           height={250}
           width="100%"
@@ -105,7 +88,7 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
         <TextField
           {...params}
           variant="outlined"
-          placeholder="Vyhldat knihu..."
+          placeholder="Vyhledat knihu..."
           InputProps={{
             ...params.InputProps,
             startAdornment: (
@@ -121,7 +104,28 @@ const SearchAutocomplete: React.FC<SearchAutocompleteProps> = () => {
 };
 
 export default SearchAutocomplete;
+// const debouncedOnInputChange = useMemo(
+//   () =>
+//     debounce((value: string) => {
+//       router.push({
+//         pathname: router.pathname,
+//         query: { ...router.query, query: value },
+//       });
+//     } ), // Adjust the debounce delay as needed
+//   [router]
+// );
 
+// const handleInputChange =
+// useCallback(
+//   (e: React.SyntheticEvent, newInputValue: string) => {
+//     router.push({
+//       pathname: router.pathname,
+//       query: { ...router.query, query: newInputValue },
+//     });
+//     // debouncedOnInputChange(newInputValue); // Update the input value when typing
+//   },
+//   [debouncedOnInputChange]
+// );
 // const useStyles = makeStyles({
 //   searchBox: {
 //     '& .MuiOutlinedInput-root': {
