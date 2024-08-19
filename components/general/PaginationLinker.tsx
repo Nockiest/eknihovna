@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { getURLSegment } from "@/utils/getURLSegment";
+import PaginationLink from "./PaginationLink";
 
 interface PaginationProps {
   totalEntries: number;
@@ -41,53 +42,57 @@ const Pagination: React.FC<PaginationProps> = ({
 
   if (totalPages <=5) {
     return visiblePageNumbers.map((pageNumber) => (
-      <Link
-        key={pageNumber}
-        href={`/${folderName}?page=${pageNumber}`}
-        className={`px-3 py-1 rounded ${
-          pageNumber === page
-            ?
-              "bg-primary-400 text-text-950":
-            "bg-secondary-900 text-text-100"
-        }`}
-      >
-        {pageNumber}
-      </Link>
+      <PaginationLink pageNumber={pageNumber} page={page} folderName={folderName} />
+      // <Link
+      //   key={pageNumber}
+      //   href={`/${folderName}?page=${pageNumber}`}
+      //   className={`px-3 py-1 rounded ${
+      //     pageNumber === page
+      //       ?
+      //         "bg-primary-400 text-text-950":
+      //       "bg-secondary-900 text-text-100"
+      //   }`}
+      // >
+      //   {pageNumber}
+      // </Link>
     ));
   }
   return (
     <div className="flex justify-center space-x-2 m-4">
       {page > 6 && (
-        <Link
-          href={`/${folderName}?page=${1}`}
-          className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        >
-          ...1
-        </Link>
+          <PaginationLink pageNumber={1} page={page} folderName={folderName} />
+        // <Link
+        //   href={`/${folderName}?page=${1}`}
+        //   className="px-3 py-1 rounded bg-gray-200 text-text-100"
+        // >
+        //   ...1
+        // </Link>
       )}
 
       {visiblePageNumbers.map((pageNumber) => (
-        <Link
-          key={pageNumber}
-          href={`/${folderName}?page=${pageNumber}`}
-          className={`px-3 py-1 rounded ${
-            pageNumber === page
-              ?
-                "bg-primary-400 text-text-950":
-              "bg-secondary-900 text-text-100"
-          }`}
-        >
-          {pageNumber}
-        </Link>
+         <PaginationLink pageNumber={pageNumber} page={page} folderName={folderName} />
+        // <Link
+        //   key={pageNumber}
+        //   href={`/${folderName}?page=${pageNumber}`}
+        //   className={`px-3 py-1 rounded ${
+        //     pageNumber === page
+        //       ?
+        //         "bg-primary-400 text-text-950":
+        //       "bg-secondary-900 text-text-100"
+        //   }`}
+        // >
+        //   {pageNumber}
+        // </Link>
       ))}
 
       {page < totalPages - 5 && (
-        <Link
-          href={`/${folderName}?page=${totalPages}`}
-          className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        >
-          ...{totalPages}
-        </Link>
+         <PaginationLink pageNumber={totalPages} page={page} folderName={folderName}  />
+        // <Link
+        //   href={`/${folderName}?page=${totalPages}`}
+        //   className="px-3 py-1 rounded bg-gray-200 text-text-100"
+        // >
+        //   ...{totalPages}
+        // </Link>
       )}
     </div>
   );
