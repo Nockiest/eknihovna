@@ -91,6 +91,7 @@ const theme = createTheme({
       fontSize: '1rem',
       '@media (min-width:600px)': {
         fontSize: '1.1rem',
+
       },
       [createTheme().breakpoints.up('md')]: {
         fontSize: '1.2rem',
@@ -129,8 +130,8 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           margin: '16px', // default margin
-          [createTheme().breakpoints.down('sm')]: {
-            margin: '8px', // smaller screens
+          [createTheme().breakpoints.down('md')]: {
+            margin: '4px', // smaller screens
           },
           [createTheme().breakpoints.up('md')]: {
             margin: '24px', // medium screens
