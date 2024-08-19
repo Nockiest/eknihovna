@@ -13,7 +13,7 @@ const OpeningHours: React.FC = () => {
 
   return (
     <Box p={2}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant="h5" gutterBottom className='text-center lg:text-left'>
         Otevírací doba
       </Typography>
       <Grid container spacing={2}>

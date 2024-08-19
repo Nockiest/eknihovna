@@ -52,7 +52,12 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       {/* Navigation menu for larger screens */}
       <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
       <NavbarMapper
-      navRoutes={navRoutes}
+      navRoutes={navRoutes  .filter((route) => {
+        if (route.URL === "/upload" ) {
+          return false;
+        }
+        return true;
+      })}
 
       renderButton={renderButton}
     />
