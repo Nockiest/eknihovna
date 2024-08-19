@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { getURLSegment } from "@/utils/getURLSegment";
 import PaginationLink from "./PaginationLink";
+import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 
 interface PaginationProps {
   totalEntries: number;
@@ -24,10 +25,16 @@ const Pagination: React.FC<PaginationProps> = ({
   useEffect(() => {
     setTotalPages(Math.ceil(totalEntries / itemsPerPage));
   }, [totalEntries, itemsPerPage]);
+  const breakPoint = useCurrentBreakpoint()
+    let offset = 5
+    if (breakPoint === 'xs' || breakPoint === 'sm') {
+      offset = 2;
 
+    }
   const getVisiblePageNumbers = () => {
-    const startPage = Math.max(1, page - 5);
-    const endPage = Math.min(totalPages, page + 5);
+
+    const startPage = Math.max(1, page - offset);
+    const endPage = Math.min(totalPages, page + offset);
     const pageNumbers = [];
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
@@ -58,9 +65,9 @@ const Pagination: React.FC<PaginationProps> = ({
     ));
   }
   return (
-    <div className="flex justify-center space-x-2 m-4">
-      {page > 6 && (
-          <PaginationLink pageNumber={1} page={page} folderName={folderName} />
+    <div className="flex flex-wrap justify-center space-x-2 m-4">
+      {page > offset && (
+          <PaginationLink pageNumber={1} page={page} folderName={folderName}  className="px-3 py-1 rounded bg-gray-200 text-text-100" />
         // <Link
         //   href={`/${folderName}?page=${1}`}
         //   className="px-3 py-1 rounded bg-gray-200 text-text-100"
@@ -85,8 +92,8 @@ const Pagination: React.FC<PaginationProps> = ({
         // </Link>
       ))}
 
-      {page < totalPages - 5 && (
-         <PaginationLink pageNumber={totalPages} page={page} folderName={folderName}  />
+      {page < totalPages - offset && (
+         <PaginationLink pageNumber={totalPages} page={page} folderName={folderName}  className="px-3 py-1 rounded bg-gray-200 text-text-100" />
         // <Link
         //   href={`/${folderName}?page=${totalPages}`}
         //   className="px-3 py-1 rounded bg-gray-200 text-text-100"
