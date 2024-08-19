@@ -13,7 +13,8 @@ const ExcelSheetUpdater = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
   if (!session) {
-    return <ReroutToAUth />;
+    return <div className="flex flex-center"><ReroutToAUth />
+      </div>
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -101,7 +102,7 @@ const ExcelSheetUpdater = () => {
     );
   }
   return (
-    <Box className="flex flex-col select-none items-center justify-center">
+    <Box className="flex flex-col z-0 select-none items-center justify-center">
       <PrimaryButton
         onClick={() => {
           signOut();
@@ -113,7 +114,7 @@ const ExcelSheetUpdater = () => {
 
       <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
-          <Typography variant="h2" className="text-xl font-semibold mb-4">
+          <Typography variant="h2" className="text-xl text-ceter font-semibold mb-4">
             Stáhnout data ze serveru
           </Typography>
           <PrimaryButton onClick={fetchDataFromServer}>
@@ -126,7 +127,7 @@ const ExcelSheetUpdater = () => {
           </PrimaryButton>
         </Box>
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
-          <Typography variant="h2" className="text-xl font-semibold mb-4">
+          <Typography variant="h2" className="text-xl text-center font-semibold mb-4">
             Přepsat data na serveru
           </Typography>
 

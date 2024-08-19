@@ -13,6 +13,7 @@ const ReroutToAUth = () => {
         // signIn("google");
         router.push("/api/auth/signin?callbackUrl=/upload");
       }}
+      className="mx-auto"
     >
       <Typography>Přihlaste se pro vstup</Typography>
     </PrimaryButton>
