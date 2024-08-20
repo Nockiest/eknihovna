@@ -26,11 +26,16 @@ const Pagination: React.FC<PaginationProps> = ({
     setTotalPages(Math.ceil(totalEntries / itemsPerPage));
   }, [totalEntries, itemsPerPage]);
   const breakPoint = useCurrentBreakpoint()
-    let offset = 5
-    if (breakPoint === 'xs' || breakPoint === 'sm') {
-      offset = 2;
+    const [offset, setOffset] = useState<number>(5)
+    useEffect(() => {
+      if (breakPoint && ['xs', 'sm'].indexOf(breakPoint) >= 0  ) {
+        setOffset(2)
+      }
+      else {
+        setOffset(5)
+      }
+}, [breakPoint])
 
-    }
   const getVisiblePageNumbers = () => {
 
     const startPage = Math.max(1, page - offset);
@@ -50,56 +55,23 @@ const Pagination: React.FC<PaginationProps> = ({
   if (totalPages <=5) {
     return visiblePageNumbers.map((pageNumber) => (
       <PaginationLink pageNumber={pageNumber} page={page} folderName={folderName} />
-      // <Link
-      //   key={pageNumber}
-      //   href={`/${folderName}?page=${pageNumber}`}
-      //   className={`px-3 py-1 rounded ${
-      //     pageNumber === page
-      //       ?
-      //         "bg-primary-400 text-text-950":
-      //       "bg-secondary-900 text-text-100"
-      //   }`}
-      // >
-      //   {pageNumber}
-      // </Link>
+
     ));
   }
   return (
     <div className="flex flex-wrap justify-center space-x-2 m-4">
       {page > offset && (
           <PaginationLink pageNumber={1} page={page} folderName={folderName}  className="px-3 py-1 rounded bg-gray-200 text-text-100" />
-        // <Link
-        //   href={`/${folderName}?page=${1}`}
-        //   className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        // >
-        //   ...1
-        // </Link>
-      )}
 
+      )}
       {visiblePageNumbers.map((pageNumber) => (
          <PaginationLink pageNumber={pageNumber} page={page} folderName={folderName} />
-        // <Link
-        //   key={pageNumber}
-        //   href={`/${folderName}?page=${pageNumber}`}
-        //   className={`px-3 py-1 rounded ${
-        //     pageNumber === page
-        //       ?
-        //         "bg-primary-400 text-text-950":
-        //       "bg-secondary-900 text-text-100"
-        //   }`}
-        // >
-        //   {pageNumber}
-        // </Link>
+
       ))}
 
       {page < totalPages - offset && (
          <PaginationLink pageNumber={totalPages} page={page} folderName={folderName}  className="px-3 py-1 rounded bg-gray-200 text-text-100" />
-        // <Link
-        //   href={`/${folderName}?page=${totalPages}`}
-        //   className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        // >
-        //   ...{totalPages}
-        // </Link>
+
       )}
     </div>
   );

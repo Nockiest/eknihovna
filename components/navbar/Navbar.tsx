@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import Link from "next/link";
 import { NavbarButton } from "@/theme/buttons/Buttons";
 import { Box, Button, Paper, Typography } from "@mui/material";
@@ -9,7 +9,6 @@ import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import Image from "next/image";
 import NavbarMapper from "./NavbarMaper";
 import { NavButton } from "@/types/types";
-import { getURLSegment } from "@/utils/getURLSegment";
 
 interface NavListProps {}
 
@@ -20,7 +19,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
   const renderButton = (button: NavButton, isActive: boolean) => (
     <NavbarButton
       key={button.URL}
-      variant={isActive ? 'contained' : 'outlined'}
+      variant={isActive ? "contained" : "outlined"}
       size="small"
       className="mx-2"
     >
@@ -51,16 +50,15 @@ const NavBar: React.FC<NavListProps> = ({}) => {
 
       {/* Navigation menu for larger screens */}
       <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
-      <NavbarMapper
-      navRoutes={navRoutes  .filter((route) => {
-        if (route.URL === "/upload" ) {
-          return false;
-        }
-        return true;
-      })}
-
-      renderButton={renderButton}
-    />
+        <NavbarMapper
+          navRoutes={navRoutes.filter((route) => {
+            if (route.URL === "/upload") {
+              return false;
+            }
+            return true;
+          })}
+          renderButton={renderButton}
+        />
         {/* {navRoutes
           .filter((route) => {
             if (route.URL === "/upload" && !isAdmin) {
