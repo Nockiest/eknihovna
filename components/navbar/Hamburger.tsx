@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { navRoutes } from "@/data/routeNames";
+import { navRoutes } from "@/data/values";
 import { Box } from "@mui/material";
 import NavbarMapper from "./NavbarMaper";
 import { NavButton } from "@/types/types";
@@ -37,7 +37,7 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
     >
       <ul className="nav__list absolute list-none flex flex-col justify-evenly items-center top-0 left-0 h-screen w-screen z-100 bg-black text-white">
       <NavbarMapper
-      navRoutes={navRoutes}
+      navRoutes={ navRoutes.filter(nav => nav.URL !== '/upload')}
       renderButton={renderButton}
     />
 
