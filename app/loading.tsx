@@ -14,7 +14,7 @@ const LoadingPage = () => {
 
   return (
     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <h1 style={{ fontSize: '24px' }}>Loading{dots}</h1>
+      <h1 style={{ fontSize: '24px' }}>Načítání{dots}</h1>
     </div>
   );
 };
