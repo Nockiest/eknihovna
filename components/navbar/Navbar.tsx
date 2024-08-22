@@ -30,7 +30,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
   return (
     <Paper
       elevation={3}
-      className="p-2 h-full w-full mx-0 flex flex-col justify-center items-center "
+      className="p-2 h-full w-full z-10 mx-0 flex flex-col justify-center items-center "
     >
       <Box className="z-3">
         {/* <CustomHamburger onClick={()=> setIsHamburgerOpen(!isHamburgerOpen)} ariaLabel="toggle navigation" /> */}
@@ -56,26 +56,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
 
       renderButton={renderButton}
     />
-        {/* {navRoutes
-          .filter((route) => {
-            if (route.URL === "/upload" && !isAdmin) {
-              return false;
-            }
-            return true;
-          })
-          .map((button) => {
-            const isActive = getURLSegment(button.URL, 0) === firstURLSegment;
 
-            return (
-              <NavbarButton
-                key={button.URL}
-                variant={isActive ? "contained" : "outlined"}
-                size="small"
-              >
-                <Link href={button.URL}>{button.label}  </Link>
-              </NavbarButton>
-            );
-          })} */}
       </Box>
     </Paper>
   );
