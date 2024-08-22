@@ -3,7 +3,7 @@ import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import { Box, Paper, Typography } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
-import {signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "./ReroutToAUth";
 import Announcer from "@/theme/Announcer";
 import { useState } from "react";
@@ -13,9 +13,8 @@ const ExcelSheetUpdater = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
   if (!session) {
-    // redirect("/api/auth/signin?callbackUrl=/upload");
-    // router.push("/api/auth/signin?callbackUrl=/upload")
-    return <ReroutToAUth />;
+    return <div className="flex flex-center"><ReroutToAUth />
+      </div>
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +26,6 @@ const ExcelSheetUpdater = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    debugger
     e.preventDefault();
     setResponseMessage("data se nahrávají");
 
@@ -39,7 +37,7 @@ const ExcelSheetUpdater = () => {
     try {
       const data = new FormData();
       data.append("file", selectedFile);
-      console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`)
+      console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
       const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
         method: "POST",
         body: data,
@@ -76,7 +74,7 @@ const ExcelSheetUpdater = () => {
       console.log("Data fetched and saved locally.", workbook);
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
-      setResponseMessage("problém se stažením dat: " + error.message);
+      setResponseMessage("Problém se stažením dat: " + error.message);
     }
   };
 
@@ -104,7 +102,7 @@ const ExcelSheetUpdater = () => {
     );
   }
   return (
-    <Box className="flex flex-col items-center justify-center">
+    <Box className="flex flex-col z-0 select-none items-center justify-center">
       <PrimaryButton
         onClick={() => {
           signOut();
@@ -116,7 +114,7 @@ const ExcelSheetUpdater = () => {
 
       <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
-          <Typography variant="h2" className="text-xl font-semibold mb-4">
+          <Typography variant="h2" className="text-xl text-ceter font-semibold mb-4">
             Stáhnout data ze serveru
           </Typography>
           <PrimaryButton onClick={fetchDataFromServer}>
@@ -129,7 +127,7 @@ const ExcelSheetUpdater = () => {
           </PrimaryButton>
         </Box>
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
-          <Typography variant="h2" className="text-xl font-semibold mb-4">
+          <Typography variant="h2" className="text-xl text-center font-semibold mb-4">
             Přepsat data na serveru
           </Typography>
 
@@ -143,7 +141,7 @@ const ExcelSheetUpdater = () => {
               id="fileInput"
               name="file"
               accept=".xlsx"
-              className="mb-4"
+              className="mb-4 cursor-pointer"
               onChange={handleFileChange}
             />
             <SecondaryButton type="submit" disabled={!selectedFile}>
@@ -165,3 +163,6 @@ const ExcelSheetUpdater = () => {
 };
 
 export default ExcelSheetUpdater;
+
+// redirect("/api/auth/signin?callbackUrl=/upload");
+// router.push("/api/auth/signin?callbackUrl=/upload");
