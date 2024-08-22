@@ -1,17 +1,11 @@
 "use client";
 import BookCatalog from "@/components/katalog/BookCatalog";
-import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
-import { Box, Typography, CircularProgress, Checkbox } from "@mui/material";
-import SearcherOpenerFab from "@/components/katalog/SearcheOpenerFab";
-import { useEffect, useMemo, useState } from "react";
+import { Box, Typography,  Checkbox } from "@mui/material";
+import { useEffect,   useState } from "react";
 import { Book, Filters, FiltringValues } from "@/types/types";
-import   fetchUniqueValues   from "@/utils/apiConections/fetchUniqueValues";
-import { SearchContext } from "./context";
-import ColorCircles from "@/components/general/ColorCircles";
 import { Searcher } from "@/components/katalog/Searcher";
-import axios from "axios";
-// import { genUniqueBookCount } from "@/utils/apiConections/getBookCount";
 import ErrorReporter from "@/theme/Announcer";
+import { SearchContext } from "./context";
 
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
@@ -22,7 +16,6 @@ const KatalogPage = () => {
     formaturita: null,
     available: false,
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [filterValues, setFiltersValues] = useState<FiltringValues>({
     genres: [],
@@ -32,16 +25,7 @@ const KatalogPage = () => {
   const [query, setQuery] = useState<string  >('');
   const [bookNames, setBookNames] = useState<string[]>([]);
 
-  // if (isLoading) {
-  //   return (
-  //     <Box
-  //       className="w-full flex justify-center items-center"
-  //       style={{ height: "100vh" }}
-  //     >
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
+
 
   if (errorMessage) {
     return <ErrorReporter message={errorMessage}  type='error'/>;
@@ -60,7 +44,6 @@ const KatalogPage = () => {
         setBookNames,
         // books,
         // setBooks,
-        setIsLoading,
         filterValues, // possible filter values
         setFiltersValues,
         bookNames,
