@@ -1,4 +1,5 @@
 import { Breakpoint } from "@mui/material";
+import { NavButton } from "@/types/types";
 
 export const truthyValues = [true,'true', "ano", "yes", 1, "dostupný"];
 export const falsyValues = [false,'false', "ne", "no", 0, "nedostupný",undefined, null];
@@ -37,3 +38,13 @@ export  const shownBooksBySize: Record<Breakpoint, number> = {
         available: true,        // Replace with true or false depending on availability
         rating: 5               // Replace with the actual rating
       }
+
+
+export const navRoutes: NavButton[] = [
+    { URL: "/", label: "Úvod" },
+    // { URL: "/about", label: "O Knihovně" },
+    { URL: "/katalog", label: "katalog" },
+    { URL: "/news", label: "Zprávy" },
+    { URL: "/contact", label: "Kontakt" },
+    { URL: "/upload", label: "API" },
+  ]

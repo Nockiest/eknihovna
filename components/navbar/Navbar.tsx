@@ -3,7 +3,7 @@ import Link from "next/link";
 import { NavbarButton } from "@/theme/buttons/Buttons";
 import { Box, Button, Paper, Typography } from "@mui/material";
 import HamburgerNavList from "./Hamburger";
-import { navRoutes } from "@/data/routeNames";
+import { navRoutes } from "@/data/values";
 import { HeaderContext, useHeaderContext } from "./headerConntext";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import Image from "next/image";
@@ -52,7 +52,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       {/* Navigation menu for larger screens */}
       <Box className="hidden sm:flex flex-row justify-center align-center space-x-4">
       <NavbarMapper
-      navRoutes={navRoutes}
+      navRoutes={navRoutes .filter(nav => nav.URL !== '/upload')}
 
       renderButton={renderButton}
     />
