@@ -14,7 +14,7 @@ const ExcelSheetUpdater = () => {
   const [responseMessage, setResponseMessage] = useState("");
   if (!session) {
     // redirect("/api/auth/signin?callbackUrl=/upload");
-    // router.push("/api/auth/signin?callbackUrl=/upload") 
+    // router.push("/api/auth/signin?callbackUrl=/upload")
     return <ReroutToAUth />;
   }
 
@@ -27,9 +27,8 @@ const ExcelSheetUpdater = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    debugger
     e.preventDefault();
-    setResponseMessage("data se nahrávají");
+    setResponseMessage("Data se nahrávají...");
 
     if (!selectedFile) {
       setResponseMessage("No file selected");
@@ -39,23 +38,35 @@ const ExcelSheetUpdater = () => {
     try {
       const data = new FormData();
       data.append("file", selectedFile);
-      console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`)
+      console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
+
       const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
         method: "POST",
         body: data,
       });
 
       if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Upload failed");
+        let errorMessage = `Upload failed with status ${res.status}`;
+
+        try {
+          const errorData = await res.json();
+          errorMessage += `: ${errorData.message || "No additional error message provided"}`;
+        } catch (jsonError) {
+          // Handle the case where the response isn't JSON
+          const text = await res.text();
+          errorMessage += `: ${text || "No additional error message provided"}`;
+        }
+
+        throw new Error(errorMessage);
       }
 
-      setResponseMessage("data úspěšně nahrána");
+      setResponseMessage("Data úspěšně nahrána");
     } catch (e: any) {
       console.error("Upload error:", e);
       setResponseMessage(`Error uploading data: ${e.message}`);
     }
   };
+
 
   // rewrite to prisma
   const fetchDataFromServer = async () => {
