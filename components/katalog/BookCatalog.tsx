@@ -1,5 +1,4 @@
-"use client";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useReducer } from "react";
 import { Box, Grid, Typography } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
@@ -10,48 +9,93 @@ import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
 import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
-import { shownBooksBySize } from "@/data/values";
+import LoadingPage from "@/app/loading";
 
-interface BookCatalogProps {}
+type State = {
+  status: "loading" | "loadedBooks" | "error";
+  shownBooks: Book[];
+  BooksInFilterNum: number;
+  errorMessage: string | null;
+};
 
-const BookCatalog: React.FC<BookCatalogProps> = () => {
-  const {
-    isOpenSearcher,
-    setOpenSearcher,
-    filters,
-    setIsLoading,
-    setErrorMessage,
-  } = useSearchContext();
+type Action =
+  | { type: "FETCH_INIT" }
+  | { type: "FETCH_SUCCESS"; payload: { books: Book[]; totalBooks: number } }
+  | { type: "FETCH_FAILURE"; errorMessage: string };
 
-  const [shownBooks, setShownBooks] = useState<Book[]>([]);
-  const [BooksInFilterNum, setBooksInFilterNum] = useState<number>(0);
+const initialState: State = {
+  status: "loading",
+  shownBooks: [],
+  BooksInFilterNum: 0,
+  errorMessage: null,
+};
+
+function reducer(state: State, action: Action): State {
+  switch (action.type) {
+    case "FETCH_INIT":
+      return {
+        ...state,
+        status: "loading",
+        errorMessage: null,
+      };
+    case "FETCH_SUCCESS":
+      return {
+        ...state,
+        status: "loadedBooks",
+        shownBooks: action.payload.books,
+        BooksInFilterNum: action.payload.totalBooks,
+      };
+    case "FETCH_FAILURE":
+      return {
+        ...state,
+        status: "error",
+        errorMessage: action.errorMessage,
+      };
+    default:
+      throw new Error(`Unhandled action type: ${action}`);
+  }
+}
+
+const BookCatalog: React.FC = () => {
+  const { isOpenSearcher, setOpenSearcher, filters } = useSearchContext();
+  const [state, dispatch] = useReducer(reducer, initialState);
   const searchParams = useSearchParams();
-  const page =
-    parseInt(searchParams.get("page") || "1", 10) === 0
-      ? 1
-      : parseInt(searchParams.get("page") || "1", 10);
+  const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
-  // fetch books by filter
   useEffect(() => {
     const fetchBooks = async () => {
-      setIsLoading(true);
-      setErrorMessage(null);
+      dispatch({ type: "FETCH_INIT" });
+
       try {
-        const newBooks = await getBooksByQuery(filters, page, 24); //shownBooksBySize[size]
+        const newBooks = await getBooksByQuery(filters, page, 24);
         const allPossibleBooks = await getBooksByQuery(filters);
-        console.log('all books and shown books',allPossibleBooks.length, newBooks.length);
-        setBooksInFilterNum(allPossibleBooks.length);
-        // setFilteredBooks(newBooks);
-        setShownBooks(newBooks);
+        console.log(
+          "all books and shown books",
+          allPossibleBooks.length,
+          newBooks.length
+        );
+
+        dispatch({
+          type: "FETCH_SUCCESS",
+          payload: {
+            books: newBooks,
+            totalBooks: allPossibleBooks.length,
+          },
+        });
       } catch (err: any) {
         console.log(err?.message);
-        setErrorMessage(err?.message || "unknown error occurred");
-      } finally {
-        setIsLoading(false);
+        dispatch({
+          type: "FETCH_FAILURE",
+          errorMessage: err?.message || "Unknown error occurred",
+        });
       }
     };
+
     fetchBooks();
-  }, [filters, page, setErrorMessage, setIsLoading]);
+  }, [filters, page]);
+
+  const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
+
   return (
     <Box className="w-full">
       <FilterLister />
@@ -63,7 +107,20 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
         <SearchAutocomplete />
       </Box>
 
-      {shownBooks.length > 0 ? (
+      {status === "loading" && (
+        <LoadingPage />
+        // <Typography variant="h6" sx={{ margin: "2rem" }}>
+        //   Načítám knihy...
+        // </Typography>
+      )}
+
+      {status === "error" && (
+        <Typography variant="h6" sx={{ margin: "2rem", color: "red" }}>
+          {errorMessage}
+        </Typography>
+      )}
+
+      {status === "loadedBooks" && shownBooks.length > 0 && (
         <Box className="w-full">
           <Grid
             container
@@ -102,11 +159,13 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
           </Grid>
           <PaginationLinker
             totalEntries={BooksInFilterNum}
-            itemsPerPage={24} //shownBooksBySize[size]
+            itemsPerPage={24}
             folderName="katalog"
           />
         </Box>
-      ) : (
+      )}
+
+      {status === "loadedBooks" && shownBooks.length === 0 && (
         <Typography variant="h6" sx={{ margin: "2rem" }}>
           Žádné knihy nenalezeny
         </Typography>
@@ -116,6 +175,7 @@ const BookCatalog: React.FC<BookCatalogProps> = () => {
 };
 
 export default BookCatalog;
+
 // Fetch books on initial render
 // useEffect(() => {
 //   console.log('run')
