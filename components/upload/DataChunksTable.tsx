@@ -18,7 +18,7 @@ const DataChunksTable: React.FC<DataChunksTableProps> = ({
   uploadProgress,
   handleUploadChunk,
 }) => {
-  const [disableUpload, setDisableUploadUpload] = useState(true);
+  const [disableUpload, setDisableUploadUpload] = useState(false);
   useEffect(() => {
     setDisableUploadUpload(true);
   }, [uploadProgress]);
