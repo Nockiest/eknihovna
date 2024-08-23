@@ -27,7 +27,7 @@ export const insertExcelDataToPostgres = async (
       try {
         // Check if the row is well-formed
         if (row.length !== headers.length) {
-          throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
+          console.error(`Badly formatted row: ${JSON.stringify(row)}`);
         }
 
         // Map the row data to the Prisma model
