@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { getURLSegment } from "@/utils/getURLSegment";
 import { Box } from "@mui/material";
 import PaginationLink from "./PaginationLink";
 import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
@@ -12,7 +11,6 @@ interface PaginationProps {
   itemsPerPage: number;
   folderName: string;
 }
-
 
 const Pagination: React.FC<PaginationProps> = ({
   totalEntries,
@@ -55,42 +53,50 @@ const Pagination: React.FC<PaginationProps> = ({
     return null; // If there's only one page or no pages, don't render pagination
   }
 
-  if (totalPages <= 5) {
-    return visiblePageNumbers.map((pageNumber, key) => (
-      <PaginationLink
-        pageNumber={pageNumber}
-        currentPage={page}
-        folderName={folderName}
-        key={key}
-      />
-    ));
-  }
   return (
     <Box className="flex flex-wrap justify-center space-x-2 m-4">
-      {page-1 >  offset && (
-        <PaginationLink
-          pageNumber={1}
-          currentPage={page}
-          folderName={folderName}
-          className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        />
-      )}
-     { visiblePageNumbers.map((pageNumber, key) => (
-      <PaginationLink
-        pageNumber={pageNumber}
-        currentPage={page}
-        folderName={folderName}
-        key={key}
-      />
-    )) }
+      {totalPages <= 5 ? (
+        // Render pagination links if totalPages is 5 or less
+        visiblePageNumbers.map((pageNumber, key) => (
+          <PaginationLink
+            pageNumber={pageNumber}
+            currentPage={page}
+            folderName={folderName}
+            key={key}
+          />
+        ))
+      ) : (
+        <>
+          {/* Show '...' before the first page link if necessary */}
+          {page - 1 > offset && (
+            <PaginationLink
+              pageNumber={1}
+              currentPage={page}
+              folderName={folderName}
+              className="px-3 py-1 rounded bg-gray-200 text-text-100"
+            />
+          )}
 
-      {page < totalPages - offset && (
-        <PaginationLink
-          pageNumber={totalPages}
-          currentPage={page}
-          folderName={folderName}
-          className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        />
+          {/* Render visible page numbers */}
+          {visiblePageNumbers.map((pageNumber, key) => (
+            <PaginationLink
+              pageNumber={pageNumber}
+              currentPage={page}
+              folderName={folderName}
+              key={key}
+            />
+          ))}
+
+          {/* Show '...' after the last page link if necessary */}
+          {page < totalPages - offset && (
+            <PaginationLink
+              pageNumber={totalPages}
+              currentPage={page}
+              folderName={folderName}
+              className="px-3 py-1 rounded bg-gray-200 text-text-100"
+            />
+          )}
+        </>
       )}
     </Box>
   );
