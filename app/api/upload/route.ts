@@ -1,12 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as xlsx from "xlsx";
 import { insertJsonDataToPostgres } from "./insertExcelDataIntoPostgres"; // Assuming this function exists
-import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 import { prisma } from "@/lib/prisma";
 
 // CORS headers configuration
 const corsHeaders = {
-'Access-Control-Allow-Origin': 'http://localhost:3001',
+'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
@@ -32,11 +30,6 @@ export async function POST(req: NextRequest) {
       if (!jsonData.headers || !jsonData.chunk) {
         throw new Error('Invalid JSON data');
       }
-
-      // Convert JSON chunk to worksheet
-      // let worksheet = xlsx.utils.json_to_sheet(jsonData.chunk, { header: jsonData.headers });
-
-      // Insert the transformed data into PostgreSQL
       try {
         await insertJsonDataToPostgres(jsonData, "knihy");
       } catch (dbError: any) {
@@ -60,8 +53,6 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-
-
     // Delete the books with the provided IDs
     const deleteResult = await prisma.knihy.deleteMany( );
 
