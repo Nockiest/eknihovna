@@ -1,5 +1,4 @@
 import { prisma } from '@/lib/prisma';
-import * as xlsx from 'xlsx';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
