@@ -9,6 +9,7 @@ import Announcer from "@/theme/Announcer";
 import { useState } from "react";
 import * as xlsx from "xlsx";
 import { excelWordsToBool, fillMissingIds } from "@/app/api/upload/excelUtils";
+import DataChunksTable from "../upload/DataChunksTable";
 
 
 const ExcelSheetUpdater = () => {
@@ -93,7 +94,7 @@ const ExcelSheetUpdater = () => {
       setChunks(updatedChunks);
 
       // Update progress
-      setUploadProgress(((chunks.length - updatedChunks.length) / chunks.length) * 100);
+      setUploadProgress(prev => prev+((chunks.length - updatedChunks.length) / chunks.length) * 100);
 
       setResponseMessage(`Chunk ${chunkIndex + 1} uploaded successfully`);
     } catch (e: any) {
@@ -194,8 +195,12 @@ const ExcelSheetUpdater = () => {
 
       <PrimaryButton onClick={checkData}>Get Current Book Count</PrimaryButton>
       <PrimaryButton onClick={deleteData}>Delete Books</PrimaryButton>
-
-      {chunks.length > 0 && (
+      <DataChunksTable
+        chunks={chunks}
+        uploadProgress={uploadProgress}
+        handleUploadChunk={handleUploadChunk}
+      />
+      {/* {chunks.length > 0 && (
         <Box className="mt-6 w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
           <Typography variant="h2" className="text-xl font-semibold mb-4 p-4">
             Data Chunks
@@ -223,7 +228,7 @@ const ExcelSheetUpdater = () => {
             </tbody>
           </table>
         </Box>
-      )}
+      )} */}
 
       <div className="mt-4">
         <Typography>Upload Progress: {Math.round(uploadProgress)}%</Typography>
