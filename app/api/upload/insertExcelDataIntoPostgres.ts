@@ -30,7 +30,7 @@ export const insertExcelDataToPostgres = async (
           throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
         }
 
-        // Map the row data to the Prisma model
+        // Map the row data to the Prisma model x
         const data: any = headers.reduce((acc: any, header: string, index: number) => {
           let value = row[index];
 
