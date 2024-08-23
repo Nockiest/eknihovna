@@ -5,8 +5,8 @@ import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 
 // CORS headers configuration
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+'Access-Control-Allow-Origin': 'http://localhost:3001',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
