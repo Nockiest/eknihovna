@@ -56,11 +56,12 @@ const Pagination: React.FC<PaginationProps> = ({
   }
 
   if (totalPages <= 5) {
-    return visiblePageNumbers.map((pageNumber) => (
+    return visiblePageNumbers.map((pageNumber, key) => (
       <PaginationLink
         pageNumber={pageNumber}
         currentPage={page}
         folderName={folderName}
+        key={key}
       />
     ));
   }
@@ -74,13 +75,14 @@ const Pagination: React.FC<PaginationProps> = ({
           className="px-3 py-1 rounded bg-gray-200 text-text-100"
         />
       )}
-      {visiblePageNumbers.map((pageNumber) => (
-        <PaginationLink
-          pageNumber={pageNumber}
-          currentPage={page}
-          folderName={folderName}
-        />
-      ))}
+     { visiblePageNumbers.map((pageNumber, key) => (
+      <PaginationLink
+        pageNumber={pageNumber}
+        currentPage={page}
+        folderName={folderName}
+        key={key}
+      />
+    ));}
 
       {page < totalPages - offset && (
         <PaginationLink
