@@ -7,7 +7,8 @@ import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "./ReroutToAUth";
 import Announcer from "@/theme/Announcer";
 import { useState } from "react";
-import * as XLSX from "xlsx";
+import * as xlsx from "xlsx";
+import { excelWordsToBool, fillMissingIds } from "@/app/api/upload/excelUtils";
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -31,6 +32,7 @@ const ExcelSheetUpdater = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setResponseMessage("Data is uploading");
+    setUploadProgress(0); // Initialize progress
 
     if (!selectedFile) {
       setResponseMessage("No file selected");
@@ -41,59 +43,61 @@ const ExcelSheetUpdater = () => {
       // Read the file into an array buffer
       const fileArrayBuffer = await selectedFile.arrayBuffer();
       const buffer = Buffer.from(fileArrayBuffer);
-      const workbook = XLSX.read(buffer, { type: "buffer" });
-      const sheetNames = workbook.SheetNames;
-      setUploadProgress(0)
-      // Split and upload each sheet separately
-      for (const sheetName of sheetNames) {
-        const worksheet = workbook.Sheets[sheetName];
+      const workbook = xlsx.read(buffer, { type: "buffer" });
+      let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+      // Apply transformations safely
+      try {
+        worksheet = excelWordsToBool(worksheet, "available");
+        worksheet = excelWordsToBool(worksheet, "formaturita");
+        worksheet = fillMissingIds(worksheet);
+      } catch (transformError: any) {
+        console.error("Error transforming data:", transformError);
 
-        // Convert worksheet to JSON
-        const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
-          header: 1,
-          defval: null,
+      }
+      // Convert worksheet to JSON
+      const jsonData: any[][] = xlsx.utils.sheet_to_json(worksheet, {
+        header: 1,
+        defval: null,
+      });
+
+      // Extract headers and rows
+      const [headers, ...rows] = jsonData;
+      const totalRows = rows.length;
+      const chunkSize = 100;
+      const totalChunks = Math.ceil(totalRows / chunkSize);
+
+      // Upload each chunk sequentially
+      for (let i = 0; i < totalChunks; i++) {
+        const chunk = rows.slice(i * chunkSize, (i + 1) * chunkSize);
+
+        // Create a new FormData instance for each chunk
+        const chunkFormData = new FormData();
+        chunkFormData.append("data", JSON.stringify({
+          headers,
+          chunk
+        }));
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
+          method: "POST",
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            headers: headers,
+            chunk: chunk
+          }),
         });
 
-        // Extract headers and rows
-        const [headers, ...rows] = jsonData;
-        const totalRows = rows.length;
-        const chunkSize = 100; // Number of rows per chunk
-        const totalChunks = Math.ceil(totalRows / chunkSize);
 
-        // Upload each chunk sequentially
-        for (let i = 0; i < totalChunks; i++) {
-          const chunk = rows.slice(i * chunkSize, (i + 1) * chunkSize);
-
-          // Create a new workbook for each chunk
-          const newWorkbook = XLSX.utils.book_new();
-          const newWorksheet = XLSX.utils.aoa_to_sheet([headers, ...chunk]);
-          XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, sheetName);
-
-          // Convert the new workbook to a buffer
-          const chunkBuffer = XLSX.write(newWorkbook, { bookType: 'xlsx', type: 'buffer' });
-
-          // Create a new FormData instance for each chunk
-          const chunkFormData = new FormData();
-          chunkFormData.append("file", new Blob([chunkBuffer]), `chunk_${i + 1}.xlsx`);
-
-          // Upload the chunk
-          const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
-            chunkFormData,
-            {
-              headers: {
-                'Content-Type': 'multipart/form-data',
-              },
-            }
-          );
-
-          if (res.status !== 200) {
-            throw new Error('Upload failed');
-          }
-
-          // Optionally update progress here
-          setUploadProgress(((i + 1) / totalChunks) * 100);
+        if (!res.ok) {
+          const errorData = await res.json();
+          setResponseMessage(`"Upload failed`);
+          throw new Error(errorData.message || "Upload failed");
+          break
         }
+
+        // Update progress
+        setUploadProgress(((i + 1) / totalChunks) * 100);
       }
 
       setResponseMessage("Data successfully uploaded");
@@ -102,6 +106,80 @@ const ExcelSheetUpdater = () => {
       setResponseMessage(`Error uploading data: ${e.message}`);
     }
   };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setResponseMessage("Data is uploading");
+
+  //   if (!selectedFile) {
+  //     setResponseMessage("No file selected");
+  //     return;
+  //   }
+
+  //   try {
+  //     // Read the file into an array buffer
+  //     const fileArrayBuffer = await selectedFile.arrayBuffer();
+  //     const buffer = Buffer.from(fileArrayBuffer);
+  //     const workbook = XLSX.read(buffer, { type: "buffer" });
+  //     const sheetNames = workbook.SheetNames;
+  //     setUploadProgress(0)
+  //     // Split and upload each sheet separately
+  //     for (const sheetName of sheetNames) {
+  //       const worksheet = workbook.Sheets[sheetName];
+
+  //       // Convert worksheet to JSON
+  //       const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
+  //         header: 1,
+  //         defval: null,
+  //       });
+
+  //       // Extract headers and rows
+  //       const [headers, ...rows] = jsonData;
+  //       const totalRows = rows.length;
+  //       const chunkSize = 100; // Number of rows per chunk
+  //       const totalChunks = Math.ceil(totalRows / chunkSize);
+
+  //       // Upload each chunk sequentially
+  //       for (let i = 0; i < totalChunks; i++) {
+  //         const chunk = rows.slice(i * chunkSize, (i + 1) * chunkSize);
+
+  //         // Create a new workbook for each chunk
+  //         const newWorkbook = XLSX.utils.book_new();
+  //         const newWorksheet = XLSX.utils.aoa_to_sheet([headers, ...chunk]);
+  //         XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, sheetName);
+
+  //         // Convert the new workbook to a buffer
+  //         const chunkBuffer = XLSX.write(newWorkbook, { bookType: 'xlsx', type: 'buffer' });
+
+  //         // Create a new FormData instance for each chunk
+  //         const chunkFormData = new FormData();
+  //         chunkFormData.append("file", new Blob([chunkBuffer]), `chunk_${i + 1}.xlsx`);
+
+  //         // Upload the chunk
+  //         const res = await axios.post(
+  //           `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
+  //           chunkFormData,
+  //           {
+  //             headers: {
+  //               'Content-Type': 'multipart/form-data',
+  //             },
+  //           }
+  //         );
+
+  //         if (res.status !== 200) {
+  //           throw new Error('Upload failed');
+  //         }
+
+  //         // Optionally update progress here
+  //         setUploadProgress(((i + 1) / totalChunks) * 100);
+  //       }
+  //     }
+
+  //     setResponseMessage("Data successfully uploaded");
+  //   } catch (e: any) {
+  //     console.error("Upload error:", e);
+  //     setResponseMessage(`Error uploading data: ${e.message}`);
+  //   }
+  // };
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
   //   setResponseMessage("data se nahrávají");
@@ -138,7 +216,7 @@ const ExcelSheetUpdater = () => {
       );
       const data = new Uint8Array(response.data);
       console.log(data);
-      setResponseMessage(response.data.count);
+      setResponseMessage(response.data.count|| 0);
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
       setResponseMessage("Problém se stažením dat: " + error.message);
@@ -169,9 +247,9 @@ const ExcelSheetUpdater = () => {
         }
       );
       const data = new Uint8Array(response.data);
-      const workbook = XLSX.read(data, { type: "array" });
+      const workbook = xlsx.read(data, { type: "array" });
       setResponseMessage("vytvárřím tabulku");
-      XLSX.writeFile(workbook, "data_ze_serveru.xlsx");
+      xlsx.writeFile(workbook, "data_ze_serveru.xlsx");
       setResponseMessage("data úspěšně stažena");
       console.log("Data fetched and saved locally.", workbook);
     } catch (error: any) {
@@ -270,8 +348,8 @@ const ExcelSheetUpdater = () => {
       </PrimaryButton>
       <PrimaryButton onClick={deleteData}>smazat knihy</PrimaryButton>
       <Announcer message={responseMessage} type="normal" />
-      <progress value={uploadProgress} max={100}></progress>
-      <div>{Math.round(uploadProgress)}% uploaded</div>
+       <progress value={uploadProgress} max={100}></progress>
+  <div>{Math.round(uploadProgress)}% uploaded</div>
     </Box>
   );
 };

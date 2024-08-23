@@ -1,23 +1,21 @@
 import { prisma } from '@/lib/prisma';
 import * as xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
-import { truthyValues } from "@/data/values";
-export const insertExcelDataToPostgres = async (
-  worksheet: xlsx.WorkSheet,
+
+
+
+// Define your truthy values list if it's not defined elsewhere
+const truthyValues = ['true', '1', 'yes']; // Example truthy values
+
+export const insertJsonDataToPostgres = async (
+  jsonData: { headers: string[], chunk: any[] },
   tableName: string
 ): Promise<void> => {
   try {
-    // Convert worksheet to JSON
-    const jsonData: any[][] = xlsx.utils.sheet_to_json(worksheet, {
-      header: 1,  // Use the first row as headers
-      defval: null, // Default value for empty cells
-    });
-
-    // Extract headers and rows
-    const [headers, ...rows] = jsonData;
+    const { headers, chunk: rows } = jsonData;
 
     if (!headers || headers.length === 0) {
-      throw new Error("The Excel file does not contain headers");
+      throw new Error("The JSON data does not contain headers");
     }
 
     console.log('Processing rows...');
@@ -30,7 +28,7 @@ export const insertExcelDataToPostgres = async (
           throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
         }
 
-        // Map the row data to the Prisma model x
+        // Map the row data to the Prisma model
         const data: any = headers.reduce((acc: any, header: string, index: number) => {
           let value = row[index];
 
@@ -64,7 +62,15 @@ export const insertExcelDataToPostgres = async (
         }, {});
 
         // Select the Prisma model based on the table name
-        const model = prisma.knihy
+        let model;
+        switch (tableName) {
+          case 'knihy':
+            model = prisma.knihy;
+            break;
+          // Add cases for other tables if needed
+          default:
+            throw new Error(`Model for table '${tableName}' not found`);
+        }
 
         // Perform the upsert operation
         await model.upsert({
@@ -74,8 +80,8 @@ export const insertExcelDataToPostgres = async (
         });
 
         // Log the number of books after each insertion for debugging
-        // const bookNum = await prisma.knihy.count(); // Use count() to get the number of records
-        // console.log(`Number of books after insertion: ${bookNum}`);
+        const bookNum = await model.count(); // Use count() to get the number of records
+        console.log(`Number of books after insertion: ${bookNum}`);
 
       } catch (rowError: any) {
         console.error("Error processing row:", rowError.message);
