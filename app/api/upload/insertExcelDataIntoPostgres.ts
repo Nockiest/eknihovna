@@ -37,7 +37,7 @@ export const insertExcelDataToPostgres = async (
           // Perform type checks and handle malformed values
           switch (header) {
             case 'id':
-              value =value? value: uuidv4(); // Generate a new unique ID if the value is malformed
+              value = value? value: uuidv4(); // Generate a new unique ID if the value is malformed
               break;
             case 'book_code':
               value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
@@ -62,15 +62,28 @@ export const insertExcelDataToPostgres = async (
           acc[header] = value;
           return acc;
         }, {});
-        let model = prisma.knihy
 
+        // Select the Prisma model based on the table name
+        let model: any;
+        switch (tableName) {
+          case 'knihy':
+            model = prisma.knihy;
+            break;
+          // Add cases for other tables if needed
+          default:
+            throw new Error(`Model for table '${tableName}' not found`);
+        }
 
         // Perform the upsert operation
-        await model.upsert({
-          where: { id: data.id }, // Adjust the identifier field if necessary
-          update: data,
-          create: data,
+        // await model.upsert({
+        //   where: { id: data.id }, // Adjust the identifier field if necessary
+        //   update: data,
+        //   create: data,
+        // });
+        await model.create({
+          data: data,
         });
+
 
       } catch (rowError: any) {
         console.error("Error processing row:", rowError.message);
