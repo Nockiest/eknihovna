@@ -6,7 +6,7 @@ import NavbarMapper from "../navbar/NavbarMaper";
 import { NavButton } from "@/types/types";
 const Footer = () => {
   const renderButton = (button: NavButton, isActive: boolean) => (
-    <Link className="hover:text-gray-400 mx-2" key={button.URL} href={button.URL}>
+    <Link className="hover:text-gray-400 m-2" key={button.URL} href={button.URL}>
       {button.label}
     </Link>
   );
@@ -17,6 +17,7 @@ const Footer = () => {
           <NavbarMapper
             navRoutes={navRoutes}
             renderButton={renderButton}
+            renderNavStyle="flex flex-wrap"
           />
         </Box>
       </div>

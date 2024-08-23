@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { getURLSegment } from "@/utils/getURLSegment";
+import { Box } from "@mui/material";
+import PaginationLink from "./PaginationLink";
 
 interface PaginationProps {
   totalEntries: number;
@@ -16,7 +18,10 @@ const Pagination: React.FC<PaginationProps> = ({
   folderName,
 }) => {
   const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page") || "0", 10) ===0? 1: parseInt(searchParams.get("page") || "0", 10);
+  const page =
+    parseInt(searchParams.get("page") || "0", 10) === 0
+      ? 1
+      : parseInt(searchParams.get("page") || "0", 10);
   const [totalPages, setTotalPages] = useState<number>(
     Math.ceil(totalEntries / itemsPerPage)
   );
@@ -36,19 +41,18 @@ const Pagination: React.FC<PaginationProps> = ({
 
   const visiblePageNumbers = getVisiblePageNumbers();
   if (totalPages <= 1) {
-    return  null  // If there's only one page or no pages, don't render pagination
+    return null; // If there's only one page or no pages, don't render pagination
   }
 
-  if (totalPages <=5) {
+  if (totalPages <= 5) {
     return visiblePageNumbers.map((pageNumber) => (
       <Link
         key={pageNumber}
         href={`/${folderName}?page=${pageNumber}`}
         className={`px-3 py-1 rounded ${
           pageNumber === page
-            ?
-              "bg-primary-400 text-text-950":
-            "bg-secondary-900 text-text-100"
+            ? "bg-primary-400 text-text-950"
+            : "bg-secondary-900 text-text-100"
         }`}
       >
         {pageNumber}
@@ -56,40 +60,32 @@ const Pagination: React.FC<PaginationProps> = ({
     ));
   }
   return (
-    <div className="flex justify-center space-x-2 m-4">
+    <Box className="flex justify-center gap-2 flex-wrap space-x-2 m-4">
       {page > 6 && (
-        <Link
-          href={`/${folderName}?page=${1}`}
-          className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        >
-          ...1
-        </Link>
+        <PaginationLink
+          pageNumber={1}
+          currentPage={page}
+          folderName={folderName}
+        />
       )}
 
       {visiblePageNumbers.map((pageNumber) => (
-        <Link
+        <PaginationLink
           key={pageNumber}
-          href={`/${folderName}?page=${pageNumber}`}
-          className={`px-3 py-1 rounded ${
-            pageNumber === page
-              ?
-                "bg-primary-400 text-text-950":
-              "bg-secondary-900 text-text-100"
-          }`}
-        >
-          {pageNumber}
-        </Link>
+          pageNumber={pageNumber}
+          currentPage={page}
+          folderName={folderName}
+        />
       ))}
 
       {page < totalPages - 5 && (
-        <Link
-          href={`/${folderName}?page=${totalPages}`}
-          className="px-3 py-1 rounded bg-gray-200 text-text-100"
-        >
-          ...{totalPages}
-        </Link>
+        <PaginationLink
+          pageNumber={totalPages}
+          currentPage={page}
+          folderName={folderName}
+        />
       )}
-    </div>
+    </Box>
   );
 };
 
