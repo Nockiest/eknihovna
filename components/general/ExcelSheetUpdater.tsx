@@ -1,5 +1,5 @@
 "use client";
-import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
+import { DangerButton, PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
@@ -194,7 +194,7 @@ const ExcelSheetUpdater = () => {
       </Box>
 
       <PrimaryButton onClick={checkData}>Get Current Book Count</PrimaryButton>
-      <PrimaryButton onClick={deleteData}>Delete Books</PrimaryButton>
+      <DangerButton onClick={deleteData}>Delete Books</DangerButton>
       <DataChunksTable
         chunks={chunks}
         uploadProgress={uploadProgress}
