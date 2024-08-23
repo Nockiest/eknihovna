@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "cross-env PORT=3001 next start",
     "lint": "next lint",
     "postinstall": "prisma generate",
     "dev:prod": "dotenv -e .env.production -- next dev"
@@ -20,11 +20,13 @@
     "@prisma/client": "^5.18.0",
     "axios": "^1.7.2",
     "busboy": "^1.6.0",
+    "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "glob": "^10.4.1",
     "lodash": "^4.17.21",
     "next": "^14.2.4",
     "next-auth": "^4.24.7",
+    "next-connect": "^1.0.0",
     "react": "^18",
     "react-dom": "^18",
     "react-responsive": "^10.0.0",
@@ -33,6 +35,7 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.17",
     "@types/formidable": "^3.4.5",
     "@types/js-cookie": "^3.0.6",
     "@types/jsonwebtoken": "^9.0.6",
@@ -42,6 +45,7 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@types/react-window": "^1.8.8",
+    "cross-env": "^7.0.3",
     "eslint": "^8",
     "eslint-config-next": "14.2.3",
     "jsonwebtoken": "^9.0.2",

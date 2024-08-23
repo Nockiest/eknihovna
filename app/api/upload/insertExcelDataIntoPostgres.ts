@@ -19,7 +19,9 @@ export const insertExcelDataToPostgres = async (
     if (!headers || headers.length === 0) {
       throw new Error("The Excel file does not contain headers");
     }
+    console.log('a')
     await prisma.knihy.deleteMany();
+    console.log('b')
     // Validate and insert data into the database
     for (const row of rows) {
       try {
