@@ -26,7 +26,6 @@ export async function POST(req: NextRequest) {
     const file = formData.get("file") as File | null;
 
     if (!file) {
-      console.error("No file uploaded");
       return NextResponse.json({ success: false, message: "No file uploaded" }, { headers: corsHeaders });
     }
 
