@@ -1,7 +1,7 @@
 "use client";
-import React, { useState, useEffect, useMemo, useReducer } from "react";
-import { Box, Grid, Typography } from "@mui/material";
-import { Book, Filters } from "@/types/types";
+import React, { useEffect, useReducer } from "react";
+import { Box, Grid } from "@mui/material";
+import { Book  } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
 import { useSearchParams } from "next/navigation";
@@ -10,10 +10,8 @@ import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
 import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
-import { shownBooksBySize } from "@/data/values";
 import LoadingComponent from "../general/LoadingComponent";
-
-interface BookCatalogProps {}
+import Announcer from "@/theme/Announcer";
 
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -73,7 +71,11 @@ const BookCatalog: React.FC = () => {
       try {
         const newBooks = await getBooksByQuery(filters, page, 24);
         const allPossibleBooks = await getBooksByQuery(filters);
-        console.log("all books and shown books", allPossibleBooks.length, newBooks.length);
+        console.log(
+          "all books and shown books",
+          allPossibleBooks.length,
+          newBooks.length
+        );
 
         dispatch({
           type: "FETCH_SUCCESS",
@@ -107,17 +109,10 @@ const BookCatalog: React.FC = () => {
         <SearchAutocomplete />
       </Box>
 
-      {status === "loading" && (
-        <LoadingComponent />
-        // <Typography variant="h6" sx={{ margin: "2rem" }}>
-        //   Loading books...
-        // </Typography>
-      )}
+      {status === "loading" && <LoadingComponent />}
 
       {status === "error" && (
-        <Typography variant="h6" sx={{ margin: "2rem", color: "red" }}>
-          {errorMessage}
-        </Typography>
+        <Announcer message={errorMessage} type={"error"} />
       )}
 
       {status === "loadedBooks" && shownBooks.length > 0 && (
@@ -138,13 +133,7 @@ const BookCatalog: React.FC = () => {
           >
             {shownBooks.map((book: Book, index: any) => (
               <Grid
-                sx={{
-                  margin: "0 auto",
-                  height: "auto",
-                  flexGrow: "1",
-                  display: "flex",
-                  justifyContent: "center",
-                }}
+                className="flex justify-center items-center flex-grow m-0 h-auto"
                 item
                 xs={12}
                 sm={6}
@@ -166,9 +155,7 @@ const BookCatalog: React.FC = () => {
       )}
 
       {status === "loadedBooks" && shownBooks.length === 0 && (
-        <Typography variant="h6" sx={{ margin: "2rem" }}>
-          Žádné knihy nenalezeny
-        </Typography>
+        <Announcer message={"Žádné knihy nenalezeny"} type={"error"} />
       )}
     </Box>
   );
