@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as xlsx from "xlsx";
+import * as XLSX from "xlsx";
 import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // Assuming this function exists
 import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 
@@ -20,19 +20,20 @@ export async function POST(req: NextRequest) {
   }
 
   console.log("POST request received");
+
   try {
     // Ensure the request is a FormData request
     const formData = await req.formData();
-    const file = formData.get("file") as File | null;
+    const dataString = formData.get("data") as string | null;
 
-    if (!file) {
-      return NextResponse.json({ success: false, message: "No file uploaded" }, { headers: corsHeaders });
+    if (!dataString) {
+      return NextResponse.json({ success: false, message: "No data provided" }, { headers: corsHeaders });
     }
 
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    const workbook = xlsx.read(buffer, { type: "buffer" });
-    let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+    const { headers, chunk } = JSON.parse(dataString);
+
+    // Convert chunk to worksheet (or process it directly if you prefer)
+    let worksheet = XLSX.utils.json_to_sheet(chunk, { header: headers });
 
     // Apply transformations safely
     try {
@@ -66,7 +67,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Server error", details: error.message }, { headers: corsHeaders });
   }
 }
-
 
 // export async function POST(req: NextRequest) {
 //   console.log("POST request received");
