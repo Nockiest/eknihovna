@@ -47,7 +47,14 @@ export const NavbarButton = styled(Button)(({ theme }) => ({
 }
 ));
 
-
+export const DangerButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.error.main,
+  color: theme.palette.error.contrastText,
+  zIndex: 0,
+  '&:hover': {
+    backgroundColor: theme.palette.error.dark,
+  },
+}));
 
 
 const ThemedButtons = () => {

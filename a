@@ -1,0 +1,255 @@
+[33mc3fbf14[m[33m ([m[1;36mHEAD -> [m[1;32mclient[m[33m)[m Merge branch 'debugupload' into client
+[33m43362b8[m[33m ([m[1;31morigin/debugupload[m[33m, [m[1;32mdebugupload[m[33m)[m decrased chunksize
+[33m32a99c5[m created datachunkstable
+[33m68c9f61[m splitted upload into chunks
+[33m43b3326[m reqrote uploadin to json
+[33m14fcb13[m fixed issue with table clearing after upload?
+[33mc5b1869[m fixed issue with table clearing after upload?
+[33m6f44f8d[m added number of books logger
+[33m2fac574[m x
+[33m02ea4f5[m x
+[33m39d6d8b[m[33m ([m[1;31morigin/client[m[33m)[m allowing badly formated rows
+[33md26b8b1[m force create new id on upload
+[33mc1d6f38[m added logs
+[33mddf881d[m debugging upload6 put back old handelsubmit fce and replaced upsert with upload
+[33mc24a7b3[m debugging upload5 error handling
+[33m1e2b3ca[m debugging upload4 error handling
+[33m8666485[m debugging upload3
+[33m12aa7b8[m restarting prisma
+[33m7d79867[m debugging upload2
+[33m0246dd7[m turnon prisma logs
+[33m49dc808[m debugging upload
+[33mc36ba40[m splited up uploading to 100 row chunks
+[33m74b6b37[m fixing upload error
+[33me2b98e4[m implementing cors3
+[33mc16de8d[m implementing cors2
+[33m31e40c1[m implementing cors
+[33m04a0bca[m fixing pagination linker error2
+[33mc1aeacd[m fixing pagination linker error
+[33mc0531a5[m improving book catalog
+[33md5428c4[m improved paginationlinker
+[33m56493d3[m improving responzivnes
+[33m04888a8[m fixed auth redirect error
+[33m1de7606[m xx
+[33m9a7c271[m removed junk from footer
+[33md44daab[m hid api link2
+[33mcc23d71[m hid api link
+[33m5a4cd11[m x
+[33m718c73b[m upload-debug-2
+[33m1f62063[m fixed navbar on small screens
+[33m63f34b9[m debugging upload
+[33m4acffd1[m Merge branch 'prisma' into client
+[33m18da1dc[m debugging client
+[33me56ead1[m Merge branch 'prisma' into client
+[33me85856a[m[33m ([m[1;31morigin/prisma[m[33m)[m odstraňen serisloading usestate
+[33m7420e2c[m změněn text v LoadingPage
+[33me5bc142[m added state machine and loading screen to book list
+[33m6c293be[m pagination linker3
+[33m56150c0[m pagination linker2
+[33mb9128e5[m improved pagination linker
+[33me0b7da5[m default bg color
+[33mfa224be[m responsive paginationlinker
+[33m7e9e3c6[m turnde off tests2
+[33ma5e6ea9[m turnde off tests
+[33mdf1306d[m responsive home page
+[33md29c0d5[m reviewed user select
+[33m43c8f21[m created first prisma jest test
+[33m8a9428c[m setupjesttesting
+[33m640d833[m This is a multi-word commit message
+[33ma0d6369[m changednextconfig
+[33m3476165[m disabledauth
+[33m927c204[m x
+[33m38833d8[m mergedwithprisma
+[33m64ef70e[m fixinguploadapi
+[33m5552e9d[m uploadfix
+[33m5eb5e4c[m downloadfix
+[33m77abfdf[m fixedbuildingdbfilters
+[33m59917cf[m fixedfetchinguniquevalues
+[33m3e2763f[m bugfixinguploadinganddownloading
+[33mf414544[m addedresponsemessages
+[33mc85f727[m x
+[33m6232fa1[m x
+[33m3b709dc[m looking for bug
+[33m203b777[m fixingerrors7
+[33m2d74934[m fixingerrors6
+[33mcb8ea12[m fixingerrors5
+[33mf07b02f[m fixingproderros4
+[33mca69909[m fixingproductionerrors3
+[33md4fe44c[m fixingproductionerrors2
+[33m21cfd7b[m fixingproductionerrors
+[33m16900de[m fixeddownloadexcel
+[33m61ddfd2[m uploadingshouldwork
+[33ma67306a[m fetchdataapinowworks
+[33ma2aae45[m addedapiroutesforexcelhandling
+[33m213eb82[m test
+[33mbe6fb2e[m x
+[33m08c7551[m fixing prisma
+[33m16bd227[m fixed import
+[33ma91af8f[m fetch unique values works in prisma
+[33mf5c5a14[m fixed build prisma filter fce
+[33m0b7c6fa[m fixing aoi nextjs routes
+[33m853220e[m fixrd build command
+[33me557be1[m added new endpoints
+[33ma7cd891[m changed env variables
+[33md131ba8[m created my first working api endpoint
+[33m14e8191[m added prisma command to package.jspn
+[33med54dc6[m 'readed query variable'
+[33md68f673[m readed query variable
+[33m5ce2561[m fixed using filters
+[33mc3e9f4e[m simplified boook catalog
+[33mf73f89b[m improved erro message to announcer
+[33me6e1d5b[m made universal error  window
+[33m30a5d88[m made universal error message
+[33ma836891[m created seperate comp for showing errros
+[33m53ac667[m Revert "testing adminemail env in prod"
+[33m9632ca6[m testing adminemail env in prod
+[33m75912ee[m z
+[33m4084fa6[m xx
+[33mac7bd37[m x
+[33m575fcda[m fixed middleware
+[33m2b5b8ba[m remv middleware
+[33ma7f86fa[m removed github auth
+[33m0e59d22[m rremoved a route
+[33m029fe5d[m fixing login
+[33m3d2bc98[m readded apikeys
+[33m2a78afa[m env files fix
+[33mc1db860[m rewrote navigation
+[33mf154625[m resolved commits
+[33m36394b9[m Delete .env
+[33md45e15b[m Delete .env.development
+[33mf0955f1[m Delete .env.production
+[33m00a5892[m y
+[33mf7f1454[m y
+[33m49f6f47[m merge
+[33m3064b8d[m[33m ([m[1;31morigin/nextAuth[m[33m, [m[1;32mnextAuth[m[33m)[m created a next auth authentication
+[33m7666e23[m x
+[33mab6c21b[m solkving middleware breakdown
+[33m153005f[m added login page to navbar
+[33m5b56287[m adjusted margin of navbar btn
+[33m503b605[m added upload page to navroutes
+[33ma100556[m hid api from non admin user
+[33m23f38af[m security update
+[33mff46820[m removed a placeholer in pagination
+[33md380309[m battling with search bar
+[33m1e85ebd[m repaired searchbar?
+[33mfa08948[m x
+[33m2c645a1[m newbooklist
+[33m86b41a1[m improved styling
+[33mb93be5a[m fixed filter array value changes to null on delete
+[33me880647[m speed up fetching books
+[33me359b50[m fixing type errors
+[33mcd59ede[m installed some packages correctly
+[33ma50d44d[m x
+[33m3075492[m fixing import error
+[33mb269cf0[m improved searchbar performance
+[33maebbde5[m fixed type error
+[33m0fabc7f[m fixed the hamburger
+[33m6d364aa[m nicer searcr bar and bug report section
+[33md951231[m added a searchbar to client
+[33mbed3099[m added a bug report button
+[33mfc9b4a4[m removing value from the autocomplete input field after enter
+[33m64ab98b[m not showing chosen filters in filtring options
+[33m491a045[m all books have the same height
+[33m24c4ae7[m removed unecessary comps from searcher
+[33m0b307e2[m restyled checkbox
+[33m5c5a63e[m fixed deleting of filters
+[33md8926b0[m storing filters in arrays
+[33m4f0ea0a[m automatickly fetching new books based on filters
+[33m404fecb[m pagination linker improved catalog centered
+[33mdcea743[m reworked filtring values
+[33mfade904[m move searcher opener fab to filter overview
+[33m4fee91d[m fixed category chip
+[33ma232336[m styled filter overview
+[33me83fc81[m created new comp for showing filters
+[33m19a5ddd[m removed a prop in book catalog
+[33m734331d[m moved totalpages usestate to pagination linker
+[33m71ae9ef[m removed items per page usestate
+[33m4837cb3[m finished styling the BookPreview components
+[33m2ae481a[m added line with circle and more stylign to the book preview
+[33m736d5d5[m showing correct labels for filters
+[33m9b58ec7[m fetching data using filters
+[33m7337d6d[m showing filters in the top of the catalog
+[33m9d41fae[m sorted select kinda works
+[33m4d43b9a[m fixing filters
+[33mc77eca9[m created custom checkbox
+[33md8d266e[m improveed color of inputs
+[33m85840a4[m changed api endpoint url
+[33m0b2ee00[m fetching unique vals from db
+[33m6865814[m moved auth to seperate file
+[33mc6adc22[m changed production serve path
+[33mba7ea85[m[33m ([m[1;31morigin/serverandclient[m[33m)[m realigned hamburger icon
+[33m20a265b[m filtring through categories
+[33m2da7a75[m allowing to choose from all genres as filters, pagination automatically decraeases page num to max page
+[33mdde1f96[m fetching books based on filters
+[33m2ec9830[m added download icon
+[33m72965c5[m fixed import statements
+[33maeaa9ac[m changed accent color
+[33ma92ab1b[m improved book preview layout
+[33m743b987[m added a star row
+[33maa28134[m added color pallet shower
+[33ma42e9c4[m handling genres properly as an array
+[33md423b0d[m fixed type error
+[33m76b0d6b[m showing genres in book previews
+[33m76f46da[m pushed context to a seperate file
+[33mf94c75b[m removed export searccontext
+[33m36dbd43[m fetching all existing genres from the db
+[33m187d233[m made genre an array
+[33m680e376[m added more elements to searcher
+[33m3e070fe[m added a working slider
+[33md41767c[m repaired pagination
+[33ma69af25[m using search params for pagination
+[33mec8df0f[m creted a use breakpoint hook
+[33m150d296[m chaned a color
+[33m7cf0039[m removed uneeded print
+[33mef762e3[m changed book preview colors
+[33m075597e[m removed typography in homepage
+[33m6889327[m fixing tsc bug
+[33m2050de8[m conditionaly styled catalog
+[33mfa70073[m updated upload function
+[33m20fb6cf[m added link to upload page
+[33m5c2a83c[m uživatel musí vybrat soubor než ho pošle na server
+[33mfb4afa2[m changing num displayed books based on screen size
+[33m3fe7e0c[m created a proper bookcatalog grid
+[33m7105065[m repaired pagination linker not showing
+[33m0f08cfd[m added message component
+[33mcd8ef37[m added school opening hours
+[33m2eca6b3[m navbar buttons are highlighted based on webpage
+[33m6088b9e[m added home page description
+[33m1c0cbbb[m added password for authenticating upload
+[33m3b2bf5f[m styled upload page
+[33m337f19a[m added responzive text
+[33m251aaf9[m tested data uploading page
+[33m9f389da[m changed pagination linker olor
+[33m91f2b7f[m moved excel updater into the website
+[33m8d51a27[m working pagination
+[33m0e4f752[m added basic pagination that is not working properly yet
+[33m4517b38[m fixed hamburger showing on large screen
+[33mcbaa384[m fixed a typo
+[33mdcab7ba[m reworked loading screen
+[33m68194de[m fixed problem with timing out
+[33m3f401c7[m checking for fetching errors
+[33m8107e65[m debugging production mode
+[33m9923b95[m added .ico file simplified booklist logic
+[33m19ca0ea[m watching for books.length == 0
+[33m4f42456[m fixed fetching error
+[33m075f910[m fixed fetching error
+[33m959a677[m added enviroment variables
+[33mea5ff38[m recieving data from node server
+[33m406e1d2[m moved use client to book catalog from katalog page
+[33m12893f5[m fixed bookpreview error
+[33m7223dcb[m added book catalog as seperate component
+[33me8a5710[m fixed one typescript error
+[33m08c1b45[m  'renamed katalog to Katalog'
+[33m234b815[m reqrote readme
+[33m1210258[m fetching boooks from the server
+[33m3a8f078[m added a footer
+[33mfc279d1[m rewrote  site names
+[33mfa0f111[m hamburger works!
+[33mae28daf[m created hero butnav buttons stopped getting styilih
+[33m32a3768[m siplified navbar added styled buttons
+[33m36379ad[m battle with routing problem
+[33m5ad0128[m added unstiled navbar
+[33m90251af[m çreating a header and first book type
+[33m823962a[m creating the first book preview component
+[33md1f5602[m first commit
+[33mb6ea177[m Initial commit from Create Next App

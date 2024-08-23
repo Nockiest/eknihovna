@@ -1,6 +1,6 @@
 "use client";
-import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
-import { Box, Paper, Typography } from "@mui/material";
+import { DangerButton, PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
+import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
@@ -12,6 +12,9 @@ const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
+
   if (!session) {
     return <div className="flex flex-center"><ReroutToAUth />
       </div>
@@ -157,6 +160,19 @@ const ExcelSheetUpdater = () => {
           </form>
         </Box>
       </Box>
+
+      <PrimaryButton onClick={checkData}>Get Current Book Count</PrimaryButton>
+      <DangerButton onClick={deleteData}>Delete Books</DangerButton>
+      <DataChunksTable
+        chunks={chunks}
+        uploadProgress={uploadProgress}
+        handleUploadChunk={handleUploadChunk}
+      />
+     {chunks.length>0 && <Box className="mt-4">
+        <Typography>Upload Progress: {Math.round(uploadProgress)}%</Typography>
+        <progress value={uploadProgress} max={100}></progress>
+      </Box>}
+
       <Announcer message={responseMessage} type="normal" />
     </Box>
   );
