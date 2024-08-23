@@ -26,11 +26,11 @@ export async function POST(req: NextRequest) {
     // Ensure the request is a FormData request
     const formData = await req.formData();
     const dataString = formData.get("data") as string | null;
-
+    console.log(1);
     if (!dataString) {
       return NextResponse.json({ success: false, message: "No data provided" }, { headers: corsHeaders });
     }
-
+    console.log(2);
     const { headers, chunk } = JSON.parse(dataString);
 
     // Convert chunk to worksheet (or process it directly if you prefer)
@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
         details: transformError.message,
       }, { headers: corsHeaders });
     }
-
+    console.log(3);
     // Insert the transformed data into PostgreSQL
     try {
       await insertExcelDataToPostgres(worksheet, "knihy");
