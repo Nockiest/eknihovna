@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import * as XLSX from "xlsx";
 import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // Assuming this function exists
 import { excelWordsToBool, fillMissingIds } from "./excelUtils";
+import { prisma } from "@/lib/prisma";
 
 // CORS headers configuration
 const corsHeaders = {
@@ -73,7 +74,27 @@ export async function POST(req: NextRequest) {
     }, { headers: corsHeaders });
   }
 }
+export async function DELETE(req: NextRequest) {
+  try {
+    // Delete the books with the provided IDs
+    const deleteResult = await prisma.knihy.deleteMany( );
 
+    // Return a success response with the number of deleted books
+    return NextResponse.json({
+      success: true,
+      message: `${deleteResult.count} book(s) deleted successfully`,
+    });
+  } catch (error: any) {
+    console.error('Error deleting books:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'Server error',
+      details: error.message,
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 // export async function POST(req: NextRequest) {
 //   console.log("POST request received");
 //   try {
