@@ -1,9 +1,73 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import * as xlsx from "xlsx";
 import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // Assuming this function exists
-import { excelWordsToBool, fillMissingIds } from "./excelHandelUtils";
+import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+// CORS headers configuration
+const corsHeaders = {
+  'Access-Control-Allow-Origin': 'http://localhost:3001',
+  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
+};
+
+export async function POST(req: NextRequest) {
+  // Handle preflight requests
+  if (req.method === 'OPTIONS') {
+    return new NextResponse(null, {
+      status: 204,
+      headers: corsHeaders,
+    });
+  }
+
+  console.log("POST request received");
+  try {
+    // Ensure the request is a FormData request
+    const formData = await req.formData();
+    const file = formData.get("file") as File | null;
+
+    if (!file) {
+      console.error("No file uploaded");
+      return NextResponse.json({ success: false, message: "No file uploaded" }, { headers: corsHeaders });
+    }
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+    const workbook = xlsx.read(buffer, { type: "buffer" });
+    let worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+    // Apply transformations safely
+    try {
+      worksheet = excelWordsToBool(worksheet, "available");
+      worksheet = excelWordsToBool(worksheet, "formaturita");
+      worksheet = fillMissingIds(worksheet);
+    } catch (transformError: any) {
+      console.error("Error transforming data:", transformError);
+      return NextResponse.json({
+        success: false,
+        error: "Data transformation error",
+        details: transformError.message,
+      }, { headers: corsHeaders });
+    }
+
+    // Insert the transformed data into PostgreSQL
+    try {
+      await insertExcelDataToPostgres(worksheet, "knihy");
+    } catch (dbError: any) {
+      console.error("Database insertion error:", dbError);
+      return NextResponse.json({
+        success: false,
+        error: "Database insertion error",
+        details: dbError.message,
+      }, { headers: corsHeaders });
+    }
+
+    return NextResponse.json({ success: true, message: "File processed and uploaded successfully" }, { headers: corsHeaders });
+  } catch (error: any) {
+    console.error("Error processing data:", error);
+    return NextResponse.json({ success: false, error: "Server error", details: error.message }, { headers: corsHeaders });
+  }
+}
+
 // export async function POST(req: NextRequest) {
 //   console.log("POST request received");
 //   try {
@@ -52,61 +116,6 @@ import { prisma } from "@/lib/prisma";
 //     return NextResponse.json({ success: false, error: "Server error", details: error.message });
 //   }
 // }
-
-export async function POST(req: NextRequest) {
-  console.log("POST request received");
-
-  try {
-    // Ensure the request is a FormData request
-    console.log(1)
-    const formData = await req.formData();
-    const file = formData.get("file") as File | null;
-    console.log(2)
-    if (!file) {
-      console.error("No file uploaded");
-      return NextResponse.json({ success: false, message: "No file uploaded" });
-    }
-    console.log(3)
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-    console.log(4)
-    const workbook = xlsx.read(buffer, { type: "buffer" });
-    let worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-    // Apply transformations safely
-    try {
-      console.log(5)
-      worksheet = excelWordsToBool(worksheet, "available");
-      worksheet = excelWordsToBool(worksheet, "formaturita");
-      worksheet = fillMissingIds(worksheet);
-      console.log(6)
-    } catch (transformError: any) {
-      console.error("Error transforming data:", transformError);
-      return NextResponse.json({
-        success: false,
-        error: "Data transformation error",
-        details: transformError.message,
-      });
-    }
-
-    // Insert the transformed data into PostgreSQL
-    try {
-      await insertExcelDataToPostgres(worksheet, "knihy");
-    } catch (dbError: any) {
-      console.error("Database insertion error:", dbError);
-      return NextResponse.json({
-        success: false,
-        error: "Database insertion error",
-        details: dbError.message,
-      });
-    }
-
-    return NextResponse.json({ success: true, message: "File processed and uploaded successfully" });
-  } catch (error: any) {
-    console.error("Error processing data:", error);
-    return NextResponse.json({ success: false, error: "Server error", details: error.message });
-  }
-}
 // async function findDuplicates() {
 //   const books = await prisma.knihy.findMany();
 //   const bookCodes = books.map(book => book.book_code);

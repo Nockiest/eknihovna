@@ -14,6 +14,7 @@ export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
       .find((key) => worksheet[key].v.toString().toLowerCase() === 'id');
 
     if (!idCol) {
+      console.log('no id', idCol)
       throw new Error("No 'id' column found");
     }
 
