@@ -82,7 +82,7 @@ const Pagination: React.FC<PaginationProps> = ({
         folderName={folderName}
         key={key}
       />
-    ));}
+    )) }
 
       {page < totalPages - offset && (
         <PaginationLink
