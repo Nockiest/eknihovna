@@ -22,7 +22,6 @@ const KatalogPage = () => {
     formaturita: null,
     available: false,
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [filterValues, setFiltersValues] = useState<FiltringValues>({
     genres: [],
@@ -31,7 +30,7 @@ const KatalogPage = () => {
   });
   const [query, setQuery] = useState<string  >('');
   const [bookNames, setBookNames] = useState<string[]>([]);
-  
+
   // if (isLoading) {
   //   return (
   //     <Box
@@ -60,7 +59,6 @@ const KatalogPage = () => {
         setBookNames,
         // books,
         // setBooks,
-        setIsLoading,
         filterValues, // possible filter values
         setFiltersValues,
         bookNames,

@@ -13,13 +13,14 @@ interface NavRoute {
 interface NavbarProps {
   navRoutes: NavRoute[];
   renderButton: (button: NavRoute, isActive: boolean) => React.ReactNode;
+  renderNavStyle?: string
 }
 
-const NavbarMapper: React.FC<NavbarProps> = ({ navRoutes, renderButton }) => {
+const NavbarMapper: React.FC<NavbarProps> = ({renderNavStyle, navRoutes, renderButton }) => {
   const firstURLSegment = getURLSegment(usePathname(), 0);
 
   return (
-    <nav>
+    <nav className={renderNavStyle}>
       {navRoutes?.map((button) => {
         const isActive = getURLSegment(button.URL, 0) === firstURLSegment;
         return renderButton(button, isActive);
