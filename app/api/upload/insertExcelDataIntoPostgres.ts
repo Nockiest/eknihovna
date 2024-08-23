@@ -20,13 +20,10 @@ export const insertExcelDataToPostgres = async (
       throw new Error("The Excel file does not contain headers");
     }
 
-    // Log the headers
-    console.log("Headers:", headers);
+    await prisma.knihy.deleteMany();
 
     // Validate and insert data into the database
-    for (const [index, row] of rows.entries()) {
-      console.log(`Processing row ${index + 1}:`, row); // Log each row
-
+    for (const row of rows) {
       try {
         // Check if the row is well-formed
         if (row.length !== headers.length) {
@@ -40,7 +37,7 @@ export const insertExcelDataToPostgres = async (
           // Perform type checks and handle malformed values
           switch (header) {
             case 'id':
-              value = value? value:uuidv4(); // Generate a new unique ID if the value is malformed
+              value =value? value: uuidv4(); // Generate a new unique ID if the value is malformed
               break;
             case 'book_code':
               value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
@@ -97,7 +94,7 @@ export const insertExcelDataToPostgres = async (
   } finally {
     await prisma.$disconnect();
   }
-};
+}
 // let model: any;
 // switch (tableName) {
 //   case 'knihy':
