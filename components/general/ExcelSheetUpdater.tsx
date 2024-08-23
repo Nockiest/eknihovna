@@ -54,7 +54,44 @@ const ExcelSheetUpdater = () => {
       setResponseMessage(`Error uploading data: ${e.message}`);
     }
   };
+  const checkData = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/logDb`,
 
+      );
+      const data = new Uint8Array(response.data);
+      console.log(data)
+      setResponseMessage(response.data.count);
+    } catch (error: any) {
+      console.error("Error fetching data from Server:", error.message);
+      setResponseMessage("Problém se stažením dat: " + error.message);
+    }
+  };
+
+  if (session?.user?.email !== "ondralukes06@seznam.cz") {
+    console.log(
+      (session?.user?.email === "ondralukes06@seznam.cz").toString(),
+      (process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()
+    );
+    return (
+      <>
+        <Typography variant="h2" className="text-xl font-semibold mb-4">
+          Neplatný admin účet{" "}
+          {session?.user?.email === "ondralukes06@seznam.cz"} x
+          {(session?.user?.email === "ondralukes06@seznam.cz").toString()}x
+          {(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()}
+        </Typography>
+        <PrimaryButton
+          onClick={() => {
+            signOut();
+          }}
+        >
+          <Typography>Odhlásit se</Typography>
+        </PrimaryButton>
+      </>
+    );
+  }
   // rewrite to prisma
   const fetchDataFromServer = async () => {
     console.log("Fetching data from server...");
@@ -157,6 +194,9 @@ const ExcelSheetUpdater = () => {
           </form>
         </Box>
       </Box>
+      <PrimaryButton onClick={checkData}>
+            získat aktuální počet knih
+          </PrimaryButton>
       <Announcer message={responseMessage} type="normal" />
     </Box>
   );
