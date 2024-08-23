@@ -1,7 +1,7 @@
-import { NextAuthOptions } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import GitHubProvider from 'next-auth/providers/github';
-import CredentialsProvider from 'next-auth/providers/credentials';
+import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import GitHubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export const options: NextAuthOptions = {
   providers: [
@@ -14,18 +14,18 @@ export const options: NextAuthOptions = {
     //   clientSecret: process.env.GITHUB_SECRET as string,
     // }),
     CredentialsProvider({
-      name: 'Credentials',
+      name: "Credentials",
       credentials: {
-        email: { label: 'Email', type: 'email' }, // Add email field
+        email: { label: "Email", type: "email" }, // Add email field
         Username: {
-          type: 'text',
-          label: 'Uživatelské jméno',
-          placeholder: 'Uživatelské heslo',
+          type: "text",
+          label: "Uživatelské jméno",
+          placeholder: "Uživatelské heslo",
         },
         password: {
-          label: 'Password',
-          type: 'password',
-          placeholder: 'Password',
+          label: "Password",
+          type: "password",
+          placeholder: "Password",
         },
       },
       async authorize(credentials) {
@@ -34,9 +34,18 @@ export const options: NextAuthOptions = {
           return null;
         }
 
-        if (['ondralukes06@seznam.cz', 'bauerova@gopat.cz'].includes(credentials.email)) {
+        if (
+          ["ondralukes06@seznam.cz", "bauerova@gopat.cz"].includes(
+            credentials.email
+          )
+        ) {
           // Add role to user object
-          return { id: '1', name: 'ondra', email: credentials.email, role: 'admin' };
+          return {
+            id: "1",
+            name: "ondra",
+            email: credentials.email,
+            role: "admin",
+          };
         } else {
           return null; // Reject non-admin users
         }
@@ -45,21 +54,31 @@ export const options: NextAuthOptions = {
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {
+      console.log("Redirecting to:", url);
       // Allows relative callback URLs
-      if (url.startsWith('/')) return `${baseUrl}${url}`;
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
       // Allows callback URLs on the same origin
       else if (new URL(url).origin === baseUrl) return url;
       return baseUrl;
     },
-    // session({ session, user }) {
-    //     // if ( session.user && user&&['ondralukes06@seznam.cz', 'bauerova@gopat.cz'].includes(user.email) ) {
-    //     //  session.user.role = 'admin'
-
-    //     // }
-    //     return session
-    //   }
   },
 
+  // callbacks: {
+  //   async redirect({ url, baseUrl }) {
+  //     // Allows relative callback URLs
+  //     if (url.startsWith('/')) return `${baseUrl}${url}`;
+  //     // Allows callback URLs on the same origin
+  //     else if (new URL(url).origin === baseUrl) return url;
+  //     return baseUrl;
+  //   },
+  //   // session({ session, user }) {
+  //   //     // if ( session.user && user&&['ondralukes06@seznam.cz', 'bauerova@gopat.cz'].includes(user.email) ) {
+  //   //     //  session.user.role = 'admin'
+
+  //   //     // }
+  //   //     return session
+  //   //   }
+  // },
 };
 
 // async authorize(credentials) {
@@ -71,11 +90,11 @@ export const options: NextAuthOptions = {
 //       return null; // Returning null or false rejects the sign-in
 //     }
 //   },
-      // callbacks: {
-        //     async signIn({ account, profile }) {
-        //       if (account.provider === "google") {
-        //         return profile.email_verified && profile.email.endsWith("@zaci.gopat.cz")
-        //       }
-        //       return true // Do different verification for other providers that don't have `email_verified`
-        //     },
-        //   }
+// callbacks: {
+//     async signIn({ account, profile }) {
+//       if (account.provider === "google") {
+//         return profile.email_verified && profile.email.endsWith("@zaci.gopat.cz")
+//       }
+//       return true // Do different verification for other providers that don't have `email_verified`
+//     },
+//   }
