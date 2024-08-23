@@ -21,7 +21,7 @@ const ExcelSheetUpdater = () => {
       </div>
     );
   }
-  
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFile(event.target.files[0]);
@@ -29,11 +29,9 @@ const ExcelSheetUpdater = () => {
       setSelectedFile(null);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setResponseMessage("Data is uploading");
-    setUploadProgress(0); // Initialize progress
+    setResponseMessage("Uploading data...");
 
     if (!selectedFile) {
       setResponseMessage("No file selected");
@@ -41,56 +39,25 @@ const ExcelSheetUpdater = () => {
     }
 
     try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
+      const data = new FormData();
+      data.append("file", selectedFile);
+      console.log("Uploading to:", `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
 
-      // Read the file into an array buffer
-      const fileArrayBuffer = await selectedFile.arrayBuffer();
-      const buffer = Buffer.from(fileArrayBuffer);
-      const workbook = XLSX.read(buffer, { type: "buffer" });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-
-      // Convert worksheet to JSON
-      const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
-        header: 1,
-        defval: null,
+      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
+        method: "POST",
+        body: data,
       });
 
-      // Extract headers and rows
-      const [headers, ...rows] = jsonData;
-      const totalRows = rows.length;
-      const chunkSize = 100;
-      const totalChunks = Math.ceil(totalRows / chunkSize);
-
-      // Upload each chunk sequentially
-      for (let i = 0; i < totalChunks; i++) {
-        const chunk = rows.slice(i * chunkSize, (i + 1) * chunkSize);
-
-        // Create a new FormData instance for each chunk
-        const chunkFormData = new FormData();
-        chunkFormData.append(
-          "data",
-          JSON.stringify({
-            headers,
-            chunk,
-          })
-        );
-
-        const res = await fetch(
-          `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
-          {
-            method: "POST",
-            body: chunkFormData,
-          }
-        );
-
-        if (!res.ok) {
+      if (!res.ok) {
+        // Attempt to parse JSON response if possible
+        let errorMessage = 'Upload failed';
+        try {
           const errorData = await res.json();
-          throw new Error(errorData.message || "Upload failed");
+          errorMessage = errorData.message || errorMessage;
+        } catch (jsonError) {
+          console.error("Failed to parse error response as JSON", jsonError);
         }
-
-        // Update progress
-        setUploadProgress(((i + 1) / totalChunks) * 100);
+        throw new Error(errorMessage);
       }
 
       setResponseMessage("Data successfully uploaded");
@@ -99,6 +66,75 @@ const ExcelSheetUpdater = () => {
       setResponseMessage(`Error uploading data: ${e.message}`);
     }
   };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setResponseMessage("Data is uploading");
+  //   setUploadProgress(0); // Initialize progress
+
+  //   if (!selectedFile) {
+  //     setResponseMessage("No file selected");
+  //     return;
+  //   }
+
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append("file", selectedFile);
+
+  //     // Read the file into an array buffer
+  //     const fileArrayBuffer = await selectedFile.arrayBuffer();
+  //     const buffer = Buffer.from(fileArrayBuffer);
+  //     const workbook = XLSX.read(buffer, { type: "buffer" });
+  //     const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+  //     // Convert worksheet to JSON
+  //     const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
+  //       header: 1,
+  //       defval: null,
+  //     });
+
+  //     // Extract headers and rows
+  //     const [headers, ...rows] = jsonData;
+  //     const totalRows = rows.length;
+  //     const chunkSize = 100;
+  //     const totalChunks = Math.ceil(totalRows / chunkSize);
+
+  //     // Upload each chunk sequentially
+  //     for (let i = 0; i < totalChunks; i++) {
+  //       const chunk = rows.slice(i * chunkSize, (i + 1) * chunkSize);
+
+  //       // Create a new FormData instance for each chunk
+  //       const chunkFormData = new FormData();
+  //       chunkFormData.append(
+  //         "data",
+  //         JSON.stringify({
+  //           headers,
+  //           chunk,
+  //         })
+  //       );
+
+  //       const res = await fetch(
+  //         `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
+  //         {
+  //           method: "POST",
+  //           body: chunkFormData,
+  //         }
+  //       );
+
+  //       if (!res.ok) {
+  //         const errorData = await res.json();
+  //         throw new Error(errorData.message || "Upload failed");
+  //       }
+
+  //       // Update progress
+  //       setUploadProgress(((i + 1) / totalChunks) * 100);
+  //     }
+
+  //     setResponseMessage("Data successfully uploaded");
+  //   } catch (e: any) {
+  //     console.error("Upload error:", e);
+  //     setResponseMessage(`Error uploading data: ${e.message}`);
+  //   }
+  // };
 
   // rewrite to prisma
   const fetchDataFromServer = async () => {
