@@ -62,17 +62,8 @@ export const insertExcelDataToPostgres = async (
           acc[header] = value;
           return acc;
         }, {});
+        let model = prisma.knihy
 
-        // Select the Prisma model based on the table name
-        let model: any;
-        switch (tableName) {
-          case 'knihy':
-            model = prisma.knihy;
-            break;
-          // Add cases for other tables if needed
-          default:
-            throw new Error(`Model for table '${tableName}' not found`);
-        }
 
         // Perform the upsert operation
         await model.upsert({
