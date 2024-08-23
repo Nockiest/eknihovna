@@ -10,6 +10,7 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'Content-Type',
 };
 
+ 
 export async function POST(req: NextRequest) {
   // Handle preflight requests
   if (req.method === 'OPTIONS') {
@@ -33,7 +34,7 @@ export async function POST(req: NextRequest) {
     const { headers, chunk } = JSON.parse(dataString);
 
     // Convert chunk to worksheet (or process it directly if you prefer)
-    let worksheet = XLSX.utils.json_to_sheet(chunk, { header: headers });
+    let worksheet = xlsx.utils.json_to_sheet(chunk, { header: headers });
 
     // Apply transformations safely
     try {
@@ -62,9 +63,14 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: "File processed and uploaded successfully" }, { headers: corsHeaders });
+
   } catch (error: any) {
     console.error("Error processing data:", error);
-    return NextResponse.json({ success: false, error: "Server error", details: error.message }, { headers: corsHeaders });
+    return NextResponse.json({
+      success: false,
+      error: "Server error",
+      details: error.message,
+    }, { headers: corsHeaders });
   }
 }
 
