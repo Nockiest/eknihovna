@@ -58,7 +58,7 @@ const ExcelSheetUpdater = () => {
       const [headers, ...rows] = jsonData;
 
       // Store chunks in a state variable
-      const chunkSize = 100;
+      const chunkSize = 10;
       const newChunks = [];
       for (let i = 0; i < rows.length; i += chunkSize) {
         newChunks.push({ headers, chunk: rows.slice(i, i + chunkSize) });
@@ -200,36 +200,6 @@ const ExcelSheetUpdater = () => {
         uploadProgress={uploadProgress}
         handleUploadChunk={handleUploadChunk}
       />
-      {/* {chunks.length > 0 && (
-        <Box className="mt-6 w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
-          <Typography variant="h2" className="text-xl font-semibold mb-4 p-4">
-            Data Chunks
-          </Typography>
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Chunk</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rows</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {chunks.map((chunk, index) => (
-                <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{`Chunk ${index + 1}`}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{chunk.chunk.length} rows</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <PrimaryButton onClick={() => handleUploadChunk(index)}  >
-                      Upload
-                    </PrimaryButton>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Box>
-      )} */}
-
       <div className="mt-4">
         <Typography>Upload Progress: {Math.round(uploadProgress)}%</Typography>
         <progress value={uploadProgress} max={100}></progress>
