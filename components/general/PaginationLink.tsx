@@ -4,12 +4,14 @@ interface PaginationLinkProps {
   pageNumber: number;
   currentPage: number;
   folderName: string;
+  className?: string
 }
 
 const PaginationLink : React.FC<PaginationLinkProps> = ({
   pageNumber,
   currentPage,
   folderName,
+  className,
 }) => {
   return (
     <Link
@@ -19,7 +21,7 @@ const PaginationLink : React.FC<PaginationLinkProps> = ({
         pageNumber === currentPage
           ? "bg-primary-400 text-text-950"
           : "bg-secondary-900 text-text-100"
-      }`}
+      } ♥${className}`}
     >
       {pageNumber}
     </Link>

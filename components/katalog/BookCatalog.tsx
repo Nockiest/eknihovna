@@ -11,6 +11,7 @@ import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
 import { shownBooksBySize } from "@/data/values";
+import LoadingComponent from "../general/LoadingComponent";
 
 interface BookCatalogProps {}
 
@@ -107,9 +108,10 @@ const BookCatalog: React.FC = () => {
       </Box>
 
       {status === "loading" && (
-        <Typography variant="h6" sx={{ margin: "2rem" }}>
-          Loading books...
-        </Typography>
+        <LoadingComponent />
+        // <Typography variant="h6" sx={{ margin: "2rem" }}>
+        //   Loading books...
+        // </Typography>
       )}
 
       {status === "error" && (

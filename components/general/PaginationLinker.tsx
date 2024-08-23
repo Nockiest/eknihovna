@@ -5,12 +5,14 @@ import { useSearchParams } from "next/navigation";
 import { getURLSegment } from "@/utils/getURLSegment";
 import { Box } from "@mui/material";
 import PaginationLink from "./PaginationLink";
+import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 
 interface PaginationProps {
   totalEntries: number;
   itemsPerPage: number;
   folderName: string;
 }
+
 
 const Pagination: React.FC<PaginationProps> = ({
   totalEntries,
@@ -28,10 +30,19 @@ const Pagination: React.FC<PaginationProps> = ({
   useEffect(() => {
     setTotalPages(Math.ceil(totalEntries / itemsPerPage));
   }, [totalEntries, itemsPerPage]);
+  const breakPoint = useCurrentBreakpoint();
+  const [offset, setOffset] = useState<number>(5);
+  useEffect(() => {
+    if (breakPoint && ["xs", "sm"].indexOf(breakPoint) >= 0) {
+      setOffset(2);
+    } else {
+      setOffset(5);
+    }
+  }, [breakPoint]);
 
   const getVisiblePageNumbers = () => {
-    const startPage = Math.max(1, page - 5);
-    const endPage = Math.min(totalPages, page + 5);
+    const startPage = Math.max(1, page - offset);
+    const endPage = Math.min(totalPages, page + offset);
     const pageNumbers = [];
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
@@ -46,43 +57,37 @@ const Pagination: React.FC<PaginationProps> = ({
 
   if (totalPages <= 5) {
     return visiblePageNumbers.map((pageNumber) => (
-      <Link
-        key={pageNumber}
-        href={`/${folderName}?page=${pageNumber}`}
-        className={`px-3 py-1 rounded ${
-          pageNumber === page
-            ? "bg-primary-400 text-text-950"
-            : "bg-secondary-900 text-text-100"
-        }`}
-      >
-        {pageNumber}
-      </Link>
+      <PaginationLink
+        pageNumber={pageNumber}
+        currentPage={page}
+        folderName={folderName}
+      />
     ));
   }
   return (
-    <Box className="flex justify-center gap-2 flex-wrap space-x-2 m-4">
-      {page > 6 && (
+    <Box className="flex flex-wrap justify-center space-x-2 m-4">
+      {page-1 >  offset && (
         <PaginationLink
           pageNumber={1}
           currentPage={page}
           folderName={folderName}
+          className="px-3 py-1 rounded bg-gray-200 text-text-100"
         />
       )}
-
       {visiblePageNumbers.map((pageNumber) => (
         <PaginationLink
-          key={pageNumber}
           pageNumber={pageNumber}
           currentPage={page}
           folderName={folderName}
         />
       ))}
 
-      {page < totalPages - 5 && (
+      {page < totalPages - offset && (
         <PaginationLink
           pageNumber={totalPages}
           currentPage={page}
           folderName={folderName}
+          className="px-3 py-1 rounded bg-gray-200 text-text-100"
         />
       )}
     </Box>
@@ -90,19 +95,3 @@ const Pagination: React.FC<PaginationProps> = ({
 };
 
 export default Pagination;
-//   const visiblePageNumbers = getVisiblePageNumbers();
-
-//   const getVisiblePageNumbers = () => {
-//     const startPage = Math.max(1, currentPage - 5);
-//     const endPage = Math.min(totalPages, currentPage + 5);
-//     const pageNumbers = [];
-//     for (let i = startPage; i <= endPage; i++) {
-//       pageNumbers.push(i);
-//     }
-//     return pageNumbers;
-//   };
-
-// Sync the state with the URL when the component mounts or when the URL changes
-//   useEffect(() => {
-
-//   }, [router]);
