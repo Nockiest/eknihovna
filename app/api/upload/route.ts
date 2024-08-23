@@ -1,13 +1,13 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextRequest, NextResponse } from "next/server";
 import * as xlsx from "xlsx";
 import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // Assuming this function exists
 import { excelWordsToBool, fillMissingIds } from "./excelUtils";
-import { NextRequest, NextResponse } from "next/server";
+
 // CORS headers configuration
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': '*',
-  'Access-Control-Allow-Headers': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type',
 };
 
 export async function POST(req: NextRequest) {
@@ -67,6 +67,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ success: false, error: "Server error", details: error.message }, { headers: corsHeaders });
   }
 }
+
 
 // export async function POST(req: NextRequest) {
 //   console.log("POST request received");
