@@ -27,7 +27,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`w-auto h-[400px] items-center mx-auto  relative flex-grow `}
+      className={`w-auto h-[400px] items-center  relative flex-grow `}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: truthyValues.includes(available)
