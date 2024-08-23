@@ -19,9 +19,9 @@ export const insertExcelDataToPostgres = async (
     if (!headers || headers.length === 0) {
       throw new Error("The Excel file does not contain headers");
     }
-    console.log('a')
-    await prisma.knihy.deleteMany();
-    console.log('b')
+
+    console.log('Processing rows...');
+
     // Validate and insert data into the database
     for (const row of rows) {
       try {
@@ -73,6 +73,10 @@ export const insertExcelDataToPostgres = async (
           create: data,
         });
 
+        // Log the number of books after each insertion for debugging
+        // const bookNum = await prisma.knihy.count(); // Use count() to get the number of records
+        // console.log(`Number of books after insertion: ${bookNum}`);
+
       } catch (rowError: any) {
         console.error("Error processing row:", rowError.message);
         throw new Error(`Error processing row: ${rowError.message}`);
@@ -87,6 +91,7 @@ export const insertExcelDataToPostgres = async (
     await prisma.$disconnect();
   }
 }
+//
 // let model: any;
 // switch (tableName) {
 //   case 'knihy':

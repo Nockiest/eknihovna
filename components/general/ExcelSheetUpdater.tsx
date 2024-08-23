@@ -1,6 +1,6 @@
 "use client";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
-import { Box, Paper, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
@@ -12,9 +12,13 @@ const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0)
   if (!session) {
-    return <div className="flex flex-center"><ReroutToAUth />
+    return (
+      <div className="flex flex-center">
+        <ReroutToAUth />
       </div>
+    );
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,74 +28,135 @@ const ExcelSheetUpdater = () => {
       setSelectedFile(null);
     }
   };
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setResponseMessage("data se nahrávají");
+    setResponseMessage("Data is uploading");
 
     if (!selectedFile) {
       setResponseMessage("No file selected");
       return;
     }
-    console.log('x')
-    try {
-      const data = new FormData();
-      data.append("file", selectedFile);
-      console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
-        method: "POST",
-        body: data,
-      });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Upload failed");
+    try {
+      // Read the file into an array buffer
+      const fileArrayBuffer = await selectedFile.arrayBuffer();
+      const buffer = Buffer.from(fileArrayBuffer);
+      const workbook = XLSX.read(buffer, { type: "buffer" });
+      const sheetNames = workbook.SheetNames;
+      setUploadProgress(0)
+      // Split and upload each sheet separately
+      for (const sheetName of sheetNames) {
+        const worksheet = workbook.Sheets[sheetName];
+
+        // Convert worksheet to JSON
+        const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
+          header: 1,
+          defval: null,
+        });
+
+        // Extract headers and rows
+        const [headers, ...rows] = jsonData;
+        const totalRows = rows.length;
+        const chunkSize = 100; // Number of rows per chunk
+        const totalChunks = Math.ceil(totalRows / chunkSize);
+
+        // Upload each chunk sequentially
+        for (let i = 0; i < totalChunks; i++) {
+          const chunk = rows.slice(i * chunkSize, (i + 1) * chunkSize);
+
+          // Create a new workbook for each chunk
+          const newWorkbook = XLSX.utils.book_new();
+          const newWorksheet = XLSX.utils.aoa_to_sheet([headers, ...chunk]);
+          XLSX.utils.book_append_sheet(newWorkbook, newWorksheet, sheetName);
+
+          // Convert the new workbook to a buffer
+          const chunkBuffer = XLSX.write(newWorkbook, { bookType: 'xlsx', type: 'buffer' });
+
+          // Create a new FormData instance for each chunk
+          const chunkFormData = new FormData();
+          chunkFormData.append("file", new Blob([chunkBuffer]), `chunk_${i + 1}.xlsx`);
+
+          // Upload the chunk
+          const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
+            chunkFormData,
+            {
+              headers: {
+                'Content-Type': 'multipart/form-data',
+              },
+            }
+          );
+
+          if (res.status !== 200) {
+            throw new Error('Upload failed');
+          }
+
+          // Optionally update progress here
+          setUploadProgress(((i + 1) / totalChunks) * 100);
+        }
       }
 
-      setResponseMessage("data úspěšně nahrána");
+      setResponseMessage("Data successfully uploaded");
     } catch (e: any) {
       console.error("Upload error:", e);
       setResponseMessage(`Error uploading data: ${e.message}`);
     }
   };
+  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  //   e.preventDefault();
+  //   setResponseMessage("data se nahrávají");
+
+  //   if (!selectedFile) {
+  //     setResponseMessage("No file selected");
+  //     return;
+  //   }
+  //   console.log("x");
+  //   try {
+  //     const data = new FormData();
+  //     data.append("file", selectedFile);
+  //     console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
+  //     const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
+  //       method: "POST",
+  //       body: data,
+  //     });
+
+  //     if (!res.ok) {
+  //       const errorData = await res.json();
+  //       throw new Error(errorData.message || "Upload failed");
+  //     }
+
+  //     setResponseMessage("data úspěšně nahrána");
+  //   } catch (e: any) {
+  //     console.error("Upload error:", e);
+  //     setResponseMessage(`Error uploading data: ${e.message}`);
+  //   }
+  // };
   const checkData = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_APP_API_URL}/logDb`,
-
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/logDb`
       );
       const data = new Uint8Array(response.data);
-      console.log(data)
+      console.log(data);
       setResponseMessage(response.data.count);
     } catch (error: any) {
       console.error("Error fetching data from Server:", error.message);
       setResponseMessage("Problém se stažením dat: " + error.message);
     }
   };
+  const deleteData = async () => {
+    try {
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`
+      );
 
-  if (session?.user?.email !== "ondralukes06@seznam.cz") {
-    console.log(
-      (session?.user?.email === "ondralukes06@seznam.cz").toString(),
-      (process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()
-    );
-    return (
-      <>
-        <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Neplatný admin účet{" "}
-          {session?.user?.email === "ondralukes06@seznam.cz"} x
-          {(session?.user?.email === "ondralukes06@seznam.cz").toString()}x
-          {(process.env.ADMIN_EMAIL === "ondralukes06@seznam.cz").toString()}
-        </Typography>
-        <PrimaryButton
-          onClick={() => {
-            signOut();
-          }}
-        >
-          <Typography>Odhlásit se</Typography>
-        </PrimaryButton>
-      </>
-    );
-  }
+      setResponseMessage(response.data.message);
+    } catch (error: any) {
+      console.error("Error fetching data from Server:", error.message);
+      setResponseMessage("Problém se stažením dat: " + error.message);
+    }
+  };
+
   // rewrite to prisma
   const fetchDataFromServer = async () => {
     console.log("Fetching data from server...");
@@ -151,7 +216,10 @@ const ExcelSheetUpdater = () => {
 
       <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
-          <Typography variant="h2" className="text-xl text-ceter font-semibold mb-4">
+          <Typography
+            variant="h2"
+            className="text-xl text-ceter font-semibold mb-4"
+          >
             Stáhnout data ze serveru
           </Typography>
           <PrimaryButton onClick={fetchDataFromServer}>
@@ -164,7 +232,10 @@ const ExcelSheetUpdater = () => {
           </PrimaryButton>
         </Box>
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
-          <Typography variant="h2" className="text-xl text-center font-semibold mb-4">
+          <Typography
+            variant="h2"
+            className="text-xl text-center font-semibold mb-4"
+          >
             Přepsat data na serveru
           </Typography>
 
@@ -195,14 +266,14 @@ const ExcelSheetUpdater = () => {
         </Box>
       </Box>
       <PrimaryButton onClick={checkData}>
-            získat aktuální počet knih
-          </PrimaryButton>
+        získat aktuální počet knih
+      </PrimaryButton>
+      <PrimaryButton onClick={deleteData}>smazat knihy</PrimaryButton>
       <Announcer message={responseMessage} type="normal" />
+      <progress value={uploadProgress} max={100}></progress>
+      <div>{Math.round(uploadProgress)}% uploaded</div>
     </Box>
   );
 };
 
 export default ExcelSheetUpdater;
-
-// redirect("/api/auth/signin?callbackUrl=/upload");
-// router.push("/api/auth/signin?callbackUrl=/upload");
