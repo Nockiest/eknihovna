@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     // Ensure the request is a FormData request
     const formData = await req.formData();
     const dataString = formData.get("data") as string | null;
-    console.log(1);
+    console.log(1,dataString);
     if (!dataString) {
       return NextResponse.json({ success: false, message: "No data provided" }, { headers: corsHeaders });
     }
