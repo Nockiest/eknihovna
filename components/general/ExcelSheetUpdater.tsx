@@ -16,7 +16,7 @@ const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
-  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
   const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
 
   if (!session) {
@@ -200,10 +200,10 @@ const ExcelSheetUpdater = () => {
         uploadProgress={uploadProgress}
         handleUploadChunk={handleUploadChunk}
       />
-      <div className="mt-4">
+     {chunks.length>0 && <Box className="mt-4">
         <Typography>Upload Progress: {Math.round(uploadProgress)}%</Typography>
         <progress value={uploadProgress} max={100}></progress>
-      </div>
+      </Box>}
 
       <Announcer message={responseMessage} type="normal" />
     </Box>
