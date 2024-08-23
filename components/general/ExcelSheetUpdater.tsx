@@ -15,8 +15,11 @@ const ExcelSheetUpdater = () => {
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
   if (!session) {
-    return <div className="flex flex-center"><ReroutToAUth />
+    return (
+      <div className="flex flex-center m-autp">
+        <ReroutToAUth />
       </div>
+    );
   }
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -64,15 +67,21 @@ const ExcelSheetUpdater = () => {
 
         // Create a new FormData instance for each chunk
         const chunkFormData = new FormData();
-        chunkFormData.append("data", JSON.stringify({
-          headers,
-          chunk
-        }));
+        chunkFormData.append(
+          "data",
+          JSON.stringify({
+            headers,
+            chunk,
+          })
+        );
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
-          method: "POST",
-          body: chunkFormData,
-        });
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
+          {
+            method: "POST",
+            body: chunkFormData,
+          }
+        );
 
         if (!res.ok) {
           const errorData = await res.json();
@@ -149,7 +158,10 @@ const ExcelSheetUpdater = () => {
 
       <Box className="flex flex-col  md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
-          <Typography variant="h2" className="text-xl text-ceter font-semibold mb-4">
+          <Typography
+            variant="h2"
+            className="text-xl text-ceter font-semibold mb-4"
+          >
             Stáhnout data ze serveru
           </Typography>
           <PrimaryButton onClick={fetchDataFromServer}>
@@ -162,7 +174,10 @@ const ExcelSheetUpdater = () => {
           </PrimaryButton>
         </Box>
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
-          <Typography variant="h2" className="text-xl text-center font-semibold mb-4">
+          <Typography
+            variant="h2"
+            className="text-xl text-center font-semibold mb-4"
+          >
             Přepsat data na serveru
           </Typography>
 

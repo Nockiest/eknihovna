@@ -19,11 +19,14 @@ export const insertExcelDataToPostgres = async (
     if (!headers || headers.length === 0) {
       throw new Error("The Excel file does not contain headers");
     }
-    console.log('a')
-    // await prisma.knihy.deleteMany();
-    console.log('b')
+
+    // Log the headers
+    console.log("Headers:", headers);
+
     // Validate and insert data into the database
-    for (const row of rows) {
+    for (const [index, row] of rows.entries()) {
+      console.log(`Processing row ${index + 1}:`, row); // Log each row
+
       try {
         // Check if the row is well-formed
         if (row.length !== headers.length) {
@@ -94,7 +97,7 @@ export const insertExcelDataToPostgres = async (
   } finally {
     await prisma.$disconnect();
   }
-}
+};
 // let model: any;
 // switch (tableName) {
 //   case 'knihy':
