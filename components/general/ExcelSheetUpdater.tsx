@@ -12,11 +12,12 @@ const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+
   if (!session) {
     return <div className="flex flex-center"><ReroutToAUth />
       </div>
   }
-
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFile(event.target.files[0]);
@@ -27,7 +28,8 @@ const ExcelSheetUpdater = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setResponseMessage("data se nahrávají");
+    setResponseMessage("Data is uploading");
+    setUploadProgress(0); // Initialize progress
 
     if (!selectedFile) {
       setResponseMessage("No file selected");
@@ -35,20 +37,53 @@ const ExcelSheetUpdater = () => {
     }
 
     try {
-      const data = new FormData();
-      data.append("file", selectedFile);
-      console.log(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
-      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
-        method: "POST",
-        body: data,
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      // Read the file into an array buffer
+      const fileArrayBuffer = await selectedFile.arrayBuffer();
+      const buffer = Buffer.from(fileArrayBuffer);
+      const workbook = XLSX.read(buffer, { type: "buffer" });
+      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+
+      // Convert worksheet to JSON
+      const jsonData: any[][] = XLSX.utils.sheet_to_json(worksheet, {
+        header: 1,
+        defval: null,
       });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Upload failed");
+      // Extract headers and rows
+      const [headers, ...rows] = jsonData;
+      const totalRows = rows.length;
+      const chunkSize = 100;
+      const totalChunks = Math.ceil(totalRows / chunkSize);
+
+      // Upload each chunk sequentially
+      for (let i = 0; i < totalChunks; i++) {
+        const chunk = rows.slice(i * chunkSize, (i + 1) * chunkSize);
+
+        // Create a new FormData instance for each chunk
+        const chunkFormData = new FormData();
+        chunkFormData.append("data", JSON.stringify({
+          headers,
+          chunk
+        }));
+
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
+          method: "POST",
+          body: chunkFormData,
+        });
+
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(errorData.message || "Upload failed");
+        }
+
+        // Update progress
+        setUploadProgress(((i + 1) / totalChunks) * 100);
       }
 
-      setResponseMessage("data úspěšně nahrána");
+      setResponseMessage("Data successfully uploaded");
     } catch (e: any) {
       console.error("Upload error:", e);
       setResponseMessage(`Error uploading data: ${e.message}`);
@@ -158,6 +193,8 @@ const ExcelSheetUpdater = () => {
         </Box>
       </Box>
       <Announcer message={responseMessage} type="normal" />
+      <progress value={uploadProgress} max={100}></progress>
+      <div>{Math.round(uploadProgress)}% uploaded</div>
     </Box>
   );
 };
