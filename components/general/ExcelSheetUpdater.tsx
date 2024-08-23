@@ -33,7 +33,7 @@ const ExcelSheetUpdater = () => {
       setResponseMessage("No file selected");
       return;
     }
-
+    console.log('x')
     try {
       const data = new FormData();
       data.append("file", selectedFile);
