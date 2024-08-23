@@ -1,6 +1,6 @@
 import * as xlsx from 'xlsx';
 import { v4 as uuidv4 } from 'uuid';
-import fs from 'fs';
+// import fs from 'fs';
 import { prisma } from '@/lib/prisma';
 import { truthyValues } from '@/data/values';
 
@@ -127,15 +127,15 @@ export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
     return worksheet;
   };
 
-  export const saveExcelFile = async () => {
-    try {
-      const buffer = await fetchAndCreateExcel("knihy");
-      fs.writeFileSync("output.xlsx", buffer);
-      console.log("Excel file created successfully.");
-    } catch (error) {
-      console.error("Error creating Excel file:", error);
-    }
-  };
+  // export const saveExcelFile = async () => {
+  //   try {
+  //     const buffer = await fetchAndCreateExcel("knihy");
+  //     fs.writeFileSync("output.xlsx", buffer);
+  //     console.log("Excel file created successfully.");
+  //   } catch (error) {
+  //     console.error("Error creating Excel file:", error);
+  //   }
+  // };
 
 
   export const fetchAndCreateExcel = async (

@@ -1,5 +1,5 @@
 // "use client";
-import ExcelSheetUpdater from "@/components/general/ExcelSheetUpdater";
+import ExcelSheetUpdater from "@/components/upload/ExcelSheetUpdater";
 import { Box } from "@mui/material";
 import { options } from "../api/auth/[...nextauth]/options";
 import AuthProvider from "@/components/AuthProvider";

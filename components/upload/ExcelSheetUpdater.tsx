@@ -4,12 +4,12 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
-import ReroutToAUth from "./ReroutToAUth";
+import ReroutToAUth from "../general/ReroutToAUth";
 import Announcer from "@/theme/Announcer";
 import { useState } from "react";
 import * as xlsx from "xlsx";
 import { excelWordsToBool, fillMissingIds } from "@/app/api/upload/excelUtils";
-import DataChunksTable from "../upload/DataChunksTable";
+import DataChunksTable from "./DataChunksTable";
 
 
 const ExcelSheetUpdater = () => {
