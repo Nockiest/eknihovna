@@ -37,7 +37,7 @@ export const insertExcelDataToPostgres = async (
           // Perform type checks and handle malformed values
           switch (header) {
             case 'id':
-              value = value? value: uuidv4(); // Generate a new unique ID if the value is malformed
+              value =  uuidv4(); // Generate a new unique ID if the value is malformed
               break;
             case 'book_code':
               value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
