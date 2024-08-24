@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
       distinct: [columnName as keyof UniqueBookValue],
     });
 
-    console.log(columnName, uniqueValues);
+    // console.log(columnName, uniqueValues);
 
     // Safely access the columnName property and filter for truthy values
     const values = uniqueValues
