@@ -2,32 +2,25 @@ import { prisma } from '@/lib/prisma';
 import * as xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 import { truthyValues } from "@/data/values";
-export const insertExcelDataToPostgres = async (
-  worksheet: xlsx.WorkSheet,
+export const insertJsonDataToPostgres = async (
+  jsonData: { headers: string[], chunk: any[] },
   tableName: string
 ): Promise<void> => {
   try {
-    // Convert worksheet to JSON
-    const jsonData: any[][] = xlsx.utils.sheet_to_json(worksheet, {
-      header: 1,  // Use the first row as headers
-      defval: null, // Default value for empty cells
-    });
-
-    // Extract headers and rows
-    const [headers, ...rows] = jsonData;
+    const { headers, chunk: rows } = jsonData;
 
     if (!headers || headers.length === 0) {
-      throw new Error("The Excel file does not contain headers");
+      throw new Error("The JSON data does not contain headers");
     }
 
-    await prisma.knihy.deleteMany();
+    console.log('Processing rows...');
 
     // Validate and insert data into the database
     for (const row of rows) {
       try {
         // Check if the row is well-formed
         if (row.length !== headers.length) {
-          console.error(`Badly formatted row: ${JSON.stringify(row)}`);
+          throw new Error(`Badly formatted row: ${JSON.stringify(row)}`);
         }
 
         // Map the row data to the Prisma model
@@ -37,7 +30,7 @@ export const insertExcelDataToPostgres = async (
           // Perform type checks and handle malformed values
           switch (header) {
             case 'id':
-              value =  uuidv4(); // Generate a new unique ID if the value is malformed
+              value = uuidv4(); // Generate a new unique ID if the value is malformed
               break;
             case 'book_code':
               value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
@@ -64,7 +57,7 @@ export const insertExcelDataToPostgres = async (
         }, {});
 
         // Select the Prisma model based on the table name
-        let model: any;
+        let model;
         switch (tableName) {
           case 'knihy':
             model = prisma.knihy;
@@ -75,15 +68,15 @@ export const insertExcelDataToPostgres = async (
         }
 
         // Perform the upsert operation
-        // await model.upsert({
-        //   where: { id: data.id }, // Adjust the identifier field if necessary
-        //   update: data,
-        //   create: data,
-        // });
-        await model.create({
-          data: data,
+        await model.upsert({
+          where: { id: data.id }, // Adjust the identifier field if necessary
+          update: data,
+          create: data,
         });
 
+        // Log the number of books after each insertion for debugging
+        const bookNum = await model.count(); // Use count() to get the number of records
+        console.log(`Number of books after insertion: ${bookNum}`);
 
       } catch (rowError: any) {
         console.error("Error processing row:", rowError.message);
