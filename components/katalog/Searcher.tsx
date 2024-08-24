@@ -25,7 +25,6 @@ export const Searcher: React.FC<SearcherProps> = () => {
   const pathname = usePathname();
   const { isOpenSearcher, setOpenSearcher, filters, setFilters, filterValues } =
     useSearchContext();
-    console.log(filterValues)
 
   const changePage = (newPage: number) => {
     const currentQuery = new URLSearchParams(searchParams.toString());
