@@ -15,9 +15,12 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   handleChange,
 }) => {
   // Sort options alphabetically
-
+console.log(options);
   const sortedOptions = options
-  .filter((option): option is string => option !== null) // Type guard to remove nulls
+  .filter((item): item is string => {
+    // Ensure item is a string and not null or undefined
+    return typeof item === 'string' && item !== null && item !== undefined;
+  })
   .sort((a, b) => a.localeCompare(b));
   const [currentValue, setCurrentValue] = useState<string | null>(null);
 

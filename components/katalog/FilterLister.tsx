@@ -22,7 +22,7 @@ const FilterLister: React.FC<FilterListerProps> =   ({
   ) {
 
     const res = await fetchUniqueValues(colName);
-
+    console.log('fetch unique vals:',colName, res)
     setFiltersValues((prevFilters: FiltringValues) => ({
       ...prevFilters,
       [colName]: res,
