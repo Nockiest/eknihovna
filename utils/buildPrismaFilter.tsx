@@ -25,7 +25,7 @@ export function buildPrismaFilter(filters: Filters) {
   }
 
   // Handle the 'category' filter
-  if (filters?.category && filters?.category.length > 0) {
+  if (filters.category && filters.category.length > 0) {
     if (Array.isArray(filters.category)) {
       // If 'category' is an array, create an OR condition
       where.OR = [
@@ -64,4 +64,3 @@ export function buildPrismaFilter(filters: Filters) {
   // Return the constructed 'where' clause
   return where;
 }
- 
