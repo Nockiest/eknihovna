@@ -85,7 +85,6 @@ const ExcelSheetUpdater = () => {
 
   const handleUploadChunk = async (chunkIndex: number) => {
     const chunk = chunks[chunkIndex];
-    console.log(JSON.stringify(chunk));
 
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
@@ -98,7 +97,7 @@ const ExcelSheetUpdater = () => {
 
         if (!res.ok) {
             const errorData = await res.json();
-            setResponseMessage(`Error uploading chunk ${chunkIndex + 1}: ${e.message}`);
+            setResponseMessage(`Error uploading chunk ${chunkIndex + 1}: ${errorData.message}`);
             throw new Error(errorData.message || "Upload failed");
         }
 
