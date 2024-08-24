@@ -17,13 +17,13 @@ const ExcelSheetUpdater = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
   const [uploadProgress, setUploadProgress] = useState<{
-    total:number
-    remaining:number
+    total: number;
+    remaining: number;
   }>({
     total: 0,
-    remaining:0
+    remaining: 0
   });
-  const uploadProgressPercent =100-( uploadProgress.remaining / uploadProgress.total)*100
+  const uploadProgressPercent = 100 - (uploadProgress.remaining / uploadProgress.total) * 100;
   const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
 
   if (!session) {
@@ -44,7 +44,7 @@ const ExcelSheetUpdater = () => {
 
   const handleParseFile = async () => {
     if (!selectedFile) {
-      setResponseMessage("No file selected");
+      setResponseMessage("Nebyli vybrány žádné soubory");
       return;
     }
 
@@ -76,10 +76,10 @@ const ExcelSheetUpdater = () => {
         remaining: newChunks.length
       });
 
-      setResponseMessage("Data parsed into chunks");
+      setResponseMessage("Data byla rozdělena do částí");
     } catch (e: any) {
-      console.error("Parse error:", e);
-      setResponseMessage(`Error parsing file: ${e.message}`);
+      console.error("Chyba při analýze:", e);
+      setResponseMessage(`Chyba při analýze souboru: ${e.message}`);
     }
   };
 
@@ -87,46 +87,45 @@ const ExcelSheetUpdater = () => {
     const chunk = chunks[chunkIndex];
 
     try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(chunk),
-        });
+      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(chunk),
+      });
 
-        if (!res.ok) {
-            const errorData = await res.json();
-            setResponseMessage(`Error uploading chunk ${chunkIndex + 1}: ${errorData.message}`);
-            throw new Error(errorData.message || "Upload failed");
-        }
+      if (!res.ok) {
+        const errorData = await res.json();
+        setResponseMessage(`Chyba při nahrávání části ${chunkIndex + 1}: ${errorData.message}`);
+        throw new Error(errorData.message || "Nahrávání selhalo");
+      }
 
-        // If the upload was successful, remove the successfully uploaded chunk from the state
-        const updatedChunks = chunks.filter((_, index) => index !== chunkIndex);
-        setChunks(updatedChunks);
+      // If the upload was successful, remove the successfully uploaded chunk from the state
+      const updatedChunks = chunks.filter((_, index) => index !== chunkIndex);
+      setChunks(updatedChunks);
 
-        // Update progress
-        setUploadProgress(prev => ({
-            total: prev.total,
-            remaining: prev.remaining - 1
-        }));
+      // Update progress
+      setUploadProgress(prev => ({
+        total: prev.total,
+        remaining: prev.remaining - 1
+      }));
 
-        // Set success message only after successfully uploading
-        setResponseMessage(`Chunk ${chunkIndex + 1} uploaded successfully`);
+      // Set success message only after successfully uploading
+      setResponseMessage(`Část ${chunkIndex + 1} byla úspěšně nahrána`);
     } catch (e: any) {
-        console.error("Upload error:", e);
-        setResponseMessage(`Error uploading chunk ${chunkIndex + 1}: ${e.message}`);
+      console.error("Chyba při nahrávání:", e);
+      setResponseMessage(`Chyba při nahrávání části ${chunkIndex + 1}: ${e.message}`);
     }
-};
-
+  };
 
   const checkData = async () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/logDb`);
-      setResponseMessage(`Current book count: ${response.data.count || 0}`);
+      setResponseMessage(`Aktuální počet knih: ${response.data.count || 0}`);
     } catch (error: any) {
-      console.error("Error fetching data from Server:", error.message);
-      setResponseMessage("Error fetching data: " + error.message);
+      console.error("Chyba při získávání dat ze serveru:", error.message);
+      setResponseMessage("Chyba při získávání dat: " + error.message);
     }
   };
 
@@ -135,24 +134,24 @@ const ExcelSheetUpdater = () => {
       const response = await axios.delete(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
       setResponseMessage(response.data.message);
     } catch (error: any) {
-      console.error("Error deleting data from Server:", error.message);
-      setResponseMessage("Error deleting data: " + error.message);
+      console.error("Chyba při mazání dat ze serveru:", error.message);
+      setResponseMessage("Chyba při mazání dat: " + error.message);
     }
   };
 
   const fetchDataFromServer = async () => {
     try {
-      setResponseMessage("Downloading data from server...");
+      setResponseMessage("Stahování dat ze serveru...");
       const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/downloadExcel`, {
         responseType: "arraybuffer",
       });
       const data = new Uint8Array(response.data);
       const workbook = xlsx.read(data, { type: "array" });
       xlsx.writeFile(workbook, "data_from_server.xlsx");
-      setResponseMessage("Data successfully downloaded");
+      setResponseMessage("Data byla úspěšně stažena");
     } catch (error: any) {
-      console.error("Error fetching data from Server:", error.message);
-      setResponseMessage("Error fetching data: " + error.message);
+      console.error("Chyba při získávání dat ze serveru:", error.message);
+      setResponseMessage("Chyba při získávání dat: " + error.message);
     }
   };
 
@@ -160,33 +159,33 @@ const ExcelSheetUpdater = () => {
     return (
       <>
         <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Invalid admin account
+          Neplatný administrátorský účet
         </Typography>
         <PrimaryButton onClick={() => signOut()}>
-          <Typography>Sign Out</Typography>
+          <Typography>Odhlásit se</Typography>
         </PrimaryButton>
       </>
     );
   }
 
   return (
-    <Box className="flex flex-col z-0 select-none items-center justify-center">
+    <Box className="flex flex-col gap-4 z-0 select-none items-center justify-center">
       <PrimaryButton onClick={() => signOut()} sx={{ margin: "2em" }}>
-        <Typography>Sign Out</Typography>
+        <Typography>Odhlásit se</Typography>
       </PrimaryButton>
 
       <Box className="flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
           <Typography variant="h2" className="text-xl font-semibold mb-4">
-            Download Data from Server
+            Stáhnout data ze serveru
           </Typography>
           <PrimaryButton onClick={fetchDataFromServer}>
-            <Image src="icon/download.svg" alt="download" width={32} height={32} />
+            <Image src="icon/download.svg" alt="stáhnout" width={32} height={32} />
           </PrimaryButton>
         </Box>
         <Box className="w-full md:w-1/2 p-6 flex flex-col items-center border-t md:border-t-0 md:border-l border-gray-200">
           <Typography variant="h2" className="text-xl font-semibold mb-4">
-            Upload Data to Server
+            Nahrát data na server
           </Typography>
 
           <form
@@ -203,31 +202,33 @@ const ExcelSheetUpdater = () => {
               onChange={handleFileChange}
             />
             <PrimaryButton type="button" onClick={handleParseFile} disabled={!selectedFile}>
-              Parse File
-              <Image className="m-1" src="icon/upload.svg" alt="upload" width={32} height={32} />
+              Analyzovat soubor
+              <Image className="m-1" src="icon/upload.svg" alt="nahrát" width={32} height={32} />
             </PrimaryButton>
           </form>
         </Box>
       </Box>
 
-      <PrimaryButton onClick={checkData}>Get Current Book Count</PrimaryButton>
-      <DangerButton onClick={deleteData}>Delete Books</DangerButton>
+      <PrimaryButton onClick={checkData}>Získat aktuální počet knih</PrimaryButton>
       <DataChunksTable
         chunks={chunks}
         uploadProgress={uploadProgressPercent}
         handleUploadChunk={handleUploadChunk}
       />
-     {chunks.length>0 && <Box className="mt-4">
-        <Typography>Upload Progress: {Math.round(uploadProgressPercent)}%</Typography>
+      {chunks.length > 0 && <Box className="mt-4">
+        <Typography>Pokrok nahrávání: {Math.round(uploadProgressPercent)}%</Typography>
         <progress value={uploadProgressPercent} max={100}></progress>
       </Box>}
 
       <Announcer message={responseMessage} type="normal" />
+      <DangerButton onClick={deleteData}>Smazat knihy</DangerButton>
+
     </Box>
   );
 };
 
 export default ExcelSheetUpdater;
+
 
   // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   //   e.preventDefault();
