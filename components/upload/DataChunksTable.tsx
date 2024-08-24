@@ -30,8 +30,8 @@ const DataChunksTable: React.FC<DataChunksTableProps> = ({
       </Typography>
       <Box
         sx={{
-          maxHeight: "400px", // Adjust height as needed
-          overflowY: "auto", // Enable vertical scrollbarx
+          maxHeight: "400px",  
+          overflowY: "auto",
         }}
       >
         <table className="min-w-full divide-y divide-gray-200">

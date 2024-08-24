@@ -16,7 +16,14 @@ const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
-  const [uploadProgress, setUploadProgress] = useState<number>(0);
+  const [uploadProgress, setUploadProgress] = useState<{
+    total:number
+    remaining:number
+  }>({
+    total: 0,
+    remaining:0
+  });
+  const uploadProgressPercent =100-( uploadProgress.remaining / uploadProgress.total)*100
   const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
 
   if (!session) {
@@ -64,6 +71,10 @@ const ExcelSheetUpdater = () => {
         newChunks.push({ headers, chunk: rows.slice(i, i + chunkSize) });
       }
       setChunks(newChunks);
+      setUploadProgress({
+        total: newChunks.length,
+        remaining: newChunks.length
+      });
 
       setResponseMessage("Data parsed into chunks");
     } catch (e: any) {
@@ -74,34 +85,41 @@ const ExcelSheetUpdater = () => {
 
   const handleUploadChunk = async (chunkIndex: number) => {
     const chunk = chunks[chunkIndex];
+    console.log(JSON.stringify(chunk));
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
-        method: "POST",
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(chunk),
-      });
+        const res = await fetch(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`, {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(chunk),
+        });
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.message || "Upload failed");
-      }
+        if (!res.ok) {
+            const errorData = await res.json();
+            setResponseMessage(`Error uploading chunk ${chunkIndex + 1}: ${e.message}`);
+            throw new Error(errorData.message || "Upload failed");
+        }
 
-      // Remove the successfully uploaded chunk from the state
-      const updatedChunks = chunks.filter((_, index) => index !== chunkIndex);
-      setChunks(updatedChunks);
+        // If the upload was successful, remove the successfully uploaded chunk from the state
+        const updatedChunks = chunks.filter((_, index) => index !== chunkIndex);
+        setChunks(updatedChunks);
 
-      // Update progress
-      setUploadProgress(prev => prev+((chunks.length - updatedChunks.length) / chunks.length) * 100);
+        // Update progress
+        setUploadProgress(prev => ({
+            total: prev.total,
+            remaining: prev.remaining - 1
+        }));
 
-      setResponseMessage(`Chunk ${chunkIndex + 1} uploaded successfully`);
+        // Set success message only after successfully uploading
+        setResponseMessage(`Chunk ${chunkIndex + 1} uploaded successfully`);
     } catch (e: any) {
-      console.error("Upload error:", e);
-      setResponseMessage(`Error uploading chunk ${chunkIndex + 1}: ${e.message}`);
+        console.error("Upload error:", e);
+        setResponseMessage(`Error uploading chunk ${chunkIndex + 1}: ${e.message}`);
     }
-  };
+};
+
 
   const checkData = async () => {
     try {
@@ -197,12 +215,12 @@ const ExcelSheetUpdater = () => {
       <DangerButton onClick={deleteData}>Delete Books</DangerButton>
       <DataChunksTable
         chunks={chunks}
-        uploadProgress={uploadProgress}
+        uploadProgress={uploadProgressPercent}
         handleUploadChunk={handleUploadChunk}
       />
      {chunks.length>0 && <Box className="mt-4">
-        <Typography>Upload Progress: {Math.round(uploadProgress)}%</Typography>
-        <progress value={uploadProgress} max={100}></progress>
+        <Typography>Upload Progress: {Math.round(uploadProgressPercent)}%</Typography>
+        <progress value={uploadProgressPercent} max={100}></progress>
       </Box>}
 
       <Announcer message={responseMessage} type="normal" />

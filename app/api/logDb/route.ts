@@ -13,7 +13,7 @@ export async function GET() {
 
     // Count the number of books
     const bookCount = data.length;
-
+    console.log(bookCount);
     // Convert Prisma query result to JSON and include the book count in the response
     const jsonData = {
       count: bookCount,

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import * as XLSX from "xlsx";
-import { insertExcelDataToPostgres } from "./insertExcelDataIntoPostgres"; // Assuming this function exists
+import { insertJsonDataToPostgres } from "./insertJsonlDataIntoPostgres"; // Assuming this function exists
 import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 import { prisma } from "@/lib/prisma";
 
@@ -21,59 +21,39 @@ export async function POST(req: NextRequest) {
     });
   }
 
-  console.log("POST request received");
+  console.log("POST request received",req.headers.get('Content-Type'));
 
   try {
-    // Ensure the request is a FormData request
-    const formData = await req.formData();
-    const dataString = formData.get("data") as string | null;
-    console.log(1,dataString);
-    if (!dataString) {
-      return NextResponse.json({ success: false, message: "No data provided" }, { headers: corsHeaders });
-    }
-    console.log(2);
-    const { headers, chunk } = JSON.parse(dataString);
+    const contentType = req.headers.get('Content-Type');
 
-    // Convert chunk to worksheet (or process it directly if you prefer)
-    let worksheet = XLSX.utils.json_to_sheet(chunk, { header: headers });
+    // Check if the request is JSON
+    if ((contentType && contentType.includes('application/json')) ) {
+      const jsonData = await req.json();
 
-    // Apply transformations safely
-    try {
-      worksheet = excelWordsToBool(worksheet, "available");
-      worksheet = excelWordsToBool(worksheet, "formaturita");
-      worksheet = fillMissingIds(worksheet);
-    } catch (transformError: any) {
-      console.error("Error transforming data:", transformError);
-      return NextResponse.json({
-        success: false,
-        error: "Data transformation error",
-        details: transformError.message,
-      }, { headers: corsHeaders });
-    }
-    console.log(3);
-    // Insert the transformed data into PostgreSQL
-    try {
-      await insertExcelDataToPostgres(worksheet, "knihy");
-    } catch (dbError: any) {
-      console.error("Database insertion error:", dbError);
-      return NextResponse.json({
-        success: false,
-        error: "Database insertion error",
-        details: dbError.message,
-      }, { headers: corsHeaders });
-    }
+      if (!jsonData.headers || !jsonData.chunk) {
+        throw new Error('Invalid JSON data');
+      }
+      try {
+        await insertJsonDataToPostgres(jsonData, "knihy");
+      } catch (dbError: any) {
+        console.error("Database insertion error:", dbError);
+        return NextResponse.json({
+          success: false,
+          error: "Database insertion error",
+          details: dbError.message,
+        }, { headers:corsHeaders });
+      }
 
-    return NextResponse.json({ success: true, message: "File processed and uploaded successfully" }, { headers: corsHeaders });
+      return NextResponse.json({ success: true, message: "Data processed and uploaded successfully" }, { headers: corsHeaders});
+
+    }
 
   } catch (error: any) {
     console.error("Error processing data:", error);
-    return NextResponse.json({
-      success: false,
-      error: "Server error",
-      details: error.message,
-    }, { headers: corsHeaders });
+    return NextResponse.json({ success: false, error: "Server error", details: error.message }, { headers: corsHeaders });
   }
 }
+
 export async function DELETE(req: NextRequest) {
   try {
     // Delete the books with the provided IDs
