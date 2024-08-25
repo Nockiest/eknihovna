@@ -1,4 +1,4 @@
-import React, { useCallback,  } from "react";
+import React, { useCallback, useMemo,  } from "react";
 import { Autocomplete, TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { FixedSizeList } from "react-window";
@@ -10,6 +10,14 @@ const SearchAutocomplete: React.FC = () => {
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
+  const filteredOptions = useMemo(() => {
+    const searchTerm = filters.name?.toLowerCase() || '';
+    const results = filterValues.name.filter((option) => {
+      return option.toLowerCase().includes(searchTerm);
+    });
+    console.log('Filtered options:', results); // Debugging: Check filtered options
+    return results;
+  }, [filterValues.name, filters.name]);
 
   const changeParams= (newname: string) => {
       console.log("Query changed:", newname); // Debugging: Check the new query value
@@ -29,25 +37,26 @@ const SearchAutocomplete: React.FC = () => {
         key={index}
         className="cursor-pointer"
         onClick={() => {
-          const selectedValue = filterValues.name[index];
+          const selectedValue = filteredOptions[index];
           console.log("Row clicked, selected value:", selectedValue); // Debugging: Check the selected value on row click
           changeParams(selectedValue);
         }}
       >
-        {filterValues.name[index]}
+        {filteredOptions[index]}
       </li>
     ),
-    [filterValues.name]
+    [filteredOptions]
   );
+
 
   return (
     <Autocomplete
       disablePortal
       id="combo-box-demo"
       className="w-full"
-      options={filterValues.name}
+      options={filteredOptions}
       groupBy={(option) => option[0]}
-      value={filters.name }
+      value={filters.name}
       onInputChange={(e, newInputValue) => {
         console.log("Input changed:", newInputValue);
         changeParams(newInputValue);
@@ -65,7 +74,7 @@ const SearchAutocomplete: React.FC = () => {
           width="100%"
           className="cursor-pointer"
           itemSize={46}
-          itemCount={filterValues.name.length}
+          itemCount={filteredOptions.length}
           {...props}
         >
           {renderRow}
