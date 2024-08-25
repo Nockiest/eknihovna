@@ -3,8 +3,12 @@ import ExcelSheetUpdater from "@/components/upload/ExcelSheetUpdater";
 import { Box } from "@mui/material";
 import { options } from "../api/auth/[...nextauth]/options";
 import AuthProvider from "@/components/AuthProvider";
+import type {  Metadata } from "next";
 
-
+export const metadata: Metadata = {
+  title: "G.O. eknihovna",
+  description: "Nahrání dat",
+};
 export default async function Page() {
 
   return (

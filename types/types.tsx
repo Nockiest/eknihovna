@@ -21,7 +21,7 @@ export type StringedBool = "true" | "false";
 
 export  type Filters= {
   // [key: string]: string[]| Omit<string | 'false' | 'true', 'false' | 'true'>| StringedBool|null ;
-  // name: string|null ;
+  name: string|null ;
   author?: string[];
   category?: string[];
   genres?: string[];
@@ -34,5 +34,5 @@ export  type Filters= {
     category: string[];
     genres: string[];
     author: string[];
-    // name: string[];
+    name: string[] ;
   };
