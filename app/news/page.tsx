@@ -3,7 +3,11 @@ import React, { useEffect, useState } from 'react';
 import { Container } from '@mui/material';
 import Message from '@/components/general/Message';
 import axios from 'axios';
-
+import { Metadata } from 'next';
+export const metadata: Metadata = {
+  title: "Novinky v G.O. knihovně",
+  description: "Seznam novinek",
+};
 const NewsPage: React.FC = () => {
   const [messages, setMessages] = useState([
     { message: "Vítáme vás v první verzi stránky. Můžete si prohlédnout aktuální stav knihovního katalogu, nebo zjistit užitečné informace o naší knihovně.", date: "2023-06-24" }

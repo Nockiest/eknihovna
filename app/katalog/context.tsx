@@ -8,12 +8,10 @@ type QueryContextType = {
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   errorMessage: string | null;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
-  setBookNames: React.Dispatch<React.SetStateAction<string[]>>;
+  // setBookNames: React.Dispatch<React.SetStateAction<string[]>>;
   filterValues: FiltringValues;
   setFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
-  query:string;
-  setQuery:React.Dispatch<React.SetStateAction<string >>;
-  bookNames: string[];
+  // bookNames: string[];
 };
 
 // Create the context

@@ -15,8 +15,8 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   handleChange,
 }) => {
   // Sort options alphabetically
-  const sortedOptions = options
-  .filter((item): item is string => {
+  console.log('opt',options)
+  const sortedOptions = options?.filter((item): item is string => {
     // Ensure item is a string and not null or undefined
     return typeof item === 'string' && item !== null && item !== undefined;
   })

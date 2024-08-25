@@ -18,7 +18,7 @@ const FilterLister: React.FC<FilterListerProps> =   ({
 
   const filterKeys = Object.keys(filters) as (keyof Filters)[];
   async function fetchUniqueFilterCol(
-    colName: "genres" | "category" | "author"
+    colName: "genres" | "category" | "author"|'name'
   ) {
 
     const res = await fetchUniqueValues(colName);
@@ -38,6 +38,7 @@ const FilterLister: React.FC<FilterListerProps> =   ({
           fetchUniqueFilterCol("genres"),
           fetchUniqueFilterCol("category"),
           fetchUniqueFilterCol("author"),
+          fetchUniqueFilterCol("name"),
         ]);
       } catch (error) {
         setErrorMessage("Failed to load books.");
