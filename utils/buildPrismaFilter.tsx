@@ -23,6 +23,23 @@ export function buildPrismaFilter(filters: Filters) {
       };
     }
   }
+  // Handle the 'name' filter
+  if (filters.name) {
+    where.OR = [
+      {
+        name: {
+          startsWith: filters.name,
+          mode: 'insensitive', // Case-insensitive search
+        },
+      },
+      {
+        name: {
+          contains: filters.name,
+          mode: 'insensitive', // Case-insensitive search
+        },
+      },
+    ];
+  }
 
   // Handle the 'category' filter
   if (filters.category && filters.category.length > 0) {

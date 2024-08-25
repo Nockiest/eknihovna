@@ -65,22 +65,25 @@ const BookCatalog: React.FC = () => {
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   useEffect(() => {
+    console.log('FETCHING NEW BOOKS WITH FILTERS', filters)
     const fetchBooks = async () => {
       dispatch({ type: "FETCH_INIT" });
 
       try {
-        const newBooks = await fetchFilteredBooks(filters, page, 24);
+        // Fetch all filtered books only once
         const allPossibleBooks = await fetchFilteredBooks(filters);
-        console.log(
-          "all books and shown books",
-          allPossibleBooks.length,
-          newBooks.length
-        );
+        console.log("All filtered books:", allPossibleBooks.length);
 
+        // Calculate the current page's books using the offset
+        const startIndex = (page-1)  * 24;
+        const endIndex = startIndex + 24;
+        const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
+        console.log(allPossibleBooks.length, currentBooks.length,startIndex,endIndex);
+        // Dispatch the result to the state
         dispatch({
           type: "FETCH_SUCCESS",
           payload: {
-            books: newBooks,
+            books: currentBooks,
             totalBooks: allPossibleBooks.length,
           },
         });

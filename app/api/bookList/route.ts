@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
 
 //     // Build the Prisma filter query
     const where = buildPrismaFilter(filters);
-    console.log(filters,where)
 
 //     // Fetch data using Prisma
     const books = await prisma.knihy.findMany({
@@ -26,6 +25,7 @@ export async function POST(req: NextRequest) {
       take: limit,
       distinct: ['name'], // Select distinct on the 'name' field
     });
+    console.log(books.length)
     // const books:Book[] = []
     return NextResponse.json(books);
   } catch (error) {
