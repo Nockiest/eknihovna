@@ -1,6 +1,5 @@
 import { falsyValues } from "@/data/values";
 import { prisma } from "@/lib/prisma";
-import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 
 type UniqueBookValue = {
@@ -12,9 +11,7 @@ type UniqueBookValue = {
 
 export async function POST(req: NextRequest) {
   const { columnName } = await req.json();
-  console.log(columnName, !columnName ,
-    typeof columnName !== "string",
-    [ "name"  , "author", "category" ,"genres"].indexOf(columnName) === -1, [ "name"  , "author", "category" , "genres"].indexOf(columnName))
+ 
   // Validate that columnName is a valid string and a key of the Book type
   if (
     !columnName ||

@@ -1,12 +1,10 @@
 "use client";
 import BookCatalog from "@/components/katalog/BookCatalog";
-import { Box, Typography, CircularProgress, Checkbox } from "@mui/material";
-import {   useMemo, useState } from "react";
-import { Book, Filters, FiltringValues } from "@/types/types";
+import { Box, Typography   } from "@mui/material";
+import {    useState } from "react";
+import {   Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
-import { Searcher } from "@/components/katalog/Searcher";
-import axios from "axios";
-// import { genUniqueBookCount } from "@/utils/apiConections/getBookCount";
+import { FiltringWindow } from "@/components/katalog/FiltringWindow";
 import ErrorReporter from "@/theme/Announcer";
 
 const KatalogPage = () => {
@@ -26,7 +24,6 @@ const KatalogPage = () => {
     author: [],
     name: []
   });
-  const [query, setQuery] = useState<string  >('');
 
   if (errorMessage) {
     return <ErrorReporter message={errorMessage}  type='error'/>;
@@ -56,7 +53,7 @@ const KatalogPage = () => {
           </Typography>
         </Box>
         <BookCatalog />
-        <Searcher />
+        <FiltringWindow />
       </Box>
     </SearchContext.Provider>
   );
