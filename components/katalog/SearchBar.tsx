@@ -11,37 +11,21 @@ const SearchAutocomplete: React.FC = () => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
-  // Flag to prevent triggering `onInputChange` when an option is selected
-  let inputChangedByUser = true;
+  // // Flag to prevent triggering `onInputChange` when an option is selected
+  // let inputChangedByUser = true;
 
-  const handleSelect = (selectedValue: string) => {
-    console.log("Selected value:", selectedValue); // Debugging: Check the selected value
-
-    // Update the 'name' key in the filters object
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      name: selectedValue,
-    }));
-
-    // Update the query parameter in the URL
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("query", selectedValue);
-    console.log("Updated query params:", currentQuery.toString()); // Debugging: Check the updated query params
-    router.push(`${pathName}?${currentQuery.toString()}`);
-  };
-
-  const changeQuery = (newname: string) => {
-    if (inputChangedByUser) {
+  const changeParams= (newname: string) => {
+    // if (inputChangedByUser) {
       console.log("Query changed:", newname); // Debugging: Check the new query value
       setFilters((prevFilters) => ({
         ...prevFilters,
-        name: newname,
+        name: newname.trim(),
       }));
       const currentQuery = new URLSearchParams(searchParams.toString());
-      currentQuery.set("query", newname);
+      // currentQuery.set("query", newname);
       currentQuery.set("page", '1' )
       router.push(`${pathName}?${currentQuery.toString()}`);
-    }
+    // }
   };
 
   const renderRow = useCallback(
@@ -49,10 +33,11 @@ const SearchAutocomplete: React.FC = () => {
       <li
         style={style}
         key={index}
+        className="cursor-pointer"
         onClick={() => {
           const selectedValue = filterValues.name[index];
           console.log("Row clicked, selected value:", selectedValue); // Debugging: Check the selected value on row click
-          handleSelect(selectedValue);
+          changeParams(selectedValue);
         }}
       >
         {filterValues.name[index]}
@@ -70,15 +55,15 @@ const SearchAutocomplete: React.FC = () => {
       groupBy={(option) => option[0]}
       value={filters.name}
       onInputChange={(e, newInputValue) => {
-        inputChangedByUser = true;
+        // inputChangedByUser = true;
         console.log("Input changed:", newInputValue); // Debugging: Check the input change value
-        changeQuery(newInputValue);
+        changeParams(newInputValue);
       }}
       onChange={(event, newValue) => {
-        inputChangedByUser = false;
+        // inputChangedByUser = false;
         console.log("Autocomplete value changed:", newValue); // Debugging: Check the new value selected
         if (newValue) {
-          handleSelect(newValue);
+          changeParams(newValue);
         }
       }}
       ListboxComponent={(props) => (
@@ -98,6 +83,7 @@ const SearchAutocomplete: React.FC = () => {
         <TextField
           {...params}
           variant="outlined"
+
           placeholder="Vyhledat knihu..."
           InputProps={{
             ...params.InputProps,
@@ -115,7 +101,21 @@ const SearchAutocomplete: React.FC = () => {
 
 export default SearchAutocomplete;
 
+// const handleSelect = (selectedValue: string) => {
+//   console.log("Selected value:", selectedValue); // Debugging: Check the selected value
 
+//   // Update the 'name' key in the filters object
+//   setFilters((prevFilters) => ({
+//     ...prevFilters,
+//     name: selectedValue,
+//   }));
+
+//   // Update the query parameter in the URL
+//   const currentQuery = new URLSearchParams(searchParams.toString());
+//   currentQuery.set("query", selectedValue);
+//   console.log("Updated query params:", currentQuery.toString()); // Debugging: Check the updated query params
+//   router.push(`${pathName}?${currentQuery.toString()}`);
+// };
 // const debouncedOnInputChange = useMemo(
 //   () =>
 //     debounce((value: string) => {

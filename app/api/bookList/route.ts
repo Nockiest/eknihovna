@@ -25,7 +25,6 @@ export async function POST(req: NextRequest) {
       take: limit,
       distinct: ['name'], // Select distinct on the 'name' field
     });
-    console.log(books.length)
     // const books:Book[] = []
     return NextResponse.json(books);
   } catch (error) {
