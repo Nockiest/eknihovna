@@ -11,21 +11,15 @@ const SearchAutocomplete: React.FC = () => {
   const pathName = usePathname();
   const searchParams = useSearchParams();
 
-  // // Flag to prevent triggering `onInputChange` when an option is selected
-  // let inputChangedByUser = true;
-
   const changeParams= (newname: string) => {
-    // if (inputChangedByUser) {
       console.log("Query changed:", newname); // Debugging: Check the new query value
       setFilters((prevFilters) => ({
         ...prevFilters,
         name: newname.trim(),
       }));
       const currentQuery = new URLSearchParams(searchParams.toString());
-      // currentQuery.set("query", newname);
       currentQuery.set("page", '1' )
       router.push(`${pathName}?${currentQuery.toString()}`);
-    // }
   };
 
   const renderRow = useCallback(
@@ -53,15 +47,13 @@ const SearchAutocomplete: React.FC = () => {
       className="w-full"
       options={filterValues.name}
       groupBy={(option) => option[0]}
-      value={filters.name}
+      value={filters.name }
       onInputChange={(e, newInputValue) => {
-        // inputChangedByUser = true;
-        console.log("Input changed:", newInputValue); // Debugging: Check the input change value
+        console.log("Input changed:", newInputValue);
         changeParams(newInputValue);
       }}
-      onChange={(event, newValue) => {
-        // inputChangedByUser = false;
-        console.log("Autocomplete value changed:", newValue); // Debugging: Check the new value selected
+      onChange={(e, newValue) => {
+        console.log("Autocomplete value changed:", newValue)
         if (newValue) {
           changeParams(newValue);
         }
