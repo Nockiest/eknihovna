@@ -30,11 +30,16 @@ const SearchAutocomplete: React.FC = () => {
     router.push(`${pathName}?${currentQuery.toString()}`);
   };
 
-  const changeQuery = (newPage: string) => {
+  const changeQuery = (newname: string) => {
     if (inputChangedByUser) {
-      console.log("Query changed:", newPage); // Debugging: Check the new query value
+      console.log("Query changed:", newname); // Debugging: Check the new query value
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        name: newname,
+      }));
       const currentQuery = new URLSearchParams(searchParams.toString());
-      currentQuery.set("query", newPage);
+      currentQuery.set("query", newname);
+      currentQuery.set("page", '1' )
       router.push(`${pathName}?${currentQuery.toString()}`);
     }
   };
