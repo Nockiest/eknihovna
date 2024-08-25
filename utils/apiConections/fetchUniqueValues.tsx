@@ -7,8 +7,9 @@ const fetchUniqueValues = async (columnName: string): Promise<string[]> => {
     const response = await axios.post(`${apiUrl}/getUniqueValues`, {
       columnName
     });
-    
-    return response.data; // Adjust this line if the structure of the response changes
+    const data = response.data
+
+    return data.flat(Infinity); // Adjust this line if the structure of the response changes
   } catch (error: any) {
     console.error("Error fetching unique values:", error.message);
     throw error; // Rethrow the error if necessary
