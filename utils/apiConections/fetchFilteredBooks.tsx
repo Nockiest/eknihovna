@@ -3,7 +3,7 @@ import { Book, Filters } from '@/types/types';
 import { defaultFilters  } from '@/data/values';
 
 
-export const getBooksByQuery = async (
+export const fetchFilteredBooks = async (
   filters: Filters = defaultFilters,
   page: number = 1,
   limit: number = 10000000
@@ -19,7 +19,7 @@ export const getBooksByQuery = async (
 };
 
 
-// export const getBooksByQuery = async (
+// export const fetchFilteredBooks = async (
 //   filters: Filters = defaultFilters,
 //   page: number = 1,
 //   limit: number = 10000000

@@ -1,33 +1,43 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback,  } from "react";
 import { Autocomplete, TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { FixedSizeList } from "react-window";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
-import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 
 const SearchAutocomplete: React.FC = () => {
-  const {   setErrorMessage, filterValues,  filters, setFilters } =
-    useSearchContext();
+  const { filterValues, filters, setFilters } = useSearchContext();
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
-  // const query = searchParams.get("query") || "";
 
-  useEffect(() => {
-    async function update() {
-      try {
-        // const bookNames = await fetchUniqueValues("name");
-        // console.log('names', bookNames)
-        // setFiltersValues(prev => ( {
-        //   ...prev,
-        //   name: bookNames}) );
-      } catch (error) {
-        setErrorMessage("Nepodařilo se načíst názvy knih.");
-      }
+  // Flag to prevent triggering `onInputChange` when an option is selected
+  let inputChangedByUser = true;
+
+  const handleSelect = (selectedValue: string) => {
+    console.log("Selected value:", selectedValue); // Debugging: Check the selected value
+
+    // Update the 'name' key in the filters object
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      name: selectedValue,
+    }));
+
+    // Update the query parameter in the URL
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("query", selectedValue);
+    console.log("Updated query params:", currentQuery.toString()); // Debugging: Check the updated query params
+    router.push(`${pathName}?${currentQuery.toString()}`);
+  };
+
+  const changeQuery = (newPage: string) => {
+    if (inputChangedByUser) {
+      console.log("Query changed:", newPage); // Debugging: Check the new query value
+      const currentQuery = new URLSearchParams(searchParams.toString());
+      currentQuery.set("query", newPage);
+      router.push(`${pathName}?${currentQuery.toString()}`);
     }
-    update();
-  }, [  setErrorMessage]);
+  };
 
   const renderRow = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => (
@@ -36,6 +46,7 @@ const SearchAutocomplete: React.FC = () => {
         key={index}
         onClick={() => {
           const selectedValue = filterValues.name[index];
+          console.log("Row clicked, selected value:", selectedValue); // Debugging: Check the selected value on row click
           handleSelect(selectedValue);
         }}
       >
@@ -45,23 +56,6 @@ const SearchAutocomplete: React.FC = () => {
     [filterValues.name]
   );
 
-  const handleSelect = (selectedValue: string) => {
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      name: selectedValue, // Update the 'name' key with the selected value
-    }));
-    // Update the query parameter in the URL
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("query", selectedValue);
-    router.push(`${pathName}?${currentQuery.toString()}`);
-  };
-
-  const changeQuery = (newPage: string) => {
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("query", newPage);
-    router.push(`${pathName}?${currentQuery.toString()}`);
-  };
-  console.log(filterValues.name)
   return (
     <Autocomplete
       disablePortal
@@ -71,7 +65,16 @@ const SearchAutocomplete: React.FC = () => {
       groupBy={(option) => option[0]}
       value={filters.name}
       onInputChange={(e, newInputValue) => {
+        inputChangedByUser = true;
+        console.log("Input changed:", newInputValue); // Debugging: Check the input change value
         changeQuery(newInputValue);
+      }}
+      onChange={(event, newValue) => {
+        inputChangedByUser = false;
+        console.log("Autocomplete value changed:", newValue); // Debugging: Check the new value selected
+        if (newValue) {
+          handleSelect(newValue);
+        }
       }}
       ListboxComponent={(props) => (
         // @ts-ignore
@@ -106,6 +109,8 @@ const SearchAutocomplete: React.FC = () => {
 };
 
 export default SearchAutocomplete;
+
+
 // const debouncedOnInputChange = useMemo(
 //   () =>
 //     debounce((value: string) => {

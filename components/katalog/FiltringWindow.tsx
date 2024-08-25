@@ -19,7 +19,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 type SearcherProps = {};
-export const Searcher: React.FC<SearcherProps> = () => {
+export const FiltringWindow: React.FC<SearcherProps> = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();

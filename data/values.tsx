@@ -11,7 +11,8 @@ export const falsyValues = [false,'false', "ne", "no", 0, "nedostupný",undefine
     category: [],
     genres: [],
     formaturita : null,
-    available: null
+    available: null,
+    name: null,
   }
 
 

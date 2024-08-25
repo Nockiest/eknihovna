@@ -6,7 +6,7 @@ import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
 import { useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
-import { getBooksByQuery } from "@/utils/apiConections/fetchBooks";
+import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
@@ -69,8 +69,8 @@ const BookCatalog: React.FC = () => {
       dispatch({ type: "FETCH_INIT" });
 
       try {
-        const newBooks = await getBooksByQuery(filters, page, 24);
-        const allPossibleBooks = await getBooksByQuery(filters);
+        const newBooks = await fetchFilteredBooks(filters, page, 24);
+        const allPossibleBooks = await fetchFilteredBooks(filters);
         console.log(
           "all books and shown books",
           allPossibleBooks.length,
