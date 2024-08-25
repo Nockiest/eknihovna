@@ -11,14 +11,13 @@ type UniqueBookValue = {
 
 export async function POST(req: NextRequest) {
   const { columnName } = await req.json();
- 
+
   // Validate that columnName is a valid string and a key of the Book type
   if (
     !columnName ||
     typeof columnName !== "string" ||
     [ "name"  , "author", "category" ,"genres"].indexOf(columnName) === -1)
    {
-    console.log(columnName,[ "name"  , "author", "category" ,"genres"].indexOf(columnName) > -1)
     return NextResponse.json({
       error:
         `${columnName} Invalid or missing columnName parameter. It must be a valid property of Book.`,
@@ -41,7 +40,7 @@ export async function POST(req: NextRequest) {
     // Safely access the columnName property and filter for truthy values
     const values = uniqueValues
       .map(
-        (item) => item[columnName as "name" | "author" | "category" | "genres"]
+        (item) => item[columnName as keyof UniqueBookValue]
       )
       .filter(item => {
         // Handle cases where item is an array
@@ -54,10 +53,7 @@ export async function POST(req: NextRequest) {
         // Handle non-array cases
         return !falsyValues.includes(item);
       }); // Filters out falsy values (null, undefined, 0, false, "")
-     if(columnName  == "name"){
-      console.log("values",columnName,values.length)
-
-     }
+    
     return NextResponse.json(values);
   } catch (error) {
     console.error("Error retrieving values:", error);

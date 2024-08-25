@@ -78,7 +78,8 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     });
   };
   const getFilteredOptions = (key: keyof FiltringValues) => {
-    return filterValues[key].filter(
+    console.log(filterValues[key])
+    return filterValues[key]?.filter(
       (option) => !filters[key]?.includes(option)
     );
   };
