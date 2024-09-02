@@ -13,44 +13,44 @@ export const options: NextAuthOptions = {
     //   clientId: process.env.GITHUB_ID as string,
     //   clientSecret: process.env.GITHUB_SECRET as string,
     // }),
-    CredentialsProvider({
-      name: "Credentials",
-      credentials: {
-        email: { label: "Email", type: "email" }, // Add email field
-        Username: {
-          type: "text",
-          label: "Uživatelské jméno",
-          placeholder: "Uživatelské heslo",
-        },
-        password: {
-          label: "Password",
-          type: "password",
-          placeholder: "Password",
-        },
-      },
-      async authorize(credentials) {
-        // Example authorization logic to assign roles
-        if (!credentials || !credentials.email) {
-          return null;
-        }
+    // CredentialsProvider({
+    //   name: "Credentials",
+    //   credentials: {
+    //     email: { label: "Email", type: "email" }, // Add email field
+    //     Username: {
+    //       type: "text",
+    //       label: "Uživatelské jméno",
+    //       placeholder: "Uživatelské heslo",
+    //     },
+    //     password: {
+    //       label: "Password",
+    //       type: "password",
+    //       placeholder: "Password",
+    //     },
+    //   },
+    //   async authorize(credentials) {
+    //     // Example authorization logic to assign roles
+    //     if (!credentials || !credentials.email) {
+    //       return null;
+    //     }
 
-        if (
-          ["ondralukes06@seznam.cz", "bauerova@gopat.cz"].includes(
-            credentials.email
-          )
-        ) {
-          // Add role to user object
-          return {
-            id: "1",
-            name: "ondra",
-            email: credentials.email,
-            role: "admin",
-          };
-        } else {
-          return null; // Reject non-admin users
-        }
-      },
-    }),
+    //     if (
+    //       ["ondralukes06@seznam.cz", "bauerova@gopat.cz"].includes(
+    //         credentials.email
+    //       )
+    //     ) {
+    //       // Add role to user object
+    //       return {
+    //         id: "1",
+    //         name: "ondra",
+    //         email: credentials.email,
+    //         role: "admin",
+    //       };
+    //     } else {
+    //       return null; // Reject non-admin users
+    //     }
+    //   },
+    // }),
   ],
   callbacks: {
     async redirect({ url, baseUrl }) {

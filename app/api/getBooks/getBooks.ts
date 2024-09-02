@@ -6,10 +6,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { NextResponse } from 'next/server';
 
 export   async function POST(req: NextApiRequest, res: NextApiResponse) {
-  // if (req.method !== 'POST') {
-  //   return res.status(405).json({ error: 'Method Not Allowed' });
-  // }
-
   const { filters, page = 1, limit = 10 } = req.body;
 
   if (!filters) {
@@ -23,7 +19,6 @@ export   async function POST(req: NextApiRequest, res: NextApiResponse) {
   try {
     // Build the Prisma filter query
     const where = buildPrismaFilter(filters);
-
     // Fetch data using Prisma
     const books = await prisma.knihy.findMany({
       where,
@@ -31,7 +26,7 @@ export   async function POST(req: NextApiRequest, res: NextApiResponse) {
       take: limit,
       distinct: ['name'], // Select distinct on the 'name' field
     });
-
+    console.log(books.length)
     NextResponse.json(books);
   } catch (error) {
     console.error("Error fetching books:", error);

@@ -31,23 +31,24 @@ const SearchAutocomplete: React.FC = () => {
   };
 
   const renderRow = useCallback(
-    ({ index, style }: { index: number; style: React.CSSProperties }) => (
-      <li
-        style={style}
-        key={index}
-        className="cursor-pointer"
-        onClick={() => {
-          const selectedValue = filteredOptions[index];
-          console.log("Row clicked, selected value:", selectedValue); // Debugging: Check the selected value on row click
-          changeParams(selectedValue);
-        }}
-      >
-        {filteredOptions[index]}
-      </li>
-    ),
-    [filteredOptions]
+    ({ index, style }: { index: number; style: React.CSSProperties }) => {
+      const selectedValue = filteredOptions[index];
+      return (
+        <li
+          style={style}
+          key={index}
+          className="cursor-pointer z-1 py-auto"
+          onClick={() => {
+            console.log("Row clicked, selected value:", selectedValue); // Debugging: Check click event
+            changeParams(selectedValue);
+          }}
+        >
+          {selectedValue}
+        </li>
+      );
+    },
+    [filteredOptions, filters.name, changeParams]
   );
-
 
   return (
     <Autocomplete
@@ -55,7 +56,8 @@ const SearchAutocomplete: React.FC = () => {
       id="combo-box-demo"
       className="w-full"
       options={filteredOptions}
-      groupBy={(option) => option[0]}
+      groupBy={(filteredOptions) => filteredOptions[0]}
+      isOptionEqualToValue={(filteredOptions, value) => filteredOptions === value }
       value={filters.name}
       onInputChange={(e, newInputValue) => {
         console.log("Input changed:", newInputValue);
@@ -73,7 +75,7 @@ const SearchAutocomplete: React.FC = () => {
           height={250}
           width="100%"
           className="cursor-pointer"
-          itemSize={46}
+          itemSize={42}
           itemCount={filteredOptions.length}
           {...props}
         >
@@ -84,7 +86,6 @@ const SearchAutocomplete: React.FC = () => {
         <TextField
           {...params}
           variant="outlined"
-
           placeholder="Vyhledat knihu..."
           InputProps={{
             ...params.InputProps,
