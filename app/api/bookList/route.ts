@@ -26,7 +26,15 @@ export async function POST(req: NextRequest) {
       distinct: ['name'], // Select distinct on the 'name' field
     });
     // const books:Book[] = []
-    return NextResponse.json(books);
+    return NextResponse.json(books, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+      }
+    });
+
   } catch (error) {
     console.error("Error fetching books:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
