@@ -19,25 +19,4 @@ export default async function Page() {
     </Box>
   );
 }
-
-  // const [isAuth, setIsAuth] = useState<boolean>(false);
-  // const session = await  getServerSession(options);
-
-  // if (status === 'authenticated') {
-
-//   useEffect (() => {
-//     if (!session) {
-
-//       redirect('/api/auth/signin?callbackUrl=/upload');
-//     }
-
-//   }, [session])
-// useEffect(() => {
-//   if (status === 'unauthenticated') {
-//     redirect('/api/auth/signin?callbackUrl=/upload');
-//   }
-// }, [status  ]);
-
-// if (status === 'loading') {
-//   return <div>Loading...</div>; // You can customize this loading state as needed
-// }
+ 

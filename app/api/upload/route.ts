@@ -44,12 +44,12 @@ export async function POST(req: NextRequest) {
         }, { headers:corsHeaders });
       }
 
-      return NextResponse.json({ success: true, message: "Data processed and uploaded successfully" }, { headers: corsHeaders});
+      return NextResponse.json({ success: true, message: "Data úspěšně zpracována" }, { headers: corsHeaders});
 
     }
 
   } catch (error: any) {
-    console.error("Error processing data:", error);
+    console.error("Error při zpracováni dat:", error);
     return NextResponse.json({ success: false, error: "Server error", details: error.message }, { headers: corsHeaders });
   }
 }
@@ -62,7 +62,7 @@ export async function DELETE(req: NextRequest) {
     // Return a success response with the number of deleted books
     return NextResponse.json({
       success: true,
-      message: `${deleteResult.count} book(s) deleted successfully`,
+      message: `${deleteResult.count} knih úspěšně smazáno`,
     });
   } catch (error: any) {
     console.error('Error deleting books:', error);

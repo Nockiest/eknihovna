@@ -25,7 +25,7 @@ const ExcelSheetUpdater = () => {
   });
   const uploadProgressPercent = 100 - (uploadProgress.remaining / uploadProgress.total) * 100;
   const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
-
+  console.log("endpoint: ", process.env.NEXT_PUBLIC_APP_API_URL)
   if (!session) {
     return (
       <div className="flex flex-center">
