@@ -2,7 +2,7 @@
 import { buildPrismaFilter } from "@/utils/buildPrismaFilter";
 import { prisma } from '@/lib/prisma';
 import { NextRequest, NextResponse } from "next/server";
-
+export const revalidate = 0
 export async function POST(req: NextRequest) {
   try {
     const { filters, page = 1, limit = 10 } = await req.json();
