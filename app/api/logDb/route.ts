@@ -12,7 +12,14 @@ export async function GET() {
     };
 
     // Return the count and the data
-    return NextResponse.json(jsonData);
+    return NextResponse.json(jsonData, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+      }
+    });
 
   } catch (error) {
     console.error('Error fetching data or creating response:', error);

@@ -39,6 +39,10 @@ export  async function GET( ) {
         headers: {
           'Content-Disposition': 'attachment; filename="table_data.xlsx"',
           'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+          'Surrogate-Control': 'no-store'
         },
       });
   } catch (error) {
@@ -46,3 +50,4 @@ export  async function GET( ) {
     NextResponse.json({ error: 'Internal Server Error' });
   }
 }
+ 

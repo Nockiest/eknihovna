@@ -27,7 +27,14 @@ export   async function POST(req: NextApiRequest, res: NextApiResponse) {
       distinct: ['name'], // Select distinct on the 'name' field
     });
     console.log(books.length)
-    NextResponse.json(books);
+    return NextResponse.json(books, {
+      headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+      }
+    });
   } catch (error) {
     console.error("Error fetching books:", error);
     res.status(500).json({ error: "Internal Server Error" });
