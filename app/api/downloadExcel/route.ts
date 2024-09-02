@@ -4,6 +4,7 @@ import { NextResponse } from 'next/server';
 
 export  async function GET( ) {
   try {
+    console.log(`GET`)
     const data = await prisma.knihy.findMany();
     console.log(data.length)
     if (data.length === 0) {
