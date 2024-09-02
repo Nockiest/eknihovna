@@ -1,8 +1,8 @@
 "use client";
 import BookCatalog from "@/components/katalog/BookCatalog";
-import { Box, Typography   } from "@mui/material";
-import {    useState } from "react";
-import {   Filters, FiltringValues } from "@/types/types";
+import { Box, Typography } from "@mui/material";
+import { useState } from "react";
+import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
 import { FiltringWindow } from "@/components/katalog/FiltringWindow";
 import ErrorReporter from "@/theme/Announcer";
@@ -15,18 +15,18 @@ const KatalogPage = () => {
     genres: [],
     formaturita: null,
     available: false,
-    name: null
+    name: null,
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [filterValues, setFiltersValues] = useState<FiltringValues>({
     genres: [],
     category: [],
     author: [],
-    name: []
+    name: [],
   });
 
   if (errorMessage) {
-    return <ErrorReporter message={errorMessage}  type='error'/>;
+    return <ErrorReporter message={errorMessage} type="error" />;
   }
 
   return (
