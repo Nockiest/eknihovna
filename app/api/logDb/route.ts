@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
-
+    console.log('get book count?' );
     const bookCount =await  prisma.knihy.count()
     console.log('počet knih:', bookCount);
     // Convert Prisma query result to JSON and include the book count in the response
