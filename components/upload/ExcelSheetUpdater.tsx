@@ -1,5 +1,5 @@
 "use client";
-import { DangerButton, PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
+import { DangerButton, PrimaryButton } from "@/theme/buttons/Buttons";
 import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import axios from "axios";
@@ -10,7 +10,7 @@ import { useState } from "react";
 import * as xlsx from "xlsx";
 import { excelWordsToBool, fillMissingIds } from "@/app/api/upload/excelUtils";
 import DataChunksTable from "./DataChunksTable";
-
+export const revalidate = 0
 
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });

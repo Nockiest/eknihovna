@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma';
 import * as xlsx from 'xlsx';
 import { NextResponse } from 'next/server';
-
+export const revalidate = 0
 export  async function GET( ) {
   try {
     console.log(`GET`)
@@ -50,4 +50,3 @@ export  async function GET( ) {
     NextResponse.json({ error: 'Internal Server Error' });
   }
 }
- 

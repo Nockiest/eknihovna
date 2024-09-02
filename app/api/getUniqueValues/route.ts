@@ -1,7 +1,7 @@
 import { falsyValues } from "@/data/values";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-
+export const revalidate = 0
 type UniqueBookValue = {
   name?: string | null;
   author?: string | null;
@@ -53,7 +53,7 @@ export async function POST(req: NextRequest) {
         // Handle non-array cases
         return !falsyValues.includes(item);
       }); // Filters out falsy values (null, undefined, 0, false, "")
-    
+
     return NextResponse.json(values);
   } catch (error) {
     console.error("Error retrieving values:", error);
