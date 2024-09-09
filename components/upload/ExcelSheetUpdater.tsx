@@ -10,6 +10,7 @@ import { useState } from "react";
 import * as xlsx from "xlsx";
 import { excelWordsToBool, fillMissingIds } from "@/app/api/upload/excelUtils";
 import DataChunksTable from "./DataChunksTable";
+import ConfirmDeleteModal from "./ConfirmDeleteModal";
 export const revalidate = 0
 
 const ExcelSheetUpdater = () => {
@@ -155,7 +156,7 @@ const ExcelSheetUpdater = () => {
     }
   };
 
-  if (session?.user?.email !== "ondralukes06@seznam.cz") {
+  if (session?.user?.email !== "ondralukes06@seznam.cz" && session?.user?.email !== "bauerova@gopat.cz") {
     return (
       <>
         <Typography variant="h2" className="text-xl font-semibold mb-4">
@@ -222,7 +223,7 @@ const ExcelSheetUpdater = () => {
 
       <Announcer message={responseMessage} type="normal" />
       <DangerButton onClick={deleteData}>Smazat knihy</DangerButton>
-
+      {/* <ConfirmDeleteModal  onConfirm={deleteData} /> */}
     </Box>
   );
 };
