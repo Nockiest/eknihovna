@@ -2,15 +2,18 @@ import { prisma } from '@/lib/prisma';
 import * as xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 import { truthyValues } from "@/data/values";
+import { UploadJsonData } from '@/types/types';
 export const insertJsonDataToPostgres = async (
-  jsonData: { headers: string[], chunk: any[] },
+  jsonData: UploadJsonData  ,
   tableName: string
 ): Promise<void> => {
   try {
-    const { headers, chunk: rows } = jsonData;
+    const { headers,   rows } = jsonData;
+    console.log("json data",jsonData)
+    console.log( headers,   rows)
 
-    if (!headers || headers.length === 0) {
-      throw new Error("The JSON data does not contain headers");
+    if (!jsonData.headers || !jsonData.rows) {
+      throw new Error('Invalid JSON data');
     }
 
     console.log('Processing rows...');
@@ -77,7 +80,6 @@ export const insertJsonDataToPostgres = async (
         // Log the number of books after each insertion for debugging
         const bookNum = await model.count(); // Use count() to get the number of records
         console.log(`Number of books after insertion: ${bookNum}`);
-
       } catch (rowError: any) {
         console.error("Error processing row:", rowError.message);
         throw new Error(`Error processing row: ${rowError.message}`);

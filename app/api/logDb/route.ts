@@ -1,9 +1,9 @@
+import { noCacheHeaders } from '@/data/values';
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 export const revalidate = 0
 export async function GET() {
   try {
-    console.log('get book count?' );
     const bookCount =await  prisma.knihy.count()
     console.log('počet knih:', bookCount);
     // Convert Prisma query result to JSON and include the book count in the response
@@ -14,10 +14,7 @@ export async function GET() {
     // Return the count and the data
     return NextResponse.json(jsonData, {
       headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Surrogate-Control': 'no-store'
+        ...noCacheHeaders
       }
     });
 

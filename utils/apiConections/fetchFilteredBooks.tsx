@@ -6,12 +6,13 @@ import { defaultFilters  } from '@/data/values';
 export const fetchFilteredBooks = async (
   filters: Filters = defaultFilters,
   page: number = 1,
+  id: string|null = null,
   limit: number = 10000000
 ): Promise<Book[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
   try {
     // debugger
-    const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit });
+    const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit, id });
     return  response.data || [];
   } catch (error: any) {
     throw new Error(`Problem with fetching data: ${error.message}`);

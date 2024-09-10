@@ -1,63 +1,67 @@
 import { NextRequest, NextResponse } from "next/server";
-import * as XLSX from "xlsx";
 import { insertJsonDataToPostgres } from "./insertJsonlDataIntoPostgres"; // Assuming this function exists
-import { excelWordsToBool, fillMissingIds } from "./excelUtils";
 import { prisma } from "@/lib/prisma";
+import { UploadJsonData } from "@/types/types";
+import { corsHeaders, noCacheHeaders } from "@/data/values";
 
-// CORS headers configuration
-const corsHeaders = {
-'Access-Control-Allow-Origin': 'http://localhost:3001',
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
 
 
 export async function POST(req: NextRequest) {
   // Handle preflight requests
-  if (req.method === 'OPTIONS') {
+  if (req.method === "OPTIONS") {
     return new NextResponse(null, {
       status: 204,
       headers: corsHeaders,
     });
   }
 
-  console.log("POST request received",req.headers.get('Content-Type'));
-
   try {
-    const contentType = req.headers.get('Content-Type');
+    const contentType = req.headers.get("Content-Type");
 
     // Check if the request is JSON
-    if ((contentType && contentType.includes('application/json')) ) {
-      const jsonData = await req.json();
-
-      if (!jsonData.headers || !jsonData.chunk) {
+    if (contentType && contentType.includes("application/json")) {
+      const jsonData: UploadJsonData = await req.json();
+      console.log(jsonData);
+      if (!jsonData.headers || !jsonData.rows) {
         throw new Error('Invalid JSON data');
       }
       try {
         await insertJsonDataToPostgres(jsonData, "knihy");
       } catch (dbError: any) {
         console.error("Database insertion error:", dbError);
-        return NextResponse.json({
-          success: false,
-          error: "Database insertion error",
-          details: dbError.message,
-        }, { headers:corsHeaders });
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Database insertion error",
+            details: dbError.message,
+          },
+          { headers: corsHeaders }
+        );
       }
 
-      return NextResponse.json({ success: true, message: "Data úspěšně zpracována" }, { headers: corsHeaders});
-
+      return NextResponse.json(
+        { success: true, message: "Data úspěšně zpracována" },
+        {
+          headers: {
+            ...corsHeaders,
+            ...noCacheHeaders
+          },
+        }
+      );
     }
-
   } catch (error: any) {
     console.error("Error při zpracováni dat:", error);
-    return NextResponse.json({ success: false, error: "Server error", details: error.message }, { headers: corsHeaders });
+    return NextResponse.json(
+      { success: false, error: "Server error", details: error.message },
+      { headers: corsHeaders }
+    );
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
     // Delete the books with the provided IDs
-    const deleteResult = await prisma.knihy.deleteMany( );
+    const deleteResult = await prisma.knihy.deleteMany();
 
     // Return a success response with the number of deleted books
     return NextResponse.json({
@@ -65,12 +69,20 @@ export async function DELETE(req: NextRequest) {
       message: `${deleteResult.count} knih úspěšně smazáno`,
     });
   } catch (error: any) {
-    console.error('Error deleting books:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Server error',
-      details: error.message,
-    });
+    console.error("Error deleting books:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Server error",
+        details: error.message,
+      },
+      {
+        headers: {
+          ...corsHeaders,
+          ...noCacheHeaders
+        },
+      }
+    );
   } finally {
     await prisma.$disconnect();
   }
@@ -154,7 +166,6 @@ export async function DELETE(req: NextRequest) {
 //     }
 //   }
 // }
-
 
 // // Determine the appropriate error response
 // let errorMessage = 'Internal Server Error';
