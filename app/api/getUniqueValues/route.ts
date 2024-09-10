@@ -1,4 +1,4 @@
-import { falsyValues } from "@/data/values";
+import { falsyValues, noCacheHeaders } from "@/data/values";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 export const revalidate = 0
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         return !falsyValues.includes(item);
       }); // Filters out falsy values (null, undefined, 0, false, "")
 
-    return NextResponse.json(values);
+    return NextResponse.json(values), { ...noCacheHeaders};
   } catch (error) {
     console.error("Error retrieving values:", error);
     return NextResponse.json({ error: "Internal Server Error" });

@@ -4,7 +4,7 @@ import { NavButton } from "@/types/types";
 export const truthyValues = [true,'true', "ano", "yes", 1, "dostupný"];
 export const falsyValues = [false,'false', "ne", "no", 0, "nedostupný",undefined, null];
 // export const knihyURL =
-//   process.env.NEXT_PUBLIC_APP_API_URL || "http://localhost:3002"; // Adjust URL as per your backend setup
+//   process.env.NEXT_PUBLIC_APP_API_URL || "http://localhost:3002/api"; // Adjust URL as per your backend setup
 
   export const defaultFilters = {
     author: [],
@@ -15,8 +15,20 @@ export const falsyValues = [false,'false', "ne", "no", 0, "nedostupný",undefine
     name: null,
   }
 
+// CORS headers configuration
+export const corsHeaders = {
+  "Access-Control-Allow-Origin": "http://localhost:3001",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
 
-
+export const noCacheHeaders = {
+  "Cache-Control":
+  "no-store, no-cache, must-revalidate, proxy-revalidate",
+Pragma: "no-cache",
+Expires: "0",
+"Surrogate-Control": "no-store",
+}
 export  const shownBooksBySize: Record<Breakpoint, number> = {
     xs: 12,
     sm: 12,
