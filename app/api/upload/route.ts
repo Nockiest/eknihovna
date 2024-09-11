@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     if (contentType && contentType.includes("application/json")) {
       const jsonData: UploadJsonData = await req.json();
       console.log(jsonData);
-      console.log(jsonData.headers);
+      // console.log(jsonData.headers);
       console.log(jsonData.rows);
 
       if ( !jsonData.rows) {
