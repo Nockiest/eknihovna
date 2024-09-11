@@ -54,14 +54,14 @@ export async function POST(req: NextRequest) {
         return !falsyValues.includes(item);
       }); // Filters out falsy values (null, undefined, 0, false, "")
 
-    return NextResponse.json(values), {headers: {
-      'Content-Disposition': 'attachment; filename="table_data.xlsx"',
-      'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-      'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-      'Pragma': 'no-cache',
-      'Expires': '0',
-      'Surrogate-Control': 'no-store'}
-    };
+    return NextResponse.json(values ,
+
+      {headers: {
+      "Cache-Control":
+      "no-store, no-cache, must-revalidate, proxy-revalidate",
+    }
+    }
+  )
   } catch (error) {
     console.error("Error retrieving values:", error);
     return NextResponse.json({ error: "Internal Server Error" });
