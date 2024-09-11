@@ -4,17 +4,8 @@ import { prisma } from "@/lib/prisma";
 import { UploadJsonData } from "@/types/types";
 import { corsHeaders, noCacheHeaders } from "@/data/values";
 
-
-
 export async function POST(req: NextRequest) {
-  // Handle preflight requests
-  if (req.method === "OPTIONS") {
-    return new NextResponse(null, {
-      status: 204,
-      headers: corsHeaders,
-    });
-  }
-
+  debugger;
   try {
     const contentType = req.headers.get("Content-Type");
 
@@ -22,9 +13,26 @@ export async function POST(req: NextRequest) {
     if (contentType && contentType.includes("application/json")) {
       const jsonData: UploadJsonData = await req.json();
       console.log(jsonData);
-      if (!jsonData.headers || !jsonData.rows) {
-        throw new Error('Invalid JSON data');
+      console.log(jsonData.headers);
+      console.log(jsonData.rows);
+
+      if ( !jsonData.rows) {
+        // Return error response if headers or rows are missing
+        return NextResponse.json(
+          {
+            success: false,
+            error: "Invalid JSON data",
+            details: jsonData.rows,
+          },
+          {
+            headers: {
+              ...corsHeaders,
+              ...noCacheHeaders
+            },
+          }
+        );
       }
+
       try {
         await insertJsonDataToPostgres(jsonData, "knihy");
       } catch (dbError: any) {
@@ -35,7 +43,12 @@ export async function POST(req: NextRequest) {
             error: "Database insertion error",
             details: dbError.message,
           },
-          { headers: corsHeaders }
+          {
+            headers: {
+              ...corsHeaders,
+              ...noCacheHeaders
+            },
+          }
         );
       }
 
@@ -48,43 +61,19 @@ export async function POST(req: NextRequest) {
           },
         }
       );
+    } else {
+      // Handle the case when the content type is not JSON
+      return NextResponse.json(
+        { success: false, error: "Invalid content type" },
+        { headers: { ...corsHeaders, ...noCacheHeaders } }
+      );
     }
   } catch (error: any) {
-    console.error("Error při zpracováni dat:", error);
+    console.error("Error při zpracováni dat:", error.message);
     return NextResponse.json(
       { success: false, error: "Server error", details: error.message },
-      { headers: corsHeaders }
+      { headers: { ...corsHeaders, ...noCacheHeaders } }
     );
-  }
-}
-
-export async function DELETE(req: NextRequest) {
-  try {
-    // Delete the books with the provided IDs
-    const deleteResult = await prisma.knihy.deleteMany();
-
-    // Return a success response with the number of deleted books
-    return NextResponse.json({
-      success: true,
-      message: `${deleteResult.count} knih úspěšně smazáno`,
-    });
-  } catch (error: any) {
-    console.error("Error deleting books:", error);
-    return NextResponse.json(
-      {
-        success: false,
-        error: "Server error",
-        details: error.message,
-      },
-      {
-        headers: {
-          ...corsHeaders,
-          ...noCacheHeaders
-        },
-      }
-    );
-  } finally {
-    await prisma.$disconnect();
   }
 }
 // export async function POST(req: NextRequest) {

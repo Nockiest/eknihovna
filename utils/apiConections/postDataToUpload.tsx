@@ -1,13 +1,13 @@
 import { UploadJsonData } from '@/types/types';
 import axios from 'axios';
 
- 
+
 export const postDataToEndpoint = async (
-    jsonData: UploadJsonData // This allows any key with any value type
+    data: UploadJsonData // This allows any key with any value type
   ): Promise<any> => {
     const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
     try {
-      const response = await axios.post(`${apiUrl}/upload`, jsonData, {
+      const response = await axios.post(`${apiUrl}/upload`, data, {
         headers: {
           'Content-Type': 'application/json',
         },

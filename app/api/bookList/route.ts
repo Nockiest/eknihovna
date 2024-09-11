@@ -9,7 +9,7 @@ export async function POST(req: NextRequest) {
     const { filters, page = 1, limit = 10 ,id} = await req.json();
     console.log(filters,page,id)
 
-    if (id  && !filters) {
+    if (id  ) {
       try {
         const book = await prisma.knihy.findUnique({
           where: {  id  },
@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
           return NextResponse.json({ error: "book not found " }, { status: 400 });
         }
 
-        return  NextResponse.json(book,{
+        return  NextResponse.json([book],{
           headers: {
             'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
             'Pragma': 'no-cache',

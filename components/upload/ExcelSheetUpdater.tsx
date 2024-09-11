@@ -16,9 +16,10 @@ import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
 export const revalidate = 0
 
 const ExcelSheetUpdater = () => {
-  const { data: session, status } = useSession({ required: true });
+  // const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
+  const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
   const [uploadProgress, setUploadProgress] = useState<{
     total: number;
     remaining: number;
@@ -27,15 +28,8 @@ const ExcelSheetUpdater = () => {
     remaining: 0
   });
   const uploadProgressPercent = 100 - (uploadProgress.remaining / uploadProgress.total) * 100;
-  const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
-  console.log("endpoint: ", process.env.NEXT_PUBLIC_APP_API_URL)
-  if (!session) {
-    return (
-      <div className="flex flex-center">
-        <ReroutToAUth />
-      </div>
-    );
-  }
+
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -71,7 +65,7 @@ const ExcelSheetUpdater = () => {
       const chunkSize = 10;
       const newChunks = [];
       for (let i = 0; i < rows.length; i += chunkSize) {
-        newChunks.push({ headers, chunk: rows.slice(i, i + chunkSize) });
+        newChunks.push({ headers, rows: rows.slice(i, i + chunkSize) });
       }
       setChunks(newChunks);
       setUploadProgress({
@@ -87,15 +81,17 @@ const ExcelSheetUpdater = () => {
   };
 
   const handleUploadChunk = async (chunkIndex: number) => {
+    debugger
     const chunk = chunks[chunkIndex];
+    console.log(chunk)
 
     try {
       const res =  await postDataToEndpoint( chunk )
 
       if (!res.ok) {
-        const errorData = await res.json();
-        setResponseMessage(`Chyba při nahrávání části ${chunkIndex + 1}: ${errorData.message}`);
-        throw new Error(errorData.message || "Nahrávání selhalo");
+        // const errorData = await res.json();
+        setResponseMessage(`Chyba při nahrávání části ${chunkIndex + 1}:  `);
+        // throw new Error(errorData.message || "Nahrávání selhalo");
       }
 
       // If the upload was successful, remove the successfully uploaded chunk from the state
@@ -151,20 +147,26 @@ const ExcelSheetUpdater = () => {
       setResponseMessage("Chyba při získávání dat: " + error.message);
     }
   };
-
-  var splited_emails = process?.env?.WHITE_LIST_EMAILS?.split(':')
-  if (splited_emails &&  session?.user?.email && splited_emails.indexOf( session?.user?.email) < 0 ) { //  session?.user?.email !== "ondralukes06@seznam.cz" && session?.user?.email !== "bauerova@gopat.cz"
-    return (
-      <>
-        <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Neplatný administrátorský účet
-        </Typography>
-        <PrimaryButton onClick={() => signOut()}>
-          <Typography>Odhlásit se</Typography>
-        </PrimaryButton>
-      </>
-    );
-  }
+  // if (!session) {
+  //   return (
+  //     <div className="flex flex-center">
+  //       <ReroutToAUth />
+  //     </div>
+  //   );
+  // }
+  // var splited_emails = process?.env?.WHITE_LIST_EMAILS?.split(':')
+  // if (splited_emails &&  session?.user?.email && splited_emails.indexOf( session?.user?.email) < 0 ) { //  session?.user?.email !== "ondralukes06@seznam.cz" && session?.user?.email !== "bauerova@gopat.cz"
+  //   return (
+  //     <>
+  //       <Typography variant="h2" className="text-xl font-semibold mb-4">
+  //         Neplatný administrátorský účet
+  //       </Typography>
+  //       <PrimaryButton onClick={() => signOut()}>
+  //         <Typography>Odhlásit se</Typography>
+  //       </PrimaryButton>
+  //     </>
+  //   );
+  // }
 
   return (
     <Box className="flex flex-col gap-4 z-0 select-none items-center justify-center">
