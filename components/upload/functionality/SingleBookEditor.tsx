@@ -6,7 +6,7 @@ import { defaultFilters } from '@/data/values';
 import { postDataToEndpoint } from '@/utils/apiConections/postDataToUpload';
 import { PrimaryButton } from '@/theme/buttons/Buttons';
 
-const SingleBookEditor = () => {
+const SingleBookEditor = ({setResponseMessage}:{setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;}) => {
   const [bookId, setBookId] = useState('');
   const [book, setBook] = useState<Book|null>(null);
   const [loading, setLoading] = useState(false);
