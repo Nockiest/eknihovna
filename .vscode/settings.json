@@ -1,0 +1,37 @@
+{
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "server": "localhost",
+            "port": 5432,
+            "driver": "PostgreSQL",
+            "name": "eknihovna",
+            "database": "eknihovna",
+            "username": "postgres",
+            "password": "OndPost06"
+        }
+    ],
+    "files.exclude": {
+        "client/knihovna/.eslintrc.json": true,
+        "client/knihovna/.gitignore": true,
+        "client/knihovna/next.config.mjs": true,
+        "client/knihovna/next-env.d.ts": true,
+        "client/knihovna/package-lock.json": true,
+        "client/knihovna/postcss.config.mjs": true,
+        "client/knihovna/tsconfig.json": false,
+        "/C:/Users/ondra/OneDrive - Gymnázium Opatov, Praha 4, Konstantinova 1500/Plocha/eknihovna": true,
+        "package-lock.json": true,
+        "eknihovna.session.sql": true,
+        "server/.gitignore": true,
+        ".vscode": true,
+        "server/dist": false,
+        "server/node_modules": true,
+        "client/knihovna/.next": true,
+        "client/knihovna/app/favicon.ico": true,
+        "server/vercel.json": true,
+        "client/knihovna/node_modules": true,
+        "node_modules": true,
+        "client/knihovna/__tests__": true,
+        "client/knihovna/__mocks__": true
+    }
+}

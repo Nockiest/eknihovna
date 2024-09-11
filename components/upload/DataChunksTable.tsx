@@ -4,7 +4,7 @@ import { Box, Typography, Button as PrimaryButton } from "@mui/material";
 
 interface Chunk {
   headers: any[];
-  chunk: any[][];
+  rows: any[][];
 }
 
 interface DataChunksTableProps {
@@ -30,7 +30,7 @@ const DataChunksTable: React.FC<DataChunksTableProps> = ({
       </Typography>
       <Box
         sx={{
-          maxHeight: "400px",  
+          maxHeight: "400px",
           overflowY: "auto",
         }}
       >
@@ -55,7 +55,7 @@ const DataChunksTable: React.FC<DataChunksTableProps> = ({
                   index + 1
                 }`}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {chunk.chunk.length} řádků
+                  {chunk.rows.length} řádků
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <PrimaryButton

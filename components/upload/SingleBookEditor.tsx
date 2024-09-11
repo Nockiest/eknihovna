@@ -18,15 +18,16 @@ const SingleBookEditor = () => {
       setError('Please enter a valid book ID');
       return;
     }
+    debugger
 
     setLoading(true);
     setError('');
     try {
       const response = await fetchFilteredBooks(defaultFilters, 1, bookId.trim(), 10000000);
-
+      console.log(response);
 
       if (response.length > 0) {
-        setBook(response[0]);
+        setBook(response[0] );
 
       } else {
         console.error("Error fetching single book", response)
@@ -63,26 +64,17 @@ const SingleBookEditor = () => {
     setError('');
     try {
       // Prepare data to send to the endpoint
-      const jsonData: UploadJsonData = {
+      const newEntry: UploadJsonData = {
         headers: [
-          'id', 'book_code', 'name', 'author', 'description', 'category', 'genres', 'rating', 'available', 'formaturita', 'bookCoverURL'
+          'id', 'book_code', 'name', 'author',   'category', 'genres', 'umisteni', 'signatura', 'zpusob_ziskani','formaturita', 'available',  'rating',
         ],
-        rows: [ [ // wrap the book object in an array to match the expected structure
-          book.id,
-          book.book_code,
-          book.name,
-          book.author,
-          book.description, // Make sure 'description' is a field in the book object
-          book.category,
-          book?.genres?.join(', ')||[], // Assuming genres is an array of strings
-          book.rating,
-          book.available,
-          book.formaturita,
-          book.bookCoverURL // Ensure this field exists in the book object
-        ]]
+        rows: [   // wrap the book object in an array to match the expected structure
+          book
+         ]
       };
-      await postDataToEndpoint(jsonData);
-      alert('Book updated successfully!');
+      console.log(newEntry.rows);
+      await postDataToEndpoint(newEntry);
+      // alert('Book updated successfully!');
     } catch (err) {
       console.error('Error updating book:', err);
       setError('Failed to update the book');
