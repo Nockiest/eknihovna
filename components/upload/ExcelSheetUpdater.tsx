@@ -16,7 +16,7 @@ import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
 export const revalidate = 0
 
 const ExcelSheetUpdater = () => {
-  // const { data: session, status } = useSession({ required: true });
+  const { data: session, status } = useSession({ required: true });
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [responseMessage, setResponseMessage] = useState("");
   const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
@@ -147,26 +147,26 @@ const ExcelSheetUpdater = () => {
       setResponseMessage("Chyba při získávání dat: " + error.message);
     }
   };
-  // if (!session) {
-  //   return (
-  //     <div className="flex flex-center">
-  //       <ReroutToAUth />
-  //     </div>
-  //   );
-  // }
-  // var splited_emails = process?.env?.WHITE_LIST_EMAILS?.split(':')
-  // if (splited_emails &&  session?.user?.email && splited_emails.indexOf( session?.user?.email) < 0 ) { //  session?.user?.email !== "ondralukes06@seznam.cz" && session?.user?.email !== "bauerova@gopat.cz"
-  //   return (
-  //     <>
-  //       <Typography variant="h2" className="text-xl font-semibold mb-4">
-  //         Neplatný administrátorský účet
-  //       </Typography>
-  //       <PrimaryButton onClick={() => signOut()}>
-  //         <Typography>Odhlásit se</Typography>
-  //       </PrimaryButton>
-  //     </>
-  //   );
-  // }
+  if (!session) {
+    return (
+      <div className="flex flex-center">
+        <ReroutToAUth />
+      </div>
+    );
+  }
+  var splited_emails = process?.env?.WHITE_LIST_EMAILS?.split(':')
+  if (splited_emails &&  session?.user?.email && splited_emails.indexOf( session?.user?.email) < 0 ) { //  session?.user?.email !== "ondralukes06@seznam.cz" && session?.user?.email !== "bauerova@gopat.cz"
+    return (
+      <>
+        <Typography variant="h2" className="text-xl font-semibold mb-4">
+          Neplatný administrátorský účet
+        </Typography>
+        <PrimaryButton onClick={() => signOut()}>
+          <Typography>Odhlásit se</Typography>
+        </PrimaryButton>
+      </>
+    );
+  }
 
   return (
     <Box className="flex flex-col gap-4 z-0 select-none items-center justify-center">
