@@ -9,11 +9,13 @@ export const insertJsonDataToPostgres = async (
   tableName: string
 ): Promise<void> => {
   try {
-    const { headers,   rows } = jsonData;
-    console.log( headers,   rows)
-
-    if ( !jsonData.rows) {
-      NextResponse.json({ error: `Invalid JSON data ${!jsonData.headers || !jsonData.rows}`}, { status: 400 });
+    const {     rows } = jsonData;
+    console.log(   rows)
+const headers = [
+  'id', 'book_code', 'name', 'author',   'category', 'genres', 'umisteni', 'signatura', 'zpusob_ziskani','formaturita', 'available',  'rating',
+]
+    if ( !rows || !Array.isArray(rows)) {
+      throw new Error("Invalid JSON data: rows are missing or not an array");
     }
 
     console.log('Processing rows...');
@@ -30,44 +32,27 @@ export const insertJsonDataToPostgres = async (
         // Map the row data to the Prisma model
         // const data: any = headers.reduce((acc: any, header: string, index: number) => {
         //   let value = row[index];
-        const data = {
-          id :  row.id?  row.id: uuidv4(),
-          book_code : isNaN(parseInt(row.book_code, 10)) ? null : parseInt(row.book_code, 10),
-          formaturita : truthyValues.includes(row.formaturita) ? true : false,
-          available : truthyValues.includes(row.available) ? true : false,
-          genres : row.genres ? row.genres.toString().split(',').map((v: string) => v.trim()) : [],
-          rating : row.rating ? parseFloat(row.rating) : -1,
-         ...row
-        }
-        console.log(data)
-        //   // Perform type checks and handle malformed values
-        //   switch (header) {
-        //     case 'id':
-        //       value = value? value: uuidv4(); // Generate a new unique ID if the value is malformed
-        //       break;
-        //     case 'book_code':
-        //       value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
-        //       break;
-        //     case 'formaturita':
-        //       value = truthyValues.includes(value) ? true : false;
-        //       break;
-        //     case 'available':
-        //       value = truthyValues.includes(value) ? true : false;
-        //       break;
-        //     case 'genres':
-        //       value = value ? value.toString().split(',').map((v: string) => v.trim()) : [];
-        //       break;
-        //     case 'rating':
-        //       value = value ? parseFloat(value) : -1;
-        //       break;
-        //     default:
-        //       value = value ? value.toString().trim() : null;
-        //       break;
-        //   }
+        const rowObject = headers.reduce((acc: any, header: string, index: number) => {
+          acc[header] = row[index] !== undefined ? row[index] : null; // Ensure undefined values are handled
+          return acc;
+        }, {});
 
-        //   acc[header] = value;
-        //   return acc;
-        // }, {});
+        // Build the data object using the correct rowObject
+        const data = {
+          id: rowObject.id ? rowObject.id : uuidv4(),
+          book_code: isNaN(parseInt(rowObject.book_code, 10)) ? null : parseInt(rowObject.book_code, 10),
+          formaturita: truthyValues.includes(rowObject.formaturita) ? true : false,
+          available: truthyValues.includes(rowObject.available) ? true : false,
+          genres: rowObject.genres ? rowObject.genres.toString().split(',').map((v: string) => v.trim()) : [],
+          rating: rowObject.rating !== null ? parseFloat(rowObject.rating) : -1,
+          name: rowObject.name,
+          author: rowObject.author,
+          category: rowObject.category,
+          umisteni: rowObject.umisteni,
+          signatura: rowObject.signatura,
+          zpusob_ziskani: rowObject.zpusob_ziskani,
+        };
+        console.log(data)
 
         // Select the Prisma model based on the table name
         let model;
@@ -80,7 +65,7 @@ export const insertJsonDataToPostgres = async (
             throw new Error(`Model for table '${tableName}' not found`);
 
         }
-
+        console.log('data:', data)
         // Perform the upsert operation
         await model.upsert({
           where: { id: data.id }, // Adjust the identifier field if necessary
@@ -114,3 +99,33 @@ export const insertJsonDataToPostgres = async (
 //   default:
 //     throw new Error(`Model for table '${tableName}' not found`);
 // }
+
+
+ //   // Perform type checks and handle malformed values
+        //   switch (header) {
+        //     case 'id':
+        //       value = value? value: uuidv4(); // Generate a new unique ID if the value is malformed
+        //       break;
+        //     case 'book_code':
+        //       value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
+        //       break;
+        //     case 'formaturita':
+        //       value = truthyValues.includes(value) ? true : false;
+        //       break;
+        //     case 'available':
+        //       value = truthyValues.includes(value) ? true : false;
+        //       break;
+        //     case 'genres':
+        //       value = value ? value.toString().split(',').map((v: string) => v.trim()) : [];
+        //       break;
+        //     case 'rating':
+        //       value = value ? parseFloat(value) : -1;
+        //       break;
+        //     default:
+        //       value = value ? value.toString().trim() : null;
+        //       break;
+        //   }
+
+        //   acc[header] = value;
+        //   return acc;
+        // }, {});
