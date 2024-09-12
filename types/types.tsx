@@ -10,6 +10,9 @@ export type Book = {
     available?: boolean
     formaturita?: boolean
     bookCoverURL?: string
+    zpusob_ziskani?: string
+    signatura?:string
+    umisteni:string
 }
 
 export type NavButton = {

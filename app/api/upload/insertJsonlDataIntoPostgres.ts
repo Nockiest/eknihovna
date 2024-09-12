@@ -32,28 +32,25 @@ const headers = [
         // Map the row data to the Prisma model
         // const data: any = headers.reduce((acc: any, header: string, index: number) => {
         //   let value = row[index];
-        const rowObject = headers.reduce((acc: any, header: string, index: number) => {
-          acc[header] = row[index] !== undefined ? row[index] : null; // Ensure undefined values are handled
-          return acc;
-        }, {});
+
 
         // Build the data object using the correct rowObject
         const data = {
-          id: rowObject.id ? rowObject.id : uuidv4(),
-          book_code: isNaN(parseInt(rowObject.book_code, 10)) ? null : parseInt(rowObject.book_code, 10),
-          formaturita: truthyValues.includes(rowObject.formaturita) ? true : false,
-          available: truthyValues.includes(rowObject.available) ? true : false,
-          genres: rowObject.genres ? rowObject.genres.toString().split(',').map((v: string) => v.trim()) : [],
-          rating: rowObject.rating !== null ? parseFloat(rowObject.rating) : -1,
-          name: rowObject.name,
-          author: rowObject.author,
-          category: rowObject.category,
-          umisteni: rowObject.umisteni,
-          signatura: rowObject.signatura,
-          zpusob_ziskani: rowObject.zpusob_ziskani,
+          id: row.id ? row.id : uuidv4(),
+          book_code: isNaN(parseInt(row.book_code, 10)) ? null : parseInt(row.book_code, 10),
+          formaturita: truthyValues.includes(row.formaturita) ? true : false,
+          available: truthyValues.includes(row.available) ? true : false,
+          genres: row.genres ? row.genres.toString().split(',').map((v: string) => v.trim()) : [],
+          rating: row.rating !== null ? parseFloat(row.rating) : -1,
+          name: row.name,
+          author: row.author,
+          category: row.category,
+          umisteni: row.umisteni,
+          signatura: row.signatura,
+          zpusob_ziskani: row.zpusob_ziskani,
         };
         console.log(data)
-
+        console.log(row)
         // Select the Prisma model based on the table name
         let model;
         switch (tableName) {
@@ -98,8 +95,11 @@ const headers = [
 //   // Add cases for other tables if needed
 //   default:
 //     throw new Error(`Model for table '${tableName}' not found`);
-// }
-
+// // }
+//       const rowObject = headers.reduce((acc: any, header: string, index: number) => {
+//           acc[header] = row[index] !== undefined ? row[index] : null; // Ensure undefined values are handled
+//           return acc;
+//         }, {});
 
  //   // Perform type checks and handle malformed values
         //   switch (header) {

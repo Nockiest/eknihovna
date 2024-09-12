@@ -1,18 +1,14 @@
 "use client";
-import { DangerButton, PrimaryButton } from "@/theme/buttons/Buttons";
+import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { Box, Typography } from "@mui/material";
-import Image from "next/image";
-import axios from "axios";
 import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "../general/ReroutToAUth";
 import Announcer from "@/theme/Announcer";
 import { useState } from "react";
-import * as xlsx from "xlsx";
 import SingleBookEditor from "./functionality/SingleBookEditor";
 import Uploader from "./functionality/Uploader";
 import BookDeleter from "./functionality/BookDeleter";
 import BookCountLogger from "./functionality/BookCountLogger";
-import BookFetchero from "./functionality/BookFetcher";
 import BookFetcher from "./functionality/BookFetcher";
 export const revalidate = 0;
 
@@ -52,10 +48,7 @@ const ExcelSheetUpdater = () => {
         <Typography>Odhlásit se</Typography>
       </PrimaryButton>
 
-      {/* <Box className="flex flex-col md:flex-row w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden"> */}
-
-      {/* </Box> */}
-      <Box className="flex flex-row flex-between">
+      <Box className="flex flex-col md:flex-row w-full   bg-white shadow-lg rounded-lg overflow-hidden">
         <Uploader setResponseMessage={setResponseMessage} />
         <BookFetcher setResponseMessage={setResponseMessage} />
         <SingleBookEditor setResponseMessage={setResponseMessage} />
