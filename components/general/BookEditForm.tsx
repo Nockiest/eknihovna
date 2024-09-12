@@ -25,7 +25,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
   return (
     <form>
       <div>
-       <label>UUID:</label>
+       <label>ID:</label>
         <input
           type="text"
           name="id"
@@ -33,11 +33,11 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
           readOnly // Make the field read-only
         />
         <PrimaryButton type="button" onClick={generateNewUUID}  >
-          Generate New UUID
+          Vygenerovat nové ID
         </PrimaryButton>
       </div>
     <div>
-      <label>Title:</label>
+      <label>Název:</label>
       <input
         type="text"
         name="name"
@@ -46,7 +46,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
       />
     </div>
     <div>
-      <label>Author:</label>
+      <label>Autor:</label>
       <input
         type="text"
         name="author"
@@ -55,7 +55,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
       />
     </div>
     <div>
-      <label>Book Code:</label>
+      <label>Kod Knihy:</label>
       <input
         type="number"
         name="book_code"
@@ -64,7 +64,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
       />
     </div>
     <div>
-      <label>Category:</label>
+      <label>Kategorie:</label>
       <input
         type="text"
         name="category"
@@ -73,7 +73,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
       />
     </div>
     <div>
-      <label>Genres (comma separated):</label>
+      <label>Žánry (odělené čárkou):</label>
       <input
         type="text"
         name="genres"
@@ -82,7 +82,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
       />
     </div>
     <div>
-      <label>Location (Umístění):</label>
+      <label> Umístění :</label>
       <input
         type="text"
         name="umisteni"

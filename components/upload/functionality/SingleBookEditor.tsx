@@ -135,18 +135,23 @@ const SingleBookEditor = ({
   return (
     <Box className="flex-grow-2">
       <h2>Upravit/Přidat jednu knihu</h2>
+
+      <PrimaryButton onClick={createNewBook} disabled={loading}>
+        Vytvořit Novou Knihu
+      </PrimaryButton>
+     <br />
       <input
         type="text"
         placeholder="Vepsat ID"
         value={bookId}
         onChange={(e) => setBookId(e.target.value)}
       />
-      <PrimaryButton onClick={fetchBook} disabled={loading}>
-        Stáhnout knihu podle ID
-      </PrimaryButton>
-      <PrimaryButton onClick={createNewBook} disabled={loading}>
-        Vytvořit Novou Knihu
-      </PrimaryButton>
+      {bookId &&
+ <PrimaryButton onClick={fetchBook} disabled={loading}>
+ Stáhnout knihu podle ID
+</PrimaryButton>
+      }
+
 
       {loading && <p>Načítání...</p>}
 
