@@ -24,7 +24,7 @@ const BookFetcher = ({setResponseMessage}:{setResponseMessage: React.Dispatch<Re
     }
   }
   return (
-    <Box className="w-full md:w-1/2 p-6 flex flex-col items-center">
+    <Box className=" flex-grow-1   p-6 flex flex-col items-center">
     <Typography variant="h2" className="text-xl font-semibold mb-4">
       Stáhnout data ze serveru
     </Typography>

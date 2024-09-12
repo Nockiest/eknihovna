@@ -6,9 +6,12 @@ import { Box, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 import DataChunksTable from "../DataChunksTable";
-import Announcer from "@/theme/Announcer";
 import * as xlsx from "xlsx";
-const Uploader = ({setResponseMessage}:{setResponseMessage: React.Dispatch<React.SetStateAction<string | null>> }) => {
+const Uploader = ({
+  setResponseMessage,
+}: {
+  setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
+}) => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [chunks, setChunks] = useState<any[]>([]); // State to hold chunks
 
@@ -31,8 +34,9 @@ const Uploader = ({setResponseMessage}:{setResponseMessage: React.Dispatch<React
       const res = await postDataToEndpoint(chunk);
 
       if (!res.ok) {
-        // const errorData = await res.json();
         setResponseMessage(`Chyba při nahrávání části ${chunkIndex + 1}:  `);
+        // const errorData = await res.json();
+
         // throw new Error(errorData.message || "Nahrávání selhalo");
       }
 
@@ -109,10 +113,9 @@ const Uploader = ({setResponseMessage}:{setResponseMessage: React.Dispatch<React
   };
 
   return (
-    <Box className='flex flex-col flex-center'>
-      <Box className="flex flex-col flex-center w-full md:w-1/2 p-6  items-center border-t md:border-t-0 md:border-l border-gray-200">
+    <Box className="flex flex-col flex-center flex-grow-2 m-8 align-center justify-center">
         <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Nahrát data na server
+          Hromadné nahrání z tabulky
         </Typography>
 
         <form
@@ -146,19 +149,20 @@ const Uploader = ({setResponseMessage}:{setResponseMessage: React.Dispatch<React
             />
           </PrimaryButton>
         </form>
-      </Box>
-      <DataChunksTable
-        chunks={chunks}
-        uploadProgress={uploadProgressPercent}
-        handleUploadChunk={handleUploadChunk}
-      />
       {chunks.length > 0 && (
-        <Box className="mt-4">
-          <Typography>
-            Pokrok nahrávání: {Math.round(uploadProgressPercent)}%
-          </Typography>
-          <progress value={uploadProgressPercent} max={100}></progress>
-        </Box>
+        <>
+          <DataChunksTable
+            chunks={chunks}
+            uploadProgress={uploadProgressPercent}
+            handleUploadChunk={handleUploadChunk}
+          />
+          <Box className="mt-4">
+            <Typography>
+              Pokrok nahrávání: {Math.round(uploadProgressPercent)}%
+            </Typography>
+            <progress value={uploadProgressPercent} max={100}></progress>
+          </Box>
+        </>
       )}
     </Box>
   );

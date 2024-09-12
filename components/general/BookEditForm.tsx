@@ -137,7 +137,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
     </div> */}
 
     <PrimaryButton type="button" onClick={() => updateBook()}>
-      Update Book
+     Nahrát knihu
     </PrimaryButton>
   </form>
   )
