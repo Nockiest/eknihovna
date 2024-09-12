@@ -35,9 +35,10 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
         isOpen ? "translate-x-0" : "translate-x-full"
       } sm:hidden`}
     >
-      <ul className="nav__list absolute list-none flex flex-col justify-evenly items-center top-0 left-0 h-screen w-screen z-100 bg-black text-white">
+      <ul className="nav__list absolute list-none flex flex-col   items-center top-0 left-0 h-screen w-screen z-100 bg-black text-white">
       <NavbarMapper
       navRoutes={ navRoutes.filter(nav => nav.URL !== '/upload')}
+      renderNavStyle={'flex flex-col h-screen justify-evenly'}
       renderButton={renderButton}
     />
 
