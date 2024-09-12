@@ -167,6 +167,29 @@ const SingleBookEditor = ({
           />
         </div>
       )}
+
+<Box>
+Návod vytvoření nové knihy
+<ul>
+  <li>kliněte na vytvořit knihu</li>
+  <li>vyplňte políčka podle údajů vaší knihy</li>
+  <li>klikněte na nahrát knihu</li>
+</ul>
+
+      </Box>
+
+<Box>
+Návod upravení existující knihy
+<ul>
+  <li>stáhněte si tabulku z databáze</li>
+  <li>vyberte v ní id řádku který chcete nahrát</li>
+  <li>zkopírujte ho do pole vepsat id </li>
+  <li>zkopírujte ho do kliněte na stáhnout knihu podle id </li>
+  <li>upravte políčka podle potřeby</li>
+  <li>klikněte na nahrát knihu</li>
+</ul>
+
+      </Box>
     </Box>
   );
 };

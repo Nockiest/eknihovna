@@ -164,6 +164,17 @@ const Uploader = ({
           </Box>
         </>
       )}
+      <Box>
+Návod
+<ul>
+  <li>kliněte na vybrat soubor</li>
+  <li>vyberte tabulku obsahující vaše knihy</li>
+  <li>klikněte na analyzovat soubor</li>
+  <li>soubor se automaticky rozdělí po 10 řádcích</li>
+  <li>klikněte na nahrát, u každého řádku, aby se data poslala do databáze</li>
+</ul>
+
+      </Box>
     </Box>
   );
 };

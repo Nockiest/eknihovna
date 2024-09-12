@@ -51,7 +51,7 @@ const ExcelSheetUpdater = () => {
           <SingleBookEditor setResponseMessage={setResponseMessage} />
         </Box>
 
-        <Box>
+        <Box className="mb-4 ml-8">
           <BookDeleter setResponseMessage={setResponseMessage} />
           <BookCountLogger setResponseMessage={setResponseMessage} />
         </Box>
