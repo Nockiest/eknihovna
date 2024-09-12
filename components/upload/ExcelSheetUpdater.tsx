@@ -1,6 +1,6 @@
 "use client";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
-import { Box, Typography } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "../general/ReroutToAUth";
 import Announcer from "@/theme/Announcer";
@@ -44,18 +44,23 @@ const ExcelSheetUpdater = () => {
 
   return (
     <Box className="flex flex-col gap-4 z-0 select-none items-center justify-center">
+      <Paper className='flex flex-col gap-16 w-full'>
+        <Box className="flex flex-col md:flex-row w-full  h-screen bg-white shadow-lg rounded-lg overflow-hidden">
+          <Uploader setResponseMessage={setResponseMessage} />
+          <BookFetcher setResponseMessage={setResponseMessage} />
+          <SingleBookEditor setResponseMessage={setResponseMessage} />
+        </Box>
+
+        <Box>
+          <BookDeleter setResponseMessage={setResponseMessage} />
+          <BookCountLogger setResponseMessage={setResponseMessage} />
+        </Box>
+      </Paper>
+      <Announcer message={responseMessage} type={"normal"} />
+
       <PrimaryButton onClick={() => signOut()} sx={{ margin: "2em" }}>
         <Typography>Odhlásit se</Typography>
       </PrimaryButton>
-
-      <Box className="flex flex-col md:flex-row w-full   bg-white shadow-lg rounded-lg overflow-hidden">
-        <Uploader setResponseMessage={setResponseMessage} />
-        <BookFetcher setResponseMessage={setResponseMessage} />
-        <SingleBookEditor setResponseMessage={setResponseMessage} />
-        <BookDeleter setResponseMessage={setResponseMessage} />
-        <BookCountLogger setResponseMessage={setResponseMessage} />
-      </Box>
-      <Announcer message={responseMessage} type={"normal"} />
 
     </Box>
   );
