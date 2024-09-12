@@ -1,5 +1,6 @@
 import { PrimaryButton } from '@/theme/buttons/Buttons';
 import { Book } from '@/types/types';
+import { Checkbox } from '@mui/material';
 import React from 'react'
 import { v4 as uuidv4 } from 'uuid'; // Import the uuid function
 type BookEditFormProps = {
@@ -82,7 +83,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
       />
     </div>
     <div>
-      <label> Umístění :</label>
+      <label> Umístění:</label>
       <input
         type="text"
         name="umisteni"
@@ -100,7 +101,7 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
       />
     </div>
     <div>
-      <label>(Způsob Získání):</label>
+      <label>Způsob Získání:</label>
       <input
         type="text"
         name="zpusob_ziskani"
@@ -110,21 +111,22 @@ const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps)
     </div>
     <div>
       <label>Maturitní:</label>
-      <input
-        type="checkbox"
+      <Checkbox
+        // type="checkbox"
         name="formaturita"
         checked={book.formaturita || false}
         onChange={handleInputChange}
       />
     </div>
     <div>
-      <label>Available:</label>
-      <input
-        type="checkbox"
-        name="available"
+      <label>Dostupná:</label>
+      <Checkbox
+        // type="checkbox"
+        name="checkbox"
         checked={book.available || false}
         onChange={handleInputChange}
       />
+
     </div>
     {/* <div>
       <label>Rating:</label>
