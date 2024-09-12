@@ -1,14 +1,41 @@
 import { PrimaryButton } from '@/theme/buttons/Buttons';
 import { Book } from '@/types/types';
 import React from 'react'
+import { v4 as uuidv4 } from 'uuid'; // Import the uuid function
 type BookEditFormProps = {
     book: Book;
     handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Ensure proper typing of the event
     updateBook: () => void;
   };
 const BookEditForm =({ book, handleInputChange, updateBook }: BookEditFormProps) => {
+
+  const generateNewUUID = () => {
+    const newUUID = uuidv4();
+
+    // Create a synthetic event to update the UUID using handleInputChange
+    const event = {
+      target: {
+        name: 'id',
+        value: newUUID,
+      },
+    } as React.ChangeEvent<HTMLInputElement>;
+
+    handleInputChange(event); // Use handleInputChange to set the new UUID
+  };
   return (
     <form>
+      <div>
+       <label>UUID:</label>
+        <input
+          type="text"
+          name="id"
+          value={book.id}
+          readOnly // Make the field read-only
+        />
+        <PrimaryButton type="button" onClick={generateNewUUID}  >
+          Generate New UUID
+        </PrimaryButton>
+      </div>
     <div>
       <label>Title:</label>
       <input

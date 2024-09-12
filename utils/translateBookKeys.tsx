@@ -2,7 +2,7 @@ import { Book } from "@/types/types"
 
 export function translateBookKey(bookKey: keyof Book ): string {
     const translationDict: Record<keyof Book, string> = {
-        id: 'identifikátor',
+        id: 'id',
         book_code: 'kód_knihy',
         name: 'název',
         author: 'autor',
@@ -12,7 +12,10 @@ export function translateBookKey(bookKey: keyof Book ): string {
         rating: 'hodnocení',
         available: 'dostupná',
         formaturita: 'maturitní',
-        bookCoverURL: 'URL_obálky'
+        bookCoverURL: 'URL_obálky',
+        zpusob_ziskani: 'zpusob_ziskani',
+        signatura: 'signatura',
+        umisteni: 'umisteni'
     };
     return translationDict[bookKey]
 }
