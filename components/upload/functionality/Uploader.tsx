@@ -113,7 +113,7 @@ const Uploader = ({
   };
 
   return (
-    <Box className="flex flex-col flex-center flex-grow-2 m-8 align-center justify-center">
+    <Box className="flex flex-col flex-center flex-grow-2 m-8 align-center  ">
         <Typography variant="h2" className="text-xl font-semibold mb-4">
           Hromadné nahrání z tabulky
         </Typography>
