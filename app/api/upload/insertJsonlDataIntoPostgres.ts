@@ -1,24 +1,35 @@
-import { prisma } from '@/lib/prisma';
+import { prisma } from "@/lib/prisma";
 import * as xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
 import { truthyValues } from "@/data/values";
-import { UploadJsonData } from '@/types/types';
-import { NextResponse } from 'next/server';
+import { UploadJsonData } from "@/types/types";
+import { NextResponse } from "next/server";
 export const insertJsonDataToPostgres = async (
-  jsonData: UploadJsonData  ,
+  jsonData: UploadJsonData,
   tableName: string
 ): Promise<void> => {
   try {
-    const {     rows } = jsonData;
-    console.log(   rows)
-const headers = [
-  'id', 'book_code', 'name', 'author',   'category', 'genres', 'umisteni', 'signatura', 'zpusob_ziskani','formaturita', 'available',  'rating',
-]
-    if ( !rows || !Array.isArray(rows)) {
+    const { rows } = jsonData;
+    console.log(rows);
+    const headers = [
+      "id",
+      "book_code",
+      "name",
+      "author",
+      "category",
+      "genres",
+      "umisteni",
+      "signatura",
+      "zpusob_ziskani",
+      "formaturita",
+      "available",
+      "rating",
+    ];
+    if (!rows || !Array.isArray(rows)) {
       throw new Error("Invalid JSON data: rows are missing or not an array");
     }
 
-    console.log('Processing rows...');
+    console.log("Processing rows...");
 
     // Validate and insert data into the database
     for (const row of rows) {
@@ -26,21 +37,30 @@ const headers = [
         // Check if the row is well-formed
         if (row.length !== headers.length) {
           console.error(`Badly formatted row: ${JSON.stringify(row)}`);
-          NextResponse.json({ error: `Badly formatted row: ${JSON.stringify(row)}` }, { status: 400 });
+          NextResponse.json(
+            { error: `Badly formatted row: ${JSON.stringify(row)}` },
+            { status: 400 }
+          );
         }
 
         // Map the row data to the Prisma model
         // const data: any = headers.reduce((acc: any, header: string, index: number) => {
         //   let value = row[index];
 
-
         // Build the data object using the correct rowObject
         const data = {
           id: row.id ? row.id : uuidv4(),
-          book_code: isNaN(parseInt(row.book_code, 10)) ? null : parseInt(row.book_code, 10),
+          book_code: isNaN(parseInt(row.book_code, 10))
+            ? null
+            : parseInt(row.book_code, 10),
           formaturita: truthyValues.includes(row.formaturita) ? true : false,
           available: truthyValues.includes(row.available) ? true : false,
-          genres: row.genres ? row.genres.toString().split(',').map((v: string) => v.trim()) : [],
+          genres: row.genres
+            ? row.genres
+                .toString()
+                .split(",")
+                .map((v: string) => v.trim())
+            : [],
           rating: row.rating !== null ? parseFloat(row.rating) : -1,
           name: row.name,
           author: row.author,
@@ -49,20 +69,19 @@ const headers = [
           signatura: row.signatura,
           zpusob_ziskani: row.zpusob_ziskani,
         };
-        console.log(data)
-        console.log(row)
+        console.log(data);
+        console.log(row);
         // Select the Prisma model based on the table name
         let model;
         switch (tableName) {
-          case 'knihy':
+          case "knihy":
             model = prisma.knihy;
             break;
           // Add cases for other tables if needed
           default:
             throw new Error(`Model for table '${tableName}' not found`);
-
         }
-        console.log('data:', data)
+        console.log("data:", data);
         // Perform the upsert operation
         await model.upsert({
           where: { id: data.id }, // Adjust the identifier field if necessary
@@ -75,7 +94,10 @@ const headers = [
         console.log(`Number of books after insertion: ${bookNum}`);
       } catch (rowError: any) {
         console.error("Error processing row:", rowError.message);
-           NextResponse.json({ error: `Error processing row: ${rowError.message}` }, { status: 400 });
+        NextResponse.json(
+          { error: `Error processing row: ${rowError.message}` },
+          { status: 400 }
+        );
       }
     }
 
@@ -86,7 +108,7 @@ const headers = [
   } finally {
     await prisma.$disconnect();
   }
-}
+};
 // let model: any;
 // switch (tableName) {
 //   case 'knihy':
@@ -101,31 +123,31 @@ const headers = [
 //           return acc;
 //         }, {});
 
- //   // Perform type checks and handle malformed values
-        //   switch (header) {
-        //     case 'id':
-        //       value = value? value: uuidv4(); // Generate a new unique ID if the value is malformed
-        //       break;
-        //     case 'book_code':
-        //       value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
-        //       break;
-        //     case 'formaturita':
-        //       value = truthyValues.includes(value) ? true : false;
-        //       break;
-        //     case 'available':
-        //       value = truthyValues.includes(value) ? true : false;
-        //       break;
-        //     case 'genres':
-        //       value = value ? value.toString().split(',').map((v: string) => v.trim()) : [];
-        //       break;
-        //     case 'rating':
-        //       value = value ? parseFloat(value) : -1;
-        //       break;
-        //     default:
-        //       value = value ? value.toString().trim() : null;
-        //       break;
-        //   }
+//   // Perform type checks and handle malformed values
+//   switch (header) {
+//     case 'id':
+//       value = value? value: uuidv4(); // Generate a new unique ID if the value is malformed
+//       break;
+//     case 'book_code':
+//       value = isNaN(parseInt(value, 10)) ? null : parseInt(value, 10);
+//       break;
+//     case 'formaturita':
+//       value = truthyValues.includes(value) ? true : false;
+//       break;
+//     case 'available':
+//       value = truthyValues.includes(value) ? true : false;
+//       break;
+//     case 'genres':
+//       value = value ? value.toString().split(',').map((v: string) => v.trim()) : [];
+//       break;
+//     case 'rating':
+//       value = value ? parseFloat(value) : -1;
+//       break;
+//     default:
+//       value = value ? value.toString().trim() : null;
+//       break;
+//   }
 
-        //   acc[header] = value;
-        //   return acc;
-        // }, {});
+//   acc[header] = value;
+//   return acc;
+// }, {});
