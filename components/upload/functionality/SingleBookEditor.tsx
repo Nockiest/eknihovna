@@ -1,40 +1,49 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { Book, UploadJsonData } from '@/types/types';
-import { fetchFilteredBooks } from '@/utils/apiConections/fetchFilteredBooks';
-import { defaultFilters } from '@/data/values';
-import { postDataToEndpoint } from '@/utils/apiConections/postDataToUpload';
-import { PrimaryButton } from '@/theme/buttons/Buttons';
+import React, { useState } from "react";
+import axios from "axios";
+import { Book, UploadJsonData } from "@/types/types";
+import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
+import { defaultFilters } from "@/data/values";
+import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
+import { PrimaryButton } from "@/theme/buttons/Buttons";
+import BookEditForm from "@/components/general/BookEditForm";
 
-const SingleBookEditor = ({setResponseMessage}:{setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;}) => {
-  const [bookId, setBookId] = useState('');
-  const [book, setBook] = useState<Book|null>(null);
+const SingleBookEditor = ({
+  setResponseMessage,
+}: {
+  setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
+}) => {
+  const [bookId, setBookId] = useState("");
+  const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   // Fetch book details based on the entered ID
   const fetchBook = async () => {
     if (!bookId) {
-      setError('Please enter a valid book ID');
+      setError("Please enter a valid book ID");
       return;
     }
-    debugger
+    debugger;
 
     setLoading(true);
-    setError('');
+    setError("");
     try {
-      const response = await fetchFilteredBooks(defaultFilters, 1, bookId.trim(), 10000000);
+      const response = await fetchFilteredBooks(
+        defaultFilters,
+        1,
+        bookId.trim(),
+        10000000
+      );
       console.log(response);
 
       if (response.length > 0) {
-        setBook(response[0] );
-
+        setBook(response[0]);
       } else {
-        console.error("Error fetching single book", response)
+        console.error("Error fetching single book", response);
       }
     } catch (err) {
-      console.error('Error fetching book:', err);
-      setError('Book not found or an error occurred');
+      console.error("Error fetching book:", err);
+      setError("Book not found or an error occurred");
     } finally {
       setLoading(false);
     }
@@ -43,16 +52,18 @@ const SingleBookEditor = ({setResponseMessage}:{setResponseMessage: React.Dispat
   // Handle the book data change
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
+    let newValue: string | string[] = value;
     if (!book) return; // Early return if book is null
-
+    if (name == "genres") {
+      newValue = value.split(",").map((v) => v.trim());
+    }
     setBook((prevBook) => {
       if (!prevBook) return prevBook; // Type guard to prevent null
 
       // Ensuring the object returned is of type Book
       return {
         ...prevBook,
-        [name]: value,
+        [name]: newValue,
       } as Book; // Type assertion here ensures the object matches the Book type
     });
   };
@@ -61,28 +72,39 @@ const SingleBookEditor = ({setResponseMessage}:{setResponseMessage: React.Dispat
     if (!book) return;
 
     setLoading(true);
-    setError('');
+    setError("");
     try {
       // Prepare data to send to the endpoint
       const newEntry: UploadJsonData = {
         headers: [
-          'id', 'book_code', 'name', 'author',   'category', 'genres', 'umisteni', 'signatura', 'zpusob_ziskani','formaturita', 'available',  'rating',
+          "id",
+          "book_code",
+          "name",
+          "author",
+          "category",
+          "genres",
+          "umisteni",
+          "signatura",
+          "zpusob_ziskani",
+          "formaturita",
+          "available",
+          "rating",
         ],
-        rows: [   // wrap the book object in an array to match the expected structure
-          book
-         ]
+        rows: [
+          // wrap the book object in an array to match the expected structure
+          book,
+        ],
       };
       console.log(newEntry.rows);
       await postDataToEndpoint(newEntry);
       // alert('Book updated successfully!');
     } catch (err) {
-      console.error('Error updating book:', err);
-      setError('Failed to update the book');
+      console.error("Error updating book:", err);
+      setError("Failed to update the book");
     } finally {
       setLoading(false);
     }
   };
-
 
   return (
     <div>
@@ -99,35 +121,13 @@ const SingleBookEditor = ({setResponseMessage}:{setResponseMessage: React.Dispat
 
       {loading && <p>Loading...</p>}
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       {book && (
         <div>
           <h3>Edit Book</h3>
-          <form>
-            <div>
-              <label>Title:</label>
-              <input
-                type="text"
-                name="name"
-                value={book.name || ''}
-                onChange={handleInputChange}
-              />
-            </div>
-            <div>
-              <label>Author:</label>
-              <input
-                type="text"
-                name="author"
-                value={book.author || ''}
-                onChange={handleInputChange}
-              />
-            </div>
-            {/* Add more fields as needed */}
-            <PrimaryButton type="button" onClick={updateBook}>
-              Update Book
-            </PrimaryButton>
-          </form>
+          <BookEditForm  book={book} handleInputChange={handleInputChange} updateBook={updateBook}/>
+
         </div>
       )}
     </div>
