@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { Book, UploadJsonData } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { defaultFilters } from "@/data/values";
 import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import BookEditForm from "@/components/general/BookEditForm";
-import { Box } from "@mui/material";
+import { Box, List, ListItemText, Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
 const newBook: Book = {
@@ -28,7 +27,7 @@ const SingleBookEditor = ({
 }: {
   setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
-  const [bookId, setBookId] = useState("");
+  const [bookId, setBookId] = useState<string>("");
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -139,19 +138,18 @@ const SingleBookEditor = ({
       <PrimaryButton onClick={createNewBook} disabled={loading}>
         Vytvořit Novou Knihu
       </PrimaryButton>
-     <br />
+      <br />
       <input
         type="text"
         placeholder="Vepsat ID"
         value={bookId}
         onChange={(e) => setBookId(e.target.value)}
       />
-      {bookId &&
- <PrimaryButton onClick={fetchBook} disabled={loading}>
- Stáhnout knihu podle ID
-</PrimaryButton>
-      }
-
+      {bookId && (
+        <PrimaryButton onClick={fetchBook} disabled={loading}>
+          Stáhnout knihu podle ID
+        </PrimaryButton>
+      )}
 
       {loading && <p>Načítání...</p>}
 
@@ -168,27 +166,25 @@ const SingleBookEditor = ({
         </div>
       )}
 
-<Box>
-Návod vytvoření nové knihy
-<ul>
-  <li>kliněte na vytvořit knihu</li>
-  <li>vyplňte políčka podle údajů vaší knihy</li>
-  <li>klikněte na nahrát knihu</li>
-</ul>
-
+      <Box>
+        <Typography variant="h6" > Návod vytvoření nové knihy </Typography>
+        <List>
+        <ListItemText primary="kliněte na vytvořit knihu" />
+        <ListItemText primary="vyplňte políčka podle údajů vaší knihy" />
+        <ListItemText primary="klikněte na nahrát knihu" />
+        </List>
       </Box>
 
-<Box>
-Návod upravení existující knihy
-<ul>
-  <li>stáhněte si tabulku z databáze</li>
-  <li>vyberte v ní id řádku který chcete nahrát</li>
-  <li>zkopírujte ho do pole vepsat id </li>
-  <li>zkopírujte ho do kliněte na stáhnout knihu podle id </li>
-  <li>upravte políčka podle potřeby</li>
-  <li>klikněte na nahrát knihu</li>
-</ul>
+      <Box>
 
+        <Typography variant="h6" >     Návod upravení existující knihy </Typography>
+        <List>
+        <ListItemText primary="stáhněte si tabulku z databáze" />
+        <ListItemText primary="vyberte v ní id řádku který chcete nahrát" />
+        <ListItemText primary="zkopírujte ho do pole vepsat id" />
+        <ListItemText primary="upravte políčka podle potřeby" />
+        <ListItemText primary="klikněte na nahrát knihu" />
+        </List>
       </Box>
     </Box>
   );
