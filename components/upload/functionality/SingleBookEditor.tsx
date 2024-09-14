@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Book, UploadJsonData } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
-import { defaultFilters } from "@/data/values";
+import { defaultFilters, bookHeaders } from "@/data/values";
 import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import BookEditForm from "@/components/general/BookEditForm";
@@ -82,11 +82,11 @@ const SingleBookEditor = ({
     } else {
       // Update existing book object
       setBook((prevBook) => {
-        if (!prevBook) return null; // Early return if prevBook is unexpectedly null
+        if (!prevBook) throw new Error('kniha zatím nebyla vytvořena'); // Early return if prevBook is unexpectedly null
         return {
           ...prevBook,
           [name]: newValue,
-          id: prevBook.id || uuidv4(), // Ensure id is always set
+          id: name === 'id' ? String(newValue) : book.id ? book.id : uuidv4(), // Ensure id is always a string
         };
       });
     }
@@ -97,23 +97,15 @@ const SingleBookEditor = ({
 
     setLoading(true);
     setError("");
+    const mapObjectToArray = (obj: Record<string, any>, keys: string[]) => {
+      return keys.map((key) => obj[key]);
+    };
+
+    const row = mapObjectToArray(book, bookHeaders);
     try {
       const newEntry: UploadJsonData = {
-        headers: [
-          "id",
-          "book_code",
-          "name",
-          "author",
-          "category",
-          "genres",
-          "umisteni",
-          "signatura",
-          "zpusob_ziskani",
-          "formaturita",
-          "available",
-          "rating",
-        ],
-        rows: [book],
+        headers:bookHeaders,
+        rows: [[...row]],
       };
       await postDataToEndpoint(newEntry);
       setResponseMessage("Book updated successfully!");
@@ -132,7 +124,7 @@ const SingleBookEditor = ({
   };
 
   return (
-    <Box className="flex-grow-2">
+    <Box className="flex-grow-2 overflow-y-auto">
       <h2>Upravit/Přidat jednu knihu</h2>
 
       <PrimaryButton onClick={createNewBook} disabled={loading}>

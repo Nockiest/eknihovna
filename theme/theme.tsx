@@ -251,34 +251,34 @@ const theme = createTheme({
         },
       },
     },
-    MuiInput: {
-      styleOverrides: {
-        root: {
-          // marginBottom: '16px', // Add margin at the bottom of the input
-          // padding: '10px', // Add padding to the input
-          borderRadius: '8px', // Rounded corners
-          backgroundColor: '#f0f0f0', // Light gray background
-          '&:hover': {
-            backgroundColor: '#e0e0e0', // Slightly darker background on hover
-          },
-          '&.Mui-focused': {
-            backgroundColor: '#ffffff', // White background when focused
-            borderColor: '#4caf50', // Green border color when focused
-          },
-        },
-        underline: {
-          '&:before': {
-            borderBottom: rootPalette.primary.main, // Initial underline color
-          },
-          '&:hover:before': {
-            borderBottom: rootPalette.primary.dark, // Underline color on hover
-          },
-          '&:after': {
-            borderBottom: rootPalette.primary.main, // Underline color when focused
-          },
-        },
-      },
-    },
+    // MuiInput: {
+    //   styleOverrides: {
+    //     root: {
+    //       // marginBottom: '16px', // Add margin at the bottom of the input
+    //       // padding: '10px', // Add padding to the input
+    //       borderRadius: '8px', // Rounded corners
+    //       backgroundColor: '#f0f0f0', // Light gray background
+    //       '&:hover': {
+    //         backgroundColor: '#e0e0e0', // Slightly darker background on hover
+    //       },
+    //       '&.Mui-focused': {
+    //         backgroundColor: '#ffffff', // White background when focused
+    //         borderColor: '#4caf50', // Green border color when focused
+    //       },
+    //     },
+    //     underline: {
+    //       '&:before': {
+    //         borderBottom: rootPalette.primary.main, // Initial underline color
+    //       },
+    //       '&:hover:before': {
+    //         borderBottom: rootPalette.primary.dark, // Underline color on hover
+    //       },
+    //       '&:after': {
+    //         borderBottom: rootPalette.primary.main, // Underline color when focused
+    //       },
+    //     },
+    //   },
+    // },
   }
 });
 export default theme;
