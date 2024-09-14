@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios"; // or any other HTTP client of your choice
-import { Button, TextField, Typography, Box } from "@mui/material"; // MUI components
+import { Button, TextField, Typography, Box, List, ListItemText } from "@mui/material"; // MUI components
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { defaultFilters } from "@/data/values";
 interface BookDeletionProps {
@@ -126,6 +126,18 @@ interface BookDeletionProps {
             </Button>
           </Box>
         )}
+
+            <Box>
+
+            <Typography variant="h6" > Návod jak smazat jedniou knihu</Typography>
+            <List>
+            <ListItemText primary="zadejte do pole id knihy" />
+            <ListItemText primary="Zobrazí se vám kniha, která byla nalezena v databázi" />
+            <ListItemText primary="pokud kniha s tímto id v db. není, zobrazí se error" />
+            <ListItemText primary="kliněte na smazat knihu" />
+            <ListItemText primary="pro kontrolu stáhněte knihu a ověřte, že kniha se zadaným ID byla opravdu smazána" />
+            </List>
+            </Box>
       </Box>
     );
   };
