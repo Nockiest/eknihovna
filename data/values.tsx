@@ -56,7 +56,7 @@ export  const shownBooksBySize: Record<Breakpoint, number> = {
 export const navRoutes: NavButton[] = [
     { URL: "/", label: "Úvod" },
     // { URL: "/about", label: "O Knihovně" },
-    { URL: "/katalog", label: "katalog" },
+    { URL: "/katalog", label: "Katalog" },
     { URL: "/news", label: "Zprávy" },
     { URL: "/contact", label: "Kontakt" },
     { URL: "/upload", label: "API" },

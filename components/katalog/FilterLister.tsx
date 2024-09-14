@@ -14,9 +14,9 @@ type FilterListerProps = {
 const FilterLister: React.FC<FilterListerProps> =   ({
 
 }) => {
-  const { filters, setFilters, setFiltersValues, setErrorMessage } = useSearchContext();
+  const { activeFilters, setFilters, setFiltersValues, setErrorMessage } = useSearchContext();
 
-  const filterKeys = Object.keys(filters) as (keyof Filters)[];
+  const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
   async function fetchUniqueFilterCol(
     colName: "genres" | "category" | "author"|'name'
   ) {
@@ -31,7 +31,7 @@ const FilterLister: React.FC<FilterListerProps> =   ({
 
 
   useEffect(() => {
-    console.log('fetching filters')
+    console.log('fetching activeFilters')
     async function update() {
       try {
         await Promise.all([
@@ -74,7 +74,7 @@ const FilterLister: React.FC<FilterListerProps> =   ({
   return (
     <Box className="m-2">
       {filterKeys.map((key) => {
-        const value = filters[key];
+        const value = activeFilters[key];
         if (checkIfIgnoredValue(value)) {
           return null;
         }

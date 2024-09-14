@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo,  } from "react";
+import React, { useCallback, useMemo } from "react";
 import { Autocomplete, TextField, InputAdornment } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { FixedSizeList } from "react-window";
@@ -6,48 +6,48 @@ import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 
 const SearchAutocomplete: React.FC = () => {
-  const { filterValues, filters, setFilters } = useSearchContext();
+  const { filterValues, activeFilters, setFilters } = useSearchContext();
   const router = useRouter();
   const pathName = usePathname();
   const searchParams = useSearchParams();
   const filteredOptions = useMemo(() => {
-    const searchTerm = filters.name?.toLowerCase() || '';
+    const searchTerm = activeFilters.name?.toLowerCase() || "";
     const results = filterValues.name.filter((option) => {
       return option.toLowerCase().includes(searchTerm);
     });
-    console.log('Filtered options:', results); // Debugging: Check filtered options
+    console.log("Filtered options:", results); // Debugging: Check filtered options
     return results;
-  }, [filterValues.name, filters.name]);
+  }, [filterValues.name, activeFilters.name]);
 
-  const changeParams= (newname: string) => {
-      console.log("Query changed:", newname); // Debugging: Check the new query value
-      setFilters((prevFilters) => ({
-        ...prevFilters,
-        name: newname.trim(),
-      }));
-      const currentQuery = new URLSearchParams(searchParams.toString());
-      currentQuery.set("page", '1' )
-      router.push(`${pathName}?${currentQuery.toString()}`);
-  };
+  const changeParams = useCallback((newname: string) => {
+    console.log("Query changed:", newname); // Debugging: Check the new query value
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      name: newname.trim(),
+    }));
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("page", '1');
+    router.push(`${pathName}?${currentQuery.toString()}`);
+  }, [setFilters, searchParams, pathName, router]);
 
   const renderRow = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
       const selectedValue = filteredOptions[index];
       return (
-        <li
-          style={style}
-          key={index}
-          className="cursor-pointer z-1 py-auto"
-          onClick={() => {
-            console.log("Row clicked, selected value:", selectedValue); // Debugging: Check click event
-            changeParams(selectedValue);
-          }}
-        >
-          {selectedValue}
-        </li>
+        <div style={style} key={index}>
+          <li
+            className="cursor-pointer z-1 py-auto"
+            onClick={() => {
+              console.log("Row clicked, selected value:", selectedValue); // Debugging: Check click event
+              changeParams(selectedValue);
+            }}
+          >
+            {selectedValue}
+          </li>
+        </div>
       );
     },
-    [filteredOptions, filters.name, changeParams]
+    [filteredOptions, changeParams]
   );
 
   return (
@@ -57,14 +57,14 @@ const SearchAutocomplete: React.FC = () => {
       className="w-full"
       options={filteredOptions}
       groupBy={(filteredOptions) => filteredOptions[0]}
-      isOptionEqualToValue={(filteredOptions, value) => filteredOptions === value }
-      value={filters.name}
+      isOptionEqualToValue={(filteredOptions, value) => filteredOptions === value}
+      value={activeFilters.name}
       onInputChange={(e, newInputValue) => {
         console.log("Input changed:", newInputValue);
         changeParams(newInputValue);
       }}
       onChange={(e, newValue) => {
-        console.log("Autocomplete value changed:", newValue)
+        console.log("Autocomplete value changed:", newValue);
         if (newValue) {
           changeParams(newValue);
         }
@@ -79,7 +79,7 @@ const SearchAutocomplete: React.FC = () => {
           itemCount={filteredOptions.length}
           {...props}
         >
-          {renderRow}
+          {({ index, style }) => renderRow({ index, style })}
         </FixedSizeList>
       )}
       renderInput={(params) => (
@@ -106,7 +106,7 @@ export default SearchAutocomplete;
 // const handleSelect = (selectedValue: string) => {
 //   console.log("Selected value:", selectedValue); // Debugging: Check the selected value
 
-//   // Update the 'name' key in the filters object
+//   // Update the 'name' key in the activeFilters object
 //   setFilters((prevFilters) => ({
 //     ...prevFilters,
 //     name: selectedValue,

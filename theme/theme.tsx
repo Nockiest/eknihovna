@@ -2,10 +2,10 @@
 "use client";
 import { createTheme } from "@mui/material/styles";
 import { Margarine } from "next/font/google";
-const rootPalette = {
+export const rootPalette = {
   primary: {
     main: "#93736c", // primary 500
-    light: "#beaba7", // primary 700
+    light: "#5b1b0b" , // primary 700
     dark: "#584541", // primary 300
     contrastText: "#ffffff",
   },

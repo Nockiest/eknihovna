@@ -3,7 +3,7 @@ import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { Box, Paper, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "../general/ReroutToAUth";
-import Announcer from "@/theme/Announcer";
+import Announcer from "@/utils/Announcer";
 import { useState } from "react";
 import SingleBookEditor from "./functionality/SingleBookEditor";
 import Uploader from "./functionality/Uploader";
@@ -45,6 +45,7 @@ const ExcelSheetUpdater = () => {
 
   return (
     <Box className="flex flex-col h-auto gap-4 z-0 select-none items-center justify-center">
+        <Announcer message={responseMessage} type={"normal"} />
       <Paper className='flex flex-col  h-auto gap-16 w-full'>
         <Box className="flex flex-col md:flex-row w-full  h-screen bg-white shadow-lg rounded-lg overflow-hidden">
           <Uploader setResponseMessage={setResponseMessage} />
@@ -58,7 +59,7 @@ const ExcelSheetUpdater = () => {
           <BookCountLogger setResponseMessage={setResponseMessage} />
         </Box>
       </Paper>
-      <Announcer message={responseMessage} type={"normal"} />
+
 
       <PrimaryButton onClick={() => signOut()} sx={{ margin: "2em" }}>
         <Typography>Odhlásit se</Typography>

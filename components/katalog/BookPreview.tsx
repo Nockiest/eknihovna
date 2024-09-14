@@ -1,11 +1,9 @@
-"use client";
+ 
 import { truthyValues } from "@/data/values";
 import theme from "@/theme/theme";
 import { Book } from "@/types/types";
 import { Box, Paper, Typography } from "@mui/material";
-import React, { useEffect } from "react";
 import Filter from "./CategoryChip";
-import { useTheme } from "@emotion/react";
 import BookCover from "./BookCover";
 import StarRow from "./starRow/StarRow";
 import CategoryChip from "./CategoryChip";
@@ -59,6 +57,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           </Box>
           {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
           <StarRow rating={rating} />
+          {!available && <Typography variant="body1"  >Nedostupná</Typography>}
         </Box>
       </Box>
     </Paper>

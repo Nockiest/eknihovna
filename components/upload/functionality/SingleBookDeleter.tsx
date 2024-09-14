@@ -24,7 +24,7 @@ interface BookDeletionProps {
       setLoading(true);
       setError("");
       try {
-        // Assume fetchFilteredBooks is a function that fetches books based on filters
+        // Assume fetchFilteredBooks is a function that fetches books based on activeFilters
         const response = await fetchFilteredBooks(
           defaultFilters, // defaultFilters or appropriate filter object
           1,
@@ -66,7 +66,10 @@ interface BookDeletionProps {
         if (!id) {
           throw new Error("ID musí být poskytnuto pro smazání.");
         }
-
+        const userConfirmed = window.confirm("Opravdu chcete tuto knihu smazat?");
+        if (!userConfirmed) {
+          return; // Exit if the user doesn't confirm
+        }
         // Send DELETE request with the ID as part of the URL or query parameters
         const response = await axios.delete(
           `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
@@ -85,7 +88,7 @@ interface BookDeletionProps {
     };
 
     return (
-      <Box sx={{ maxWidth: 600, mx: "auto", p: 3 }}>
+      <Box sx={{ maxWidth: 400, mx: "auto", p: 3 }}>
         <Typography variant="h6" gutterBottom>
           Smazání knihy
         </Typography>

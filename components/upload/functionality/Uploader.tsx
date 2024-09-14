@@ -26,7 +26,6 @@ const Uploader = ({
     100 - (uploadProgress.remaining / uploadProgress.total) * 100;
 
   const handleUploadChunk = async (chunkIndex: number) => {
-    ;
     const chunk = chunks[chunkIndex];
     try {
       const res = await postDataToEndpoint(chunk);
@@ -111,42 +110,42 @@ const Uploader = ({
   };
 
   return (
-    <Box className="flex flex-col flex-center flex-grow-2 m-8 align-center  ">
-        <Typography variant="h2" className="text-xl font-semibold mb-4">
-          Hromadné nahrání z tabulky
-        </Typography>
+    <Box className="flex flex-col flex-center b-black flex-grow-1 m-8 align-center  ">
+      <Typography variant="h2" className="text-xl font-semibold mb-4">
+        Hromadné nahrání z tabulky
+      </Typography>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleParseFile();
-          }}
-          encType="multipart/form-data"
-          className="flex flex-col items-center"
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleParseFile();
+        }}
+        encType="multipart/form-data"
+        className="flex flex-col items-center"
+      >
+        <input
+          type="file"
+          id="fileInput"
+          name="file"
+          accept=".xlsx"
+          className="mb-4 cursor-pointer"
+          onChange={handleFileChange}
+        />
+        <PrimaryButton
+          type="button"
+          onClick={handleParseFile}
+          disabled={!selectedFile}
         >
-          <input
-            type="file"
-            id="fileInput"
-            name="file"
-            accept=".xlsx"
-            className="mb-4 cursor-pointer"
-            onChange={handleFileChange}
+          Analyzovat soubor
+          <Image
+            className="m-1"
+            src="icon/upload.svg"
+            alt="nahrát"
+            width={32}
+            height={32}
           />
-          <PrimaryButton
-            type="button"
-            onClick={handleParseFile}
-            disabled={!selectedFile}
-          >
-            Analyzovat soubor
-            <Image
-              className="m-1"
-              src="icon/upload.svg"
-              alt="nahrát"
-              width={32}
-              height={32}
-            />
-          </PrimaryButton>
-        </form>
+        </PrimaryButton>
+      </form>
       {chunks.length > 0 && (
         <>
           <DataChunksTable
@@ -163,22 +162,18 @@ const Uploader = ({
         </>
       )}
       <Box>
-
-      <Box>
-        <Typography variant="h6" > Návod pro hromadné nahrávání</Typography>
-        <List>
-        <ListItemText primary=">kliněte na vybrat soubor" />
-        <ListItemText primary="vyberte tabulku obsahující vaše knihy" />
-        <ListItemText primary="klikněte na analyzovat soubor" />
-        <ListItemText primary="soubor se automaticky rozdělí po 10 řádcích" />
-        <ListItemText primary="klikněte na nahrát, u každého řádku vytvořené tabulku, aby se tyto řádky poslaly do databáze" />
-        <ListItemText primary="pro kontorlu můžete stáhnout data ze serveru a prohlédnout si, jestli odpovídají nahranému obsahu" />
-        <ListItemText primary="pokud se data nenahrála, pravděpodoně tabulka neobsahuje správné názvy sloupců" />
-        </List>
-      </Box>
-
-
-
+        <Box>
+          <Typography variant="h6"> Návod pro hromadné nahrávání</Typography>
+          <List>
+            <ListItemText primary="kliněte na vybrat soubor" />
+            <ListItemText primary="vyberte tabulku obsahující vaše knihy" />
+            <ListItemText primary="klikněte na analyzovat soubor" />
+            <ListItemText primary="soubor se automaticky rozdělí po 10 řádcích" />
+            <ListItemText primary="klikněte na nahrát, u každého řádku vytvořené tabulku, aby se tyto řádky poslaly do databáze" />
+            <ListItemText primary="pro kontorlu můžete stáhnout data ze serveru a prohlédnout si, jestli odpovídají nahranému obsahu" />
+            <ListItemText primary="pokud se data nenahrála, pravděpodoně tabulka neobsahuje správné názvy sloupců" />
+          </List>
+        </Box>
       </Box>
     </Box>
   );

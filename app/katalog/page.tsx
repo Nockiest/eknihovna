@@ -5,11 +5,11 @@ import { useState } from "react";
 import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
 import { FiltringWindow } from "@/components/katalog/FiltringWindow";
-import ErrorReporter from "@/theme/Announcer";
+import ErrorReporter from "@/utils/Announcer";
 
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
-  const [filters, setFilters] = useState<Filters>({
+  const [activeFilters, setFilters] = useState<Filters>({
     author: [],
     category: [],
     genres: [],
@@ -34,7 +34,7 @@ const KatalogPage = () => {
       value={{
         isOpenSearcher,
         setOpenSearcher,
-        filters, // currently active filters
+        activeFilters, // currently active activeFilters
         setFilters,
         errorMessage, //
         setErrorMessage,
