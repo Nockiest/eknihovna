@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import * as xlsx from "xlsx";
 import { v4 as uuidv4 } from "uuid";
-import { truthyValues } from "@/data/values";
+import { bookHeaders, truthyValues } from "@/data/values";
 import { UploadJsonData } from "@/types/types";
 import { NextResponse } from "next/server";
 export const insertJsonDataToPostgres = async (
@@ -11,20 +11,6 @@ export const insertJsonDataToPostgres = async (
   try {
     const { rows } = jsonData;
     console.log(rows);
-    const headers = [
-      "id",
-      "book_code",
-      "name",
-      "author",
-      "category",
-      "genres",
-      "umisteni",
-      "signatura",
-      "zpusob_ziskani",
-      "formaturita",
-      "available",
-      "rating",
-    ];
     if (!rows || !Array.isArray(rows)) {
       throw new Error("Invalid JSON data: rows are missing or not an array");
     }
@@ -33,7 +19,7 @@ export const insertJsonDataToPostgres = async (
     for (const row of rows) {
       try {
         // Check if the row is well-formed
-        if (row.length !== headers.length) {
+        if (row.length !== bookHeaders.length) {
           console.error(`Badly formatted row: ${JSON.stringify(row)}`);
           NextResponse.json(
             { error: `Badly formatted row: ${JSON.stringify(row)}` },
@@ -46,7 +32,7 @@ export const insertJsonDataToPostgres = async (
         //   let value = row[index];
 
         // Build the data object using the correct rowObject
-        let data = headers.reduce((acc: any, header: string, index: number) => {
+        let data = bookHeaders.reduce((acc: any, header: string, index: number) => {
                     acc[header] = row[index] !== undefined ? row[index] : null; // Ensure undefined values are handled
                     return acc;
                   }, {});

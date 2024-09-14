@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
     } else {
       // Handle the case when the content type is not JSON
       return NextResponse.json(
-        { success: false, error: "Invalid content type" },
+        { success: false, error: "Špatný content type" },
         { headers: { ...corsHeaders, ...noCacheHeaders } }
       );
     }
@@ -79,21 +79,46 @@ export async function POST(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    // Delete the books with the provided IDs
-    const deleteResult = await prisma.knihy.deleteMany( );
+    // Extract the ID from the request body
+    const { id } = await req.json();
 
-    // Return a success response with the number of deleted books
+    // Validate that an ID is provided
+    if (!id) {
+      return NextResponse.json({
+        success: false,
+        error: 'ID neposkytnuto',
+      }, { status: 400 });
+    }
+
+    // Check if a book with the provided ID exists
+    const book = await prisma.knihy.findUnique({
+      where: { id },
+    });
+
+    if (!book) {
+      return NextResponse.json({
+        success: false,
+        error: `Kniha s id: ${id} v databázi neexistuje`,
+      }, { status: 404 });
+    }
+
+    // Delete the book with the provided ID
+    const deleteResult = await prisma.knihy.delete({
+      where: { id },
+    });
+
+    // Return a success response with the deleted book ID
     return NextResponse.json({
       success: true,
-      message: `${deleteResult.count} knih úspěšně smazáno`,
+      message: `Kniha s ID ${id} úspěšně smazána`,
     });
   } catch (error: any) {
-    console.error('Error deleting books:', error);
+    console.error('Error deleting book:', error);
     return NextResponse.json({
       success: false,
       error: 'Server error',
       details: error.message,
-    });
+    }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
