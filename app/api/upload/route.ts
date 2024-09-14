@@ -76,6 +76,28 @@ export async function POST(req: NextRequest) {
     );
   }
 }
+
+export async function DELETE(req: NextRequest) {
+  try {
+    // Delete the books with the provided IDs
+    const deleteResult = await prisma.knihy.deleteMany( );
+
+    // Return a success response with the number of deleted books
+    return NextResponse.json({
+      success: true,
+      message: `${deleteResult.count} knih úspěšně smazáno`,
+    });
+  } catch (error: any) {
+    console.error('Error deleting books:', error);
+    return NextResponse.json({
+      success: false,
+      error: 'Server error',
+      details: error.message,
+    });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
 // export async function POST(req: NextRequest) {
 //   console.log("POST request received");
 //   try {

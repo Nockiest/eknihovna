@@ -29,8 +29,6 @@ export const insertJsonDataToPostgres = async (
       throw new Error("Invalid JSON data: rows are missing or not an array");
     }
 
-    console.log("Processing rows...");
-
     // Validate and insert data into the database
     for (const row of rows) {
       try {
@@ -48,26 +46,30 @@ export const insertJsonDataToPostgres = async (
         //   let value = row[index];
 
         // Build the data object using the correct rowObject
-        const data = {
-          id: row.id ? row.id : uuidv4(),
-          book_code: isNaN(parseInt(row.book_code, 10))
+        let data = headers.reduce((acc: any, header: string, index: number) => {
+                    acc[header] = row[index] !== undefined ? row[index] : null; // Ensure undefined values are handled
+                    return acc;
+                  }, {});
+          data = {
+          id: data.id ? data.id : uuidv4(),
+          book_code: isNaN(parseInt(data.book_code, 10))
             ? null
-            : parseInt(row.book_code, 10),
-          formaturita: truthyValues.includes(row.formaturita) ? true : false,
-          available: truthyValues.includes(row.available) ? true : false,
-          genres: row.genres
-            ? row.genres
+            : parseInt(data.book_code, 10),
+          formaturita: truthyValues.includes(data.formaturita) ? true : false,
+          available: truthyValues.includes(data.available) ? true : false,
+          genres: data.genres
+            ? data.genres
                 .toString()
                 .split(",")
                 .map((v: string) => v.trim())
             : [],
-          rating: row.rating !== null ? parseFloat(row.rating) : -1,
-          name: row.name,
-          author: row.author,
-          category: row.category,
-          umisteni: row.umisteni,
-          signatura: row.signatura,
-          zpusob_ziskani: row.zpusob_ziskani,
+          rating: data.rating !== null ? parseFloat(data.rating) : -1,
+          name: data.name,
+          author: data.author,
+          category: data.category,
+          umisteni: data.umisteni,
+          signatura: data.signatura,
+          zpusob_ziskani: data.zpusob_ziskani,
         };
         console.log(data);
         console.log(row);

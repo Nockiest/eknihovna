@@ -61,3 +61,18 @@ export const navRoutes: NavButton[] = [
     { URL: "/contact", label: "Kontakt" },
     { URL: "/upload", label: "API" },
   ]
+
+export const  bookHeaders = [
+    "id",
+    "book_code",
+    "name",
+    "author",
+    "category",
+    "genres",
+    "umisteni",
+    "signatura",
+    "zpusob_ziskani",
+    "formaturita",
+    "available",
+    "rating",
+  ]

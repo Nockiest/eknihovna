@@ -43,8 +43,8 @@ const ExcelSheetUpdater = () => {
   }
 
   return (
-    <Box className="flex flex-col gap-4 z-0 select-none items-center justify-center">
-      <Paper className='flex flex-col gap-16 w-full'>
+    <Box className="flex flex-col h-auto gap-4 z-0 select-none items-center justify-center">
+      <Paper className='flex flex-col  h-auto gap-16 w-full'>
         <Box className="flex flex-col md:flex-row w-full  h-screen bg-white shadow-lg rounded-lg overflow-hidden">
           <Uploader setResponseMessage={setResponseMessage} />
           <BookFetcher setResponseMessage={setResponseMessage} />
