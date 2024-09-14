@@ -8,7 +8,7 @@ import BookEditForm from "@/components/general/BookEditForm";
 import { Box, List, ListItemText, Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
-const newBook: Book = {
+const emptyBook: Book = {
   id: uuidv4(),
   book_code: -1,
   name: "",
@@ -78,7 +78,7 @@ const SingleBookEditor = ({
 
     if (!book) {
       // If book is null, initialize a new book object
-      setBook(newBook);
+      setBook(emptyBook);
     } else {
       // Update existing book object
       setBook((prevBook) => {
@@ -119,7 +119,7 @@ const SingleBookEditor = ({
 
   // Initialize a new book with a new UUID and empty values
   const createNewBook = () => {
-    setBook(newBook);
+    setBook(emptyBook);
     setBookId(""); // Clear the book ID input field
   };
 

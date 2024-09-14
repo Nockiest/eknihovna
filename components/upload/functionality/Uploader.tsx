@@ -26,10 +26,8 @@ const Uploader = ({
     100 - (uploadProgress.remaining / uploadProgress.total) * 100;
 
   const handleUploadChunk = async (chunkIndex: number) => {
-    debugger;
+    ;
     const chunk = chunks[chunkIndex];
-    console.log(chunk);
-
     try {
       const res = await postDataToEndpoint(chunk);
 

@@ -10,6 +10,7 @@ import Uploader from "./functionality/Uploader";
 import BookDeleter from "./functionality/BookDeleter";
 import BookCountLogger from "./functionality/BookCountLogger";
 import BookFetcher from "./functionality/BookFetcher";
+import SingleBookDeleter from "./functionality/SingleBookDeleter";
 export const revalidate = 0;
 
 const ExcelSheetUpdater = () => {
@@ -49,6 +50,7 @@ const ExcelSheetUpdater = () => {
           <Uploader setResponseMessage={setResponseMessage} />
           <BookFetcher setResponseMessage={setResponseMessage} />
           <SingleBookEditor setResponseMessage={setResponseMessage} />
+          <SingleBookDeleter setResponseMessage={setResponseMessage}/>
         </Box>
 
         <Box className="mb-4 ml-8">
