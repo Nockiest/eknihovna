@@ -23,7 +23,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { isOpenSearcher, setOpenSearcher, filters, setFilters, filterValues } =
+  const { isOpenSearcher, setOpenSearcher, activeFilters, setFilters, filterValues } =
     useSearchContext();
 
   const changePage = (newPage: number) => {
@@ -79,7 +79,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
   };
   const getFilteredOptions = (key: keyof FiltringValues) => {
     return filterValues[key]?.filter(
-      (option) => !filters[key]?.includes(option)
+      (option) => !activeFilters[key]?.includes(option)
     );
   };
 
@@ -110,7 +110,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           />
 
           <InputLabel shrink>
-            Žánry: {filters.genres?.join(",") || "None"}
+            Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel>
           <SortedGroupedSelect
             options={getFilteredOptions("genres")}
@@ -118,7 +118,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             handleChange={(newVal) => handleFilterChange("genres", newVal)}
           />
 
-          <InputLabel shrink>Autor: {filters.author || "None"}</InputLabel>
+          <InputLabel shrink>Autor: {activeFilters.author || "None"}</InputLabel>
           <SortedGroupedSelect
             options={getFilteredOptions("author")}
             label={"autor"}
@@ -129,7 +129,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={Boolean(filters.available)}
+              checked={Boolean(activeFilters.available)}
               onChange={(e) =>
                 handleFilterChange("available", e.target.checked)
               }
@@ -147,7 +147,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         <FormControlLabel
           control={
             <Checkbox
-              checked={Boolean(filters.formaturita)}
+              checked={Boolean(activeFilters.formaturita)}
               onChange={(e) =>
                 handleFilterChange("formaturita", e.target.checked)
               }

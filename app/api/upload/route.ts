@@ -17,7 +17,6 @@ export async function POST(req: NextRequest) {
       console.log(jsonData.rows);
 
       if ( !jsonData.rows) {
-        // Return error response if headers or rows are missing
         return NextResponse.json(
           {
             success: false,

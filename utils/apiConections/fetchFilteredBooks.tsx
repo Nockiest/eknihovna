@@ -21,19 +21,19 @@ export const fetchFilteredBooks = async (
 
 
 // export const fetchFilteredBooks = async (
-//   filters: Filters = defaultFilters,
+//   activeFilters: Filters = defaultFilters,
 //   page: number = 1,
 //   limit: number = 10000000
 // ): Promise<Book[]> => {
 //   // const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
 //   try {
 //     // debugger
-//     // const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit });
+//     // const response = await axios.post(`${apiUrl}/bookList`, { activeFilters, page, limit });
 //     // console.log(response.data)
 //   //  const books = await prisma.knihy.findMany()
 //   //  console.log(books)
 //     // return  response.data || [];
-//     const prismaFilters = buildPrismaFilter(filters);
+//     const prismaFilters = buildPrismaFilter(activeFilters);
 
 //     // Calculate offset
 //     const offset = (page - 1) * limit;

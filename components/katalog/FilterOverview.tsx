@@ -14,8 +14,8 @@ interface FilterOverviewProps {
 }
 
 const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
-  const { filters, isOpenSearcher, setOpenSearcher } = useSearchContext();
-  const filterKeys = Object.keys(filters) as (keyof Filters)[];
+  const { activeFilters, isOpenSearcher, setOpenSearcher } = useSearchContext();
+  const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
 
   return (
     <Box className="w-full flex flex-wrap">
@@ -25,7 +25,7 @@ const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
 />
 
       {filterKeys.map((key) => {
-        const value = filters[key];
+        const value = activeFilters[key];
         if (value) {
           if (typeof value === 'string') {
             return (

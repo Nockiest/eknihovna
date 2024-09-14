@@ -11,7 +11,7 @@ import SearchAutocomplete from "./SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
 import LoadingComponent from "../general/LoadingComponent";
-import Announcer from "@/theme/Announcer";
+import Announcer from "@/utils/Announcer";
 
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -59,19 +59,19 @@ function reducer(state: State, action: Action): State {
 }
 
 const BookCatalog: React.FC = () => {
-  const { isOpenSearcher, setOpenSearcher, filters } = useSearchContext();
+  const { isOpenSearcher, setOpenSearcher, activeFilters } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   useEffect(() => {
-    console.log('FETCHING NEW BOOKS WITH FILTERS', filters)
+    console.log('FETCHING NEW BOOKS WITH FILTERS', activeFilters)
     const fetchBooks = async () => {
       dispatch({ type: "FETCH_INIT" });
 
       try {
         // Fetch all filtered books only once
-        const allPossibleBooks = await fetchFilteredBooks(filters);
+        const allPossibleBooks = await fetchFilteredBooks(activeFilters);
         console.log("All filtered books:", allPossibleBooks.length);
 
         // Calculate the current page's books using the offset
@@ -97,7 +97,7 @@ const BookCatalog: React.FC = () => {
     };
 
     fetchBooks();
-  }, [filters, page]);
+  }, [activeFilters, page]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
 

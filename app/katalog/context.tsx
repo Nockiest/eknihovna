@@ -4,7 +4,7 @@ import { useContext, createContext } from "react";
 type QueryContextType = {
   isOpenSearcher: boolean;
   setOpenSearcher: React.Dispatch<React.SetStateAction<boolean>>;
-  filters: Filters;
+  activeFilters: Filters;
   setFilters: React.Dispatch<React.SetStateAction<Filters>>;
   errorMessage: string | null;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
