@@ -164,18 +164,21 @@ const SingleBookEditor = ({
         <ListItemText primary="kliněte na vytvořit knihu" />
         <ListItemText primary="vyplňte políčka podle údajů vaší knihy" />
         <ListItemText primary="klikněte na nahrát knihu" />
+        <ListItemText primary="kniha by měla být přidána do databáze" />
         </List>
       </Box>
 
       <Box>
 
-        <Typography variant="h6" >     Návod upravení existující knihy </Typography>
+        <Typography variant="h6" > Návod upravení existující knihy </Typography>
         <List>
         <ListItemText primary="stáhněte si tabulku z databáze" />
-        <ListItemText primary="vyberte v ní id řádku který chcete nahrát" />
-        <ListItemText primary="zkopírujte ho do pole vepsat id" />
+        <ListItemText primary="vyberte v ní ID řádku který chcete upravit" />
+        <ListItemText primary="zkopírujte ho do pole vepsat ID" />
+        <ListItemText primary="kliněte na Stáhnout knihu podle ID" />
         <ListItemText primary="upravte políčka podle potřeby" />
         <ListItemText primary="klikněte na nahrát knihu" />
+        <ListItemText primary="kniha s tímto ID by měla být úspěšně upravena" />
         </List>
       </Box>
     </Box>

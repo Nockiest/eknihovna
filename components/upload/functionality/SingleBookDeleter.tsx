@@ -135,7 +135,7 @@ interface BookDeletionProps {
             <ListItemText primary="Zobrazí se vám kniha, která byla nalezena v databázi" />
             <ListItemText primary="pokud kniha s tímto id v db. není, zobrazí se error" />
             <ListItemText primary="kliněte na smazat knihu" />
-            <ListItemText primary="pro kontrolu stáhněte knihu a ověřte, že kniha se zadaným ID byla opravdu smazána" />
+            <ListItemText primary="pro kontrolu stáhněte data ze serveru a ověřte, že kniha se zadaným ID byla opravdu smazána" />
             </List>
             </Box>
       </Box>

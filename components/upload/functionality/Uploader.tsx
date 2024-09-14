@@ -2,7 +2,7 @@
 import { excelWordsToBool, fillMissingIds } from "@/app/api/upload/excelUtils";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
-import { Box, Typography } from "@mui/material";
+import { Box, List, ListItemText, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
 import DataChunksTable from "../DataChunksTable";
@@ -163,14 +163,21 @@ const Uploader = ({
         </>
       )}
       <Box>
-Návod
-<ul>
-  <li>kliněte na vybrat soubor</li>
-  <li>vyberte tabulku obsahující vaše knihy</li>
-  <li>klikněte na analyzovat soubor</li>
-  <li>soubor se automaticky rozdělí po 10 řádcích</li>
-  <li>klikněte na nahrát, u každého řádku, aby se data poslala do databáze</li>
-</ul>
+
+      <Box>
+        <Typography variant="h6" > Návod pro hromadné nahrávání</Typography>
+        <List>
+        <ListItemText primary=">kliněte na vybrat soubor" />
+        <ListItemText primary="vyberte tabulku obsahující vaše knihy" />
+        <ListItemText primary="klikněte na analyzovat soubor" />
+        <ListItemText primary="soubor se automaticky rozdělí po 10 řádcích" />
+        <ListItemText primary="klikněte na nahrát, u každého řádku vytvořené tabulku, aby se tyto řádky poslaly do databáze" />
+        <ListItemText primary="pro kontorlu můžete stáhnout data ze serveru a prohlédnout si, jestli odpovídají nahranému obsahu" />
+        <ListItemText primary="pokud se data nenahrála, pravděpodoně tabulka neobsahuje správné názvy sloupců" />
+        </List>
+      </Box>
+
+
 
       </Box>
     </Box>
