@@ -6,6 +6,7 @@ import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
 import { FiltringWindow } from "@/components/katalog/FiltringWindow";
 import ErrorReporter from "@/utils/Announcer";
+import ColorCirclesComprehensive from "@/components/general/ColorCirclesComprehensive";
 
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
@@ -42,6 +43,7 @@ const KatalogPage = () => {
         setFiltersValues,
       }}
     >
+      {/* <ColorCirclesComprehensive /> */}
       <Box className="w-full">
         <Box
           display="flex"

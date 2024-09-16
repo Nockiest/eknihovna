@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
       where,
       skip: (page - 1) * limit,
       take: limit,
-      distinct: ['name'], // Select distinct on the 'name' field
+      // distinct: ['name'], // Select distinct on the 'name' field
     });
     // const books:Book[] = []
     return NextResponse.json(books, {
