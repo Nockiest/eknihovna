@@ -83,6 +83,11 @@ const config: Config = {
 
     },
   },
+  safelist: [
+    {
+      pattern: /bg-(primary|secondary|background|accent|text)-[0-9]{1,3}/,
+    },
+  ],
   plugins: [],
 };
 export default config;
