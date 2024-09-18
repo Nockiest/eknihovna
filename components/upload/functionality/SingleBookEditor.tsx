@@ -133,6 +133,7 @@ const SingleBookEditor = ({
       <br />
       <input
         type="text"
+        className="w-full"
         placeholder="Nebo vepsat ID knihy v databázi"
         value={bookId}
         onChange={(e) => setBookId(e.target.value)}
