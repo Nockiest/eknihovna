@@ -10,7 +10,12 @@ const BookDeleter = ({ setResponseMessage }: { setResponseMessage: React.Dispatc
     }
 
     try {
-      const response = await axios.delete(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`);
+      debugger
+      const response = await axios.delete(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
+        {
+          data: { id:-1 }, // Include the ID in the request body if your API expects it this way
+        }
+      );
       setResponseMessage(response.data.message);
     } catch (error: any) {
       console.error("Chyba při mazání dat ze serveru:", error.message);
