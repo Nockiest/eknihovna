@@ -118,7 +118,7 @@ interface BookDeletionProps {
             <Typography variant="body1">
               Kniha k odstranění: {bookName}
             </Typography>
-
+          <br />
             <Button
               variant="contained"
               color="error"

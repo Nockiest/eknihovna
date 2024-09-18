@@ -89,7 +89,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json(
         {
           success: true,
-          message: deleteResult,
+          message:  `smazáno  ${deleteResult.count} knih`,
         },
         { status: 200 }
       );

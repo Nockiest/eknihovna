@@ -124,8 +124,8 @@ const SingleBookEditor = ({
   };
 
   return (
-    <Box className="flex-grow-2 overflow-y-auto">
-      <h2>Upravit/Přidat jednu knihu</h2>
+    <Box className="flex-grow-2 m-4 overflow-y-auto">
+      <Typography variant="h4">Upravit/Přidat jednu knihu</Typography>
 
       <PrimaryButton onClick={createNewBook} disabled={loading}>
         Vytvořit Novou Knihu
@@ -149,7 +149,7 @@ const SingleBookEditor = ({
 
       {book && (
         <div>
-          <h3>{bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}</h3>
+          <h1  >{bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}</h1>
           <BookEditForm
             book={book}
             handleInputChange={handleInputChange}
