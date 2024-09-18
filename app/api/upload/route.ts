@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       // console.log(jsonData.headers);
       console.log(jsonData.rows);
 
-      if ( !jsonData.rows) {
+      if (!jsonData.rows) {
         return NextResponse.json(
           {
             success: false,
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
           {
             headers: {
               ...corsHeaders,
-              ...noCacheHeaders
+              ...noCacheHeaders,
             },
           }
         );
@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
           {
             headers: {
               ...corsHeaders,
-              ...noCacheHeaders
+              ...noCacheHeaders,
             },
           }
         );
@@ -56,7 +56,7 @@ export async function POST(req: NextRequest) {
         {
           headers: {
             ...corsHeaders,
-            ...noCacheHeaders
+            ...noCacheHeaders,
           },
         }
       );
@@ -80,31 +80,44 @@ export async function DELETE(req: NextRequest) {
   try {
     // Extract the ID from the request body
     const { id } = await req.json();
+    console.log(id,(parseInt(id) ==  -1));
+    console.log(typeof id === "string")
+    if (parseInt(id) ==  -1) {
+      console.log('x')
+      const deleteResult = await prisma.knihy.deleteMany( );
+      console.log('returning')
+      return NextResponse.json(
+        {
+          success: true,
+          message: deleteResult,
+        },
+        { status: 200 }
+      );
+    } else if (id && typeof id === "string") {
+      // Check if a book with the provided ID exists
+      console.log('deleting', id)
+      const book = await prisma.knihy.delete({
+        where: { id },
+      });
 
-    // Validate that an ID is provided
-    if (!id) {
-      return NextResponse.json({
-        success: false,
-        error: 'ID neposkytnuto',
-      }, { status: 400 });
+      if (!book) {
+        return NextResponse.json(
+          {
+            success: false,
+            error: `Kniha s id: ${id} v databázi neexistuje`,
+          },
+          { status: 404 }
+        );
+      }
+    } else {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "ID neposkytnuto",
+        },
+        { status: 400 }
+      );
     }
-
-    // Check if a book with the provided ID exists
-    const book = await prisma.knihy.findUnique({
-      where: { id },
-    });
-
-    if (!book) {
-      return NextResponse.json({
-        success: false,
-        error: `Kniha s id: ${id} v databázi neexistuje`,
-      }, { status: 404 });
-    }
-
-    // Delete the book with the provided ID
-    const deleteResult = await prisma.knihy.delete({
-      where: { id },
-    });
 
     // Return a success response with the deleted book ID
     return NextResponse.json({
@@ -112,12 +125,15 @@ export async function DELETE(req: NextRequest) {
       message: `Kniha s ID ${id} úspěšně smazána`,
     });
   } catch (error: any) {
-    console.error('Error deleting book:', error);
-    return NextResponse.json({
-      success: false,
-      error: 'Server error',
-      details: error.message,
-    }, { status: 500 });
+    console.error("Error deleting book:", error);
+    return NextResponse.json(
+      {
+        success: false,
+        error: "Server error",
+        details: error.message,
+      },
+      { status: 500 }
+    );
   } finally {
     await prisma.$disconnect();
   }

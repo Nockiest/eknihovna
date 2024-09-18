@@ -45,26 +45,25 @@ const ExcelSheetUpdater = () => {
 
   return (
     <Box className="flex flex-col h-auto gap-4 z-0 select-none items-center justify-center">
-        <Announcer message={responseMessage} type={"normal"} />
-      <Paper className='flex flex-col  h-auto gap-16 w-full'>
+      <Announcer message={responseMessage} type={"normal"} />
+      <Paper className="flex flex-col  h-auto gap-16 w-full">
         <Box className="flex flex-col md:flex-row w-full  h-screen bg-white shadow-lg rounded-lg overflow-hidden">
           <Uploader setResponseMessage={setResponseMessage} />
-          <BookFetcher setResponseMessage={setResponseMessage} />
           <SingleBookEditor setResponseMessage={setResponseMessage} />
-          <SingleBookDeleter setResponseMessage={setResponseMessage}/>
+          <SingleBookDeleter setResponseMessage={setResponseMessage} />
         </Box>
 
         <Box className="mb-4 ml-8">
+          <BookFetcher setResponseMessage={setResponseMessage} />
+
           <BookDeleter setResponseMessage={setResponseMessage} />
           <BookCountLogger setResponseMessage={setResponseMessage} />
         </Box>
       </Paper>
 
-
       <PrimaryButton onClick={() => signOut()} sx={{ margin: "2em" }}>
         <Typography>Odhlásit se</Typography>
       </PrimaryButton>
-
     </Box>
   );
 };
