@@ -38,9 +38,7 @@ export const insertJsonDataToPostgres = async (
                   }, {});
           data = {
           id: data.id ? data.id : uuidv4(),
-          book_code: isNaN(parseInt(data.book_code, 10))
-            ? null
-            : parseInt(data.book_code, 10),
+
           formaturita: truthyValues.includes(data.formaturita) ? true : false,
           available: truthyValues.includes(data.available) ? true : false,
           genres: data.genres
@@ -53,7 +51,6 @@ export const insertJsonDataToPostgres = async (
           name: data.name,
           author: data.author,
           category: data.category,
-          umisteni: data.umisteni,
           signatura: data.signatura,
           zpusob_ziskani: data.zpusob_ziskani,
         };

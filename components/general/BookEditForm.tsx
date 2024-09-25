@@ -49,10 +49,8 @@ const BookEditForm = ({
         {[
           { label: "Název", name: "name", type: "text", value: book.name },
           { label: "Autor", name: "author", type: "text", value: book.author },
-          { label: "Kod Knihy", name: "book_code", type: "number", value: book.book_code },
           { label: "Kategorie", name: "category", type: "text", value: book.category },
           { label: "Žánry (odělené čárkou)", name: "genres", type: "text", value: book.genres ? book.genres.join(", ") : "" },
-          { label: "Umístění", name: "umisteni", type: "text", value: book.umisteni },
           { label: "Signatura", name: "signatura", type: "text", value: book.signatura },
           { label: "Způsob Získání", name: "zpusob_ziskani", type: "text", value: book.zpusob_ziskani },
         ].map((field) => (

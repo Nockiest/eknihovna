@@ -1,9 +1,7 @@
 export type Book = {
     id: string
-    book_code?: number
     name?: string
     author?: string
-    description?: string
     category: string
     genres?:string[]
     rating?: number
@@ -12,7 +10,6 @@ export type Book = {
     bookCoverURL?: string
     zpusob_ziskani?: string
     signatura?:string
-    umisteni:string
 }
 
 export type NavButton = {
@@ -23,7 +20,6 @@ export type NavButton = {
 export type StringedBool = "true" | "false";
 
 export  type Filters= {
-  // [key: string]: string[]| Omit<string | 'false' | 'true', 'false' | 'true'>| StringedBool|null ;
   name: string|null ;
   author?: string[];
   category?: string[];

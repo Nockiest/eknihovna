@@ -10,12 +10,10 @@ import { v4 as uuidv4 } from "uuid";
 
 const emptyBook: Book = {
   id: uuidv4(),
-  book_code: -1,
   name: "",
   author: "",
   category: "",
   genres: [],
-  umisteni: "",
   signatura: "",
   zpusob_ziskani: "",
   formaturita: false,
@@ -82,11 +80,11 @@ const SingleBookEditor = ({
     } else {
       // Update existing book object
       setBook((prevBook) => {
-        if (!prevBook) throw new Error('kniha zatím nebyla vytvořena'); // Early return if prevBook is unexpectedly null
+        if (!prevBook) throw new Error("kniha zatím nebyla vytvořena"); // Early return if prevBook is unexpectedly null
         return {
           ...prevBook,
           [name]: newValue,
-          id: name === 'id' ? String(newValue) : book.id ? book.id : uuidv4(), // Ensure id is always a string
+          id: name === "id" ? String(newValue) : book.id ? book.id : uuidv4(), // Ensure id is always a string
         };
       });
     }
@@ -104,7 +102,7 @@ const SingleBookEditor = ({
     const row = mapObjectToArray(book, bookHeaders);
     try {
       const newEntry: UploadJsonData = {
-        headers:bookHeaders,
+        headers: bookHeaders,
         rows: [[...row]],
       };
       await postDataToEndpoint(newEntry);
@@ -124,63 +122,69 @@ const SingleBookEditor = ({
   };
 
   return (
-    <Box className="flex-grow-2 m-4 overflow-y-auto">
-      <Typography variant="h4">Upravit/Přidat jednu knihu</Typography>
-
-      <PrimaryButton onClick={createNewBook} disabled={loading}>
-        Vytvořit Novou Knihu
-      </PrimaryButton>
-      <br />
-      <input
-        type="text"
-        className="w-full"
-        placeholder="Nebo vepsat ID knihy v databázi"
-        value={bookId}
-        onChange={(e) => setBookId(e.target.value)}
-      />
-      {bookId && (
-        <PrimaryButton onClick={fetchBook} disabled={loading}>
-          Stáhnout knihu podle ID
-        </PrimaryButton>
-      )}
-
-      {loading && <p>Načítání...</p>}
-
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {book && (
-        <div>
-          <h1  >{bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}</h1>
-          <BookEditForm
-            book={book}
-            handleInputChange={handleInputChange}
-            updateBook={updateBook}
-          />
-        </div>
-      )}
-
+    <Box className="mx-16 flex flex-row  gap-2 m-4 overflow-y-auto">
       <Box>
-        <Typography variant="h6" > Návod vytvoření nové knihy </Typography>
-        <List>
-        <ListItemText primary="kliněte na vytvořit knihu" />
-        <ListItemText primary="vyplňte políčka podle údajů vaší knihy" />
-        <ListItemText primary="klikněte na nahrát knihu" />
-        <ListItemText primary="kniha by měla být přidána do databáze" />
-        </List>
+        <Typography variant="h4">Upravit/Přidat jednu knihu</Typography>
+
+        <PrimaryButton onClick={createNewBook} disabled={loading}>
+          Vytvořit Novou Knihu
+        </PrimaryButton>
+        <br />
+        <input
+          type="text"
+          className="w-full"
+          placeholder="Nebo vepsat ID knihy v databázi"
+          value={bookId}
+          onChange={(e) => setBookId(e.target.value)}
+        />
+        {bookId && (
+          <PrimaryButton onClick={fetchBook} disabled={loading}>
+            Stáhnout knihu podle ID
+          </PrimaryButton>
+        )}
+
+        {loading && <p>Načítání...</p>}
+
+        {error && <p style={{ color: "red" }}>{error}</p>}
+
+        <Box>
+          <Typography variant="h6"> Návod vytvoření nové knihy </Typography>
+          <List>
+            <ListItemText primary="kliněte na vytvořit knihu" />
+            <ListItemText primary="vyplňte políčka podle údajů vaší knihy" />
+            <ListItemText primary="klikněte na nahrát knihu" />
+            <ListItemText primary="kniha by měla být přidána do databáze" />
+          </List>
+        </Box>
+
+        <Box>
+          <Typography variant="h6">
+            {" "}
+            Návod upravení existující knihy{" "}
+          </Typography>
+          <List>
+            <ListItemText primary="stáhněte si tabulku z databáze" />
+            <ListItemText primary="vyberte v ní ID řádku který chcete upravit" />
+            <ListItemText primary="zkopírujte ho do pole vepsat ID" />
+            <ListItemText primary="kliněte na Stáhnout knihu podle ID" />
+            <ListItemText primary="upravte políčka podle potřeby" />
+            <ListItemText primary="klikněte na nahrát knihu" />
+            <ListItemText primary="kniha s tímto ID by měla být úspěšně upravena" />
+          </List>
+        </Box>
       </Box>
 
       <Box>
-
-        <Typography variant="h6" > Návod upravení existující knihy </Typography>
-        <List>
-        <ListItemText primary="stáhněte si tabulku z databáze" />
-        <ListItemText primary="vyberte v ní ID řádku který chcete upravit" />
-        <ListItemText primary="zkopírujte ho do pole vepsat ID" />
-        <ListItemText primary="kliněte na Stáhnout knihu podle ID" />
-        <ListItemText primary="upravte políčka podle potřeby" />
-        <ListItemText primary="klikněte na nahrát knihu" />
-        <ListItemText primary="kniha s tímto ID by měla být úspěšně upravena" />
-        </List>
+        {book && (
+          <div>
+            <Typography variant='h4'>{bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}</Typography>
+            <BookEditForm
+              book={book}
+              handleInputChange={handleInputChange}
+              updateBook={updateBook}
+            />
+          </div>
+        )}
       </Box>
     </Box>
   );
