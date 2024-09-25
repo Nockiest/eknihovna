@@ -110,7 +110,7 @@ const Uploader = ({
   };
 
   return (
-    <Box className="flex flex-col flex-center b-black flex-grow-1 m-8 align-center  ">
+    <Box className="mx-auto px-4 flex flex-col flex-center b-black flex-grow-1 m-8 align-center  ">
       <Typography variant="h2" className="text-xl font-semibold mb-4">
         Hromadné nahrání z tabulky
       </Typography>
@@ -147,7 +147,7 @@ const Uploader = ({
         </PrimaryButton>
       </form>
       {chunks.length > 0 && (
-        <>
+        <Box>
           <DataChunksTable
             chunks={chunks}
             uploadProgress={uploadProgressPercent}
@@ -159,7 +159,7 @@ const Uploader = ({
             </Typography>
             <progress value={uploadProgressPercent} max={100}></progress>
           </Box>
-        </>
+        </Box>
       )}
       <Box>
         <Box>

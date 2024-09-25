@@ -80,7 +80,16 @@ export async function DELETE(req: NextRequest) {
   try {
     // Extract the ID from the request body
     let { id } = await req.json();
-    id = id.trim()
+
+    // Ověříme, zda je id platné a přetypujeme na string
+    if (id !== undefined && id !== null) {
+      id = String(id).trim(); // Převod na string a ořezání prázdných znaků
+    } else {
+      return NextResponse.json(
+        { success: false, error: "ID neposkytnuto" },
+        { status: 400 }
+      );
+    }
     console.log(id, parseInt(id) == -1);
     console.log(typeof id === "string");
     if (parseInt(id) == -1) {
