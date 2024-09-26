@@ -120,33 +120,26 @@ const Uploader = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Check if the file exists before appending
-    // if (!file) {
-    //   alert("Please select a file first.");
-    //   return;
-    // }
 
-  //   const formData = new FormData();
-  //   formData.append("file", file); // `file` is now guaranteed to not be null
-  //  console.log(formData,file)
   console.log(jsonResult)
   const response = await fetch(
     `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",  // Set the content type to JSON
+        "Content-Type": "application/json", // Set the content type to JSON
       },
-      body:JSON.stringify(jsonResult),  // Convert jsonResult to a JSON string
+      body: JSON.stringify(jsonResult), // Convert jsonResult to a JSON string
     }
   );
 
-    if (response.ok) {
-      alert("File uploaded successfully");
-    } else {
-      alert("Error uploading file");
-    }
-  };
+  if (response.ok) {
+    alert("File uploaded successfully");
+  } else {
+    const errorData = await response.json(); // Parse error message from response
+    alert(`Error uploading file: ${errorData.message || "Unknown error occurred"}`);
+  }
+  }
   // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
   //   if (event.target.files && event.target.files.length > 0) {
   //     setFile(event.target.files[0]);
@@ -214,19 +207,3 @@ const Uploader = ({
 };
 
 export default Uploader;
-{
-  /* <PrimaryButton
-          type="button"
-          onClick={handleParseFile}
-          disabled={!file}
-        >
-          Analyzovat soubor
-          <Image
-            className="m-1"
-            src="icon/upload.svg"
-            alt="nahrát"
-            width={32}
-            height={32}
-          />
-        </PrimaryButton> */
-}
