@@ -8,7 +8,14 @@ export async function POST(req: NextRequest) {
     const jsonData = await req.json();
     if (!jsonData || !Array.isArray(jsonData)) {
       return NextResponse.json(
+
         {
+          headers: {
+            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+            'Pragma': 'no-cache',
+            'Expires': '0',
+            'Surrogate-Control': 'no-store'
+          },
           success: false,
           error: "Invalid data format. Expected an array of books.",
         },
@@ -44,13 +51,26 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { success: true, message: "Data inserted successfully!" },
+
+      {   headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+      },
+      success: true, message: "Data inserted successfully!" },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error handling request:", error);
     return NextResponse.json(
-      { success: false, message: "Server error occurred" },
+      {   headers: {
+        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0',
+        'Surrogate-Control': 'no-store'
+      },
+      success: false, message: "Server error occurred" +error },
       { status: 500 }
     );
   }
