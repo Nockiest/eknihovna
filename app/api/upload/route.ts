@@ -22,11 +22,11 @@ export async function POST(req: NextRequest) {
         console.log(item); // Log the item separately
         return {
           id: item.id || uuidv4(),
-          name: String(item.name || ""),         // Ensure 'name' is a string
-          author: String(item.author || ""),     // Ensure 'author' is a string
-          category: String(item.category || ""), // Ensure 'category' is a string
-          signatura: String(item.signatura || ""), // Ensure 'signatura' is a string
-          zpusob_ziskani: String(item.zpusob_ziskani || ""),
+          name: item.name || "", // Use empty string if falsy
+          author: item.author || "", // Use empty string if falsy
+          category: item.category || "", // Use empty string if falsy
+          signatura: item.signatura || "", // Use empty string if falsy
+          zpusob_ziskani: item.zpusob_ziskani || "",
           genres: item.genres
             ? item.genres
                 .toString()
@@ -36,12 +36,13 @@ export async function POST(req: NextRequest) {
           formaturita: Boolean(item.formaturita), // Coerce to boolean
           available: Boolean(item.available), // Coerce to boolean
           rating:
-            item.rating !== null && item.rating !== undefined
+            item.rating !== null && !isNaN(Number(item.rating))
               ? Number(item.rating)
-              : -1,
+              : null, // Set to null if rating is NaN or null
         };
       }),
     });
+
     return NextResponse.json(
       { success: true, message: "Data inserted successfully!" },
       { status: 200 }
