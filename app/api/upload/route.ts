@@ -8,14 +8,7 @@ export async function POST(req: NextRequest) {
     const jsonData = await req.json();
     if (!jsonData || !Array.isArray(jsonData)) {
       return NextResponse.json(
-
         {
-          headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-            'Surrogate-Control': 'no-store'
-          },
           success: false,
           error: "Invalid data format. Expected an array of books.",
         },
@@ -23,22 +16,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Validate and insert the JSON data into the database
-    await prisma.knihy.createMany({
-      data: jsonData.map((item) => {
+    // Filter out invalid items and prepare for insertion
+    const validData = jsonData
+      .map((item) => {
         console.log(item); // Log the item separately
+        // Construct item with default values
         return {
           id: item.id || uuidv4(),
-          name: item.name || "", // Use empty string if falsy
-          author: item.author || "", // Use empty string if falsy
-          category: item.category || "", // Use empty string if falsy
-          signatura: item.signatura || "", // Use empty string if falsy
-          zpusob_ziskani: item.zpusob_ziskani || "",
-          genres: item.genres
+          name: typeof item.name === 'string' ? item.name : "", // Use empty string if falsy or not a string
+          author: typeof item.author === 'string' ? item.author : "", // Use empty string if falsy or not a string
+          category: typeof item.category === 'string' ? item.category : "", // Use empty string if falsy or not a string
+          signatura: typeof item.signatura === 'string' ? item.signatura : "", // Use empty string if falsy or not a string
+          zpusob_ziskani: typeof item.zpusob_ziskani === 'string' ? item.zpusob_ziskani : "",
+          genres: Array.isArray(item.genres)
             ? item.genres
-                .toString()
-                .split(",")
-                .map((v: string) => v.trim())
+                .map((v: any) => typeof v === 'string' ? v.trim() : '') // Ensure genres are strings
+                .filter(Boolean) // Remove empty strings
             : [],
           formaturita: Boolean(item.formaturita), // Coerce to boolean
           available: Boolean(item.available), // Coerce to boolean
@@ -47,30 +40,23 @@ export async function POST(req: NextRequest) {
               ? Number(item.rating)
               : null, // Set to null if rating is NaN or null
         };
-      }),
+      })
+      // Filter out any items that have critical fields empty (modify as necessary)
+      .filter(item => item.name  ); // Ensure important fields are not empty
+
+    // Insert valid data into the database
+    await prisma.knihy.createMany({
+      data: validData,
     });
 
     return NextResponse.json(
-
-      {   headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Surrogate-Control': 'no-store'
-      },
-      success: true, message: "Data inserted successfully!" },
+      { success: true, message: "Data inserted successfully!" },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error handling request:", error);
     return NextResponse.json(
-      {   headers: {
-        'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0',
-        'Surrogate-Control': 'no-store'
-      },
-      success: false, message: "Server error occurred" +error },
+      { success: false, message: "Server error occurred" },
       { status: 500 }
     );
   }
