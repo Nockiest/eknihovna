@@ -17,17 +17,15 @@ export async function POST(req: NextRequest) {
     }
 
     // Filter out invalid items and prepare for insertion
-    const validData = jsonData
-      .map((item) => {
-        console.log(item); // Log the item separately
+    const validData = jsonData .filter(item => item.name  ).map((item) => {  // Ensure important fields are not empty
         // Construct item with default values
         return {
           id: item.id || uuidv4(),
-          name: typeof item.name === 'string' ? item.name : "", // Use empty string if falsy or not a string
-          author: typeof item.author === 'string' ? item.author : "", // Use empty string if falsy or not a string
-          category: typeof item.category === 'string' ? item.category : "", // Use empty string if falsy or not a string
-          signatura: typeof item.signatura === 'string' ? item.signatura : "", // Use empty string if falsy or not a string
-          zpusob_ziskani: typeof item.zpusob_ziskani === 'string' ? item.zpusob_ziskani : "",
+          name: typeof item.name === 'string' ? String(item.name) : "", // Use empty string if falsy or not a string
+          author: typeof item.author === 'string' ? String(item.author) : "", // Use empty string if falsy or not a string
+          category: typeof item.category === 'string' ? String(item.category) : "", // Use empty string if falsy or not a string
+          signatura: typeof String(item.signatura) === 'string' ? String(item.signatura) : "", // Use empty string if falsy or not a string
+          zpusob_ziskani: typeof item.zpusob_ziskani === 'string' ? String(item.zpusob_ziskani) : "",
           genres: Array.isArray(item.genres)
             ? item.genres
                 .map((v: any) => typeof v === 'string' ? v.trim() : '') // Ensure genres are strings
@@ -42,7 +40,7 @@ export async function POST(req: NextRequest) {
         };
       })
       // Filter out any items that have critical fields empty (modify as necessary)
-      .filter(item => item.name  ); // Ensure important fields are not empty
+
 
     // Insert valid data into the database
     await prisma.knihy.createMany({
