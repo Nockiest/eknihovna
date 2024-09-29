@@ -6,34 +6,13 @@ import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { checkAuth } from "@/utils/checkAuth";
-// import Cookies from 'js-cookie';
 
-
-// export const getServerSideProps: GetServerSideProps = withServerSideProps(async (context) => {
-//   // Your specific logic for this page
-//   const specificData =checkAuth(context.req)
-
-//   return {
-//     props: {
-//       specificData,
-//     },
-//   };
-// });
-
-// export const getServerSideProps: GetServerSideProps = async (context) => {
-//   const isAdmin = checkAuth(context.req);
-
-//   return {
-//     props: {
-//       isAuthenticated,
-//     },
-//   };
-// };
 export default function Home( ) {
 
 
   return (
     <Container maxWidth={"lg"}>
+      <h1>hello</h1>
       <Typography variant="body1">
         Vítejte na domovské stránce knihovny Gymnázia Opatov, kde se můžete
         seznámit s bohatým fondem naší školní knihovny a získat důležité
@@ -48,7 +27,6 @@ export default function Home( ) {
         zvědavost. Přijďte navštívit naši knihovnu a objevte, co všechno pro vás
         máme připraveného. Těšíme se na vaši návštěvu!
       </Typography>
-      {/* <Login onSubmit={onSubmit} /> */}
       <OpeningHours />
       <Box mt={2} display="flex" justifyContent="center">
         <Button

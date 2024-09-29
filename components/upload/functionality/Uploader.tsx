@@ -5,10 +5,8 @@ import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
 import { Box, List, ListItemText, Typography } from "@mui/material";
 import Image from "next/image";
 import React, { useState } from "react";
-import DataChunksTable from "../../../deprecated/DataChunksTable";
 import * as xlsx from "xlsx";
 import convertExcelToJson from "@/utils/convertExcelToJson";
-import downloadExcelAsArrayBuffer from "@/utils/downloadExcelAsArrayBuffer";
 import readFileAsArrayBuffer from "@/utils/readFileArrayAsBUffer";
 const Uploader = ({
   setResponseMessage,
