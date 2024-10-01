@@ -5,7 +5,7 @@ const OpeningHours: React.FC = () => {
   // Data for days and opening hours (assuming a static data structure)
   const days = [
     { day: 'Pondělí', hours: '12:45 - 15:30' },
-    { day: 'Úterý', hours: '|kabinet 12:30-13:30 |knihovna 13:30 - 15:30' },
+    { day: 'Úterý', hours: '12:30 - 15:30 (v kabinetu 12:30-13:30)' },
     { day: 'Středa', hours: '13:45 - 15:30' },
     { day: 'Čtvrtek', hours: '12:30 - 15:30' },
     { day: 'Pátek', hours: '13:30 - 14:00' },

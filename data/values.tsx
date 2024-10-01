@@ -56,7 +56,7 @@ export const navRoutes: NavButton[] = [
     // { URL: "/about", label: "O Knihovně" },
     { URL: "/katalog", label: "Katalog" },
     { URL: "/news", label: "Zprávy" },
-    { URL: "/contact", label: "Kontakt" },
+    { URL: "/info", label: "Informace" },
     { URL: "/upload", label: "API" },
   ]
 

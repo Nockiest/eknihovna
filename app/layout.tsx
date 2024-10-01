@@ -33,14 +33,14 @@ export default function RootLayout({
         <link rel="icon" type="image/x-icon" href="/bookLogo.ico" />
 
         {/* Optional: Additional Favicons for Different Sizes */}
-        {/* <link rel="icon" type="image/png" sizes="16x16" href="client/knihovna/public/icon/GO.ico" />
-      <link rel="icon" type="image/png" sizes="32x32" href="client/knihovna/public/icon/GO.ico" /> */}
+        <link rel="icon" type="image/png" sizes="16x16" href="client/knihovna/public/icon/GO.ico" />
+      <link rel="icon" type="image/png" sizes="32x32" href="client/knihovna/public/icon/GO.ico" />
 
         {/* Optional: Apple Touch Icon */}
-        {/* <link rel="apple-touch-icon" sizes="180x180" href="client/knihovna/public/icon/GO.ico" /> */}
+        <link rel="apple-touch-icon" sizes="180x180" href="client/knihovna/public/icon/GO.ico" />
 
         {/* Optional: Manifest File */}
-        {/* <link rel="manifest" href="client/knihovna/public/icon/GO.ico" /> */}
+        <link rel="manifest" href="client/knihovna/public/icon/GO.ico" />
 
         {/* Optional: Theme Color */}
         <meta name="theme-color" content="#413330" />
@@ -53,15 +53,14 @@ export default function RootLayout({
         {/* <SessionWrapper > */}
 <Hero />
           {/* <NoSSRHero /> */}
-          <BugReportSection />
 
-          <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
+          <main className="flex min-h-screen flex-col items-center justify-between  pt-12">
 
             {children}
           </main>
+          <BugReportSection />
 
           <Footer />
-
         </ThemeProvider>
         {/* </QueryContextProvider> */}
       </body>

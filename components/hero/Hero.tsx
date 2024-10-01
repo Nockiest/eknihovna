@@ -7,7 +7,6 @@ import { HeaderContext } from "../navbar/headerConntext";
 import { getURLSegment } from "@/utils/getURLSegment";
 import { usePathname } from "next/navigation";
 import NavBar from "../navbar/Navbar";
-// import NavBar from "../navbar/Navbar";
 
 const Hero = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
@@ -28,7 +27,7 @@ const Hero = () => {
         <CustomHamburger onClick={toggleNav} ariaLabel="toggle navigation" />
         <Box className="w-auto h-64 -z-1 relative">
           <Image
-            src="/img/books.jpg"
+            src="/img/library/libraryTable.png"
             layout="fill"
             objectFit="cover"
             alt="Books"

@@ -16,13 +16,13 @@ export const revalidate = 0;
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [responseMessage, setResponseMessage] = useState<string | null>("");
-  const [activeTab, setActiveTab] = useState(0); // Výchozí tab je první
+  const [activeTab, setActiveTab] = useState(1); // Výchozí tab je první
 
   if (!session) {
     return (
-      <div className="flex flex-center">
+      <Box className="flex flex-col flex-center">
         <ReroutToAUth />
-      </div>
+      </Box>
     );
   }
   var splited_emails = process?.env?.WHITE_LIST_EMAILS?.split(":");
@@ -58,7 +58,7 @@ const ExcelSheetUpdater = () => {
     }
   };
   return (
-    <Box className="flex flex-col h-auto gap-4 z-0 select-none items-center justify-center">
+    <Box className="flex flex-col h-auto gap-4 z-0 select-none px-12 items-center justify-center">
       <Announcer message={responseMessage} type={"normal"} />
       <Paper className="flex flex-col  h-auto gap-16 w-full">
       <Box className="flex gap-4 p-4 bg-gray-200 rounded-md justify-center">

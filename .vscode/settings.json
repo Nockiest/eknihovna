@@ -32,6 +32,13 @@
         "client/knihovna/node_modules": true,
         "node_modules": true,
         "client/knihovna/__tests__": true,
-        "client/knihovna/__mocks__": true
+        "client/knihovna/__mocks__": true,
+        ".swc": true,
+        "next-env.d.ts": true,
+        "next.config.mjs": true,
+        "postcss.config.mjs": true,
+        "tsconfig.json": true,
+        ".eslintrc.json": true,
+        "coverage": true
     }
 }

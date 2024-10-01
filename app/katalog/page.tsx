@@ -44,7 +44,7 @@ const KatalogPage = () => {
       }}
     >
       {/* <ColorCirclesComprehensive /> */}
-      <Box className="w-full">
+      <Box className="w-full px-12">
         <Box
           display="flex"
           alignItems="space-between"
