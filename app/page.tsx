@@ -1,18 +1,14 @@
 'use client'
-import BookPreview from "@/components/katalog/BookPreview";
 import OpeningHours from "@/components/general/OpeningHours";
-import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import { checkAuth } from "@/utils/checkAuth";
 
 export default function Home( ) {
 
 
   return (
     <Container maxWidth={"lg"}>
-      <h1>hello</h1>
       <Typography variant="body1">
         Vítejte na domovské stránce knihovny Gymnázia Opatov, kde se můžete
         seznámit s bohatým fondem naší školní knihovny a získat důležité

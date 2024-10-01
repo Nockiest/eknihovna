@@ -1,3 +1,6 @@
+
+App is available on this domain: eknihovna.vercel.app
+
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
@@ -48,5 +51,3 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 In order for this version to work properly, it is necessary to start up the server side, which will be added into its own branch promptly
-
-

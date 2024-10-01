@@ -53,10 +53,12 @@ export default function RootLayout({
         {/* <SessionWrapper > */}
 <Hero />
           {/* <NoSSRHero /> */}
+          <BugReportSection />
+
           <main className="flex min-h-screen flex-col items-center justify-between px-12 lg:px-24 pt-12">
+
             {children}
           </main>
-          <BugReportSection />
 
           <Footer />
 

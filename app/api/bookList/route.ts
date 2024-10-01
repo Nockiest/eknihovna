@@ -21,10 +21,7 @@ export async function POST(req: NextRequest) {
 
         return  NextResponse.json([book],{
           headers: {
-            'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-            'Surrogate-Control': 'no-store'
+           ...noCacheHeaders
           }
         },);
       } catch (error) {

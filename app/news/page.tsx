@@ -12,7 +12,7 @@ type Message = {
 }
 const NewsPage: React.FC = () => {
   const  messages:Message[] = [
-   {message:"Vítáme vás v první verzi stránky. Můžete si prohlédnout aktuální stav knihovního katalogu, nebo zjistit užitečné informace o naší knihovně.", date: "2023-06-24" }
+   {message:"Vítáme vás v první verzi stránky. Můžete si prohlédnout aktuální stav knihovního katalogu, nebo zjistit užitečné informace o naší knihovně.", date: "2024-06-24" }
   ]
   return (
     <Container maxWidth="sm">

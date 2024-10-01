@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 interface BookCoverProps {
   width: string;
 }
@@ -26,6 +26,23 @@ const BookCover: React.FC<BookCoverProps> = ({ width }) => {
         alt='knižní přebaly přijdou v jiné verzi'
         layout='fill'
       />
+       <Typography
+          variant="body1"
+          sx={{
+            position: 'absolute',
+            // top: '50%',
+            left: '0',
+            right: "0",
+            width: '100%',
+            // transform: 'translate(-50%, -50%)',
+            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+            color: 'white',
+            padding: '10px',
+            borderRadius: '4px',
+          }}
+        >
+          Přebaly knih přidáme co nejdříve
+        </Typography>
     </Box>
   );
 };

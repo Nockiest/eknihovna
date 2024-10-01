@@ -19,6 +19,7 @@ const config: Config = {
     '^@/components/(.*)$': '<rootDir>/components/$1',
     '^@/utils/(.*)$': '<rootDir>/utils/$1',
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
   }
   // Add more setup options before each test is run

@@ -1,7 +1,7 @@
 import { falsyValues, noCacheHeaders } from "@/data/values";
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-export const revalidate = 0
+export const revalidate = 0;
 type UniqueBookValue = {
   name?: string | null;
   author?: string | null;
@@ -16,11 +16,10 @@ export async function POST(req: NextRequest) {
   if (
     !columnName ||
     typeof columnName !== "string" ||
-    [ "name"  , "author", "category" ,"genres"].indexOf(columnName) === -1)
-   {
+    ["name", "author", "category", "genres"].indexOf(columnName) === -1
+  ) {
     return NextResponse.json({
-      error:
-        `${columnName} Invalid or missing columnName parameter. It must be a valid property of Book.`,
+      error: `${columnName} Invalid or missing columnName parameter. It must be a valid property of Book.`,
     });
   }
 
@@ -35,33 +34,29 @@ export async function POST(req: NextRequest) {
       distinct: [columnName as keyof UniqueBookValue],
     });
 
-    // console.log(columnName, uniqueValues);
-
     // Safely access the columnName property and filter for truthy values
     const values = uniqueValues
-      .map(
-        (item) => item[columnName as keyof UniqueBookValue]
-      )
-      .filter(item => {
+      .map((item) => item[columnName as keyof UniqueBookValue])
+      .filter((item) => {
         // Handle cases where item is an array
         if (Array.isArray(item)) {
           return item.length > 0; // Example: Filter out empty arrays
         }
         if (item === null || item === undefined) {
-          return false
+          return false;
         }
         // Handle non-array cases
         return !falsyValues.includes(item);
       }); // Filters out falsy values (null, undefined, 0, false, "")
 
-    return NextResponse.json(values ,
-
-      {headers: {
-      "Cache-Control":
-      "no-store, no-cache, must-revalidate, proxy-revalidate",
-    }
-    }
-  )
+    return NextResponse.json(
+      values,
+      {
+        headers: {
+          ...noCacheHeaders,
+        },
+      }
+    );
   } catch (error) {
     console.error("Error retrieving values:", error);
     return NextResponse.json({ error: "Internal Server Error" });

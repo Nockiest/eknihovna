@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { v4 as uuidv4 } from "uuid";
+import { noCacheHeaders } from "@/data/values";
 
 export async function POST(req: NextRequest) {
   try {
@@ -11,6 +12,9 @@ export async function POST(req: NextRequest) {
         {
           success: false,
           error: "Invalid data format. Expected an array of books.",
+          headers: {
+            ...noCacheHeaders,
+          },
         },
         { status: 400 }
       );
@@ -18,36 +22,55 @@ export async function POST(req: NextRequest) {
 
     // Filter out invalid items and prepare for insertion
     const validData = jsonData
-    .filter((item) => item.name) // Ensure important fields like name are not empty
-    .map((item) => {
-      // Construct item with default values
-      return {
-        id: item.id || uuidv4(),
+      .filter((item) => item.name) // Ensure important fields like name are not empty
+      .map((item) => {
+        // Construct item with default values
+        return {
+          id: item.id || uuidv4(),
 
-        // Ensure fields are strings, trim them, and enforce max lengths
-        name: typeof item.name === "string" ? item.name.trim().substring(0, 255) : "", // Trims and limits to 255 characters
-        author: typeof item.author === "string" ? item.author.trim().substring(0, 255) : "", // Trims and limits to 255 characters
-        category: typeof item.category === "string" ? item.category.trim().substring(0, 50) : "", // Trims and limits to 50 characters
-        signatura: typeof item.signatura === "string" ? item.signatura.trim().substring(0, 50) : "", // Trims and limits to 50 characters
-        zpusob_ziskani: typeof item.zpusob_ziskani === "string" ? item.zpusob_ziskani.trim().substring(0, 100) : "", // Trims and limits to 100 characters
+          // Ensure fields are strings, trim them, and enforce max lengths
+          name:
+            typeof item.name === "string"
+              ? item.name.trim().substring(0, 255)
+              : "", // Trims and limits to 255 characters
+          author:
+            typeof item.author === "string"
+              ? item.author.trim().substring(0, 255)
+              : "", // Trims and limits to 255 characters
+          category:
+            typeof item.category === "string"
+              ? item.category.trim().substring(0, 50)
+              : "", // Trims and limits to 50 characters
+          signatura:
+            typeof item.signatura === "string"
+              ? item.signatura.trim().substring(0, 50)
+              : "", // Trims and limits to 50 characters
+          zpusob_ziskani:
+            typeof item.zpusob_ziskani === "string"
+              ? item.zpusob_ziskani.trim().substring(0, 100)
+              : "", // Trims and limits to 100 characters
 
-        // Ensure genres are an array of strings, trimming and filtering out empty values
-        genres: Array.isArray(item.genres)
-          ? item.genres
-              .map((v:any) => (typeof v === "string" ? v.trim().substring(0, 50) : "")) // Ensure genres are strings, trim, limit length
-              .filter(Boolean) // Remove empty strings
-          : [],
+          // Ensure genres are an array of strings, trimming and filtering out empty values
+          genres: Array.isArray(item.genres)
+            ? item.genres
+                .map((v: any) =>
+                  typeof v === "string" ? v.trim().substring(0, 50) : ""
+                ) // Ensure genres are strings, trim, limit length
+                .filter(Boolean) // Remove empty strings
+            : [],
 
-        formaturita: Boolean(item.formaturita), // Coerce to boolean
-        available: Boolean(item.available), // Coerce to boolean
+          formaturita: Boolean(item.formaturita), // Coerce to boolean
+          available: Boolean(item.available), // Coerce to boolean
 
-        // Validate rating, set to null if invalid or NaN, otherwise convert to number
-        rating:
-          item.rating !== null && !isNaN(Number(item.rating)) && item.rating >= 0
-            ? Number(item.rating)
-            : null, // Set to null if rating is NaN, null, or invalid
-      };
-    });
+          // Validate rating, set to null if invalid or NaN, otherwise convert to number
+          rating:
+            item.rating !== null &&
+            !isNaN(Number(item.rating)) &&
+            item.rating >= 0
+              ? Number(item.rating)
+              : null, // Set to null if rating is NaN, null, or invalid
+        };
+      });
 
     // Insert valid data into the database
     await prisma.knihy.createMany({
@@ -55,23 +78,28 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { success: true, message: "Data inserted successfully!" },
+      {
+        success: true,
+        message: "Data inserted successfully!",
+        headers: {
+          ...noCacheHeaders,
+        },
+      },
       { status: 200 }
     );
   } catch (error) {
     console.error("Error inserting data:", error);
     return NextResponse.json(
-      { success: false, message: "Failed to insert data" },
-      { status: 500 }
+      { success: false, message: "Failed to insert data" , headers: {
+        ...noCacheHeaders
+      }},
+      { status: 500 },
+
     );
   }
 
-      // Filter out any items that have critical fields empty (modify as necessary)
-
-
-  }
-
-
+  // Filter out any items that have critical fields empty (modify as necessary)
+}
 
 export async function DELETE(req: NextRequest) {
   try {

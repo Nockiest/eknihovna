@@ -1,5 +1,5 @@
 import { Breakpoint } from "@mui/material";
-import { NavButton } from "@/types/types";
+import { Book, NavButton } from "@/types/types";
 
 export const truthyValues = [true,'true', "ano", "yes", 1, "dostupný"];
 export const falsyValues = [false,'false', "ne", "no", 0, "nedostupný",undefined, null];
@@ -60,13 +60,13 @@ export const navRoutes: NavButton[] = [
     { URL: "/upload", label: "API" },
   ]
 
-export const  bookHeaders = [
+export const  bookHeaders: Array<keyof Book> = [
     "id",
     "name",
     "author",
     "category",
     "genres",
-    "umisteni",
+    "zpusob_ziskani",
     "signatura",
     "formaturita",
     "available",
