@@ -4,11 +4,10 @@ import { Button, TextField, Typography, Box, List, ListItemText } from "@mui/mat
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { defaultFilters } from "@/data/values";
 interface BookDeletionProps {
-    setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
   }
 
   // Define the functional component with the props interface
-  const SingleBookDeleter: React.FC<BookDeletionProps> = ({ setResponseMessage }) => {
+  const SingleBookDeleter: React.FC<BookDeletionProps> = ( ) => {
     const [bookId, setBookId] = useState<string>("");
     const [bookName, setBookName] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
@@ -79,11 +78,11 @@ interface BookDeletionProps {
         );
 
         // Set response message from the server
-        setResponseMessage(response.data.message);
+        alert(response.data.message);
       } catch (error: any) {
         // Log and set response message on error
         console.error("Chyba při mazání dat ze serveru:", error.message);
-        setResponseMessage("Chyba při mazání dat: " + error.message);
+        alert("Chyba při mazání dat: " + error.message);
       }
     };
 

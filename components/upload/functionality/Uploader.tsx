@@ -9,9 +9,9 @@ import * as xlsx from "xlsx";
 import convertExcelToJson from "@/utils/convertExcelToJson";
 import readFileAsArrayBuffer from "@/utils/readFileArrayAsBUffer";
 const Uploader = ({
-  setResponseMessage,
+  // setResponseMessage,
 }: {
-  setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
+  // setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
 }) => {
 
   const [jsonResult, setJsonResult] = useState<any[]>([]);
@@ -44,11 +44,9 @@ const Uploader = ({
 
   if (response.ok) {
     alert("soubor úspěšně nahrán");
-    setResponseMessage('soubor úspěšně nahrán" ')
   } else {
     const errorData = await response.json(); // Parse error message from response
     alert(`Error při nahrání souboru: ${errorData.message || "neznámý error"}`);
-    setResponseMessage(`Error při nahrání souboru: ${errorData.message || "neznámý error"}`)
   }
   }
 

@@ -20,11 +20,7 @@ const emptyBook: Book = {
   available: false,
   rating: -1,
 };
-const SingleBookEditor = ({
-  setResponseMessage,
-}: {
-  setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
-}) => {
+const SingleBookEditor = ( ) => {
   const [bookId, setBookId] = useState<string>("");
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(false);
@@ -106,7 +102,7 @@ const SingleBookEditor = ({
         rows: [[...row]],
       };
       await postDataToEndpoint(newEntry);
-      setResponseMessage("Book updated successfully!");
+      alert("Kniha úspěšně aktualizována");
     } catch (err) {
       console.error("Error updating book:", err);
       setError("Failed to update the book");
