@@ -1,9 +1,10 @@
 import React, { useCallback, useMemo } from "react";
-import { Autocomplete, TextField, InputAdornment, Box } from "@mui/material";
+import { Autocomplete, TextField, InputAdornment, Box, useMediaQuery } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { FixedSizeList } from "react-window";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
+import theme from "@/theme/theme";
 
 const SearchAutocomplete: React.FC = () => {
   const { filterValues, activeFilters, setFilters } = useSearchContext();
@@ -32,31 +33,17 @@ const SearchAutocomplete: React.FC = () => {
     },
     [setFilters, searchParams, pathName, router]
   );
-
-  const renderRow = useCallback(
-    ({ index, style }: { index: number; style: React.CSSProperties }) => {
-      const selectedValue = filteredOptions[index];
-      return (
-        <div style={style} key={index}>
-          <li
-            className="cursor-pointer z-1 py-auto"
-            onClick={() => {
-              console.log("Row clicked, selected value:", selectedValue); // Debugging: Check click event
-              changeParams(selectedValue);
-            }}
-          >
-            {selectedValue}
-          </li>
-        </div>
-      );
-    },
-    [filteredOptions, changeParams]
-  );
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
   return (
     <Autocomplete
-      id="country-select-demo"
-      sx={{ width: 300 }}
+      id="book-searcher"
+      sx={{
+        color: prefersDarkMode ? "#ffffff" : "#000000",
+        backgroundColor: !prefersDarkMode ? "#ffffff" : "#000000",
+        borderRadius: "1em",
+        cursor: "pointer",
+      }}
       options={filteredOptions}
       className="w-full"
       autoHighlight
@@ -72,22 +59,21 @@ const SearchAutocomplete: React.FC = () => {
         console.log("Input changed:", newInputValue);
         changeParams(newInputValue);
       }}
-      renderOption={(props, option) => {
-        // const { key, ...optionProps } = props;
+      renderOption={(props, bookName) => {
         return (
           <Box
-            key={option}
+            key={bookName}
             component="li"
-            sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
-            // {...optionProps}
+            sx={{
+              color: "#ffffff",
+              cursor: "pointer",
+            }}
             onClick={() => {
-              console.log("Row clicked, selected value:", option); // Debugging: Check click event
-              changeParams(String(option));
+              console.log("Row clicked, selected value:", bookName);
+              changeParams(String(bookName));
             }}
           >
-            {option}
-            {/* {props} */}
-            {/* {option.label} ({option.code}) +{option.phone} */}
+            {bookName}
           </Box>
         );
       }}
@@ -95,62 +81,30 @@ const SearchAutocomplete: React.FC = () => {
         <TextField
           {...params}
           label="Vyhledejte knihu"
-          // slotProps={{
-          //   htmlInput: {
-          //     ...params.inputProps,
-          //     autoComplete: 'new-password', // disable autocomplete and autofill
-          //   },
-          // }}
+          InputProps={{
+            ...params.InputProps,
+            sx: {
+              color: prefersDarkMode ? "#ffffff" : "#000000", // Text color
+              "& .MuiInputBase-input": {
+                color: prefersDarkMode ? "#ffffff" : "#000000", // Input text color
+              },
+              "& .MuiInputLabel-root": {
+                color: prefersDarkMode ? "#aaaaaa" : "#000000", // Placeholder color
+              },
+              backgroundColor: !prefersDarkMode ? "#ffffff" : "#000000", // Background color
+              cursor: "pointer",
+
+            },
+          }}
+          InputLabelProps={{
+            sx: {
+              color: prefersDarkMode ? "#aaaaaa" : "#000000", // Placeholder (label) color
+              cursor: "pointer",
+            },
+          }}
         />
       )}
     />
-    // <Autocomplete
-    //   disablePortal
-    //   id="combo-box-demo"
-    //   className="w-full"
-    //   options={filteredOptions}
-    //   groupBy={(filteredOptions) => filteredOptions[0]}
-    //   isOptionEqualToValue={(filteredOptions, value) => filteredOptions === value}
-    //   value={activeFilters.name}
-    //   onInputChange={(e, newInputValue) => {
-    //     console.log("Input changed:", newInputValue);
-    //     changeParams(newInputValue);
-    //   }}
-    //   onChange={(e, newValue) => {
-    //     console.log("Autocomplete value changed:", newValue);
-    //     if (newValue) {
-    //       changeParams(newValue);
-    //     }
-    //   }}
-    //   ListboxComponent={(props) => (
-    //     // @ts-ignore
-    //     <FixedSizeList
-    //       height={250}
-    //       width="100%"
-    //       className="cursor-pointer"
-    //       itemSize={42}
-    //       itemCount={filteredOptions.length}
-    //       {...props}
-    //     >
-    //       {({ index, style }) => renderRow({ index, style })}
-    //     </FixedSizeList>
-    //   )}
-    //   renderInput={(params) => (
-    //     <TextField
-    //       {...params}
-    //       variant="outlined"
-    //       placeholder="Vyhledat knihu..."
-    //       InputProps={{
-    //         ...params.InputProps,
-    //         startAdornment: (
-    //           <InputAdornment position="start">
-    //             <SearchIcon />
-    //           </InputAdornment>
-    //         ),
-    //       }}
-    //     />
-    //   )}
-    // />
   );
 };
 
@@ -294,3 +248,22 @@ export default SearchAutocomplete;
 // };
 
 // export default SearchAutocomplete;
+// const renderRow = useCallback(
+//   ({ index, style }: { index: number; style: React.CSSProperties }) => {
+//     const selectedValue = filteredOptions[index];
+//     return (
+//       <div style={style} key={index}>
+//         <li
+//           className="cursor-pointer z-1 py-auto"
+//           onClick={() => {
+//             console.log("Row clicked, selected value:", selectedValue); // Debugging: Check click event
+//             changeParams(selectedValue);
+//           }}
+//         >
+//           {selectedValue}
+//         </li>
+//       </div>
+//     );
+//   },
+//   [filteredOptions, changeParams]
+// );

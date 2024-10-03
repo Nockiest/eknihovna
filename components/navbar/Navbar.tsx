@@ -1,7 +1,7 @@
 'use client'
 import Link from "next/link";
 import { NavbarButton } from "@/theme/buttons/Buttons";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography, useMediaQuery } from "@mui/material";
 import HamburgerNavList from "./Hamburger";
 import { navRoutes } from "@/data/values";
 import { HeaderContext, useHeaderContext } from "./headerConntext";
@@ -16,7 +16,7 @@ interface NavListProps {}
 const NavBar: React.FC<NavListProps> = ({}) => {
   const { isHamburgerOpen, setIsHamburgerOpen } = useHeaderContext();
   const size = useCurrentBreakpoint();
-
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const renderButton = (button: NavButton, isActive: boolean) => (
     <NavbarButton
       key={button.URL}
@@ -30,7 +30,8 @@ const NavBar: React.FC<NavListProps> = ({}) => {
   return (
     <Paper
       elevation={3}
-      className="p-2 h-full w-full z-10 mx-0 flex flex-col justify-center items-center "
+      className="p-2 h-full w-full z-10 mx-0 flex flex-col justify-center bg-secondary-800 items-center "
+
     >
       <Box className="z-3">
         {/* <CustomHamburger onClick={()=> setIsHamburgerOpen(!isHamburgerOpen)} ariaLabel="toggle navigation" /> */}

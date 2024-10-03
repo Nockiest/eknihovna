@@ -74,7 +74,11 @@ const FilterLister: React.FC<FilterListerProps> =   ({
   return (
     <Box className="m-2">
       {filterKeys.map((key) => {
+        if (key === "name"){
+          return
+        }
         const value = activeFilters[key];
+
         if (checkIfIgnoredValue(value)) {
           return null;
         }

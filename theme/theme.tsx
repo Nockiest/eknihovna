@@ -1,7 +1,7 @@
 // src/theme.js
 "use client";
 import { createTheme } from "@mui/material/styles";
-import { Margarine } from "next/font/google";
+// import { Margarine } from "next/font/google";
 export const rootPalette = {
   primary: {
     main: "#93736c", // primary 500
@@ -97,7 +97,10 @@ const theme = createTheme({
       },
     },
   },
+
+
   palette: {
+    mode: 'light',
     primary: {
       main: rootPalette.primary.main , // primary 500
       light: rootPalette.primary.light, // primary 700
@@ -117,12 +120,13 @@ const theme = createTheme({
     },
     background: {
       default:  rootPalette.background.default, // secondary 500
-
+      paper: '#424242', // Example: dark background for inputs (you can adjust as needed)
 // this is the accent color
       },
       error:{
         main: '#C42C0E'
-      }
+      },
+
     },
   components: {
     MuiContainer: {
@@ -247,6 +251,32 @@ const theme = createTheme({
              "& svg": {
                fontSize: 20,
              },
+          },
+        },
+      },
+    },
+    MuiAutocomplete: {
+      styleOverrides: {
+        option: {
+          color: '#ffffff', // White text in the dropdown options
+        },
+        input: {
+          color: '#ffffff', // White text in the input field
+        },
+      },
+    },
+    MuiInputBase: {
+      styleOverrides: {
+        input: {
+          color: '#ffffff', // White text for the base input text
+        },
+      },
+    },
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          '& fieldset': {
+            borderColor: '#ffffff', // Optional: white border for outlined input
           },
         },
       },

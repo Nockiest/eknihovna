@@ -48,7 +48,7 @@ export default function RootLayout({
       <body className={inter.className}>
 
       {/* <QueryContextProvider> */}
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme}  >
 
         {/* <SessionWrapper > */}
 <Hero />
