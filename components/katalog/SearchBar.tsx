@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from "react";
-import { Autocomplete, TextField, InputAdornment } from "@mui/material";
+import { Autocomplete, TextField, InputAdornment, Box } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { FixedSizeList } from "react-window";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
@@ -19,16 +19,19 @@ const SearchAutocomplete: React.FC = () => {
     return results;
   }, [filterValues.name, activeFilters.name]);
 
-  const changeParams = useCallback((newname: string) => {
-    console.log("Query changed:", newname); // Debugging: Check the new query value
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      name: newname.trim(),
-    }));
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("page", '1');
-    router.push(`${pathName}?${currentQuery.toString()}`);
-  }, [setFilters, searchParams, pathName, router]);
+  const changeParams = useCallback(
+    (newname: string) => {
+      console.log("Query changed:", newname); // Debugging: Check the new query value
+      setFilters((prevFilters) => ({
+        ...prevFilters,
+        name: newname.trim(),
+      }));
+      const currentQuery = new URLSearchParams(searchParams.toString());
+      currentQuery.set("page", "1");
+      router.push(`${pathName}?${currentQuery.toString()}`);
+    },
+    [setFilters, searchParams, pathName, router]
+  );
 
   const renderRow = useCallback(
     ({ index, style }: { index: number; style: React.CSSProperties }) => {
@@ -52,52 +55,102 @@ const SearchAutocomplete: React.FC = () => {
 
   return (
     <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      className="w-full"
+      id="country-select-demo"
+      sx={{ width: 300 }}
       options={filteredOptions}
-      groupBy={(filteredOptions) => filteredOptions[0]}
-      isOptionEqualToValue={(filteredOptions, value) => filteredOptions === value}
+      className="w-full"
+      autoHighlight
       value={activeFilters.name}
-      onInputChange={(e, newInputValue) => {
-        console.log("Input changed:", newInputValue);
-        changeParams(newInputValue);
-      }}
+      getOptionLabel={(option) => option}
       onChange={(e, newValue) => {
         console.log("Autocomplete value changed:", newValue);
         if (newValue) {
           changeParams(newValue);
         }
       }}
-      ListboxComponent={(props) => (
-        // @ts-ignore
-        <FixedSizeList
-          height={250}
-          width="100%"
-          className="cursor-pointer"
-          itemSize={42}
-          itemCount={filteredOptions.length}
-          {...props}
-        >
-          {({ index, style }) => renderRow({ index, style })}
-        </FixedSizeList>
-      )}
+      onInputChange={(e, newInputValue) => {
+        console.log("Input changed:", newInputValue);
+        changeParams(newInputValue);
+      }}
+      renderOption={(props, option) => {
+        // const { key, ...optionProps } = props;
+        return (
+          <Box
+            key={option}
+            component="li"
+            sx={{ "& > img": { mr: 2, flexShrink: 0 } }}
+            // {...optionProps}
+            onClick={() => {
+              console.log("Row clicked, selected value:", option); // Debugging: Check click event
+              changeParams(String(option));
+            }}
+          >
+            {option}
+            {/* {props} */}
+            {/* {option.label} ({option.code}) +{option.phone} */}
+          </Box>
+        );
+      }}
       renderInput={(params) => (
         <TextField
           {...params}
-          variant="outlined"
-          placeholder="Vyhledat knihu..."
-          InputProps={{
-            ...params.InputProps,
-            startAdornment: (
-              <InputAdornment position="start">
-                <SearchIcon />
-              </InputAdornment>
-            ),
-          }}
+          label="Vyhledejte knihu"
+          // slotProps={{
+          //   htmlInput: {
+          //     ...params.inputProps,
+          //     autoComplete: 'new-password', // disable autocomplete and autofill
+          //   },
+          // }}
         />
       )}
     />
+    // <Autocomplete
+    //   disablePortal
+    //   id="combo-box-demo"
+    //   className="w-full"
+    //   options={filteredOptions}
+    //   groupBy={(filteredOptions) => filteredOptions[0]}
+    //   isOptionEqualToValue={(filteredOptions, value) => filteredOptions === value}
+    //   value={activeFilters.name}
+    //   onInputChange={(e, newInputValue) => {
+    //     console.log("Input changed:", newInputValue);
+    //     changeParams(newInputValue);
+    //   }}
+    //   onChange={(e, newValue) => {
+    //     console.log("Autocomplete value changed:", newValue);
+    //     if (newValue) {
+    //       changeParams(newValue);
+    //     }
+    //   }}
+    //   ListboxComponent={(props) => (
+    //     // @ts-ignore
+    //     <FixedSizeList
+    //       height={250}
+    //       width="100%"
+    //       className="cursor-pointer"
+    //       itemSize={42}
+    //       itemCount={filteredOptions.length}
+    //       {...props}
+    //     >
+    //       {({ index, style }) => renderRow({ index, style })}
+    //     </FixedSizeList>
+    //   )}
+    //   renderInput={(params) => (
+    //     <TextField
+    //       {...params}
+    //       variant="outlined"
+    //       placeholder="Vyhledat knihu..."
+    //       InputProps={{
+    //         ...params.InputProps,
+    //         startAdornment: (
+    //           <InputAdornment position="start">
+    //             <SearchIcon />
+    //           </InputAdornment>
+    //         ),
+    //       }}
+    //     />
+    //   )}
+    // />
   );
 };
 
