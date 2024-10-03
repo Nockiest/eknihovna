@@ -1,9 +1,12 @@
 // test it deletes all books from db
 import DELETE_BOOKS from "../../app/api/upload/DELETE"
 import { createMocks } from 'node-mocks-http';
-import { NextRequest, NextResponse } from 'next/server';
 
-// Mock prisma client and its methods
+// Mock prisma client
+import { NextRequest, NextResponse } from 'next/server'; // Import NextRequest for mocking
+import { ReadableStream } from 'web-streams-polyfill/ponyfill/es2018'; // Needed for body streaming
+
+// Mock prisma client
 jest.mock('@prisma/client', () => {
   const prisma = {
     knihy: {
@@ -16,7 +19,7 @@ jest.mock('@prisma/client', () => {
 });
 
 describe('DELETE_BOOKS API', () => {
-  let prisma ;
+  let prisma;
 
   beforeEach(() => {
     // Re-import prisma after mock
@@ -27,15 +30,27 @@ describe('DELETE_BOOKS API', () => {
     jest.clearAllMocks(); // Clean up after each test
   });
 
+  // Helper function to create a mock NextRequest with JSON body
+  function createMockNextRequest(body) {
+    const stream = new ReadableStream({
+      start(controller) {
+        controller.enqueue(new TextEncoder().encode(JSON.stringify(body)));
+        controller.close();
+      },
+    });
+    return new NextRequest('http://localhost/api/upload', {
+      method: 'DELETE',
+      body: stream,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
   test('Deletes all books when ID is -1', async () => {
     prisma.knihy.deleteMany.mockResolvedValueOnce({ count: 10 });
 
-    const { req, res } = createMocks({
-      method: 'DELETE',
-      body: { id: '-1' }, // Simulate a delete request with ID -1
-    });
+    const req = createMockNextRequest({ id: '-1' }); // Simulate a DELETE request with ID -1
 
-    const response = await DELETE_BOOKS(req );
+    const response = await DELETE_BOOKS(req); // Call the API route
 
     expect(prisma.knihy.deleteMany).toHaveBeenCalled();
     expect(response.status).toBe(200);
@@ -48,12 +63,9 @@ describe('DELETE_BOOKS API', () => {
   test('Deletes specific book when ID is provided', async () => {
     prisma.knihy.delete.mockResolvedValueOnce({ id: '1', name: 'Test Book' });
 
-    const { req, res } = createMocks({
-      method: 'DELETE',
-      body: { id: '1' }, // Simulate a delete request with ID '1'
-    });
+    const req = createMockNextRequest({ id: '1' }); // Simulate a DELETE request with ID '1'
 
-    const response = await DELETE_BOOKS(req );
+    const response = await DELETE_BOOKS(req);
 
     expect(prisma.knihy.delete).toHaveBeenCalledWith({ where: { id: '1' } });
     expect(response.status).toBe(200);
@@ -66,12 +78,9 @@ describe('DELETE_BOOKS API', () => {
   test('Returns 404 if book does not exist', async () => {
     prisma.knihy.delete.mockResolvedValueOnce(null);
 
-    const { req, res } = createMocks({
-      method: 'DELETE',
-      body: { id: 'non-existing-id' },
-    });
+    const req = createMockNextRequest({ id: 'non-existing-id' });
 
-    const response = await DELETE_BOOKS(req );
+    const response = await DELETE_BOOKS(req);
 
     expect(prisma.knihy.delete).toHaveBeenCalledWith({ where: { id: 'non-existing-id' } });
     expect(response.status).toBe(404);
@@ -82,12 +91,9 @@ describe('DELETE_BOOKS API', () => {
   });
 
   test('Returns 400 when no ID is provided', async () => {
-    const { req, res } = createMocks({
-      method: 'DELETE',
-      body: {},
-    });
+    const req = createMockNextRequest({}); // Empty body
 
-    const response = await DELETE_BOOKS(req  );
+    const response = await DELETE_BOOKS(req);
 
     expect(response.status).toBe(400);
     expect(await response.json()).toEqual({
@@ -99,12 +105,9 @@ describe('DELETE_BOOKS API', () => {
   test('Handles server error', async () => {
     prisma.knihy.deleteMany.mockRejectedValueOnce(new Error('Server error'));
 
-    const { req, res } = createMocks({
-      method: 'DELETE',
-      body: { id: '-1' },
-    });
+    const req = createMockNextRequest({ id: '-1' });
 
-    const response = await DELETE_BOOKS(req  );
+    const response = await DELETE_BOOKS(req);
 
     expect(response.status).toBe(500);
     expect(await response.json()).toEqual({

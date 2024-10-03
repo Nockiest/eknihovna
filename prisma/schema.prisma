@@ -9,12 +9,10 @@ datasource db {
 
 model knihy {
   id             String   @id @db.VarChar(255)
-  book_code      Int?     @unique
   name           String?  @db.VarChar(255)
   author         String?  @db.VarChar(255)
   category       String?  @db.VarChar(50)
   genres         String[]
-  umisteni       String?  @db.VarChar(100)
   signatura      String?  @db.VarChar(50)
   zpusob_ziskani String?  @db.VarChar(100)
   formaturita    Boolean?

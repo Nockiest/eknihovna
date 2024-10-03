@@ -2,7 +2,6 @@ import { POST } from '../app/api/upload/route'; // Replace with the correct path
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
 import {prisma} from '../lib/prisma'; // Make sure to import your prisma instance
-import { v4 as uuidv4 } from 'uuid';
 
 // Mock prisma and uuidv4
 jest.mock('../lib/prisma');
