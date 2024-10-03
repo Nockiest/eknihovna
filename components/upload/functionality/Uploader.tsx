@@ -1,24 +1,15 @@
 "use client";
-import { excelWordsToBool, fillMissingIds } from "@/app/api/upload/excelUtils";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
-import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
 import { Box, List, ListItemText, Typography } from "@mui/material";
-import Image from "next/image";
 import React, { useState } from "react";
-import * as xlsx from "xlsx";
-import convertExcelToJson from "@/utils/convertExcelToJson";
 import readFileAsArrayBuffer from "@/utils/readFileArrayAsBUffer";
-const Uploader = ({
-  // setResponseMessage,
-}: {
-  // setResponseMessage: React.Dispatch<React.SetStateAction<string | null>>;
-}) => {
+import convertExcelToJson from "@/utils/convertExcelToJson";
+const Uploader = ( ) => {
 
   const [jsonResult, setJsonResult] = useState<any[]>([]);
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
-
       // Read the file as an ArrayBuffer using FileReader
       const arrayBuffer = await readFileAsArrayBuffer(file);
       const jsonData = convertExcelToJson(arrayBuffer);

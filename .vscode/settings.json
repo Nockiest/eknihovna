@@ -39,6 +39,7 @@
         "postcss.config.mjs": true,
         "tsconfig.json": true,
         ".eslintrc.json": true,
-        "coverage": true
+        "coverage": true,
+        ".next": true
     }
 }
