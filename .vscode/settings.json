@@ -35,11 +35,13 @@
         "client/knihovna/__mocks__": true,
         ".swc": true,
         "next-env.d.ts": true,
-        "next.config.mjs": false,
+        "next.config.mjs": true,
         "postcss.config.mjs": true,
         "tsconfig.json": true,
         ".eslintrc.json": true,
         "coverage": true,
-        ".next": true
+        ".next": true,
+        "jest.setup.ts": true,
+        "tailwind.config.ts": true
     }
 }

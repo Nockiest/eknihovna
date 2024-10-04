@@ -49,7 +49,18 @@ export  const shownBooksBySize: Record<Breakpoint, number> = {
         available: true,        // Replace with true or false depending on availability
         rating: 5               // Replace with the actual rating
       }
-
+    export const emptyBook: Book = {
+        id: '1',
+        name: "",
+        author: "",
+        category: "",
+        genres: [],
+        signatura: "",
+        zpusob_ziskani: "",
+        formaturita: false,
+        available: false,
+        rating: -1,
+      };
 
 export const navRoutes: NavButton[] = [
     { URL: "/", label: "Úvod" },

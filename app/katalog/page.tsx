@@ -6,7 +6,7 @@ import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
 import { FiltringWindow } from "@/components/katalog/FiltringWindow";
 import ErrorReporter from "@/utils/Announcer";
-import ColorCirclesComprehensive from "@/components/general/ColorCirclesComprehensive";
+import ColorCirclesComprehensive from "@/components/general/styling/ColorCirclesComprehensive";
 
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);

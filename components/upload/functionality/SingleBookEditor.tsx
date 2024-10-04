@@ -1,25 +1,14 @@
 import React, { useState } from "react";
-import { Book, UploadJsonData } from "@/types/types";
+import { Book   } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
-import { defaultFilters, bookHeaders } from "@/data/values";
+import { defaultFilters, bookHeaders, emptyBook } from "@/data/values";
 import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import BookEditForm from "@/components/general/BookEditForm";
 import { Box, List, ListItemText, Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
-const emptyBook: Book = {
-  id: uuidv4(),
-  name: "",
-  author: "",
-  category: "",
-  genres: [],
-  signatura: "",
-  zpusob_ziskani: "",
-  formaturita: false,
-  available: false,
-  rating: -1,
-};
+
 const SingleBookEditor = ( ) => {
   const [bookId, setBookId] = useState<string>("");
   const [book, setBook] = useState<Book | null>(null);
