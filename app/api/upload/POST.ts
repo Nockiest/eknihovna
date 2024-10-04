@@ -7,6 +7,8 @@ const POST_BOOKS = async (req: NextRequest) => {
   try {
     const jsonData = await req.json();
     console.log(jsonData[0]);
+
+    // Validate JSON format
     if (!jsonData || !Array.isArray(jsonData)) {
       return NextResponse.json(
         {
@@ -19,9 +21,10 @@ const POST_BOOKS = async (req: NextRequest) => {
         { status: 400 }
       );
     }
-/// proč se error nedostanena server
-const keys = Object.keys(jsonData[0]) as Array<keyof Book>; // Cast the keys as keyof Book
-const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) >= 0);
+
+    // Validate keys against expected bookHeaders
+    const keys = Object.keys(jsonData[0]) as Array<keyof Book>;
+    const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) >= 0);
 
     if (!hasValidKeys) {
       return NextResponse.json(
@@ -32,9 +35,7 @@ const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) 
           )}`,
           message: `Tato Tabulka Má Špatné Názvy Hlaviček, obdržené názvy: ${keys.join(
             ", "
-          )}, očekávané názvy: $${bookHeaders.join(
-            ", "
-          )}`,
+          )}, očekávané názvy: ${bookHeaders.join(", ")}`,
           headers: {
             ...noCacheHeaders,
           },
@@ -48,9 +49,9 @@ const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) 
       .filter((item) => item.name) // Ensure important fields like name are not empty
       .map((item) => {
         return {
-          id: item.id || uuidv4(),
+          id: item.id || uuidv4(), // Generate ID if not present
           name:
-            typeof  item.name  === "string"|| typeof  item.name == 'number'
+            typeof item.name === "string" || typeof item.name == "number"
               ? String(item.name).trim().substring(0, 255)
               : "",
           author:
@@ -86,16 +87,20 @@ const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) 
               : null,
         };
       });
-      console.log(validData[0]);
-    // Insert valid data into the database
-    await prisma.knihy.createMany({
-      data: validData,
-    });
+
+    // Iterate over each valid book and upsert into the database
+    for (const book of validData) {
+      await prisma.knihy.upsert({
+        where: { id: book.id }, // Check if a book with the same ID exists
+        update: book,           // If it exists, update with new data
+        create: book,           // If it doesn't exist, create a new entry
+      });
+    }
 
     return NextResponse.json(
       {
         success: true,
-        message: "Data inserted successfully!",
+        message: "Data successfully inserted or updated!",
         headers: {
           ...noCacheHeaders,
         },
@@ -103,11 +108,11 @@ const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) 
       { status: 200 }
     );
   } catch (error) {
-    console.error("Error inserting data:", error);
+    console.error("Error inserting or updating data:", error);
     return NextResponse.json(
       {
         success: false,
-        message: "Selhal jsem při nahrání dat" + error,
+        message: "Selhal jsem při nahrání dat: " + error,
         headers: {
           ...noCacheHeaders,
         },

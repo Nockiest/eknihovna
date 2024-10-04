@@ -35,7 +35,7 @@
         "client/knihovna/__mocks__": true,
         ".swc": true,
         "next-env.d.ts": true,
-        "next.config.mjs": true,
+        "next.config.mjs": false,
         "postcss.config.mjs": true,
         "tsconfig.json": true,
         ".eslintrc.json": true,

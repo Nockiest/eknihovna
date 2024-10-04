@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo } from "react";
-import { Autocomplete, TextField, InputAdornment, Box, useMediaQuery } from "@mui/material";
+import { Autocomplete, TextField,   Box, useMediaQuery } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { FixedSizeList } from "react-window";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 import theme from "@/theme/theme";

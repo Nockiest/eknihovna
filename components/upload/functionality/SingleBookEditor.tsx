@@ -24,17 +24,14 @@ const SingleBookEditor = ( ) => {
   const [bookId, setBookId] = useState<string>("");
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   // Fetch book details based on the entered ID
   const fetchBook = async () => {
+    debugger
     if (!bookId) {
-      setError("Please enter a valid book ID");
-      return;
+      return alert("Prossím zadejte validnéí ID");
     }
-
     setLoading(true);
-    setError("");
     try {
       const response = await fetchFilteredBooks(
         defaultFilters, // defaultFilters or appropriate filter object
@@ -43,14 +40,11 @@ const SingleBookEditor = ( ) => {
         10000000
       );
 
-      if (response.length > 0) {
-        setBook(response[0]);
-      } else {
-        setError("Book not found");
-      }
+      response.length > 0?  setBook(response[0]): alert("Book not found");
+
     } catch (err) {
       console.error("Error fetching book:", err);
-      setError("Book not found or an error occurred");
+      alert("Kniha nenalezena nebo nastal error");
     } finally {
       setLoading(false);
     }
@@ -87,25 +81,18 @@ const SingleBookEditor = ( ) => {
   };
   // Update the book in the database
   const updateBook = async () => {
+    debugger
     if (!book) return;
 
     setLoading(true);
-    setError("");
-    const mapObjectToArray = (obj: Record<string, any>, keys: string[]) => {
-      return keys.map((key) => obj[key]);
-    };
 
-    const row = mapObjectToArray(book, bookHeaders);
     try {
-      const newEntry: UploadJsonData = {
-        headers: bookHeaders,
-        rows: [[...row]],
-      };
-      await postDataToEndpoint(newEntry);
+      console.log(book)
+      await postDataToEndpoint([book]);
       alert("Kniha úspěšně aktualizována");
     } catch (err) {
       console.error("Error updating book:", err);
-      setError("Failed to update the book");
+      alert("Selhal jsem v aktualizování knihy:"+err);
     } finally {
       setLoading(false);
     }
@@ -141,8 +128,6 @@ const SingleBookEditor = ( ) => {
 
         {loading && <p>Načítání...</p>}
 
-        {error && <p style={{ color: "red" }}>{error}</p>}
-
         <Box>
           <Typography variant="h6"> Návod vytvoření nové knihy </Typography>
           <List>
@@ -155,8 +140,7 @@ const SingleBookEditor = ( ) => {
 
         <Box>
           <Typography variant="h6">
-            {" "}
-            Návod upravení existující knihy{" "}
+            Návod upravení existující knihy
           </Typography>
           <List>
             <ListItemText primary="stáhněte si tabulku z databáze" />
@@ -172,14 +156,14 @@ const SingleBookEditor = ( ) => {
 
       <Box>
         {book && (
-          <div>
+          <Box>
             <Typography variant='h4'>{bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}</Typography>
             <BookEditForm
               book={book}
               handleInputChange={handleInputChange}
               updateBook={updateBook}
             />
-          </div>
+          </Box>
         )}
       </Box>
     </Box>

@@ -36,7 +36,7 @@ export  type Filters= {
     name: string[] ;
   };
 
-export type UploadJsonData = {
-  headers: string[];
-  rows: any[];
-}
+// export type UploadJsonData = {
+//   headers: string[];
+//   rows: any[];
+// }

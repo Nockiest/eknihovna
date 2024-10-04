@@ -267,9 +267,9 @@ const theme = createTheme({
     },
     MuiInputBase: {
       styleOverrides: {
-        input: {
-          color: '#ffffff', // White text for the base input text
-        },
+        // input: {
+        //   color: '#ffffff', // White text for the base input text
+        // },
       },
     },
     MuiOutlinedInput: {

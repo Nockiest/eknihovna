@@ -53,6 +53,7 @@ const ExcelSheetUpdater = () => {
         return <SingleBookEditor />;
       case 2:
         return <SingleBookDeleter />;
+    
       default:
         return null;
     }
@@ -62,7 +63,7 @@ const ExcelSheetUpdater = () => {
       <Paper className="flex flex-col  h-auto gap-16 w-full">
         <CustomButtonGroup
           buttons={[
-            { text: 'Nahrát Knihu', onClick: () => setActiveTab(0) },
+            { text: 'Hromadné nahrání', onClick: () => setActiveTab(0) },
             { text: 'Editovat Knihu', onClick: () => setActiveTab(1) },
             { text: 'Smazat Knihu', onClick: () => setActiveTab(2) },
           ]}
