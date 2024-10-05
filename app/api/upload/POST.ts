@@ -11,6 +11,7 @@ import { v4 as uuidv4 } from "uuid";
  *
  * @param req - The incoming NextRequest object containing the book data to be processed
  */
+export const maxDuration = 60; // This function can run for a maximum of 60 seconds
 const POST_BOOKS = async (req: NextRequest) => {
   try {
     const json  = await req.json();
@@ -117,11 +118,12 @@ const POST_BOOKS = async (req: NextRequest) => {
       }
 
     console.log(validData[0], books[0],truthyValues.indexOf(books[0].formaturita),truthyValues.indexOf(books[0].available));
+    const totalBooks = await prisma.knihy.count();
 
     return NextResponse.json(
       {
         success: true,
-        message: "Data successfully inserted or updated!",
+        message: `Data successfully inserted or updated! Current number of books: ${totalBooks}`  ,
         headers: {
           ...noCacheHeaders,
         },
