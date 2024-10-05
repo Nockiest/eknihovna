@@ -102,11 +102,12 @@ const POST_BOOKS = async (req: NextRequest) => {
         // Delete all previous books
         console.log("Delete all books")
         await prisma.knihy.deleteMany();
-        for (const book of validData) {
-          await prisma.knihy.create({
-            data: book,
+        // for (const book of validData) {
+        //   console.log(validData.indexOf(book))
+          await prisma.knihy.createMany({
+            data: validData,
           });
-        }
+        
       } else {
         for (const book of validData) {
           console.log(validData.indexOf(book))
