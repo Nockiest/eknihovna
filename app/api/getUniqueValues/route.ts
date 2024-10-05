@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     ["name", "author", "category", "genres"].indexOf(columnName) === -1
   ) {
     return NextResponse.json({
-      error: `${columnName} Invalid or missing columnName parameter. It must be a valid property of Book.`,
+      error: `${columnName} Tato hodnota není validní pro získání knihy`,
     });
   }
 
@@ -59,6 +59,6 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error retrieving values:", error);
-    return NextResponse.json({ error: "Internal Server Error" });
+    return NextResponse.json({ error: "Problém na straně serveru" });
   }
 }

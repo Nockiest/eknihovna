@@ -45,6 +45,6 @@ export  async function GET( ) {
       });
   } catch (error) {
     console.error('Error fetching data or creating Excel file:', error);
-    NextResponse.json({ error: 'Internal Server Error' });
+    NextResponse.json({ error: 'Problém na straně serveru' });
   }
 }

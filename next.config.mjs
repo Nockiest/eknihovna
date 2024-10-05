@@ -19,17 +19,3 @@ const nextConfig = {
 };
 
 export default nextConfig
-// const withBundleAnalyzer = require('@next/bundle-analyzer')({
-//   enabled: process.env.ANALYZE === 'true',
-// });
-
-// module.exports = withBundleAnalyzer({
-//   webpack(config) {
-//     return config;
-//   },
-// });
-// export default nextConfig;
-// next.config.js
-
-
-// module.exports = nextConfig;

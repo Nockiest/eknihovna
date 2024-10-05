@@ -1,4 +1,4 @@
-import { bookHeaders, noCacheHeaders } from "@/data/values";
+import { bookHeaders, noCacheHeaders, truthyValues } from "@/data/values";
 import { prisma } from "@/lib/prisma";
 import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
@@ -77,8 +77,8 @@ const POST_BOOKS = async (req: NextRequest) => {
                 )
                 .filter(Boolean)
             : [],
-          formaturita: Boolean(item.formaturita),
-          available: Boolean(item.available),
+          formaturita: truthyValues.indexOf(item.formaturita) >= 0? true:false,
+          available: truthyValues.indexOf(item.available) >= 0 ? true:false,
           rating:
             item.rating !== null &&
             !isNaN(Number(item.rating)) &&
@@ -87,15 +87,16 @@ const POST_BOOKS = async (req: NextRequest) => {
               : null,
         };
       });
-
     // Iterate over each valid book and upsert into the database
     for (const book of validData) {
+
       await prisma.knihy.upsert({
         where: { id: book.id }, // Check if a book with the same ID exists
         update: book,           // If it exists, update with new data
         create: book,           // If it doesn't exist, create a new entry
       });
     }
+    console.log(validData[0], jsonData[0],truthyValues.indexOf(jsonData[0].formaturita),truthyValues.indexOf(jsonData[0].available));
 
     return NextResponse.json(
       {
