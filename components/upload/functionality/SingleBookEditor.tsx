@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Book   } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { defaultFilters, bookHeaders, emptyBook } from "@/data/values";
-import { postDataToEndpoint } from "@/utils/apiConections/postDataToUpload";
+import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import BookEditForm from "@/components/general/BookEditForm";
 import { Box, List, ListItemText, Typography } from "@mui/material";
@@ -77,7 +77,7 @@ const SingleBookEditor = ( ) => {
 
     try {
       console.log(book)
-      await postDataToEndpoint([book]);
+      await postDataToUpload([book]);
       alert("Kniha úspěšně aktualizována");
     } catch (err) {
       console.error("Error updating book:", err);

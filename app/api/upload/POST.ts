@@ -5,11 +5,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 const POST_BOOKS = async (req: NextRequest) => {
   try {
-    const jsonData = await req.json();
-    console.log(jsonData[0]);
+    const json  = await req.json();
+    const { removePreviousData,  books } = json ; // Extract removedPreviousData
+    console.log(books[0] )
+    console.log(  removePreviousData);
 
     // Validate JSON format
-    if (!jsonData || !Array.isArray(jsonData)) {
+    if (!books || !Array.isArray(books)) {
       return NextResponse.json(
         {
           success: false,
@@ -23,7 +25,7 @@ const POST_BOOKS = async (req: NextRequest) => {
     }
 
     // Validate keys against expected bookHeaders
-    const keys = Object.keys(jsonData[0]) as Array<keyof Book>;
+    const keys = Object.keys(books[0]) as Array<keyof Book>;
     const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) >= 0);
 
     if (!hasValidKeys) {
@@ -45,7 +47,7 @@ const POST_BOOKS = async (req: NextRequest) => {
     }
 
     // Process valid data
-    const validData = jsonData
+    const validData = books
       .filter((item) => item.name) // Ensure important fields like name are not empty
       .map((item) => {
         return {
@@ -87,16 +89,26 @@ const POST_BOOKS = async (req: NextRequest) => {
               : null,
         };
       });
-    // Iterate over each valid book and upsert into the database
-    for (const book of validData) {
+      if (removePreviousData) {
+        // Delete all previous books
+        console.log("Delete all books")
+        await prisma.knihy.deleteMany();
+        for (const book of validData) {
+          await prisma.knihy.create({
+            data: book,
+          });
+        }
+      } else {
+        for (const book of validData) {
+          await prisma.knihy.upsert({
+            where: { id: book.id },
+            update: book,
+            create: book,
+          });
+        }
+      }
 
-      await prisma.knihy.upsert({
-        where: { id: book.id }, // Check if a book with the same ID exists
-        update: book,           // If it exists, update with new data
-        create: book,           // If it doesn't exist, create a new entry
-      });
-    }
-    console.log(validData[0], jsonData[0],truthyValues.indexOf(jsonData[0].formaturita),truthyValues.indexOf(jsonData[0].available));
+    console.log(validData[0], books[0],truthyValues.indexOf(books[0].formaturita),truthyValues.indexOf(books[0].available));
 
     return NextResponse.json(
       {

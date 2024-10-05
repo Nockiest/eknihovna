@@ -4,10 +4,12 @@ import { Box, List, ListItemText, Typography } from "@mui/material";
 import React, { useState } from "react";
 import readFileAsArrayBuffer from "@/utils/readFileArrayAsBUffer";
 import convertExcelToJson from "@/utils/convertExcelToJson";
-const Uploader = ( ) => {
-
+import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
+const Uploader = () => {
   const [jsonResult, setJsonResult] = useState<any[]>([]);
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (event.target.files && event.target.files.length > 0) {
       const file = event.target.files[0];
       // Read the file as an ArrayBuffer using FileReader
@@ -20,27 +22,18 @@ const Uploader = ( ) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    console.log(jsonResult);
+    const response = await postDataToUpload(jsonResult, true);
 
-  console.log(jsonResult)
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json", // Set the content type to JSON
-      },
-      body: JSON.stringify(jsonResult), // Convert jsonResult to a JSON string
+    if (response.ok) {
+      alert("soubor úspěšně nahrán");
+    } else {
+      const errorData = await response.json(); // Parse error message from response
+      alert(
+        `Error při nahrání souboru: ${errorData.message || "neznámý error"}`
+      );
     }
-  );
-
-  if (response.ok) {
-    alert("soubor úspěšně nahrán");
-  } else {
-    const errorData = await response.json(); // Parse error message from response
-    alert(`Error při nahrání souboru: ${errorData.message || "neznámý error"}`);
-  }
-  }
-
+  };
 
   return (
     <Box className="mx-auto px-4 flex flex-col flex-center b-black flex-grow-1 m-8 align-center  ">
