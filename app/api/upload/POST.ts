@@ -3,6 +3,14 @@ import { prisma } from "@/lib/prisma";
 import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
+/**
+ * Asynchronously processes and validates incoming book data from a request.
+ * Extracts book information, validates JSON format, checks keys against expected headers,
+ * processes valid data, and inserts or updates books in the database accordingly.
+ * Handles errors and returns appropriate responses with success status and messages.
+ *
+ * @param req - The incoming NextRequest object containing the book data to be processed
+ */
 const POST_BOOKS = async (req: NextRequest) => {
   try {
     const json  = await req.json();
@@ -25,8 +33,8 @@ const POST_BOOKS = async (req: NextRequest) => {
     }
 
     // Validate keys against expected bookHeaders
-    const keys = Object.keys(books[0]) as Array<keyof Book>;
-    const hasValidKeys = keys.every((key) => bookHeaders.indexOf(key as keyof Book) >= 0);
+    const FirstBookKeys = Object.keys(books[0]) as Array<keyof Book>;
+    const hasValidKeys = FirstBookKeys.every((key) => bookHeaders.indexOf(key as keyof Book) >= 0);
 
     if (!hasValidKeys) {
       return NextResponse.json(
@@ -35,7 +43,7 @@ const POST_BOOKS = async (req: NextRequest) => {
           error: `Tato Tabulka Má Špatné Názvy Hlaviček, očekávané názvy: ${bookHeaders.join(
             ", "
           )}`,
-          message: `Tato Tabulka Má Špatné Názvy Hlaviček, obdržené názvy: ${keys.join(
+          message: `Tato Tabulka Má Špatné Názvy Hlaviček, obdržené názvy: ${FirstBookKeys.join(
             ", "
           )}, očekávané názvy: ${bookHeaders.join(", ")}`,
           headers: {

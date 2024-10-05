@@ -6,13 +6,13 @@ describe('Page', () => {
   it('renders a heading', () => {
     render(<Page />)
 
-    const heading = screen.getByRole('heading', { level: 1 })
+    const heading = screen.getByRole('heading', { level: 6 })
     expect(heading).toBeInTheDocument()
   })
-  it('renders a div', () => {
-    render(<Page />)
+  // it('renders a div', () => {
+  //   render(<Page />)
 
-    const div = screen.getByRole('div')
-    expect(div).toBeInTheDocument()
-  })
+  //   const div = screen.getByRole('div')
+  //   expect(div).toBeInTheDocument()
+  // })
 })

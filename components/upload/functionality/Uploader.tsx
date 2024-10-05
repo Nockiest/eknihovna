@@ -1,12 +1,13 @@
 "use client";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
-import { Box, List, ListItemText, Typography } from "@mui/material";
+import { Box, Checkbox, List, ListItemText, Typography } from "@mui/material";
 import React, { useState } from "react";
 import readFileAsArrayBuffer from "@/utils/readFileArrayAsBUffer";
 import convertExcelToJson from "@/utils/convertExcelToJson";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
 const Uploader = () => {
   const [jsonResult, setJsonResult] = useState<any[]>([]);
+  const [overwriteData, setOverwriteData] = useState(false);
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -23,18 +24,17 @@ const Uploader = () => {
     e.preventDefault();
 
     console.log(jsonResult);
-    const response = await postDataToUpload(jsonResult, true);
-
-    if (response.ok) {
+    const response = await postDataToUpload(jsonResult, overwriteData);
+    console.log(response);
+    if (response.data.success === true) {
       alert("soubor úspěšně nahrán");
     } else {
-      const errorData = await response.json(); // Parse error message from response
+      const errorData = response.data; // Access data directly from the response
       alert(
         `Error při nahrání souboru: ${errorData.message || "neznámý error"}`
       );
     }
   };
-
   return (
     <Box className="mx-auto px-4 flex flex-col flex-center b-black flex-grow-1 m-8 align-center  ">
       <Typography variant="h2" className="text-xl font-semibold mb-4">
@@ -59,6 +59,12 @@ const Uploader = () => {
           onChange={handleFileChange}
         />
         <PrimaryButton type="submit">Nahrát</PrimaryButton>
+        <Checkbox
+          id={"checkboxInput"}
+          checked={overwriteData}
+          onChange={() => setOverwriteData(!overwriteData)}
+        />
+        <label htmlFor="checkboxInput">Přepsat data v DB</label>
       </form>
 
       <Box>
