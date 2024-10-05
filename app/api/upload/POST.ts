@@ -109,6 +109,7 @@ const POST_BOOKS = async (req: NextRequest) => {
         }
       } else {
         for (const book of validData) {
+          console.log(validData.indexOf(book))
           await prisma.knihy.upsert({
             where: { id: book.id },
             update: book,
