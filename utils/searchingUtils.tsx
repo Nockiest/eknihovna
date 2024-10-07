@@ -2,18 +2,6 @@ export const standardizeText = (text: string) => {
   return text.replace(/\s+/g, " ").trim().toLocaleLowerCase();
 };
 
-// export const checkSearchRelevant = (keyword: string, query: string) => {
-//   if (query.replace(/\s/g, "") === "") {
-//     return false;
-//   }
-//   const keywordWithoutSpaces = standardizeText(keyword);
-//   const queryWithoutSpaces = standardizeText(query);
-//   return (
-//     keywordWithoutSpaces.indexOf(queryWithoutSpaces) >= 0 ||
-//     queryWithoutSpaces.indexOf(keywordWithoutSpaces) >= 0
-//   );
-// };
-
 export const checkResultIncludesQuery = (
   result: string,
   query: string
@@ -21,16 +9,7 @@ export const checkResultIncludesQuery = (
   return standardizeText(result).includes(standardizeText(query));
 };
 
-
-// export  function getSimilarity(result: string, query: string) {
-//     if (query == ''){
-//         return 0
-//     }
-//     result = result.toLowerCase();
-//     query = query.toLowerCase();
-//     return result.length - result.replace(new RegExp(query, 'g'), '').length;
-//   }
-const checkSearchRelevant = (keyword: string , query : string) => {
+export const checkSearchRelevant = (keyword: string , query : string) => {
     if (query.replace(/\s/g, "") === ''){
       return false
     }
@@ -41,11 +20,11 @@ const checkSearchRelevant = (keyword: string , query : string) => {
     );
   };
 // self explanatory
-const checkResultStartWithQuery = (result: string , query: string  )  => {
+export const checkResultStartWithQuery = (result: string , query: string  )  => {
     return  result.replace(/\s+/g, " ").trim().toLocaleLowerCase().indexOf( query.replace(/\s+/g, " ").trim().toLocaleLowerCase()) == 0
   }
 // gets how similar one string is to another
-function getSimilarity (result: string , query : string) {
+export function getSimilarity (result: string , query : string) {
     result = result.toLowerCase()
     query = query.toLowerCase()
 
@@ -54,7 +33,7 @@ function getSimilarity (result: string , query : string) {
 // checks whether the word is misspelled
 // note that to show results passed through this function in the front end you
 // should add to the check in the querylist table for the index of query
-function levenshteinDistance(word1: string, word2: string) {
+export function levenshteinDistance(word1: string, word2: string) {
     const m = word1.length;
     const n = word2.length;
 

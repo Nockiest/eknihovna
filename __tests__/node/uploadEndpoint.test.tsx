@@ -1,7 +1,7 @@
-import { POST } from '../app/api/upload/route'; // Replace with the correct path to the API route
+import { POST } from '../../app/api/upload/route'; // Replace with the correct path to the API route
 import { NextRequest } from 'next/server';
 import { NextResponse } from 'next/server';
-import {prisma} from '../lib/prisma'; // Make sure to import your prisma instance
+import {prisma} from '../../lib/prisma'; // Make sure to import your prisma instance
 
 // Mock prisma and uuidv4
 jest.mock('../lib/prisma');

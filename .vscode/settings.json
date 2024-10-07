@@ -40,7 +40,7 @@
         ".eslintrc.json": true,
         "coverage": true,
         ".next": true,
-        "jest.setup.ts": true,
+        "jest.setup.ts": false,
         "tailwind.config.ts": true
     }
 }

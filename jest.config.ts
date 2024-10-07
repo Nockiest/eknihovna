@@ -11,23 +11,32 @@ const createJestConfig = nextJest({
 })
 
 // Add any custom config to be passed to Jest
-const config: Config = {
+const jsdomConfig: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'jsdom',
   moduleNameMapper: {
-    // ...
-    '^@/components/(.*)$': '<rootDir>/components/$1',
-    '^@/utils/(.*)$': '<rootDir>/utils/$1',
-    '^@/lib/(.*)$': '<rootDir>/lib/$1',
-    
-    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
-  }
-  // Add more setup options before each test is run
-  // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
+    // Add your moduleNameMapper configurations here
+  },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
 }
 
+// Jest configuration for node environment
+const nodeConfig: Config = {
+  coverageProvider: 'v8',
+  testEnvironment: 'node',
+  moduleNameMapper: {
+    // Add your moduleNameMapper configurations here
+  },
+  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
+}
+
+// Determine which configuration to use based on the environment
+const isNodeEnvironment = process.env.TEST_ENV === 'node' // You can set this environment variable when running tests
+
+const configToUse = isNodeEnvironment ? nodeConfig : jsdomConfig
+
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-export default createJestConfig(config)
+export default createJestConfig(configToUse)
 // import type {Config} from 'jest';
 
 // const config: Config = {

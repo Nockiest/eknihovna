@@ -107,7 +107,7 @@ const POST_BOOKS = async (req: NextRequest) => {
           await prisma.knihy.createMany({
             data: validData,
           });
-        
+
       } else {
         for (const book of validData) {
           console.log(validData.indexOf(book))

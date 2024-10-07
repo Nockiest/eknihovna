@@ -5,7 +5,7 @@ import POST_BOOKS from "@/app/api/upload/POST";
 import { testBook } from "@/data/values";
 
 describe('code snippet', () => {
-
+  debugger
     // Successfully processes valid book data and inserts it into the database
     it('should insert valid book data into the database when provided', async () => {
       const mockRequest = {
