@@ -3,19 +3,11 @@ import { prisma } from "@/lib/prisma";
 import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
-/**
- * Asynchronously processes and validates incoming book data from a request.
- * Extracts book information, validates JSON format, checks keys against expected headers,
- * processes valid data, and inserts or updates books in the database accordingly.
- * Handles errors and returns appropriate responses with success status and messages.
- *
- * @param req - The incoming NextRequest object containing the book data to be processed
- */
+
 export const maxDuration = 60; // This function can run for a maximum of 60 seconds
-const POST_BOOKS = async (req: NextRequest) => {
+const POST_BOOKS = async (json: any) => {
   try {
-    const json  = await req.json();
-    const { removePreviousData,  books } = json ; // Extract removedPreviousData
+    const { removePreviousData, books } = json;
     console.log(books[0] )
     console.log(  removePreviousData);
 
