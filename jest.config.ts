@@ -17,7 +17,7 @@ const jsdomConfig: Config = {
   moduleNameMapper: {
     // Add your moduleNameMapper configurations here
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
+  setupFilesAfterEnv: [ '<rootDir>/jest.setup.ts','<rootDir>/singleton.ts']
 }
 
 // Jest configuration for node environment
@@ -27,7 +27,7 @@ const nodeConfig: Config = {
   moduleNameMapper: {
     // Add your moduleNameMapper configurations here
   },
-  setupFilesAfterEnv: ['<rootDir>/jest.setup.ts']
+  setupFilesAfterEnv: [ '<rootDir>/jest.setup.ts','<rootDir>/singleton.ts']
 }
 
 // Determine which configuration to use based on the environment
