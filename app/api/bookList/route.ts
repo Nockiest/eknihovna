@@ -1,6 +1,6 @@
 // import prisma from "@/lib/prisma";
 import { buildPrismaFilter } from "@/utils/buildPrismaFilter";
-import { prisma } from '@/lib/prisma';
+import { context, findUniquePrismaBooks, loadPrismaBookPage } from '@/lib/prisma';
 import { NextRequest, NextResponse } from "next/server";
 import { noCacheHeaders } from "@/data/values";
 export const revalidate = 0
@@ -11,9 +11,9 @@ export async function POST(req: NextRequest) {
 
     if (id  ) {
       try {
-        const book = await prisma.knihy.findUnique({
-          where: {  id  },
-        });
+        const book = await findUniquePrismaBooks(id) // await prisma.knihy.findUnique({
+        //   where: {  id  },
+        // });
 
         if (!book) {
           return NextResponse.json({ error: "book not found " }, { status: 400 });
@@ -42,12 +42,13 @@ export async function POST(req: NextRequest) {
     const where = buildPrismaFilter(filters);
 
 //     // Fetch data using Prisma
-    const books = await prisma.knihy.findMany({
-      where,
-      skip: (page - 1) * limit,
-      take: limit,
-      // distinct: ['name'], // Select distinct on the 'name' field
-    });
+    const books = await loadPrismaBookPage(where,page,limit);
+    // await prisma.knihy.findMany({
+    //   where,
+    //   skip: (page - 1) * limit,
+    //   take: limit,
+    //   // distinct: ['name'], // Select distinct on the 'name' field
+    // });
     // const books:Book[] = []
     return NextResponse.json(books, {
       headers: {
@@ -59,6 +60,6 @@ export async function POST(req: NextRequest) {
     console.error("Error fetching books:", error);
     return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   } finally {
-    prisma.$disconnect()
+    context.prisma.$disconnect()
   }
 }

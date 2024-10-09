@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma';
+import { context, findManyPrismaBooks } from '@/lib/prisma';
 import * as xlsx from 'xlsx';
 import { NextResponse } from 'next/server';
 import { noCacheHeaders } from '@/data/values';
@@ -6,7 +6,7 @@ export const revalidate = 0
 export  async function GET( ) {
   try {
     console.log(`GET`)
-    const data = await prisma.knihy.findMany();
+    const data = await findManyPrismaBooks();
     console.log(data.length)
     if (data.length === 0) {
       return NextResponse.json({ error: 'No data found in the table.' });

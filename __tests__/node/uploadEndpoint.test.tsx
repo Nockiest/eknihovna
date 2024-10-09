@@ -4,7 +4,7 @@ import { NextResponse } from 'next/server';
 import {prisma} from '../../lib/prisma'; // Make sure to import your prisma instance
 
 // Mock prisma and uuidv4
-jest.mock('../lib/prisma');
+jest.mock('../../lib/prisma');
 jest.mock('uuid', () => ({
   v4: jest.fn().mockReturnValue('mocked-uuid'),
 }));

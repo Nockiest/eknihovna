@@ -45,14 +45,14 @@ export const shownBooksBySize: Record<Breakpoint, number> = {
   xl: 36,
 };
 
-export const testBook = {
+export const testBook:Book = {
   id: "x", // Replace with your actual unique ID or a UUID generator
   name: "Book Name", // Replace with the actual book name
   author: "Author Name", // Replace with the actual author name
   category: "Category", // Replace with the actual category
   genres: ["Genre1", "Genre2"], // Replace with the actual genres
-  umisteni: "Location", // Replace with the actual location
   signatura: "Signature", // Replace with the actual signature
+  zpusob_ziskani: "",
   formaturita: true, // Replace with true or false depending on whether it's formal
   available: true, // Replace with true or false depending on availability
   rating: 5, // Replace with the actual rating

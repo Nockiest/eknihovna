@@ -1,5 +1,5 @@
 import { bookHeaders, noCacheHeaders, truthyValues } from "@/data/values";
-import { prisma } from "@/lib/prisma";
+import {  countPrismaBooks, craeteManyPrismaBooks, upsertPrismaBook } from "@/lib/prisma";
 import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -93,26 +93,28 @@ const POST_BOOKS = async (json: any) => {
       if (removePreviousData) {
         // Delete all previous books
         console.log("Delete all books")
-        await prisma.knihy.deleteMany();
+        // await prisma.knihy.deleteMany();
         // for (const book of validData) {
         //   console.log(validData.indexOf(book))
-          await prisma.knihy.createMany({
-            data: validData,
-          });
+          // await prisma.knihy.createMany({
+          //   data: validData,
+          // });
+          craeteManyPrismaBooks(validData as Book[]);
 
       } else {
         for (const book of validData) {
           console.log(validData.indexOf(book))
-          await prisma.knihy.upsert({
-            where: { id: book.id },
-            update: book,
-            create: book,
-          });
+          await upsertPrismaBook(book as Book)
+          // await prisma.knihy.upsert({
+          //   where: { id: book.id },
+          //   update: book,
+          //   create: book,
+          // });
         }
       }
 
     console.log(validData[0], books[0],truthyValues.indexOf(books[0].formaturita),truthyValues.indexOf(books[0].available));
-    const totalBooks = await prisma.knihy.count();
+    const totalBooks = countPrismaBooks() //await context.prisma.knihy.count();
 
     return NextResponse.json(
       {

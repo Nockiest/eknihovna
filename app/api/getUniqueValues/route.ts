@@ -1,5 +1,5 @@
 import { falsyValues, noCacheHeaders } from "@/data/values";
-import { prisma } from "@/lib/prisma";
+import { context, findManyPrismaUniquePrismaBooksColumn } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 export const revalidate = 0;
 type UniqueBookValue = {
@@ -29,10 +29,11 @@ export async function POST(req: NextRequest) {
     selectObject[columnName] = true;
 
     // Query the database for distinct values
-    const uniqueValues: UniqueBookValue[] = await prisma.knihy.findMany({
-      select: selectObject,
-      distinct: [columnName as keyof UniqueBookValue],
-    });
+    const uniqueValues: UniqueBookValue[] = await findManyPrismaUniquePrismaBooksColumn(selectObject, columnName)
+    // await prisma.knihy.findMany({
+    //   select: selectObject,
+    //   distinct: [columnName as keyof UniqueBookValue],
+    // });
 
     // Safely access the columnName property and filter for truthy values
     const values = uniqueValues

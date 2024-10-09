@@ -15,10 +15,10 @@ let config: Config = {
   coverageProvider: 'v8',
   testEnvironment: 'node',
   moduleNameMapper: {
-    // ...
     '^@/components/(.*)$': '<rootDir>/components/$1',
     '^@/utils/(.*)$': '<rootDir>/utils/$1',
     '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    //  "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.json",
 
     setupFilesAfterEnv: ['<rootDir>/jest.setup.ts', '<rootDir>/singleton.ts']
   }

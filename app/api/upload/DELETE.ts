@@ -1,4 +1,5 @@
-import { prisma } from "@/lib/prisma";
+import { context, deleteAllPrismaBooks, deletePrismaBook } from "@/lib/prisma";
+import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 
  const  DELETE_BOOKS =async (req:NextRequest) => {
@@ -19,7 +20,8 @@ import { NextRequest, NextResponse } from "next/server";
         console.log(typeof id === "string");
         if (parseInt(id) == -1) {
           console.log("x");
-          const deleteResult = await prisma.knihy.deleteMany();
+
+           const deleteResult =  await deleteAllPrismaBooks() // await prisma.knihy.deleteMany();
           console.log("returning");
           return NextResponse.json(
             {
@@ -31,9 +33,10 @@ import { NextRequest, NextResponse } from "next/server";
         } else if (id && typeof id === "string") {
           // Check if a book with the provided ID exists
           console.log("deleting", id);
-          const book = await prisma.knihy.delete({
-            where: { id },
-          });
+          const book:Book = await deletePrismaBook(id) as Book;
+          // await prisma.knihy.delete({
+          //   where: { id },
+          // });
           console.log("deleted", book);
           if (!book) {
             return NextResponse.json(
@@ -68,7 +71,7 @@ import { NextRequest, NextResponse } from "next/server";
           { status: 500 }
         );
       } finally {
-        await prisma.$disconnect();
+        await context.prisma.$disconnect();
       }
 }
 
