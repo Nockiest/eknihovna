@@ -1,3 +1,6 @@
+import { PrismaClient } from "@prisma/client"
+import { DeepMockProxy } from "jest-mock-extended"
+
 export type Book = {
     id: string
     name?: string
@@ -35,7 +38,7 @@ export  type Filters= {
     author: string[];
     name: string[] ;
   };
-
+  
 // export type UploadJsonData = {
 //   headers: string[];
 //   rows: any[];

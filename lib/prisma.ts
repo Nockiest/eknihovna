@@ -1,4 +1,4 @@
-import { Context } from "@/prismaContext";
+import { Context } from "@/types/prismaContext";
 import { Book } from "@/types/types";
 import { PrismaClient } from "@prisma/client";
 

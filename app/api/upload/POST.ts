@@ -1,5 +1,9 @@
 import { bookHeaders, noCacheHeaders, truthyValues } from "@/data/values";
-import {  countPrismaBooks, craeteManyPrismaBooks, upsertPrismaBook } from "@/lib/prisma";
+import {
+  countPrismaBooks,
+  craeteManyPrismaBooks,
+  upsertPrismaBook,
+} from "@/lib/prisma";
 import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
@@ -8,8 +12,8 @@ export const maxDuration = 60; // This function can run for a maximum of 60 seco
 const POST_BOOKS = async (json: any) => {
   try {
     const { removePreviousData, books } = json;
-    console.log(books[0] )
-    console.log(  removePreviousData);
+    console.log( books[0]);
+    console.log(removePreviousData);
 
     // Validate JSON format
     if (!books || !Array.isArray(books)) {
@@ -27,7 +31,9 @@ const POST_BOOKS = async (json: any) => {
 
     // Validate keys against expected bookHeaders
     const FirstBookKeys = Object.keys(books[0]) as Array<keyof Book>;
-    const hasValidKeys = FirstBookKeys.every((key) => bookHeaders.indexOf(key as keyof Book) >= 0);
+    const hasValidKeys = FirstBookKeys.every(
+      (key) => bookHeaders.indexOf(key as keyof Book) >= 0
+    );
 
     if (!hasValidKeys) {
       return NextResponse.json(
@@ -80,8 +86,9 @@ const POST_BOOKS = async (json: any) => {
                 )
                 .filter(Boolean)
             : [],
-          formaturita: truthyValues.indexOf(item.formaturita) >= 0? true:false,
-          available: truthyValues.indexOf(item.available) >= 0 ? true:false,
+          formaturita:
+            truthyValues.indexOf(item.formaturita) >= 0 ? true : false,
+          available: truthyValues.indexOf(item.available) >= 0 ? true : false,
           rating:
             item.rating !== null &&
             !isNaN(Number(item.rating)) &&
@@ -90,36 +97,29 @@ const POST_BOOKS = async (json: any) => {
               : null,
         };
       });
-      if (removePreviousData) {
-        // Delete all previous books
-        console.log("Delete all books")
-        // await prisma.knihy.deleteMany();
-        // for (const book of validData) {
-        //   console.log(validData.indexOf(book))
-          // await prisma.knihy.createMany({
-          //   data: validData,
-          // });
-          craeteManyPrismaBooks(validData as Book[]);
-
-      } else {
-        for (const book of validData) {
-          console.log(validData.indexOf(book))
-          await upsertPrismaBook(book as Book)
-          // await prisma.knihy.upsert({
-          //   where: { id: book.id },
-          //   update: book,
-          //   create: book,
-          // });
-        }
+    if (removePreviousData) {
+      // Delete all previous books
+      console.log("Delete all books");
+      craeteManyPrismaBooks(validData as Book[]);
+    } else {
+      for (const book of validData) {
+        console.log(validData.indexOf(book));
+        await upsertPrismaBook(book as Book);
       }
+    }
 
-    console.log(validData[0], books[0],truthyValues.indexOf(books[0].formaturita),truthyValues.indexOf(books[0].available));
-    const totalBooks = countPrismaBooks() //await context.prisma.knihy.count();
+    console.log(
+      validData[0],
+      books[0],
+      truthyValues.indexOf(books[0].formaturita),
+      truthyValues.indexOf(books[0].available)
+    );
+    const totalBooks = countPrismaBooks(); //await context.prisma.knihy.count();
 
     return NextResponse.json(
       {
         success: true,
-        message: `Data successfully inserted or updated! Current number of books: ${totalBooks}`  ,
+        message: `Data successfully inserted or updated! Current number of books: ${totalBooks}`,
         headers: {
           ...noCacheHeaders,
         },

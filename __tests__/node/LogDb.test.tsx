@@ -3,20 +3,8 @@ import { mockDeep, DeepMockProxy } from "jest-mock-extended";
 import { GET } from "../../app/api/logDb/route";
 import { createMocks } from "node-mocks-http";
 import { context, countPrismaBooks } from "@/lib/prisma";
-
-export type Context = {
-  prisma: PrismaClient;
-};
-
-export type MockContext = {
-  prisma: DeepMockProxy<PrismaClient>;
-};
-
-export const createMockContext = (): MockContext => {
-  return {
-    prisma: mockDeep<PrismaClient>(),
-  };
-};
+import { Context, MockContext } from "@/types/prismaContext";
+import { createMockContext } from "../Prismat.test";
 
 let mockCtx: MockContext;
 let ctx: Context;
