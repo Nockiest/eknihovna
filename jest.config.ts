@@ -2,36 +2,54 @@
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
-import type { Config } from 'jest'
-import nextJest from 'next/jest.js'
+import type { Config } from "jest";
+import nextJest from "next/jest.js";
 
 const createJestConfig = nextJest({
   // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
-  dir: './',
-})
+  dir: "./",
+});
+// let config: Config = {
+//   coverageProvider: 'v8',
+//   testEnvironment: 'node',
+//   moduleNameMapper: {
+//     '^@/components/(.*)$': '<rootDir>/components/$1',
+//     '^@/utils/(.*)$': '<rootDir>/utils/$1',
+//     '^@/lib/(.*)$': '<rootDir>/lib/$1',
+//     //  "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.json",
+//     '^.+\\.(css|less|scss)$': 'identity-obj-proxy',
 
+//   },
+//   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts', '<rootDir>/singleton.ts']
+// ,
+//     transform: {
+//     '^.+\\.(js|jsx|ts|tsx)$': '<rootDir>/node_modules/babel-jest',
+//   },
 // Add any custom config to be passed to Jest
 let config: Config = {
-  coverageProvider: 'v8',
-  testEnvironment: 'node',
+  coverageProvider: "v8",
+  testEnvironment: "node",
   moduleNameMapper: {
-    '^@/components/(.*)$': '<rootDir>/components/$1',
-    '^@/utils/(.*)$': '<rootDir>/utils/$1',
-    '^@/lib/(.*)$': '<rootDir>/lib/$1',
+    "^@/components/(.*)$": "<rootDir>/components/$1",
+    "^@/utils/(.*)$": "<rootDir>/utils/$1",
+    "^@/lib/(.*)$": "<rootDir>/lib/$1",
     //  "\\.(css|scss)$": "<rootDir>/__mocks__/styleMock.json",
-
-    setupFilesAfterEnv: ['<rootDir>/jest.setup.ts', '<rootDir>/singleton.ts']
-  }
+    setupFilesAfterEnv: ["<rootDir>/jest.setup.ts", "<rootDir>/singleton.ts"],
+  },
+    transform: {
+    '^.+\\.(js|jsx|ts|tsx)$': '<rootDir>/node_modules/babel-jest',
+  },
   // Add more setup options before each test is run
   // setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
-}
-const isNodeEnvironment = process.env.TEST_ENV === 'node' // You can set this environment variable when running tests
+};
+const isNodeEnvironment = process.env.TEST_ENV === "node"; // You can set this environment variable when running tests
 
-isNodeEnvironment ? config.testEnvironment =  "node" : config.testEnvironment =  "jsdom"
-
+isNodeEnvironment
+  ? (config.testEnvironment = "node")
+  : (config.testEnvironment = "jsdom");
 
 // createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-export default createJestConfig(config)
+export default createJestConfig(config);
 // import type {Config} from 'jest';
 
 // const config: Config = {
