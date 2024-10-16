@@ -2,7 +2,7 @@ import { falsyValues, noCacheHeaders } from "@/data/values";
 import { context, findManyPrismaUniquePrismaBooksColumn } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 export const revalidate = 0;
-type UniqueBookValue = {
+export type UniqueBookValue = {
   name?: string | null;
   author?: string | null;
   category?: string | null;
