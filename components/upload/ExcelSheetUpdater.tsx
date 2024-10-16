@@ -27,7 +27,7 @@ const ExcelSheetUpdater = () => {
   }
 
 
-  if (!splited_emails) {
+  if (!splited_emails|| !session?.user?.email) {
     console.log("splited_emails is undefined or empty",splited_emails, process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS, process.env.TEST_ENV,  process.env.NEXT_PUBLIC_APP_API_URL, process.env);
     return (
       <>
@@ -39,11 +39,8 @@ const ExcelSheetUpdater = () => {
     );
   }
   if (
-    splited_emails &&
-    session?.user?.email &&
     splited_emails.indexOf(session?.user?.email) < 0
   ) {
-    //  session?.user?.email !== "ondralukes06@seznam.cz" && session?.user?.email !== "bauerova@gopat.cz"
     return (
       <>
         <Typography variant="h2" className="text-xl font-semibold mb-4">
@@ -72,12 +69,6 @@ const ExcelSheetUpdater = () => {
   };
   return (
     <Box className="flex flex-col h-auto gap-4 z-0 select-none px-12 items-center justify-center">
-      <Box>
-        <p>{splited_emails}</p>
-        <p>{session?.user?.email}</p>
-       {session?.user?.email &&  <p>{splited_emails.indexOf(session?.user?.email) < 0}</p>}
-      </Box>
-
       <Paper className="flex flex-col  h-auto gap-16 w-full">
         <CustomButtonGroup
           buttons={[

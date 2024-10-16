@@ -1,22 +1,21 @@
 import React, { useState } from "react";
-import { Book   } from "@/types/types";
+import { Book } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { defaultFilters, bookHeaders, emptyBook } from "@/data/values";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import BookEditForm from "@/components/general/BookEditForm";
-import { Box, List, ListItemText, Typography } from "@mui/material";
+import { Box, Input, List, ListItemText, Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
 
-
-const SingleBookEditor = ( ) => {
+const SingleBookEditor = () => {
   const [bookId, setBookId] = useState<string>("");
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(false);
 
   // Fetch book details based on the entered ID
   const fetchBook = async () => {
-    debugger
+    debugger;
     if (!bookId) {
       return alert("Prossím zadejte validnéí ID");
     }
@@ -29,8 +28,7 @@ const SingleBookEditor = ( ) => {
         10000000
       );
 
-      response.length > 0?  setBook(response[0]): alert("Book not found");
-
+      response.length > 0 ? setBook(response[0]) : alert("Book not found");
     } catch (err) {
       console.error("Error fetching book:", err);
       alert("Kniha nenalezena nebo nastal error");
@@ -70,18 +68,18 @@ const SingleBookEditor = ( ) => {
   };
   // Update the book in the database
   const updateBook = async () => {
-    debugger
+    debugger;
     if (!book) return;
 
     setLoading(true);
 
     try {
-      console.log(book)
+      console.log(book);
       await postDataToUpload([book]);
       alert("Kniha úspěšně aktualizována");
     } catch (err) {
       console.error("Error updating book:", err);
-      alert("Selhal jsem v aktualizování knihy:"+err);
+      alert("Selhal jsem v aktualizování knihy:" + err);
     } finally {
       setLoading(false);
     }
@@ -101,10 +99,9 @@ const SingleBookEditor = ( ) => {
         <PrimaryButton onClick={createNewBook} disabled={loading}>
           Vytvořit Novou Knihu
         </PrimaryButton>
-        <br />
-        <input
+        <Input
           type="text"
-          className="w-full"
+          className="w-full my-2"
           placeholder="Nebo vepsat ID knihy v databázi"
           value={bookId}
           onChange={(e) => setBookId(e.target.value)}
@@ -128,9 +125,7 @@ const SingleBookEditor = ( ) => {
         </Box>
 
         <Box>
-          <Typography variant="h6">
-            Návod upravení existující knihy
-          </Typography>
+          <Typography variant="h6">Návod upravení existující knihy</Typography>
           <List>
             <ListItemText primary="stáhněte si tabulku z databáze" />
             <ListItemText primary="vyberte v ní ID řádku který chcete upravit" />
@@ -146,7 +141,9 @@ const SingleBookEditor = ( ) => {
       <Box>
         {book && (
           <Box>
-            <Typography variant='h4'>{bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}</Typography>
+            <Typography variant="h4">
+              {bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}
+            </Typography>
             <BookEditForm
               book={book}
               handleInputChange={handleInputChange}
