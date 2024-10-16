@@ -28,7 +28,11 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       id="combo-box-demo"
       options={sortedOptions}
       value={currentValue}
-      sx={{ width: 300 }}
+      sx={{
+        width: 300,
+        maxHeight: 300, // Set a maximum height for the dropdown list
+        overflowY: 'auto', // Enable vertical scrolling
+      }}
       renderInput={(params) => <TextField {...params} label={label} />}
       onChange={(e, newVal) => {
         handleChange(newVal);

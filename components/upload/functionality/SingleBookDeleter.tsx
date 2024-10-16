@@ -131,7 +131,7 @@ interface BookDeletionProps {
 
             <Box>
 
-            <Typography variant="h6" > Návod jak smazat jedniou knihu</Typography>
+            <Typography variant="h6" > Návod jak smazat jedinou knihu</Typography>
             <List>
             <ListItemText primary="zadejte do pole id knihy" />
             <ListItemText primary="Zobrazí se vám kniha, která byla nalezena v databázi" />

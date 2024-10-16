@@ -29,7 +29,7 @@ const FilterLister: React.FC<FilterListerProps> =   ({
     }));
   }
 
-
+// maybe ineffective?
   useEffect(() => {
     console.log('fetching activeFilters')
     async function update() {

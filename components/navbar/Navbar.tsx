@@ -9,7 +9,6 @@ import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
 import Image from "next/image";
 import NavbarMapper from "./NavbarMaper";
 import { NavButton } from "@/types/types";
-import { getURLSegment } from "@/utils/getURLSegment";
 
 interface NavListProps {}
 

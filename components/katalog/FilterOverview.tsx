@@ -7,12 +7,12 @@ import SearcherOpenerFab from "./SearcheOpenerFab";
 import { isStringedBool } from "@/types/typeChecks";
 import { Filters } from "@/types/types";
 
-
-
 interface FilterOverviewProps {
   removeFilter: (key: keyof Filters, value: any) => void;
 }
-
+/**
+ * Lists the active filters.
+ */
 const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
   const { activeFilters, isOpenSearcher, setOpenSearcher } = useSearchContext();
   const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
@@ -20,14 +20,14 @@ const FilterOverview: React.FC<FilterOverviewProps> = ({ removeFilter }) => {
   return (
     <Box className="w-full flex flex-wrap">
       <SearcherOpenerFab
-  css={  isOpenSearcher ? "hidden" : "block"  }
-  onClick={() => setOpenSearcher(true)}
-/>
+        css={isOpenSearcher ? "hidden" : "block"}
+        onClick={() => setOpenSearcher(true)}
+      />
 
       {filterKeys.map((key) => {
         const value = activeFilters[key];
         if (value) {
-          if (typeof value === 'string') {
+          if (typeof value === "string") {
             return (
               <CategoryChip
                 key={key}
