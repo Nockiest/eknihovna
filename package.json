@@ -70,7 +70,7 @@
     "cross-env": "^7.0.3",
     "eslint": "^8.57.1",
     "eslint-config-next": "^14.2.3",
-    "jest": "^29.7.0",
+    "jest": "^27.5.1",  
     "jest-environment-jsdom": "^29.7.0",
     "jest-mock-extended": "^2.0.4",
     "postcss": "^8",

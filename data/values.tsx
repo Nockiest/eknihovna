@@ -90,3 +90,6 @@ export const bookHeaders: Array<keyof Book> = [
   "available",
   "rating",
 ];
+
+export var splited_emails = process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");
+console.log(splited_emails);

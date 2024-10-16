@@ -1,9 +1,8 @@
 "use client";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
-import { Box, Button, Paper, Typography } from "@mui/material";
+import { Box,  Paper, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "../general/ReroutToAUth";
-import Announcer from "@/utils/Announcer";
 import { useState } from "react";
 import SingleBookEditor from "./functionality/SingleBookEditor";
 import Uploader from "./functionality/Uploader";
@@ -12,6 +11,7 @@ import BookCountLogger from "./functionality/BookCountLogger";
 import BookFetcher from "./functionality/BookFetcher";
 import SingleBookDeleter from "./functionality/SingleBookDeleter";
 import CustomButtonGroup from "../general/ButtonGroup";
+import { splited_emails } from "@/data/values";
 export const revalidate = 0;
 
 const ExcelSheetUpdater = () => {
@@ -25,7 +25,19 @@ const ExcelSheetUpdater = () => {
       </Box>
     );
   }
-  var splited_emails = process?.env?.WHITE_LIST_EMAILS?.split(":");
+
+
+  if (!splited_emails) {
+    console.log("splited_emails is undefined or empty",splited_emails, process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS, process.env.TEST_ENV,  process.env.NEXT_PUBLIC_APP_API_URL, process.env);
+    return (
+      <>
+        <Typography variant="body1">x {process?.env?.WHITE_LIST_EMAILS} x</Typography>
+        <Typography variant="h6">
+          Přihlašování selhalo, chyba je na straně apilkace
+        </Typography>
+      </>
+    );
+  }
   if (
     splited_emails &&
     session?.user?.email &&
@@ -53,19 +65,25 @@ const ExcelSheetUpdater = () => {
         return <SingleBookEditor />;
       case 2:
         return <SingleBookDeleter />;
-    
+
       default:
         return null;
     }
   };
   return (
     <Box className="flex flex-col h-auto gap-4 z-0 select-none px-12 items-center justify-center">
+      <Box>
+        <p>{splited_emails}</p>
+        <p>{session?.user?.email}</p>
+       {session?.user?.email &&  <p>{splited_emails.indexOf(session?.user?.email) < 0}</p>}
+      </Box>
+
       <Paper className="flex flex-col  h-auto gap-16 w-full">
         <CustomButtonGroup
           buttons={[
-            { text: 'Hromadné nahrání', onClick: () => setActiveTab(0) },
-            { text: 'Editovat Knihu', onClick: () => setActiveTab(1) },
-            { text: 'Smazat Knihu', onClick: () => setActiveTab(2) },
+            { text: "Hromadné nahrání", onClick: () => setActiveTab(0) },
+            { text: "Editovat Knihu", onClick: () => setActiveTab(1) },
+            { text: "Smazat Knihu", onClick: () => setActiveTab(2) },
           ]}
           activeIndex={activeTab}
           setActiveIndex={setActiveTab}

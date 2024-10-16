@@ -1,4 +1,3 @@
-
 import { truthyValues } from "@/data/values";
 import theme from "@/theme/theme";
 import { Book } from "@/types/types";
@@ -33,10 +32,13 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           : 0,
         color: theme.palette.text.primary,
         maxWidth: "311px",
-
       }}
     >
-      <Box p={2} sx={{ backgroundColor: '#ffffff'}} className=" flex flex-col items-center justify-around h-full">
+      <Box
+        p={2}
+        sx={{ backgroundColor: "#ffffff" }}
+        className=" flex flex-col items-center justify-around h-full"
+      >
         <BookCover width={"200px"} />
         <Box className=" flex grow-0 flex-col items-center justify-around w-full  ">
           <Typography variant="h6" align="center">
@@ -57,7 +59,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           </Box>
           {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
           {/* <StarRow rating={rating} /> */}
-          {!available && <Typography variant="body1"  >Nedostupná</Typography>}
+          {!available && <Typography variant="body1">Nedostupná</Typography>}
         </Box>
       </Box>
     </Paper>
