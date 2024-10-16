@@ -1,7 +1,7 @@
 import * as xlsx from 'xlsx';
 import { v4 as uuidv4 } from 'uuid';
 // import fs from 'fs';
-import { prisma } from '@/lib/prisma';
+
 import { truthyValues } from '@/data/values';
 
 export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
@@ -138,53 +138,53 @@ export const fillMissingIds = (worksheet: xlsx.WorkSheet): xlsx.WorkSheet => {
   // };
 
 
-  export const fetchAndCreateExcel = async (
-    tableName: string
-  ): Promise<Buffer> => {
-    try {
-      // Fetch data using Prisma Client
-      let data: any[];
+  // export const fetchAndCreateExcel = async (
+  //   tableName: string
+  // ): Promise<Buffer> => {
+  //   try {
+  //     // Fetch data using Prisma Client
+  //     let data: any[];
 
-      switch (tableName) {
-        case 'knihy':
-          data = await prisma.knihy.findMany();
-          break;
-        // Add cases for other table names if needed
-        default:
-          throw new Error(`Table ${tableName} is not supported`);
-      }
+  //     switch (tableName) {
+  //       case 'knihy':
+  //         data = await prisma.knihy.findMany();
+  //         break;
+  //       // Add cases for other table names if needed
+  //       default:
+  //         throw new Error(`Table ${tableName} is not supported`);
+  //     }
 
-      if (data.length === 0) {
-        throw new Error("No data found in the table.");
-      }
+  //     if (data.length === 0) {
+  //       throw new Error("No data found in the table.");
+  //     }
 
-      // Convert Prisma query result to JSON
-      const jsonData = data.map((item) => JSON.parse(JSON.stringify(item)));
+  //     // Convert Prisma query result to JSON
+  //     const jsonData = data.map((item) => JSON.parse(JSON.stringify(item)));
 
-      // Join array values into a string separated by commas
-      jsonData.forEach((row: any) => {
-        Object.keys(row).forEach((key) => {
-          if (Array.isArray(row[key])) {
-            row[key] = row[key].join(', ');
-          }
-        });
-      });
+  //     // Join array values into a string separated by commas
+  //     jsonData.forEach((row: any) => {
+  //       Object.keys(row).forEach((key) => {
+  //         if (Array.isArray(row[key])) {
+  //           row[key] = row[key].join(', ');
+  //         }
+  //       });
+  //     });
 
-      // Create a new workbook and worksheet
-      const workbook = xlsx.utils.book_new();
-      const worksheet = xlsx.utils.json_to_sheet(jsonData);
+  //     // Create a new workbook and worksheet
+  //     const workbook = xlsx.utils.book_new();
+  //     const worksheet = xlsx.utils.json_to_sheet(jsonData);
 
-      // Append the worksheet to the workbook
-      xlsx.utils.book_append_sheet(workbook, worksheet, tableName);
+  //     // Append the worksheet to the workbook
+  //     xlsx.utils.book_append_sheet(workbook, worksheet, tableName);
 
-      // Write the workbook to a buffer
-      const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+  //     // Write the workbook to a buffer
+  //     const buffer = xlsx.write(workbook, { type: 'buffer', bookType: 'xlsx' });
 
-      return buffer;
-    } catch (error) {
-      console.error('Error fetching data or creating Excel file:', error);
-      throw error;
-    } finally {
-      await prisma.$disconnect(); // Close the Prisma Client connection
-    }
-  };
+  //     return buffer;
+  //   } catch (error) {
+  //     console.error('Error fetching data or creating Excel file:', error);
+  //     throw error;
+  //   } finally {
+  //     await prisma.$disconnect(); // Close the Prisma Client connection
+  //   }
+  // };
