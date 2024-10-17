@@ -1,17 +1,19 @@
 "use client";
 import React, { useEffect, useReducer } from "react";
-import { Box, Grid } from "@mui/material";
-import { Book  } from "@/types/types";
+import { Box, Button, Grid } from "@mui/material";
+import { Book } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
-import SearchAutocomplete from "./SearchBar";
+import SearchAutocomplete from "../../deprecated/SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
 import LoadingComponent from "../general/LoadingComponent";
 import Announcer from "@/utils/Announcer";
+import { useRouter } from "next/navigation";
+import { PrimaryButton } from "@/theme/buttons/Buttons";
 
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -62,43 +64,54 @@ const BookCatalog: React.FC = () => {
   const { isOpenSearcher, setOpenSearcher, activeFilters } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const router = useRouter();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
+  const changePage = (newPage: number) => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("page", newPage.toString());
+    router.push(`${pathname}?${currentQuery.toString()}`);
+  };
+  const fetchBooks = async () => {
+    dispatch({ type: "FETCH_INIT" });
 
+    try {
+      // Fetch all filtered books only once
+      changePage(1);
+
+      const allPossibleBooks = await fetchFilteredBooks(activeFilters);
+      console.log("All filtered books:", allPossibleBooks.length);
+
+      // Calculate the current page's books using the offset
+      const startIndex = (page - 1) * 24;
+      const endIndex = startIndex + 24;
+      const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
+      console.log(
+        allPossibleBooks.length,
+        currentBooks.length,
+        startIndex,
+        endIndex
+      );
+      // Dispatch the result to the state
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: {
+          books: currentBooks,
+          totalBooks: allPossibleBooks.length,
+        },
+      });
+    } catch (err: any) {
+      console.log(err?.message);
+      dispatch({
+        type: "FETCH_FAILURE",
+        errorMessage: err?.message || "Unknown error occurred",
+      });
+    }
+  };
   // should fetch only books based on page
-  useEffect(() => {
-    console.log('FETCHING NEW BOOKS WITH FILTERS', activeFilters)
-    const fetchBooks = async () => {
-      dispatch({ type: "FETCH_INIT" });
-
-      try {
-        // Fetch all filtered books only once
-        const allPossibleBooks = await fetchFilteredBooks(activeFilters);
-        console.log("All filtered books:", allPossibleBooks.length);
-
-        // Calculate the current page's books using the offset
-        const startIndex = (page-1)  * 24;
-        const endIndex = startIndex + 24;
-        const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
-        console.log(allPossibleBooks.length, currentBooks.length,startIndex,endIndex);
-        // Dispatch the result to the state
-        dispatch({
-          type: "FETCH_SUCCESS",
-          payload: {
-            books: currentBooks,
-            totalBooks: allPossibleBooks.length,
-          },
-        });
-      } catch (err: any) {
-        console.log(err?.message);
-        dispatch({
-          type: "FETCH_FAILURE",
-          errorMessage: err?.message || "Unknown error occurred",
-        });
-      }
-    };
-
-    fetchBooks();
-  }, [activeFilters, page]);
+  // useEffect(() => {
+  //   fetchBooks();
+  // }, [page]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
 
@@ -110,7 +123,13 @@ const BookCatalog: React.FC = () => {
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
-        <SearchAutocomplete />
+        <PrimaryButton
+          onClick={() => {
+            fetchBooks();
+          }}
+        >
+          Aplikovat Filtry
+        </PrimaryButton>
       </Box>
 
       {status === "loading" && <LoadingComponent />}

@@ -17,6 +17,7 @@ import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import SearchAutocomplete from "../../deprecated/SearchBar";
 
 type SearcherProps = {};
 export const FiltringWindow: React.FC<SearcherProps> = () => {
@@ -26,19 +27,16 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
   const { isOpenSearcher, setOpenSearcher, activeFilters, setFilters, filterValues } =
     useSearchContext();
 
-  const changePage = (newPage: number) => {
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("page", newPage.toString());
-    router.push(`${pathname}?${currentQuery.toString()}`);
-  };
+
   const handleFilterChange = (
     name: keyof Filters,
     value: string | boolean | null
   ) => {
-    changePage(1);
-    updateURLWithFilters()
-    console.log(extractFiltersFromURL())
+    console.log( name,value)
+    // updateURLWithFilters()
+    // console.log(extractFiltersFromURL())
     setFilters((prevFilters: Filters) => {
+      debugger
       if (
         (typeof value === "boolean" || value === null) &&
         !Array.isArray(prevFilters[name])
@@ -83,27 +81,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
       (option) => !activeFilters[key]?.includes(option)
     );
   };
-  const updateURLWithFilters = () => {
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    Object.keys(activeFilters).forEach((key) => {
-      const value = activeFilters[key as keyof typeof activeFilters];
-      if (value !== null && value !== undefined) {
-        currentQuery.set(key, Array.isArray(value) ? value.join(',') : value.toString());
-      }
-    });
-    router.push(`${pathname}?${currentQuery.toString()}`);
-  };
-  const extractFiltersFromURL = () => {
-      const currentQuery = new URLSearchParams(searchParams.toString());
-      Object.keys(activeFilters).forEach((key) => {
-        const value = activeFilters[key as keyof typeof activeFilters];
-        if (value !== null && value !== undefined) {
-          currentQuery.set(key, Array.isArray(value) ? value.join(',') : value.toString());
-        }
-      });
-      return `${pathname}?${currentQuery.toString()}`;
 
-  };
   return (
     <Slide
       direction="up"
@@ -145,6 +123,13 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             label={"autor"}
             handleChange={(newVal) => handleFilterChange("author", newVal)}
           />
+
+          <InputLabel shrink>Autor: {activeFilters.name || "None"}</InputLabel>
+          <SortedGroupedSelect
+            options={getFilteredOptions("name")}
+            label={"jméno"}
+            handleChange={(newVal) => handleFilterChange("name", newVal)}
+          />
         </Box>
 
         <FormControlLabel
@@ -182,6 +167,8 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             },
           }}
         />
+        {/* <SearchAutocomplete /> */}
+
       </Paper>
     </Slide>
   );

@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo } from "react";
 import { Autocomplete, TextField,   Box, useMediaQuery } from "@mui/material";
-import SearchIcon from "@mui/icons-material/Search";
 import { useRouter, useSearchParams, usePathname } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 import theme from "@/theme/theme";
@@ -8,14 +7,14 @@ import theme from "@/theme/theme";
 const SearchAutocomplete: React.FC = () => {
   const { filterValues, activeFilters, setFilters } = useSearchContext();
   const router = useRouter();
-  const pathName = usePathname();
+  // const pathName = usePathname();
   const searchParams = useSearchParams();
   const filteredOptions = useMemo(() => {
     const searchTerm = activeFilters.name?.toLowerCase() || "";
     const results = filterValues.name.filter((option) => {
       return option.toLowerCase().includes(searchTerm);
     });
-    console.log("Filtered options:", results); // Debugging: Check filtered options
+    // console.log("Filtered options:", results); // Debugging: Check filtered options
     return results;
   }, [filterValues.name, activeFilters.name]);
 
@@ -26,11 +25,11 @@ const SearchAutocomplete: React.FC = () => {
         ...prevFilters,
         name: newname.trim(),
       }));
-      const currentQuery = new URLSearchParams(searchParams.toString());
-      currentQuery.set("page", "1");
-      router.push(`${pathName}?${currentQuery.toString()}`);
+      // const currentQuery = new URLSearchParams(searchParams.toString());
+      // currentQuery.set("page", "1");
+      // router.push(`${pathName}?${currentQuery.toString()}`);
     },
-    [setFilters, searchParams, pathName, router]
+    [setFilters, searchParams,  router]
   );
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 

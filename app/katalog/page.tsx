@@ -1,12 +1,13 @@
 "use client";
 import BookCatalog from "@/components/katalog/BookCatalog";
 import { Box, Typography } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
 import { FiltringWindow } from "@/components/katalog/FiltringWindow";
 import ErrorReporter from "@/utils/Announcer";
 import ColorCirclesComprehensive from "@/components/general/styling/ColorCirclesComprehensive";
+import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
@@ -26,6 +27,34 @@ const KatalogPage = () => {
     name: [],
   });
 
+  async function fetchUniqueFilterCol(
+    colName: "genres" | "category" | "author"|'name'
+  ) {
+
+    const res = await fetchUniqueValues(colName);
+    console.log('fetch unique vals:',colName, res)
+    setFiltersValues((prevFilters: FiltringValues) => ({
+      ...prevFilters,
+      [colName]: res,
+    }));
+  }
+
+// maybe ineffective?
+  useEffect(() => {
+    async function update() {
+      try {
+        await Promise.all([
+          fetchUniqueFilterCol("genres"),
+          fetchUniqueFilterCol("category"),
+          fetchUniqueFilterCol("author"),
+          fetchUniqueFilterCol("name"),
+        ]);
+      } catch (error) {
+        setErrorMessage("Failed to load books.");
+      }
+    }
+    update();
+  }, []);
   if (errorMessage) {
     return <ErrorReporter message={errorMessage} type="error" />;
   }

@@ -17,35 +17,7 @@ const FilterLister: React.FC<FilterListerProps> =   ({
   const { activeFilters, setFilters, setFiltersValues, setErrorMessage } = useSearchContext();
 
   const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
-  async function fetchUniqueFilterCol(
-    colName: "genres" | "category" | "author"|'name'
-  ) {
-
-    const res = await fetchUniqueValues(colName);
-    console.log('fetch unique vals:',colName, res)
-    setFiltersValues((prevFilters: FiltringValues) => ({
-      ...prevFilters,
-      [colName]: res,
-    }));
-  }
-
-// maybe ineffective?
-  useEffect(() => {
-    console.log('fetching activeFilters')
-    async function update() {
-      try {
-        await Promise.all([
-          fetchUniqueFilterCol("genres"),
-          fetchUniqueFilterCol("category"),
-          fetchUniqueFilterCol("author"),
-          fetchUniqueFilterCol("name"),
-        ]);
-      } catch (error) {
-        setErrorMessage("Failed to load books.");
-      }
-    }
-    update();
-  }, []);
+  
 
   const removeFilter = (key: keyof Filters, value: string | boolean) => {
     setFilters((prevFilters: Filters) => {
