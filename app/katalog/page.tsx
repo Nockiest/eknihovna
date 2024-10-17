@@ -55,6 +55,7 @@ const KatalogPage = () => {
     }
     update();
   }, []);
+
   if (errorMessage) {
     return <ErrorReporter message={errorMessage} type="error" />;
   }
@@ -84,7 +85,6 @@ const KatalogPage = () => {
           </Typography>
         </Box>
         <BookCatalog />
-        <FiltringWindow />
       </Box>
     </SearchContext.Provider>
   );

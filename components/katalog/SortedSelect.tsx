@@ -37,8 +37,9 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       renderInput={(params) => <TextField className="text-black" sx={{ color: 'black' }} { ...params} label={label} />}
       onChange={(e, newVal) => {
         handleChange(newVal);
+        setCurrentValue(newVal); // Update the input value when typing
         // if (newVal !== null) {
-        setCurrentValue(""); // Clear the input field only when an option is selected
+        // setCurrentValue(""); // Clear the input field only when an option is selected
         // }
       }}
       onInputChange={(e, newInputValue) => {

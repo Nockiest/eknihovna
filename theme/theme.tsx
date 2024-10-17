@@ -258,10 +258,12 @@ const theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         option: {
-          color: '#ffffff', // White text in the dropdown options
+          color: 'black',
+          backgroundColor: '#ffffff', // White text in the dropdown options
         },
         input: {
-          color: '#ffffff', // White text in the input field
+          color: 'black',
+          backgroundColor: '#ffffff', // White text in the input field
         },
       },
     },

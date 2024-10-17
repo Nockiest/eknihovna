@@ -18,9 +18,12 @@ import FilterLister from "./FilterLister";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import SearchAutocomplete from "../../deprecated/SearchBar";
+import { PrimaryButton } from "@/theme/buttons/Buttons";
 
-type SearcherProps = {};
-export const FiltringWindow: React.FC<SearcherProps> = () => {
+type SearcherProps = {
+  applyFilters: (filters:Filters) => {}
+};
+export const FiltringWindow: React.FC<SearcherProps> = ({applyFilters}) => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
@@ -36,7 +39,6 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     // updateURLWithFilters()
     // console.log(extractFiltersFromURL())
     setFilters((prevFilters: Filters) => {
-      debugger
       if (
         (typeof value === "boolean" || value === null) &&
         !Array.isArray(prevFilters[name])
@@ -168,7 +170,13 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           }}
         />
         {/* <SearchAutocomplete /> */}
-
+        <PrimaryButton
+          onClick={() => {
+            applyFilters(activeFilters);
+          }}
+        >
+          Aplikovat Filtry
+        </PrimaryButton>
       </Paper>
     </Slide>
   );

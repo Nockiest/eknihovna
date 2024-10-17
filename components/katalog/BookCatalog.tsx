@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useReducer } from "react";
 import { Box, Button, Grid } from "@mui/material";
-import { Book } from "@/types/types";
+import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -14,6 +14,7 @@ import LoadingComponent from "../general/LoadingComponent";
 import Announcer from "@/utils/Announcer";
 import { useRouter } from "next/navigation";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
+import { FiltringWindow } from "./FiltringWindow";
 
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -72,7 +73,7 @@ const BookCatalog: React.FC = () => {
     currentQuery.set("page", newPage.toString());
     router.push(`${pathname}?${currentQuery.toString()}`);
   };
-  const fetchBooks = async () => {
+  const fetchBooks = async (activeFilters:Filters) => {
     dispatch({ type: "FETCH_INIT" });
 
     try {
@@ -109,9 +110,9 @@ const BookCatalog: React.FC = () => {
     }
   };
   // should fetch only books based on page
-  // useEffect(() => {
-  //   fetchBooks();
-  // }, [page]);
+  useEffect(() => {
+    fetchBooks(activeFilters);
+  }, []);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
 
@@ -123,14 +124,15 @@ const BookCatalog: React.FC = () => {
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
-        <PrimaryButton
+        {/* <PrimaryButton
           onClick={() => {
             fetchBooks();
           }}
         >
           Aplikovat Filtry
-        </PrimaryButton>
+        </PrimaryButton> */}
       </Box>
+      <FiltringWindow applyFilters={fetchBooks } />
 
       {status === "loading" && <LoadingComponent />}
 

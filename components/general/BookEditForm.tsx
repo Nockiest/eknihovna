@@ -17,7 +17,6 @@ const BookEditForm = ({
 }: BookEditFormProps) => {
   const generateNewUUID = () => {
     console.log("Generating new  id")
-    debugger
     const newUUID = uuidv4();
 
     // Create a synthetic event to update the UUID using handleInputChange
