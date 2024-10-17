@@ -64,6 +64,7 @@ const BookCatalog: React.FC = () => {
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
+  // should fetch only books based on page
   useEffect(() => {
     console.log('FETCHING NEW BOOKS WITH FILTERS', activeFilters)
     const fetchBooks = async () => {

@@ -36,8 +36,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     value: string | boolean | null
   ) => {
     changePage(1);
+    updateURLWithFilters()
+    console.log(extractFiltersFromURL())
     setFilters((prevFilters: Filters) => {
-      console.log(prevFilters[name], Array.isArray(prevFilters[name]), value);
       if (
         (typeof value === "boolean" || value === null) &&
         !Array.isArray(prevFilters[name])
@@ -82,7 +83,27 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
       (option) => !activeFilters[key]?.includes(option)
     );
   };
+  const updateURLWithFilters = () => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    Object.keys(activeFilters).forEach((key) => {
+      const value = activeFilters[key as keyof typeof activeFilters];
+      if (value !== null && value !== undefined) {
+        currentQuery.set(key, Array.isArray(value) ? value.join(',') : value.toString());
+      }
+    });
+    router.push(`${pathname}?${currentQuery.toString()}`);
+  };
+  const extractFiltersFromURL = () => {
+      const currentQuery = new URLSearchParams(searchParams.toString());
+      Object.keys(activeFilters).forEach((key) => {
+        const value = activeFilters[key as keyof typeof activeFilters];
+        if (value !== null && value !== undefined) {
+          currentQuery.set(key, Array.isArray(value) ? value.join(',') : value.toString());
+        }
+      });
+      return `${pathname}?${currentQuery.toString()}`;
 
+  };
   return (
     <Slide
       direction="up"

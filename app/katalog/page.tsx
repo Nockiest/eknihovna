@@ -14,7 +14,7 @@ const KatalogPage = () => {
     author: [],
     category: [],
     genres: [],
-    formaturita: null,
+    formaturita: false,
     available: false,
     name: null,
   });
