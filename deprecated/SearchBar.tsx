@@ -5,7 +5,7 @@ import { useSearchContext } from "@/app/katalog/context";
 import theme from "@/theme/theme";
 
 const SearchAutocomplete: React.FC = () => {
-  const { filterValues, activeFilters, setFilters } = useSearchContext();
+  const { filterValues, activeFilters, setActiveFilters } = useSearchContext();
   const router = useRouter();
   // const pathName = usePathname();
   const searchParams = useSearchParams();
@@ -21,7 +21,7 @@ const SearchAutocomplete: React.FC = () => {
   const changeParams = useCallback(
     (newname: string) => {
       console.log("Query changed:", newname); // Debugging: Check the new query value
-      setFilters((prevFilters) => ({
+      setActiveFilters((prevFilters) => ({
         ...prevFilters,
         name: newname.trim(),
       }));
@@ -29,7 +29,7 @@ const SearchAutocomplete: React.FC = () => {
       // currentQuery.set("page", "1");
       // router.push(`${pathName}?${currentQuery.toString()}`);
     },
-    [setFilters, searchParams,  router]
+    [setActiveFilters, searchParams,  router]
   );
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
@@ -112,7 +112,7 @@ export default SearchAutocomplete;
 //   console.log("Selected value:", selectedValue); // Debugging: Check the selected value
 
 //   // Update the 'name' key in the activeFilters object
-//   setFilters((prevFilters) => ({
+//   setActiveFilters((prevFilters) => ({
 //     ...prevFilters,
 //     name: selectedValue,
 //   }));

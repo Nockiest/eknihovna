@@ -7,13 +7,11 @@ import PaginationLinker from "../general/PaginationLinker";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
-import SearchAutocomplete from "../../deprecated/SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
 import LoadingComponent from "../general/LoadingComponent";
 import Announcer from "@/utils/Announcer";
 import { useRouter } from "next/navigation";
-import { PrimaryButton } from "@/theme/buttons/Buttons";
 
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -65,20 +63,15 @@ const BookCatalog: React.FC = () => {
   const { isOpenSearcher, setOpenSearcher, activeFilters } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
+ 
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
-  const changePage = (newPage: number) => {
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("page", newPage.toString());
-    router.push(`${pathname}?${currentQuery.toString()}`);
-  };
+
   const fetchBooks = async () => {
     dispatch({ type: "FETCH_INIT" });
 
     try {
       // Fetch all filtered books only once
-      changePage(1);
+      // changePage(1);
 
       const allPossibleBooks = await fetchFilteredBooks(activeFilters);
       console.log("All filtered books:", allPossibleBooks.length);
@@ -124,13 +117,6 @@ const BookCatalog: React.FC = () => {
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
-        {/* <PrimaryButton
-          onClick={() => {
-            fetchBooks();
-          }}
-        >
-          Aplikovat Filtry
-        </PrimaryButton> */}
       </Box>
 
       {status === "loading" && <LoadingComponent />}

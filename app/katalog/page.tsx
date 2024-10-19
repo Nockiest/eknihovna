@@ -12,7 +12,7 @@ import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 // provides contex for the while page
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
-  const [activeFilters, setFilters] = useState<Filters>({
+  const [activeFilters, setActiveFilters] = useState<Filters>({
     author: [],
     category: [],
     genres: [],
@@ -21,7 +21,7 @@ const KatalogPage = () => {
     name: null,
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [filterValues, setFiltersValues] = useState<FiltringValues>({
+  const [filterValues, setActiveFiltersValues] = useState<FiltringValues>({
     genres: [],
     category: [],
     author: [],
@@ -34,7 +34,7 @@ const KatalogPage = () => {
 
     const res = await fetchUniqueValues(colName);
     console.log('fetch unique vals:',colName, res)
-    setFiltersValues((prevFilters: FiltringValues) => ({
+    setActiveFiltersValues((prevFilters: FiltringValues) => ({
       ...prevFilters,
       [colName]: res,
     }));
@@ -57,7 +57,7 @@ const KatalogPage = () => {
     update();
   }, []);
 
-  
+
   if (errorMessage) {
     return <ErrorReporter message={errorMessage} type="error" />;
   }
@@ -68,11 +68,11 @@ const KatalogPage = () => {
         isOpenSearcher,
         setOpenSearcher,
         activeFilters, // currently active activeFilters
-        setFilters,
+        setActiveFilters,
         errorMessage, //
         setErrorMessage,
         filterValues, // possible filter values
-        setFiltersValues,
+        setActiveFiltersValues,
       }}
     >
       {/* <ColorCirclesComprehensive /> */}

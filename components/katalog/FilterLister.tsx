@@ -14,13 +14,13 @@ type FilterListerProps = {
 const FilterLister: React.FC<FilterListerProps> =   ({
 
 }) => {
-  const { activeFilters, setFilters, setFiltersValues, setErrorMessage } = useSearchContext();
+  const { activeFilters, setActiveFilters, setActiveFiltersValues, setErrorMessage } = useSearchContext();
 
   const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
-  
+
 
   const removeFilter = (key: keyof Filters, value: string | boolean) => {
-    setFilters((prevFilters: Filters) => {
+    setActiveFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
       console.log(key, value, prevFilters[key]);
 

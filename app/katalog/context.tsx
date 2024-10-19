@@ -5,12 +5,12 @@ type QueryContextType = {
   isOpenSearcher: boolean;
   setOpenSearcher: React.Dispatch<React.SetStateAction<boolean>>;
   activeFilters: Filters;
-  setFilters: React.Dispatch<React.SetStateAction<Filters>>;
+  setActiveFilters: React.Dispatch<React.SetStateAction<Filters>>;
   errorMessage: string | null;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
   // setBookNames: React.Dispatch<React.SetStateAction<string[]>>;
   filterValues: FiltringValues;
-  setFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
+  setActiveFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
   // bookNames: string[];
 };
 

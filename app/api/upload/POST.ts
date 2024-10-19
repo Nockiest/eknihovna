@@ -58,13 +58,6 @@ const POST_BOOKS = async (json: any) => {
     const validData = books
       .filter((item) => item.name) // Ensure important fields like name are not empty
       .map((item) => {
-        console.log(
-          item.category? item.category
-                  .trim()
-                  .substring(0, 50)
-                  .toLowerCase()
-                  .replace(/^\w/, (c: string) => c.toUpperCase()): ''
-        )
         return {
           id: item.id || uuidv4(), // Generate ID if not present
           name:
