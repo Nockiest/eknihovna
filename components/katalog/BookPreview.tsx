@@ -6,7 +6,7 @@ import Filter from "./CategoryChip";
 import BookCover from "./BookCover";
 import StarRow from "./starRow/StarRow";
 import CategoryChip from "./CategoryChip";
-import LineWithCircle from "../general/LineWithCircle";
+import LineWithCircle from "../general/styling/LineWithCircle";
 
 type BookPreviewProps = {
   book: Book;

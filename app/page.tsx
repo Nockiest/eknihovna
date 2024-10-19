@@ -3,6 +3,8 @@ import OpeningHours from "@/components/general/OpeningHours";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
+import OtherProjectLinker from "@/components/general/OtherProjectLinker";
 
 export default function Home() {
   return (
@@ -36,7 +38,13 @@ export default function Home() {
         Těšíme se na vaši návštěvu!
       </Typography>
       <br />
-
+      <Container className=" text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
+        <Typography variant="body1">
+          Stránku vytvořil Ondřej Lukeš. Děkuji za pomoc všem co se podíleli na
+          projektu: Patriku Holbovi, Davidu Laušmanovi, prof. Bauerové a redakci
+          Peřinky.
+        </Typography>
+      </Container>
       <OpeningHours />
       <Box mt={2} display="flex" justifyContent="center">
         <Button
@@ -49,13 +57,8 @@ export default function Home() {
           </Link>
         </Button>
       </Box>
-      <Container className=" text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
-        <Typography variant="body1">
-          Stránku vytvořil Ondřej Lukeš. Děkuji za pomoc všem co se podíleli na
-          projektu: Patriku Holbovi, Davidu Laušmanovi, prof. Bauerové a redakci
-          Peřinky.
-        </Typography>
-      </Container>
+
+     <OtherProjectLinker />
     </Container>
   );
 }

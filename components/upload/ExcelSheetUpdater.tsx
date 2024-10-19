@@ -10,7 +10,7 @@ import BookDeleter from "./functionality/BookDeleter";
 import BookCountLogger from "./functionality/BookCountLogger";
 import BookFetcher from "./functionality/BookFetcher";
 import SingleBookDeleter from "./functionality/SingleBookDeleter";
-import CustomButtonGroup from "../general/ButtonGroup";
+import CustomButtonGroup from "../general/styling/ButtonGroup";
 import { splited_emails } from "@/data/values";
 export const revalidate = 0;
 

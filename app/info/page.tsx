@@ -3,6 +3,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { Box, List, ListItem, Typography } from "@mui/material";
 import Link from "next/link";
+import CreditMe from "@/components/general/CreditMe";
 export const metadata: Metadata = {
   title: "Informace o G.O. knihovně",
   description: "Vše o výpujčce a kontakt na knihovnu",
@@ -79,6 +80,7 @@ const page = () => {
           <Link href="/katalog">Pujčit si knihu</Link>
         </PrimaryButton>
       </Box>
+      <CreditMe />
     </Box>
   );
 };

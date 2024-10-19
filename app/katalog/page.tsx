@@ -6,6 +6,7 @@ import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
 import ErrorReporter from "@/utils/Announcer";
 import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
+import CreditMe from "@/components/general/CreditMe";
 
 // provides contex for the while page
 const KatalogPage = () => {
@@ -84,6 +85,7 @@ const KatalogPage = () => {
           </Typography>
         </Box>
         <BookCatalog />
+        <CreditMe />
       </Box>
     </SearchContext.Provider>
   );
