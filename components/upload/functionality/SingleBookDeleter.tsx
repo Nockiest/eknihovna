@@ -27,8 +27,9 @@ interface BookDeletionProps {
         const response = await fetchFilteredBooks(
           defaultFilters, // defaultFilters or appropriate filter object
           1,
+          10000000,
           bookId.trim(),
-          10000000
+
         );
 
         if (response.length > 0 && response[0].name) {

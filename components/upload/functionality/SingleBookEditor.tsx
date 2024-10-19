@@ -24,8 +24,8 @@ const SingleBookEditor = () => {
       const response = await fetchFilteredBooks(
         defaultFilters, // defaultFilters or appropriate filter object
         1,
+        10000000,
         bookId.trim(),
-        10000000
       );
 
       response.length > 0 ? setBook(response[0]) : alert("Book not found");
