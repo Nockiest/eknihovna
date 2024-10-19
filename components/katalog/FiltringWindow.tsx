@@ -100,7 +100,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
   return (
     <Slide
       direction="up"
-      className="fixed bottom-0 left-0 right-0 md:left-16 md:right-16 z-50 p-4 h-3/4  bg-white"
+      className="fixed bottom-0 left-0 right-0 md:left-16 md:right-16 z-50 p-4 h-full  bg-white"
       in={isOpenSearcher}
       mountOnEnter
       unmountOnExit
