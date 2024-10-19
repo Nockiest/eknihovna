@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Slide,
   Paper,
@@ -17,28 +17,41 @@ import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import SearchAutocomplete from "../../deprecated/SearchBar";
-import { PrimaryButton } from "@/theme/buttons/Buttons";
+import useDebounce from "@/utils/hooks/useDebounce";
 
-type SearcherProps = {
-  applyFilters: (filters:Filters) => {}
-};
-export const FiltringWindow: React.FC<SearcherProps> = ({applyFilters}) => {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+type SearcherProps = {};
+export const FiltringWindow: React.FC<SearcherProps> = () => {
+  const {
+    isOpenSearcher,
+    setOpenSearcher,
+    activeFilters,
+    setActiveFilters,
+    filterValues,
+  } = useSearchContext();
+  const [debouncedFilters, setDebouncedFilters] =
+    useState<Filters>(activeFilters);
+  const debouncedActiveFilters = useDebounce(debouncedFilters, 500); // Adjust the delay as needed
+  useEffect(() => {
+    console.log(debouncedActiveFilters)
+    changePage(1)
+    setActiveFilters(debouncedActiveFilters);
+  }, [debouncedActiveFilters]);
+  const searchParams = useSearchParams()
+  const page = parseInt(searchParams.get("page") || "1", 10) || 1;
   const pathname = usePathname();
-  const { isOpenSearcher, setOpenSearcher, activeFilters, setFilters, filterValues } =
-    useSearchContext();
-
-
+  const router = useRouter();
+  const changePage = (newPage: number) => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("page", newPage.toString());
+    router.push(`${pathname}?${currentQuery.toString()}`);
+  };
   const handleFilterChange = (
     name: keyof Filters,
     value: string | boolean | null
   ) => {
-    console.log( name,value)
-    // updateURLWithFilters()
-    // console.log(extractFiltersFromURL())
-    setFilters((prevFilters: Filters) => {
+    console.log(name, value);
+    setDebouncedFilters((prevFilters: Filters) => {
+      debugger;
       if (
         (typeof value === "boolean" || value === null) &&
         !Array.isArray(prevFilters[name])
@@ -119,7 +132,9 @@ export const FiltringWindow: React.FC<SearcherProps> = ({applyFilters}) => {
             handleChange={(newVal) => handleFilterChange("genres", newVal)}
           />
 
-          <InputLabel shrink>Autor: {activeFilters.author || "None"}</InputLabel>
+          <InputLabel shrink>
+            Autor: {activeFilters.author || "None"}
+          </InputLabel>
           <SortedGroupedSelect
             options={getFilteredOptions("author")}
             label={"autor"}
@@ -169,14 +184,6 @@ export const FiltringWindow: React.FC<SearcherProps> = ({applyFilters}) => {
             },
           }}
         />
-        {/* <SearchAutocomplete /> */}
-        <PrimaryButton
-          onClick={() => {
-            applyFilters(activeFilters);
-          }}
-        >
-          Aplikovat Filtry
-        </PrimaryButton>
       </Paper>
     </Slide>
   );

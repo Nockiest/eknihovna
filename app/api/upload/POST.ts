@@ -2,6 +2,7 @@ import { bookHeaders, noCacheHeaders, truthyValues } from "@/data/values";
 import {
   countPrismaBooks,
   craeteManyPrismaBooks,
+  deleteAllPrismaBooks,
   upsertPrismaBook,
 } from "@/lib/prisma";
 import { Book } from "@/types/types";
@@ -12,7 +13,7 @@ export const maxDuration = 60; // This function can run for a maximum of 60 seco
 const POST_BOOKS = async (json: any) => {
   try {
     const { removePreviousData, books } = json;
-    console.log( books[0]);
+    console.log(books[0]);
     console.log(removePreviousData);
 
     // Validate JSON format
@@ -69,11 +70,19 @@ const POST_BOOKS = async (json: any) => {
               : "",
           category:
             typeof item.category === "string"
-              ? item.category.trim().substring(0, 50)
+              ? item.category
+                  .trim()
+                  .substring(0, 50)
+                  .toLowerCase()
+                  .replace(/^\w/, (c: string) => c.toUpperCase())
               : "",
           signatura:
             typeof item.signatura === "string"
-              ? item.signatura.trim().substring(0, 50)
+              ? item.signatura
+                  .trim()
+                  .substring(0, 50)
+                  .toLowerCase()
+                  .replace(/^\w/, (c: string) => c.toUpperCase())
               : "",
           zpusob_ziskani:
             typeof item.zpusob_ziskani === "string"
@@ -99,6 +108,7 @@ const POST_BOOKS = async (json: any) => {
       });
     if (removePreviousData) {
       // Delete all previous books
+      deleteAllPrismaBooks()
       console.log("Delete all books");
       craeteManyPrismaBooks(validData as Book[]);
     } else {

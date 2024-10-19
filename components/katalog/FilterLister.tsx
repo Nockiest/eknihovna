@@ -14,13 +14,13 @@ type FilterListerProps = {
 const FilterLister: React.FC<FilterListerProps> =   ({
 
 }) => {
-  const { activeFilters, setFilters, setFiltersValues, setErrorMessage } = useSearchContext();
+  const { activeFilters, setActiveFilters,   } = useSearchContext();
 
   const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
-  
+
 
   const removeFilter = (key: keyof Filters, value: string | boolean) => {
-    setFilters((prevFilters: Filters) => {
+    setActiveFilters((prevFilters: Filters) => {
       const currentFilter = prevFilters[key];
       console.log(key, value, prevFilters[key]);
 
@@ -46,9 +46,9 @@ const FilterLister: React.FC<FilterListerProps> =   ({
   return (
     <Box className="m-2">
       {filterKeys.map((key) => {
-        if (key === "name"){
-          return
-        }
+        // if (key === "name"){
+        //   return
+        // }
         const value = activeFilters[key];
 
         if (checkIfIgnoredValue(value)) {

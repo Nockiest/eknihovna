@@ -7,14 +7,11 @@ import PaginationLinker from "../general/PaginationLinker";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
-import SearchAutocomplete from "../../deprecated/SearchBar";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
 import LoadingComponent from "../general/LoadingComponent";
 import Announcer from "@/utils/Announcer";
 import { useRouter } from "next/navigation";
-import { PrimaryButton } from "@/theme/buttons/Buttons";
-import { FiltringWindow } from "./FiltringWindow";
 
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -61,25 +58,18 @@ function reducer(state: State, action: Action): State {
   }
 }
 
+// handles fetching and displaying books
 const BookCatalog: React.FC = () => {
   const { isOpenSearcher, setOpenSearcher, activeFilters } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const router = useRouter();
+
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
-  const changePage = (newPage: number) => {
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("page", newPage.toString());
-    router.push(`${pathname}?${currentQuery.toString()}`);
-  };
-  const fetchBooks = async (activeFilters:Filters) => {
+
+  const fetchBooks = async () => {
     dispatch({ type: "FETCH_INIT" });
 
     try {
-      // Fetch all filtered books only once
-      changePage(1);
-
       const allPossibleBooks = await fetchFilteredBooks(activeFilters);
       console.log("All filtered books:", allPossibleBooks.length);
 
@@ -111,8 +101,8 @@ const BookCatalog: React.FC = () => {
   };
   // should fetch only books based on page
   useEffect(() => {
-    fetchBooks(activeFilters);
-  }, []);
+    fetchBooks();
+  }, [page,activeFilters]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
 
@@ -124,13 +114,6 @@ const BookCatalog: React.FC = () => {
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
-        {/* <PrimaryButton
-          onClick={() => {
-            fetchBooks();
-          }}
-        >
-          Aplikovat Filtry
-        </PrimaryButton> */}
       </Box>
       <FiltringWindow applyFilters={fetchBooks } />
 
@@ -163,7 +146,8 @@ const BookCatalog: React.FC = () => {
                 xs={12}
                 sm={6}
                 md={4}
-                xl={3}
+                lg={3}
+                xl={2}
                 key={index}
                 alignItems={"center"}
               >
