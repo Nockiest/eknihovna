@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Slide,
   Paper,
@@ -17,26 +17,35 @@ import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
-import SearchAutocomplete from "../../deprecated/SearchBar";
+import useDebounce from "@/utils/hooks/useDebounce";
 
 type SearcherProps = {};
 export const FiltringWindow: React.FC<SearcherProps> = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const { isOpenSearcher, setOpenSearcher, activeFilters, setFilters, filterValues } =
-    useSearchContext();
-
-
+  const {
+    isOpenSearcher,
+    setOpenSearcher,
+    activeFilters,
+    setFilters,
+    filterValues,
+  } = useSearchContext();
+  const [debouncedFilters, setDebouncedFilters] =
+    useState<Filters>(activeFilters);
+  const debouncedActiveFilters = useDebounce(debouncedFilters, 500); // Adjust the delay as needed
+  useEffect(() => {
+    setFilters(debouncedActiveFilters);
+  }, [debouncedActiveFilters]);
   const handleFilterChange = (
     name: keyof Filters,
     value: string | boolean | null
   ) => {
-    console.log( name,value)
+    console.log(name, value);
     // updateURLWithFilters()
     // console.log(extractFiltersFromURL())
-    setFilters((prevFilters: Filters) => {
-      debugger
+    setDebouncedFilters((prevFilters: Filters) => {
+      debugger;
       if (
         (typeof value === "boolean" || value === null) &&
         !Array.isArray(prevFilters[name])
@@ -117,7 +126,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             handleChange={(newVal) => handleFilterChange("genres", newVal)}
           />
 
-          <InputLabel shrink>Autor: {activeFilters.author || "None"}</InputLabel>
+          <InputLabel shrink>
+            Autor: {activeFilters.author || "None"}
+          </InputLabel>
           <SortedGroupedSelect
             options={getFilteredOptions("author")}
             label={"autor"}
@@ -168,7 +179,6 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           }}
         />
         {/* <SearchAutocomplete /> */}
-
       </Paper>
     </Slide>
   );

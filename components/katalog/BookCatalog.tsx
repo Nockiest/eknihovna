@@ -60,6 +60,7 @@ function reducer(state: State, action: Action): State {
   }
 }
 
+// handles fetching and displaying books
 const BookCatalog: React.FC = () => {
   const { isOpenSearcher, setOpenSearcher, activeFilters } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -109,9 +110,9 @@ const BookCatalog: React.FC = () => {
     }
   };
   // should fetch only books based on page
-  // useEffect(() => {
-  //   fetchBooks();
-  // }, [page]);
+  useEffect(() => {
+    fetchBooks();
+  }, [page,activeFilters]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
 
@@ -123,13 +124,13 @@ const BookCatalog: React.FC = () => {
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
-        <PrimaryButton
+        {/* <PrimaryButton
           onClick={() => {
             fetchBooks();
           }}
         >
           Aplikovat Filtry
-        </PrimaryButton>
+        </PrimaryButton> */}
       </Box>
 
       {status === "loading" && <LoadingComponent />}
@@ -161,7 +162,8 @@ const BookCatalog: React.FC = () => {
                 xs={12}
                 sm={6}
                 md={4}
-                xl={3}
+                lg={3}
+                xl={2}
                 key={index}
                 alignItems={"center"}
               >

@@ -9,6 +9,7 @@ import ErrorReporter from "@/utils/Announcer";
 import ColorCirclesComprehensive from "@/components/general/styling/ColorCirclesComprehensive";
 import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 
+// provides contex for the while page
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
   const [activeFilters, setFilters] = useState<Filters>({
@@ -55,6 +56,8 @@ const KatalogPage = () => {
     }
     update();
   }, []);
+
+  
   if (errorMessage) {
     return <ErrorReporter message={errorMessage} type="error" />;
   }
