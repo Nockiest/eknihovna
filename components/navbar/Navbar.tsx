@@ -28,7 +28,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
   return (
     <Paper
       elevation={3}
-      className="p-2 h-full w-full z-10 mx-0 flex flex-col justify-center bg-secondary-800 items-center "
+      className="p-2 h-full w-full z-10 mx-0 flex flex-col justify-center   items-center "
 
     >
       <Box className="z-3">
@@ -43,7 +43,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
       {size === "xs" || size === "sm" ? (
         <Image src="/img/loga/bookLogo.png" width={64} height={64} alt="logo" />
       ) : (
-        <Typography variant="h1" className="sm:mb-4 text-center" align="center">
+        <Typography variant="h1" className="sm:mb-4 text-center  "  align="center">
           ŠKOLNÍ KNIHOVNA
         </Typography>
       )}

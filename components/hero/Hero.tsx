@@ -10,7 +10,6 @@ import NavBar from "../navbar/Navbar";
 
 const Hero = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
-  const currentLink = getURLSegment(usePathname(), 1);
 
   const toggleNav = () => {
     setIsHamburgerOpen(!isHamburgerOpen);
