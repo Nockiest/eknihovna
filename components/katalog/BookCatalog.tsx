@@ -12,6 +12,7 @@ import FilterLister from "./FilterLister";
 import LoadingComponent from "../general/LoadingComponent";
 import Announcer from "@/utils/Announcer";
 import { useRouter } from "next/navigation";
+import { FiltringWindow } from "./FiltringWindow";
 
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -115,7 +116,7 @@ const BookCatalog: React.FC = () => {
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
       </Box>
-      <FiltringWindow applyFilters={fetchBooks } />
+      <FiltringWindow   />
 
       {status === "loading" && <LoadingComponent />}
 
