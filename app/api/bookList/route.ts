@@ -1,48 +1,62 @@
 // import prisma from "@/lib/prisma";
 import { buildPrismaFilter } from "@/utils/buildPrismaFilter";
-import { context, findUniquePrismaBooks, loadPrismaBookPage } from '@/lib/prisma';
+import {
+  context,
+  findUniquePrismaBooks,
+  loadPrismaBookPage,
+} from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { noCacheHeaders } from "@/data/values";
-export const revalidate = 0
+export const revalidate = 0;
 export async function POST(req: NextRequest) {
   try {
-    const { filters, page = 1, limit = 10 ,id} = await req.json();
-    console.log(filters,page,id)
+    const { filters, page = 1, limit = 10, id } = await req.json();
+    console.log(filters, page, id);
 
-    if (id  ) {
+    if (id) {
       try {
-        const book = await findUniquePrismaBooks(id) // await prisma.knihy.findUnique({
-        //   where: {  id  },
-        // });
-
+        const book = await findUniquePrismaBooks(id); // await prisma.knihy.findUnique({
+        
         if (!book) {
-          return NextResponse.json({ error: "book not found " }, { status: 400 });
+          return NextResponse.json(
+            { error: "book not found " },
+            { status: 400 }
+          );
         }
 
-        return  NextResponse.json([book],{
+        return NextResponse.json([book], {
           headers: {
-           ...noCacheHeaders
-          }
-        },);
+            ...noCacheHeaders,
+          },
+        });
       } catch (error) {
-        console.error('Error fetching book by ID:', error);
-        return  NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        console.error("Error fetching book by ID:", error);
+        return NextResponse.json(
+          { error: "Internal Server Error" },
+          { status: 500 }
+        );
       }
     }
 
     if (!filters) {
-      return NextResponse.json({ error: "Server didn't receive filters" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Server didn't receive filters" },
+        { status: 400 }
+      );
     }
 
     if (page <= 0) {
-      return NextResponse.json({ error: "Page number was set to 0 or less " }, { status: 400 });
+      return NextResponse.json(
+        { error: "Page number was set to 0 or less " },
+        { status: 400 }
+      );
     }
 
-//     // Build the Prisma filter query
+    //     // Build the Prisma filter query
     const where = buildPrismaFilter(filters);
 
-//     // Fetch data using Prisma
-    const books = await loadPrismaBookPage(where,page,limit);
+    //     // Fetch data using Prisma
+    const books = await loadPrismaBookPage(where, page, limit);
     // await prisma.knihy.findMany({
     //   where,
     //   skip: (page - 1) * limit,
@@ -52,14 +66,16 @@ export async function POST(req: NextRequest) {
     // const books:Book[] = []
     return NextResponse.json(books, {
       headers: {
-        ...noCacheHeaders
-      }
+        ...noCacheHeaders,
+      },
     });
-
   } catch (error) {
     console.error("Error fetching books:", error);
-    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal Server Error" },
+      { status: 500 }
+    );
   } finally {
-    context.prisma.$disconnect()
+    context.prisma.$disconnect();
   }
 }

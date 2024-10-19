@@ -120,7 +120,7 @@ const theme = createTheme({
     },
     background: {
       default: rootPalette.background.default, // secondary 500
-      paper: "#424242", // Example: dark background for inputs (you can adjust as needed)
+      // paper: "#424242", // Example: dark background for inputs (you can adjust as needed)
       // this is the accent color
     },
     error: {
