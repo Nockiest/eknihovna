@@ -4,9 +4,7 @@ import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
-import { FiltringWindow } from "@/components/katalog/FiltringWindow";
 import ErrorReporter from "@/utils/Announcer";
-import ColorCirclesComprehensive from "@/components/general/styling/ColorCirclesComprehensive";
 import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 
 // provides contex for the while page
@@ -75,7 +73,6 @@ const KatalogPage = () => {
         setActiveFiltersValues,
       }}
     >
-      {/* <ColorCirclesComprehensive /> */}
       <Box className="w-full px-12">
         <Box
           display="flex"

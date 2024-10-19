@@ -15,7 +15,6 @@ interface NavListProps {}
 const NavBar: React.FC<NavListProps> = ({}) => {
   const { isHamburgerOpen, setIsHamburgerOpen } = useHeaderContext();
   const size = useCurrentBreakpoint();
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const renderButton = (button: NavButton, isActive: boolean) => (
     <NavbarButton
       key={button.URL}

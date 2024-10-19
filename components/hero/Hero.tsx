@@ -27,15 +27,15 @@ const Hero = () => {
         <CustomHamburger onClick={toggleNav} ariaLabel="toggle navigation" />
         <Box className="w-auto h-64 -z-1 relative">
           <Image
-            src="/img/library/pic.jpg"
+            src="/img/library/libraryTable.png"
             layout="fill"
             objectFit="cover"
             alt="Books"
           />
 
-          {/* <Box className="absolute bottom-4 right-4 z-1 text-white bg-black bg-opacity-30 px-2 py-1 rounded">
+          <Box className="absolute bottom-4 right-4 z-1 text-white bg-black bg-opacity-30 px-2 py-1 rounded">
             Fotografie od redakce Peřinky
-          </Box> */}
+          </Box>
         </Box>
         <NavBar />
       </Box>
