@@ -20,11 +20,11 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     genres = [],
     formaturita = false,
     rating = -1,
-  }:Book = book;
+  }: Book = book;
 
   return (
     <Paper
-      className={` h-[400px] w-[260px] items-center   relative   `}
+      className={` h-[400px] w-[260px] items-center relative`}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: truthyValues.includes(available)

@@ -63,16 +63,13 @@ const BookCatalog: React.FC = () => {
   const { isOpenSearcher, setOpenSearcher, activeFilters } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchParams = useSearchParams();
- 
+
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   const fetchBooks = async () => {
     dispatch({ type: "FETCH_INIT" });
 
     try {
-      // Fetch all filtered books only once
-      // changePage(1);
-
       const allPossibleBooks = await fetchFilteredBooks(activeFilters);
       console.log("All filtered books:", allPossibleBooks.length);
 
