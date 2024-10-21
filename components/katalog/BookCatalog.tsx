@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useReducer } from "react";
-import { Box, Button, Grid, Stack } from "@mui/material";
+import { Box, Button, Grid, IconButton, Stack } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
@@ -13,7 +13,8 @@ import LoadingComponent from "../general/LoadingComponent";
 import Announcer from "@/utils/Announcer";
 import { useRouter } from "next/navigation";
 import { FiltringWindow } from "./FiltringWindow";
-
+import SortedGroupedSelect from "./SortedSelect";
+import SearchIcon from "@mui/icons-material/Search";
 type State = {
   status: "loading" | "loadedBooks" | "error";
   shownBooks: Book[];
@@ -61,7 +62,12 @@ function reducer(state: State, action: Action): State {
 
 // handles fetching and displaying books
 const BookCatalog: React.FC = () => {
-  const { isOpenSearcher, setOpenSearcher, activeFilters } = useSearchContext();
+  const {
+    isOpenSearcher,
+    setOpenSearcher,
+    activeFilters,
+    handleActiveFilterChange,
+  } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
   const searchParams = useSearchParams();
 
@@ -103,20 +109,28 @@ const BookCatalog: React.FC = () => {
   // should fetch only books based on page
   useEffect(() => {
     fetchBooks();
-  }, [page,activeFilters]);
+  }, [page, activeFilters]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
 
   return (
     <Box className="w-full">
       <FilterLister />
-      <Box className="flex-row flex-wrap w-full gap-4">
+      <Box className="flex flex-row flex-wrap w-full gap-4">
         <SearcherOpenerFab
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
+        <IconButton>
+          <SearchIcon />
+        </IconButton>
+        <SortedGroupedSelect
+          filterName={"name"}
+          label={"název"}
+          handleChange={(newVal) => handleActiveFilterChange("name", newVal)}
+        />
       </Box>
-      <FiltringWindow   />
+      <FiltringWindow />
 
       {status === "loading" && <LoadingComponent />}
 

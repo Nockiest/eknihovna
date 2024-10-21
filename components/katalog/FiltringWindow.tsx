@@ -27,7 +27,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     isOpenSearcher,
     setOpenSearcher,
     activeFilters,
-    setActiveFilters,
+    handleActiveFilterChange,
     filterValues,
   } = useSearchContext();
 
@@ -40,53 +40,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     currentQuery.set("page", newPage.toString());
     router.push(`${pathname}?${currentQuery.toString()}`);
   };
-  const handleFilterChange = (
-    filterName: keyof Filters,
-    value: string | boolean | null
-  ) => {
-    console.log(filterName, value);
-    const makeNewFilters = () => {
-      if (
-        (typeof value === "boolean" || value === null) &&
-        !Array.isArray(activeFilters[filterName])
-      ) {
-        return {
-          ...activeFilters,
-          [filterName]: !value ? null : value,
-        };
-      }
-      if (Array.isArray(activeFilters[filterName])) {
-        const arrayValue = activeFilters[filterName] as string[];
-        if (
-          typeof value === "boolean" ||
-          value === null ||
-          value === undefined
-        ) {
-          console.error("value has unexpected value: " + value);
-          return {
-            ...activeFilters,
-            [filterName]: [],
-          };
-        }
 
-        if (!arrayValue.includes(value)) {
-          return {
-            ...activeFilters,
-            [filterName]: [...arrayValue, value],
-          };
-        } else {
-          return activeFilters;
-        }
-      } else {
-        return {
-          ...activeFilters,
-          [filterName]: value,
-        };
-      }
-    };
-    const newFilters = makeNewFilters();
-    setActiveFilters(newFilters);
-  };
   const getFilteredOptions = (key: keyof FiltringValues) => {
     return filterValues[key]?.filter(
       (option) => !activeFilters[key]?.includes(option)
@@ -114,34 +68,34 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
 
         <Stack spacing={2} className="m-2 mt-8 center-flex flex-col mx-4">
           {/* <InputLabel shrink>Název: {activeFilters.name || "None"}</InputLabel> */}
-          <SortedGroupedSelect
-            options={getFilteredOptions("name")}
+          {/* <SortedGroupedSelect
+            filterName={ "name" }
             label={"název"}
-            handleChange={(newVal) => handleFilterChange("name", newVal)}
-          />
+            handleChange={(newVal) => handleActiveFilterChange("name", newVal)}
+          /> */}
 
           <SortedGroupedSelect
-            options={getFilteredOptions("category")}
+            filterName={ "category" }
             label={"kategorie"}
-            handleChange={(newVal) => handleFilterChange("category", newVal)}
+            handleChange={(newVal) => handleActiveFilterChange("category", newVal)}
           />
 
           {/* <InputLabel shrink>
             Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={getFilteredOptions("genres")}
+            filterName={ "genres" }
             label={"žánry"}
-            handleChange={(newVal) => handleFilterChange("genres", newVal)}
+            handleChange={(newVal) => handleActiveFilterChange("genres", newVal)}
           />
 
           {/* <InputLabel shrink>
             Autor: {activeFilters.author || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={getFilteredOptions("author")}
+            filterName={ "author" }
             label={"autor"}
-            handleChange={(newVal) => handleFilterChange("author", newVal)}
+            handleChange={(newVal) => handleActiveFilterChange("author", newVal)}
           />
           {/* <MultipleSelect
            options={getFilteredOptions("author")}
@@ -155,7 +109,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             <Checkbox
               checked={Boolean(activeFilters.available)}
               onChange={(e) =>
-                handleFilterChange("available", e.target.checked)
+                handleActiveFilterChange("available", e.target.checked)
               }
             />
           }
@@ -173,7 +127,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             <Checkbox
               checked={Boolean(activeFilters.formaturita)}
               onChange={(e) =>
-                handleFilterChange("formaturita", e.target.checked)
+                handleActiveFilterChange("formaturita", e.target.checked)
               }
             />
           }

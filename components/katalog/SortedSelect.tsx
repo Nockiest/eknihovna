@@ -1,19 +1,29 @@
 "use client";
+import { useSearchContext } from "@/app/katalog/context";
+import { FiltringValues } from "@/types/types";
 import { Autocomplete, TextField } from "@mui/material";
 import React, { useState } from "react";
 
 interface SortedGroupedSelectProps {
-  options: Array<string | null>;
+  filterName:  keyof FiltringValues;
   label: string;
   handleChange: (value: string | null) => void;
 }
 
 const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
-  options,
+  filterName,
   label,
   handleChange,
 }) => {
   // Sort options alphabetically
+  const {activeFilters,filterValues} =  useSearchContext()
+
+  const getFilteredOptions = (key: keyof FiltringValues) => {
+    return filterValues[key]?.filter(
+      (option) => !activeFilters[key]?.includes(option)
+    );
+  };
+  const options = getFilteredOptions(filterName)
   const sortedOptions = options
     ?.filter((item): item is string => {
       // Ensure item is a string and not null or undefined
@@ -30,7 +40,9 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       value={currentValue}
       sx={{
         minWidth: 300,
-        width: 'auto',
+        width: 'full',
+        flexGrow: 1,
+        mx: '1rem',
         overflowY: 'auto', // Enable vertical scrolling
         textColor: 'black'
       }}

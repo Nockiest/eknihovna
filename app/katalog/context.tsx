@@ -11,6 +11,10 @@ type QueryContextType = {
   // setBookNames: React.Dispatch<React.SetStateAction<string[]>>;
   filterValues: FiltringValues;
   setActiveFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
+   handleActiveFilterChange: (
+    filterName: keyof Filters,
+    value: string | boolean | null
+  ) => void;
   // bookNames: string[];
 };
 

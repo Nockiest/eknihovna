@@ -56,6 +56,53 @@ const KatalogPage = () => {
     update();
   }, []);
 
+  const handleActiveFilterChange = (
+    filterName: keyof Filters,
+    value: string | boolean | null
+  ) => {
+    console.log(filterName, value);
+    const makeNewFilters = () => {
+      if (
+        (typeof value === "boolean" || value === null) &&
+        !Array.isArray(activeFilters[filterName])
+      ) {
+        return {
+          ...activeFilters,
+          [filterName]: !value ? null : value,
+        };
+      }
+      if (Array.isArray(activeFilters[filterName])) {
+        const arrayValue = activeFilters[filterName] as string[];
+        if (
+          typeof value === "boolean" ||
+          value === null ||
+          value === undefined
+        ) {
+          console.error("value has unexpected value: " + value);
+          return {
+            ...activeFilters,
+            [filterName]: [],
+          };
+        }
+
+        if (!arrayValue.includes(value)) {
+          return {
+            ...activeFilters,
+            [filterName]: [...arrayValue, value],
+          };
+        } else {
+          return activeFilters;
+        }
+      } else {
+        return {
+          ...activeFilters,
+          [filterName]: value,
+        };
+      }
+    };
+    const newFilters = makeNewFilters();
+    setActiveFilters(newFilters);
+  };
 
   if (errorMessage) {
     return <ErrorReporter message={errorMessage} type="error" />;
@@ -72,9 +119,10 @@ const KatalogPage = () => {
         setErrorMessage,
         filterValues, // possible filter values
         setActiveFiltersValues,
+        handleActiveFilterChange
       }}
     >
-      <Box className="w-full px-12">
+      <Box className="w-full px-3 md:px-12">
         <Box
           display="flex"
           alignItems="space-between"
