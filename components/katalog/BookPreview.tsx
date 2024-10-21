@@ -38,7 +38,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         sx={{ backgroundColor: "#ffffff" }}
         className=" flex flex-col items-center justify-around h-full"
       >
-        <BookCover width={"200px"} />
+        <BookCover width={"200px"} isbn ={"9780140449136"} />
         <Box className=" flex grow-0 flex-col items-center justify-around w-full  ">
           <Typography variant="h6" align="center">
             {name}
