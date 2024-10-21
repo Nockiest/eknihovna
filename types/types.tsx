@@ -13,6 +13,7 @@ export type Book = {
     bookCoverURL?: string
     zpusob_ziskani?: string
     signatura?:string
+    isbn?:string
 }
 
 export type NavButton = {

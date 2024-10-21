@@ -31,7 +31,7 @@ const BookEditForm = ({
   };
   return(
       <form className="border-2 border-gray-300 p-4 rounded-lg">
-        <div className="flex items-center mb-4">
+        <Box className="flex items-center mb-4">
           <label className="w-1/4 text-right pr-4">ID:</label>
           <input
             type="text"
@@ -41,7 +41,7 @@ const BookEditForm = ({
 
             className="w-3/4"
           />
-        </div>
+        </Box>
         <PrimaryButton type="button" onClick={generateNewUUID} className="mb-4">
           Vygenerovat nové ID
         </PrimaryButton>
@@ -52,6 +52,8 @@ const BookEditForm = ({
           { label: "Žánry (odělené čárkou)", name: "genres", type: "text", value: book.genres ? book.genres.join(", ") : "" },
           { label: "Signatura", name: "signatura", type: "text", value: book.signatura },
           { label: "Způsob Získání", name: "zpusob_ziskani", type: "text", value: book.zpusob_ziskani },
+          { label: "isbn", name: "isbn", type: "text", value: book.isbn },
+
         ].map((field) => (
           <div key={field.name} className="flex items-center mb-4">
             <label className="w-1/4 text-right pr-4">{field.label}:</label>

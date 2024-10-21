@@ -35,7 +35,7 @@ const POST_BOOKS = async (json: any) => {
     const hasValidKeys = FirstBookKeys.every(
       (key) => bookHeaders.indexOf(key as keyof Book) >= 0
     );
-
+    console.log(hasValidKeys)
     if (!hasValidKeys) {
       return NextResponse.json(
         {
@@ -104,11 +104,14 @@ const POST_BOOKS = async (json: any) => {
             item.rating >= 0
               ? Number(item.rating)
               : null,
+            isbn:
+              typeof item.isbn === "string"? String(item.isbn.trim()): null
         };
       });
+
     if (removePreviousData) {
       // Delete all previous books
-      deleteAllPrismaBooks()
+      await deleteAllPrismaBooks()
       console.log("Delete all books");
       craeteManyPrismaBooks(validData as Book[]);
     } else {

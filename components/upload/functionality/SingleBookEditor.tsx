@@ -17,7 +17,7 @@ const SingleBookEditor = () => {
   const fetchBook = async () => {
     debugger;
     if (!bookId) {
-      return alert("Prossím zadejte validnéí ID");
+      return alert("Prossím zadejte validnní ID");
     }
     setLoading(true);
     try {
@@ -53,7 +53,8 @@ const SingleBookEditor = () => {
 
     if (!book) {
       // If book is null, initialize a new book object
-      setBook(emptyBook);
+      const newBook: Book = {  ...emptyBook,id: uuidv4(), }
+      setBook(newBook);
     } else {
       // Update existing book object
       setBook((prevBook) => {
@@ -87,8 +88,9 @@ const SingleBookEditor = () => {
 
   // Initialize a new book with a new UUID and empty values
   const createNewBook = () => {
-    setBook(emptyBook);
-    setBookId(""); // Clear the book ID input field
+    const newBook: Book = {  ...emptyBook,id: uuidv4(), }
+    setBook(newBook);
+    setBookId(''); // Clear the book ID input field
   };
 
   return (

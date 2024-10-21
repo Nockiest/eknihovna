@@ -89,6 +89,7 @@ export const bookHeaders: Array<keyof Book> = [
   "formaturita",
   "available",
   "rating",
+  'isbn'
 ];
 
 export var splited_emails = process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");

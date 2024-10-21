@@ -18,4 +18,5 @@ model knihy {
   formaturita    Boolean?
   available      Boolean?
   rating         Int?
+  isbn            String? @db.VarChar(13)
 }
