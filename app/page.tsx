@@ -38,7 +38,7 @@ export default function Home() {
         Těšíme se na vaši návštěvu!
       </Typography>
       <br />
-      <Container className=" text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
+      <Container className="mx-auto text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
         <Typography variant="body1">
           Stránku vytvořil Ondřej Lukeš. Děkuji za pomoc všem co se podíleli na
           projektu: Patriku Holbovi, Davidu Laušmanovi, prof. Bauerové a redakci

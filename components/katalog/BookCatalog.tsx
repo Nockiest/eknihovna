@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect, useReducer } from "react";
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Stack } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
@@ -125,7 +125,7 @@ const BookCatalog: React.FC = () => {
       )}
 
       {status === "loadedBooks" && shownBooks.length > 0 && (
-        <Box className="w-full mx-auto">
+        <Stack className="w-full mx-auto">
           <Grid
             container
             spacing={4}
@@ -142,7 +142,7 @@ const BookCatalog: React.FC = () => {
           >
             {shownBooks.map((book: Book, index: any) => (
               <Grid
-                className="flex justify-center items-center flex-grow m-0 h-auto"
+                className="flex justify-center items-center flex-grow m-0 mx-auto h-auto"
                 item
                 xs={12}
                 sm={6}
@@ -150,7 +150,7 @@ const BookCatalog: React.FC = () => {
                 lg={3}
                 xl={2}
                 key={index}
-                alignItems={"center"}
+                alignItems={"begin"}
               >
                 <BookPreview book={book} />
               </Grid>
@@ -161,7 +161,7 @@ const BookCatalog: React.FC = () => {
             itemsPerPage={24}
             folderName="katalog"
           />
-        </Box>
+        </Stack>
       )}
 
       {status === "loadedBooks" && shownBooks.length === 0 && (
