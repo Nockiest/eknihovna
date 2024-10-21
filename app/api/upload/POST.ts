@@ -104,6 +104,8 @@ const POST_BOOKS = async (json: any) => {
             item.rating >= 0
               ? Number(item.rating)
               : null,
+            isbn:
+            item.isbn !== null && typeof item.isbn === "string"? item.isbn.trim(): null
         };
       });
     if (removePreviousData) {

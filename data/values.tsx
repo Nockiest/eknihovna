@@ -56,6 +56,7 @@ export const testBook:Book = {
   formaturita: true, // Replace with true or false depending on whether it's formal
   available: true, // Replace with true or false depending on availability
   rating: 5, // Replace with the actual rating
+  isbn: '9780140449136'
 };
 export const emptyBook: Book = {
   id: "1",
@@ -68,6 +69,7 @@ export const emptyBook: Book = {
   formaturita: false,
   available: false,
   rating: -1,
+  isbn: ''
 };
 
 export const navRoutes: NavButton[] = [
@@ -89,6 +91,7 @@ export const bookHeaders: Array<keyof Book> = [
   "formaturita",
   "available",
   "rating",
+  "isbn",
 ];
 
 export var splited_emails = process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");
