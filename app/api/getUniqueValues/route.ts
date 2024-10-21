@@ -29,13 +29,9 @@ export async function POST(req: NextRequest) {
     selectObject[columnName] = true;
 
     // Query the database for distinct values
-    const uniqueValues: UniqueBookValue[] = await findManyPrismaUniquePrismaBooksColumn(selectObject, columnName)
-    // await prisma.knihy.findMany({
-    //   select: selectObject,
-    //   distinct: [columnName as keyof UniqueBookValue],
-    // });
+    const uniqueValues: UniqueBookValue[] = await findManyPrismaUniquePrismaBooksColumn(selectObject, columnName);
 
-    // Safely access the columnName property and filter for truthy values
+    // Safely access the columnName property and filter for non-empty string values
     const values = uniqueValues
       .map((item) => item[columnName as keyof UniqueBookValue])
       .filter((item) => {
@@ -43,12 +39,11 @@ export async function POST(req: NextRequest) {
         if (Array.isArray(item)) {
           return item.length > 0; // Example: Filter out empty arrays
         }
-        if (item === null || item === undefined) {
-          return false;
+        if (typeof item === "string" && item.trim() !== "") {
+          return true;
         }
-        // Handle non-array cases
-        return !falsyValues.includes(item);
-      }); // Filters out falsy values (null, undefined, 0, false, "")
+        return false;
+      });
 
     return NextResponse.json(
       values,

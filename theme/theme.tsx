@@ -259,9 +259,9 @@ const theme = createTheme({
         option: {
           backgroundColor: rootPalette.primary.contrastText, // White text in the dropdown options
         },
-        input: {
-          color:rootPalette.primary.contrastText, // White text in the input field
-        },
+        // input: {
+        //   color:rootPalette.primary.contrastText, // White text in the input field
+        // },
       },
     },
     MuiInputBase: {

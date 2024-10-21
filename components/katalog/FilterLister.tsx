@@ -4,7 +4,6 @@ import { Filters, FiltringValues } from "@/types/types";
 import { translateBookKey } from "@/utils/translateBookKeys";
 import CategoryChip from "./CategoryChip";
 import { Box, Typography } from "@mui/material";
-import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 import { useSearchContext } from "@/app/katalog/context";
 import { useEffect } from "react";
 
@@ -15,9 +14,8 @@ const FilterLister: React.FC<FilterListerProps> =   ({
 
 }) => {
   const { activeFilters, setActiveFilters,   } = useSearchContext();
-
+ 
   const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
-
 
   const removeFilter = (key: keyof Filters, value: string | boolean) => {
     setActiveFilters((prevFilters: Filters) => {

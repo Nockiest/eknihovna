@@ -8,6 +8,7 @@ import {
   InputLabel,
   IconButton,
   Box,
+  Stack,
 } from "@mui/material";
 import theme from "@/theme/theme";
 import { Filters, FiltringValues } from "@/types/types";
@@ -18,6 +19,7 @@ import FilterLister from "./FilterLister";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import useDebounce from "@/utils/hooks/useDebounce";
+import MultipleSelect from "./MultipleSelect";
 
 type SearcherProps = {};
 export const FiltringWindow: React.FC<SearcherProps> = () => {
@@ -28,15 +30,8 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     setActiveFilters,
     filterValues,
   } = useSearchContext();
-  const [debouncedFilters, setDebouncedFilters] =
-    useState<Filters>(activeFilters);
-  const debouncedActiveFilters = useDebounce(debouncedFilters, 500); // Adjust the delay as needed
-  useEffect(() => {
-    console.log(debouncedActiveFilters)
-    changePage(1)
-    setActiveFilters(debouncedActiveFilters);
-  }, [debouncedActiveFilters]);
-  const searchParams = useSearchParams()
+
+  const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
   const pathname = usePathname();
   const router = useRouter();
@@ -46,23 +41,22 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     router.push(`${pathname}?${currentQuery.toString()}`);
   };
   const handleFilterChange = (
-    name: keyof Filters,
+    filterName: keyof Filters,
     value: string | boolean | null
   ) => {
-    console.log(name, value);
-    setDebouncedFilters((prevFilters: Filters) => {
-      debugger;
+    console.log(filterName, value);
+    const makeNewFilters = () => {
       if (
         (typeof value === "boolean" || value === null) &&
-        !Array.isArray(prevFilters[name])
+        !Array.isArray(activeFilters[filterName])
       ) {
         return {
-          ...prevFilters,
-          [name]: !value ? null : value,
+          ...activeFilters,
+          [filterName]: !value ? null : value,
         };
       }
-      if (Array.isArray(prevFilters[name])) {
-        const arrayValue = prevFilters[name] as string[];
+      if (Array.isArray(activeFilters[filterName])) {
+        const arrayValue = activeFilters[filterName] as string[];
         if (
           typeof value === "boolean" ||
           value === null ||
@@ -70,26 +64,28 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         ) {
           console.error("value has unexpected value: " + value);
           return {
-            ...prevFilters,
-            [name]: [],
+            ...activeFilters,
+            [filterName]: [],
           };
         }
 
         if (!arrayValue.includes(value)) {
           return {
-            ...prevFilters,
-            [name]: [...arrayValue, value],
+            ...activeFilters,
+            [filterName]: [...arrayValue, value],
           };
         } else {
-          return prevFilters;
+          return activeFilters;
         }
       } else {
         return {
-          ...prevFilters,
-          [name]: value,
+          ...activeFilters,
+          [filterName]: value,
         };
       }
-    });
+    };
+    const newFilters = makeNewFilters();
+    setActiveFilters(newFilters);
   };
   const getFilteredOptions = (key: keyof FiltringValues) => {
     return filterValues[key]?.filter(
@@ -116,38 +112,43 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         </IconButton>
         <FilterLister />
 
-        <Box className="m-2 mt-8 center-flex flex-col mx-4">
+        <Stack spacing={2} className="m-2 mt-8 center-flex flex-col mx-4">
+          {/* <InputLabel shrink>Název: {activeFilters.name || "None"}</InputLabel> */}
+          <SortedGroupedSelect
+            options={getFilteredOptions("name")}
+            label={"název"}
+            handleChange={(newVal) => handleFilterChange("name", newVal)}
+          />
+
           <SortedGroupedSelect
             options={getFilteredOptions("category")}
             label={"kategorie"}
             handleChange={(newVal) => handleFilterChange("category", newVal)}
           />
 
-          <InputLabel shrink>
+          {/* <InputLabel shrink>
             Žánry: {activeFilters.genres?.join(",") || "None"}
-          </InputLabel>
+          </InputLabel> */}
           <SortedGroupedSelect
             options={getFilteredOptions("genres")}
             label={"žánry"}
             handleChange={(newVal) => handleFilterChange("genres", newVal)}
           />
 
-          <InputLabel shrink>
+          {/* <InputLabel shrink>
             Autor: {activeFilters.author || "None"}
-          </InputLabel>
+          </InputLabel> */}
           <SortedGroupedSelect
             options={getFilteredOptions("author")}
             label={"autor"}
             handleChange={(newVal) => handleFilterChange("author", newVal)}
           />
-
-          <InputLabel shrink>Autor: {activeFilters.name || "None"}</InputLabel>
-          <SortedGroupedSelect
-            options={getFilteredOptions("name")}
-            label={"jméno"}
-            handleChange={(newVal) => handleFilterChange("name", newVal)}
-          />
-        </Box>
+          {/* <MultipleSelect
+           options={getFilteredOptions("author")}
+           label={"autor"}
+           handleChange={(newVal) => {return}}
+           /> */}
+        </Stack>
 
         <FormControlLabel
           control={
@@ -188,3 +189,12 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     </Slide>
   );
 };
+
+// const [debouncedFilters, setDebouncedFilters] =
+//   useState<Filters>(activeFilters);
+// const debouncedActiveFilters = useDebounce(debouncedFilters, 500); // Adjust the delay as needed
+// useEffect(() => {
+//   console.log(debouncedActiveFilters)
+//   changePage(1)
+//   setActiveFilters(debouncedActiveFilters);
+// }, [debouncedActiveFilters]);

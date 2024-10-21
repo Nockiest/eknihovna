@@ -29,8 +29,8 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       options={sortedOptions}
       value={currentValue}
       sx={{
-        width: 300,
-        maxHeight: 300, // Set a maximum height for the dropdown list
+        minWidth: 300,
+        width: 'auto',
         overflowY: 'auto', // Enable vertical scrolling
         textColor: 'black'
       }}
