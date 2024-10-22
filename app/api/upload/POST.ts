@@ -6,7 +6,7 @@ import {
   upsertPrismaBook,
 } from "@/lib/prisma";
 import { Book } from "@/types/types";
-import { NextRequest, NextResponse } from "next/server";
+import {  NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
 export const maxDuration = 60; // This function can run for a maximum of 60 seconds
@@ -57,7 +57,7 @@ const POST_BOOKS = async (json: any) => {
     // Process valid data
     const validData = books
       .filter((item) => {
-        if (!item.name || !item.category) {
+        if (!item.name || !item.id) {
           rejectedRows.push(item.name || "Unnamed");
         }
         return item.name;
@@ -117,7 +117,7 @@ const POST_BOOKS = async (json: any) => {
       // Delete all previous books
       await deleteAllPrismaBooks();
       console.log("Delete all books");
-      craeteManyPrismaBooks(validData as Book[]);
+      await craeteManyPrismaBooks(validData as Book[]);
     } else {
       for (const book of validData) {
         console.log(validData.indexOf(book));
@@ -131,12 +131,12 @@ const POST_BOOKS = async (json: any) => {
       truthyValues.indexOf(books[0].formaturita),
       truthyValues.indexOf(books[0].available)
     );
-    const totalBooks = countPrismaBooks(); //await context.prisma.knihy.count();
+    const totalBooks = await countPrismaBooks();
 
     return NextResponse.json(
       {
         success: true,
-        message: `Data úspěšně nahrána, počet knih: ${totalBooks}. Tyto knihy se bohužel nepodařilo nahrát: ${rejectedRows.join(', ')} `,
+        message: `Data úspěšně nahrána, počet knih: ${totalBooks}. ${rejectedRows.length > 0 && 'Tyto knihy se bohužel nepodařilo nahrát' + rejectedRows.join(', ')} `,
         headers: {
           ...noCacheHeaders,
         },

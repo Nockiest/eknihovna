@@ -27,7 +27,7 @@ const Uploader = () => {
     const response = await postDataToUpload(jsonResult, overwriteData);
     console.log(response);
     if (response.data.success === true) {
-      alert("soubor úspěšně nahrán");
+      alert(response.data.message);
     } else {
       const errorData = response.data; // Access data directly from the response
       alert(
