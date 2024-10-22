@@ -35,7 +35,7 @@ const POST_BOOKS = async (json: any) => {
     const hasValidKeys = FirstBookKeys.every(
       (key) => bookHeaders.indexOf(key as keyof Book) >= 0
     );
-    console.log(hasValidKeys)
+    console.log(hasValidKeys);
     if (!hasValidKeys) {
       return NextResponse.json(
         {
@@ -53,10 +53,15 @@ const POST_BOOKS = async (json: any) => {
         { status: 400 }
       );
     }
-
+    const rejectedRows: string[] = [];
     // Process valid data
     const validData = books
-      .filter((item) => item.name) // Ensure important fields like name are not empty
+      .filter((item) => {
+        if (!item.name || !item.category) {
+          rejectedRows.push(item.name || "Unnamed");
+        }
+        return item.name;
+      }) // Ensure important fields like name are not empty
       .map((item) => {
         return {
           id: item.id || uuidv4(), // Generate ID if not present
@@ -104,14 +109,13 @@ const POST_BOOKS = async (json: any) => {
             item.rating >= 0
               ? Number(item.rating)
               : null,
-            isbn:
-              typeof item.isbn === "string"? String(item.isbn.trim()): null
+          isbn: typeof item.isbn === "string" ? String(item.isbn.trim()) : null,
         };
       });
 
     if (removePreviousData) {
       // Delete all previous books
-      await deleteAllPrismaBooks()
+      await deleteAllPrismaBooks();
       console.log("Delete all books");
       craeteManyPrismaBooks(validData as Book[]);
     } else {
@@ -132,7 +136,7 @@ const POST_BOOKS = async (json: any) => {
     return NextResponse.json(
       {
         success: true,
-        message: `Data successfully inserted or updated! Current number of books: ${totalBooks}`,
+        message: `Data úspěšně nahrána, počet knih: ${totalBooks}. Tyto knihy se bohužel nepodařilo nahrát: ${rejectedRows.join(', ')} `,
         headers: {
           ...noCacheHeaders,
         },
