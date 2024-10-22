@@ -13,6 +13,7 @@ export function translateBookKey(bookKey: keyof Book ): string {
         bookCoverURL: 'URL_obálky',
         zpusob_ziskani: 'zpusob_ziskani',
         signatura: 'signatura',
+        isbn: 'isbn',
     };
     return translationDict[bookKey]
 }
