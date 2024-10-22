@@ -42,9 +42,7 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
         minWidth: 300,
         width: 'full',
         flexGrow: 1,
-        mx: '1rem',
         overflowY: 'auto', // Enable vertical scrolling
-        textColor: 'black'
       }}
       renderInput={(params) => <TextField className="text-black" sx={{ color: 'black' }} { ...params} label={label} />}
       onChange={(e, newVal) => {

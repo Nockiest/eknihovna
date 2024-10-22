@@ -260,8 +260,29 @@ const theme = createTheme({
           backgroundColor: rootPalette.primary.contrastText, // White text in the dropdown options
         },
         // input: {
-        //   color:rootPalette.primary.contrastText, // White text in the input field
+        //   backgroundColor: rootPalette.primary.contrastText, // White text in the dropdown options
         // },
+        // endAdornment:{
+        //   backgroundColor: rootPalette.primary.contrastText,
+        // },
+        // tag: {
+        //   backgroundColor: 'white', // Customize the background color of the tags
+        //   // color: 'white', // Customize the text color of the tags
+        // },
+
+        // popupIndicator: {
+        //   backgroundColor: rootPalette.primary.contrastText,
+        //   // color: rootPalette.primary.dark,
+        // },
+        // clearIndicator: {
+        //   backgroundColor: rootPalette.primary.contrastText,
+        // },
+        // endAdornment:{
+        //   backgroundColor: rootPalette.primary.contrastText,
+        // },
+        // endAdornment:{
+        //   backgroundColor: rootPalette.primary.contrastText,
+        // }
       },
     },
     MuiInputBase: {

@@ -115,7 +115,7 @@ const BookCatalog: React.FC = () => {
   return (
     <Box className="w-full">
       <FilterLister />
-      <Box className="flex flex-row flex-wrap w-full gap-4">
+      <Box className="flex flex-row flex-wrap w-full p-4 bg-primary-950 gap-4">
         <SearcherOpenerFab
           css={"z-0 mb-2"}
           onClick={() => setOpenSearcher(!isOpenSearcher)}
