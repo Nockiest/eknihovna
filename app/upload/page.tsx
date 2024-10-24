@@ -3,7 +3,6 @@ import ExcelSheetUpdater from "@/components/upload/ExcelSheetUpdater";
 import { Box } from "@mui/material";
 import AuthProvider from "@/components/AuthProvider";
 import type {  Metadata } from "next";
-import { UploadContext } from "./context";
 export const revalidate = 0
 export const metadata: Metadata = {
   title: "G.O. eknihovna",

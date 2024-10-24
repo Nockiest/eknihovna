@@ -6,8 +6,6 @@ import { Autocomplete, TextField } from "@mui/material";
 import React, { useState } from "react";
 
 interface SortedGroupedSelectProps {
-  // filterName:  keyof FiltringValues;
-  // getFilteredOptions: (key: keyof FiltringValues)=>string[]
   options:string[]
   label: string;
   handleChange: (value: string | null) => void;
@@ -15,18 +13,11 @@ interface SortedGroupedSelectProps {
 }
 
 const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
-  // getFilteredOptions,
   options,
   label,
   handleChange,
   context = "katalog", // Default to using the default context
 }) => {
-  // const  SearchContext = context === "katalog" ? useSearchContext : useUploadContext;
-  // const { activeFilters,   } = SearchContext();
-
-
-
-  // const options = getFilteredOptions(filterName);
   const sortedOptions = options
     ?.filter((item): item is string => {
       return typeof item === "string" && item !== null && item !== undefined;
