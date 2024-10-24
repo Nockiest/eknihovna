@@ -7,13 +7,13 @@ export const fetchFilteredBooks = async (
   filters: Filters = defaultFilters,
   page: number = 1,
   limit: number = 10000000,
-  id: string|null = null,
+ 
 
 ): Promise<Book[]> => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
   try {
     // debugger
-    const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit, id });
+    const response = await axios.post(`${apiUrl}/bookList`, { filters, page, limit,  });
     return  response.data || [];
   } catch (error: any) {
     throw new Error(`Problem with fetching data: ${error.message}`);

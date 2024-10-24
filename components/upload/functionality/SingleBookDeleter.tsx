@@ -25,10 +25,10 @@ interface BookDeletionProps {
       try {
         // Assume fetchFilteredBooks is a function that fetches books based on activeFilters
         const response = await fetchFilteredBooks(
-          defaultFilters, // defaultFilters or appropriate filter object
+          {...defaultFilters, id:bookId.trim()}, // defaultFilters or appropriate filter object
           1,
           10000000,
-          bookId.trim(),
+          // bookId.trim(),
 
         );
 

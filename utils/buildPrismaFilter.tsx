@@ -78,6 +78,13 @@ export function buildPrismaFilter(activeFilters: Filters) {
   if ( falsyValues.indexOf( activeFilters.formaturita )< 0) {
     where.formaturita = activeFilters.formaturita;
   }
+
+  if (activeFilters.id) {
+    where.id = {
+      equals: activeFilters.id,
+    };
+  }
+
   // Return the constructed 'where' clause
   return where;
 }

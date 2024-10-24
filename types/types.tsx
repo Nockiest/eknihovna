@@ -29,6 +29,7 @@ export  type Filters= {
   category?: string[];
   genres?: string[];
   formaturita?: boolean|null;
+  id?: string|null;
   // rating: number;
   available?: boolean|null;
 };

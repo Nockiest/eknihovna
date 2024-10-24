@@ -61,7 +61,17 @@ export const findUniquePrismaBooks = async (
   ctx: Context = context
 ) => {
   return await ctx.prisma.knihy.findUnique({
-    where: { id },
+    where: { id,   },
+  });
+};
+
+export const findPrismaBookByFields = async (
+  fields: { key: keyof Book; value: any }[],
+  ctx: Context = context
+) => {
+  const where = Object.fromEntries(fields.map(({ key, value }) => [key, value])); // Dynamically create the where clause based on the provided key-value pairs
+  return await ctx.prisma.knihy.findMany({
+    where,
   });
 };
 

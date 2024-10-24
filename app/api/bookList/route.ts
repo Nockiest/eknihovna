@@ -10,33 +10,33 @@ import { noCacheHeaders } from "@/data/values";
 export const revalidate = 0;
 export async function POST(req: NextRequest) {
   try {
-    const { filters, page = 1, limit = 10, id } = await req.json();
-    console.log(filters, page, id);
+    const { filters, page = 1, limit = 10    } = await req.json();
+    console.log(filters, page,  );
 
-    if (id) {
-      try {
-        const book = await findUniquePrismaBooks(id); // await prisma.knihy.findUnique({
-        
-        if (!book) {
-          return NextResponse.json(
-            { error: "book not found " },
-            { status: 400 }
-          );
-        }
+    // if (id) {
+    //   try {
+    //     const book = await findUniquePrismaBooks(id); // await prisma.knihy.findUnique({
 
-        return NextResponse.json([book], {
-          headers: {
-            ...noCacheHeaders,
-          },
-        });
-      } catch (error) {
-        console.error("Error fetching book by ID:", error);
-        return NextResponse.json(
-          { error: "Internal Server Error" },
-          { status: 500 }
-        );
-      }
-    }
+    //     if (!book) {
+    //       return NextResponse.json(
+    //         { error: "book not found " },
+    //         { status: 400 }
+    //       );
+    //     }
+
+    //     return NextResponse.json([book], {
+    //       headers: {
+    //         ...noCacheHeaders,
+    //       },
+    //     });
+    //   } catch (error) {
+    //     console.error("Error fetching book by ID:", error);
+    //     return NextResponse.json(
+    //       { error: "Internal Server Error" },
+    //       { status: 500 }
+    //     );
+    //   }
+    // }
 
     if (!filters) {
       return NextResponse.json(
@@ -57,13 +57,7 @@ export async function POST(req: NextRequest) {
 
     //     // Fetch data using Prisma
     const books = await loadPrismaBookPage(where, page, limit);
-    // await prisma.knihy.findMany({
-    //   where,
-    //   skip: (page - 1) * limit,
-    //   take: limit,
-    //   // distinct: ['name'], // Select distinct on the 'name' field
-    // });
-    // const books:Book[] = []
+
     return NextResponse.json(books, {
       headers: {
         ...noCacheHeaders,

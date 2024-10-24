@@ -24,10 +24,9 @@ const SingleBookEditor = () => {
     setLoading(true);
     try {
       const response = await fetchFilteredBooks(
-        defaultFilters, // defaultFilters or appropriate filter object
+        {...defaultFilters, id: book.id.trim()}, // defaultFilters or appropriate filter object
         1,
         10000000,
-        book.id.trim()
       );
 
       response.length > 0 ? setBook(response[0]) : alert("Book not found");
