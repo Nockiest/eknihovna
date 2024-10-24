@@ -1,5 +1,6 @@
+'use client'
 import React, { useState } from "react";
-import { Book } from "@/types/types";
+import { Book, FiltringValues } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { defaultFilters, bookHeaders, emptyBook } from "@/data/values";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
@@ -10,9 +11,18 @@ import { v4 as uuidv4 } from "uuid";
 import SortedGroupedSelect from "@/components/katalog/SortedSelect";
 
 const SingleBookEditor = () => {
-  const [bookId, setBookId] = useState<string>("");
+  // const [bookId, setBookId] = useState<string>("");
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(false);
+  const [query, setQuery] = useState<string>("");
+  const getFilteredOptions = (key: keyof FiltringValues) => {
+    return  ['test','test2']
+
+    //
+    //return filterValues[key]?.filter(
+    //   (option) => !activeFilters[key]?.includes(option)
+    // );
+  };
 
   // Fetch book details based on the entered ID
   const fetchBook = async () => {
@@ -101,7 +111,7 @@ const SingleBookEditor = () => {
 
 
 
-    {/* <SortedGroupedSelect filterName={"name"} label={"jméno knihy v databázi"} handleChange={}/> */}
+    <SortedGroupedSelect filterName={"name"} label={"jméno knihy v databázi"} handleChange={(word) =>setQuery(word||'')} getFilteredOptions={getFilteredOptions} />
         {/* <Input
           type="text"
           className="w-full my-2"

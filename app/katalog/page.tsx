@@ -20,7 +20,7 @@ const KatalogPage = () => {
     name: null,
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [filterValues, setActiveFiltersValues] = useState<FiltringValues>({
+  const [filterValues, setFiltersValues] = useState<FiltringValues>({
     genres: [],
     category: [],
     author: [],
@@ -33,7 +33,7 @@ const KatalogPage = () => {
 
     const res = await fetchUniqueValues(colName);
     console.log('fetch unique vals:',colName, res)
-    setActiveFiltersValues((prevFilters: FiltringValues) => ({
+    setFiltersValues((prevFilters: FiltringValues) => ({
       ...prevFilters,
       [colName]: res,
     }));
@@ -118,7 +118,7 @@ const KatalogPage = () => {
         errorMessage, //
         setErrorMessage,
         filterValues, // possible filter values
-        setActiveFiltersValues,
+        setFiltersValues,
         handleActiveFilterChange
       }}
     >

@@ -75,15 +75,18 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           /> */}
 
           <SortedGroupedSelect
+          getFilteredOptions={getFilteredOptions}
             filterName={ "category" }
             label={"kategorie"}
             handleChange={(newVal) => handleActiveFilterChange("category", newVal)}
+
           />
 
           {/* <InputLabel shrink>
             Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
+          getFilteredOptions={getFilteredOptions}
             filterName={ "genres" }
             label={"žánry"}
             handleChange={(newVal) => handleActiveFilterChange("genres", newVal)}
@@ -93,6 +96,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Autor: {activeFilters.author || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
+            getFilteredOptions={getFilteredOptions}
             filterName={ "author" }
             label={"autor"}
             handleChange={(newVal) => handleActiveFilterChange("author", newVal)}

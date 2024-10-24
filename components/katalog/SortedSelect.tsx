@@ -1,35 +1,36 @@
 "use client";
 import { useSearchContext } from "@/app/katalog/context";
+import {   useUploadContext } from "@/app/upload/context";
 import { FiltringValues } from "@/types/types";
 import { Autocomplete, TextField } from "@mui/material";
 import React, { useState } from "react";
 
 interface SortedGroupedSelectProps {
   filterName:  keyof FiltringValues;
+  getFilteredOptions: (key: keyof FiltringValues)=>string[]
   label: string;
   handleChange: (value: string | null) => void;
+  context?: 'katalog'|  'upload'
 }
 
 const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
-  filterName,
+  getFilteredOptions,
   label,
   handleChange,
+  context = "katalog", // Default to using the default context
 }) => {
-  // Sort options alphabetically
-  const {activeFilters,filterValues} =  useSearchContext()
+  const  SearchContext = context === "katalog" ? useSearchContext : useUploadContext;
+  const { activeFilters,   } = SearchContext();
 
-  const getFilteredOptions = (key: keyof FiltringValues) => {
-    return filterValues[key]?.filter(
-      (option) => !activeFilters[key]?.includes(option)
-    );
-  };
-  const options = getFilteredOptions(filterName)
+
+
+  const options = getFilteredOptions(filterName);
   const sortedOptions = options
     ?.filter((item): item is string => {
-      // Ensure item is a string and not null or undefined
       return typeof item === "string" && item !== null && item !== undefined;
     })
     .sort((a, b) => a.localeCompare(b));
+
   const [currentValue, setCurrentValue] = useState<string | null>(null);
 
   return (
@@ -42,18 +43,15 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
         minWidth: 300,
         width: 'full',
         flexGrow: 1,
-        overflowY: 'auto', // Enable vertical scrolling
+        overflowY: 'auto',
       }}
-      renderInput={(params) => <TextField className="text-black" sx={{ color: 'black' }} { ...params} label={label} />}
+      renderInput={(params) => <TextField className="text-black" sx={{ color: 'black' }} {...params} label={label} />}
       onChange={(e, newVal) => {
         handleChange(newVal);
-        setCurrentValue(newVal); // Update the input value when typing
-        // if (newVal !== null) {
-        // setCurrentValue(""); // Clear the input field only when an option is selected
-        // }
+        setCurrentValue(newVal);
       }}
       onInputChange={(e, newInputValue) => {
-        setCurrentValue(newInputValue); // Update the input value when typing
+        setCurrentValue(newInputValue);
       }}
     />
   );

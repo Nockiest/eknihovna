@@ -8,14 +8,12 @@ type QueryContextType = {
   setActiveFilters: React.Dispatch<React.SetStateAction<Filters>>;
   errorMessage: string | null;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | null>>;
-  // setBookNames: React.Dispatch<React.SetStateAction<string[]>>;
   filterValues: FiltringValues;
-  setActiveFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
+  setFiltersValues: React.Dispatch<React.SetStateAction<FiltringValues>>;
    handleActiveFilterChange: (
     filterName: keyof Filters,
     value: string | boolean | null
   ) => void;
-  // bookNames: string[];
 };
 
 // Create the context
