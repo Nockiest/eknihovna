@@ -26,6 +26,7 @@ export const useSearchContext = () => {
   const context = useContext(SearchContext);
 
   if (!context) {
+    console.trace("No search context")
     throw new Error(
       "useSearchContext must be used within a SearchContextProvider"
     );

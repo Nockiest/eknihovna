@@ -21,8 +21,8 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   handleChange,
   context = "katalog", // Default to using the default context
 }) => {
-  const  SearchContext = context === "katalog" ? useSearchContext : useUploadContext;
-  const { activeFilters,   } = SearchContext();
+  // const  SearchContext = context === "katalog" ? useSearchContext : useUploadContext;
+  // const { activeFilters,   } = SearchContext();
 
 
 

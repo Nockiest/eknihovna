@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState } from "react";
 import { Book, FiltringValues } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
@@ -11,24 +11,15 @@ import { v4 as uuidv4 } from "uuid";
 import SortedGroupedSelect from "@/components/katalog/SortedSelect";
 
 const SingleBookEditor = () => {
-  // const [bookId, setBookId] = useState<string>("");
   const [book, setBook] = useState<Book | null>(null);
   const [loading, setLoading] = useState(false);
-  const [query, setQuery] = useState<string>("");
-  const getFilteredOptions = (key: keyof FiltringValues) => {
-    return  ['test','test2']
+  // const [query, setQuery] = useState<string>("");
 
-    //
-    //return filterValues[key]?.filter(
-    //   (option) => !activeFilters[key]?.includes(option)
-    // );
-  };
 
   // Fetch book details based on the entered ID
   const fetchBook = async () => {
-    debugger;
-    if (!bookId) {
-      return alert("Prossím zadejte validnní ID");
+    if (!book) {
+      return alert("Vyberte prosÍm knihu kterou chcete zobrazit");
     }
     setLoading(true);
     try {
@@ -36,7 +27,7 @@ const SingleBookEditor = () => {
         defaultFilters, // defaultFilters or appropriate filter object
         1,
         10000000,
-        bookId.trim()
+        book.id.trim()
       );
 
       response.length > 0 ? setBook(response[0]) : alert("Book not found");
@@ -48,7 +39,7 @@ const SingleBookEditor = () => {
     }
   };
 
-    // this is dupliacted fix it immidiately!!!!!!
+  // this is dupliacted fix it immidiately!!!!!!
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     let newValue: string | string[] | boolean | number = value;
@@ -105,13 +96,27 @@ const SingleBookEditor = () => {
     }
   };
   return (
-    <Box className="mx-16 flex flex-row  gap-2 m-4 overflow-y-auto" onKeyUp={(e) => handleKeyPress(e as unknown as KeyboardEvent)  }>
+    <Box
+      className="mx-16 flex flex-row  gap-2 m-4 overflow-y-auto"
+      onKeyUp={(e) => handleKeyPress(e as unknown as KeyboardEvent)}
+    >
       <Box>
         <Typography variant="h4">Upravit/Přidat jednu knihu</Typography>
 
-
-
-    <SortedGroupedSelect filterName={"name"} label={"jméno knihy v databázi"} handleChange={(word) =>setQuery(word||'')} getFilteredOptions={getFilteredOptions} />
+        <SortedGroupedSelect
+          options={[]}
+          label={"jméno knihy v databázi"}
+          context={'upload'}
+          handleChange={(word) => {
+            setBook((prev) => {
+              if (prev === null) {
+                return emptyBook; // Set book state to emptyBook if prev is null
+              } else {
+                return { ...prev, name: word || undefined };
+              } // Ensure name is of type string | undefined
+            });
+          }}
+        />
         {/* <Input
           type="text"
           className="w-full my-2"
@@ -130,7 +135,6 @@ const SingleBookEditor = () => {
 
         {loading && <p>Načítání...</p>}
 
-
         <Box>
           <Typography variant="h6">Návod upravení existující knihy</Typography>
           <List>
@@ -148,9 +152,7 @@ const SingleBookEditor = () => {
       <Box>
         {book && (
           <Box>
-            <Typography variant="h4">
-              {bookId ? "Upravit Knihu" : "Vytvořit Novou Knihu"}
-            </Typography>
+            <Typography variant="h4">Upravit knihu</Typography>
             <BookEditForm
               book={book}
               handleInputChange={handleInputChange}

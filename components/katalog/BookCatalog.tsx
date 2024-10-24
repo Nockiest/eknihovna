@@ -14,6 +14,7 @@ import Announcer from "@/utils/Announcer";
 import { FiltringWindow } from "./FiltringWindow";
 import SortedGroupedSelect from "./SortedSelect";
 import SearchIcon from "@mui/icons-material/Search";
+import getFilteredOptions from "@/utils/getFilteredOptions";
 type State = {
   status: "loading" | "loadedBooks" | "error";
   shownBooks: Book[];
@@ -65,6 +66,7 @@ const BookCatalog: React.FC = () => {
     isOpenSearcher,
     setOpenSearcher,
     activeFilters,
+    filterValues,
     handleActiveFilterChange,
   } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -124,7 +126,8 @@ const BookCatalog: React.FC = () => {
           <SearchIcon />
         </IconButton>
         <SortedGroupedSelect
-          filterName={"name"}
+          // filterName={"name"}
+          options={getFilteredOptions('name', filterValues, activeFilters)}
           label={"název"}
           handleChange={(newVal) => handleActiveFilterChange("name", newVal)}
         />

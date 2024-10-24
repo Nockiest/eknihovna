@@ -16,10 +16,8 @@ import { useSearchContext } from "@/app/katalog/context";
 import SortedGroupedSelect from "./SortedSelect";
 import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
-import { usePathname, useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import useDebounce from "@/utils/hooks/useDebounce";
-import MultipleSelect from "./MultipleSelect";
+import getFilteredOptions from "@/utils/getFilteredOptions";
+
 
 type SearcherProps = {};
 export const FiltringWindow: React.FC<SearcherProps> = () => {
@@ -31,13 +29,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     filterValues,
   } = useSearchContext();
 
- 
 
-  const getFilteredOptions = (key: keyof FiltringValues) => {
-    return filterValues[key]?.filter(
-      (option) => !activeFilters[key]?.includes(option)
-    );
-  };
+
+
 
   return (
     <Slide
@@ -67,7 +61,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           /> */}
 
           <SortedGroupedSelect
-          options={ getFilteredOptions('category')}
+          options={ getFilteredOptions('category',filterValues,activeFilters)}
           // getFilteredOptions={getFilteredOptions}
             // filterName={ "category" }
             label={"kategorie"}
@@ -79,7 +73,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={ getFilteredOptions('genres')}
+            options={ getFilteredOptions('genres',filterValues,activeFilters)}
           // getFilteredOptions={getFilteredOptions}
             // filterName={ "genres" }
             label={"žánry"}
@@ -90,7 +84,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Autor: {activeFilters.author || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={ getFilteredOptions('author')}
+            options={ getFilteredOptions('author',filterValues,activeFilters)}
             // getFilteredOptions={getFilteredOptions}
             // filterName={ "author" }
             label={"autor"}
