@@ -7,6 +7,7 @@ import { SearchContext } from "./context";
 import ErrorReporter from "@/utils/Announcer";
 import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 import CreditMe from "@/components/general/CreditMe";
+import { usePathname, useRouter,useSearchParams } from "next/navigation";
 
 // provides contex for the while page
 const KatalogPage = () => {
@@ -102,6 +103,17 @@ const KatalogPage = () => {
     };
     const newFilters = makeNewFilters();
     setActiveFilters(newFilters);
+    changePage(1)
+  };
+
+  const searchParams = useSearchParams();
+  const page = parseInt(searchParams.get("page") || "1", 10) || 1;
+  const pathname = usePathname();
+  const router = useRouter();
+  const changePage = (newPage: number) => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("page", newPage.toString());
+    router.push(`${pathname}?${currentQuery.toString()}`);
   };
 
   if (errorMessage) {

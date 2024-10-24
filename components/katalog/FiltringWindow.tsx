@@ -31,15 +31,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     filterValues,
   } = useSearchContext();
 
-  const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page") || "1", 10) || 1;
-  const pathname = usePathname();
-  const router = useRouter();
-  const changePage = (newPage: number) => {
-    const currentQuery = new URLSearchParams(searchParams.toString());
-    currentQuery.set("page", newPage.toString());
-    router.push(`${pathname}?${currentQuery.toString()}`);
-  };
+ 
 
   const getFilteredOptions = (key: keyof FiltringValues) => {
     return filterValues[key]?.filter(
@@ -75,8 +67,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           /> */}
 
           <SortedGroupedSelect
-          getFilteredOptions={getFilteredOptions}
-            filterName={ "category" }
+          options={ getFilteredOptions('category')}
+          // getFilteredOptions={getFilteredOptions}
+            // filterName={ "category" }
             label={"kategorie"}
             handleChange={(newVal) => handleActiveFilterChange("category", newVal)}
 
@@ -86,8 +79,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-          getFilteredOptions={getFilteredOptions}
-            filterName={ "genres" }
+            options={ getFilteredOptions('genres')}
+          // getFilteredOptions={getFilteredOptions}
+            // filterName={ "genres" }
             label={"žánry"}
             handleChange={(newVal) => handleActiveFilterChange("genres", newVal)}
           />
@@ -96,8 +90,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Autor: {activeFilters.author || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            getFilteredOptions={getFilteredOptions}
-            filterName={ "author" }
+            options={ getFilteredOptions('author')}
+            // getFilteredOptions={getFilteredOptions}
+            // filterName={ "author" }
             label={"autor"}
             handleChange={(newVal) => handleActiveFilterChange("author", newVal)}
           />
