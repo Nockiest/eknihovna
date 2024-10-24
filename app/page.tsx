@@ -38,14 +38,6 @@ export default function Home() {
         Těšíme se na vaši návštěvu!
       </Typography>
       <br />
-      <Container className="mx-auto text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
-        <Typography variant="body1">
-          Stránku vytvořil Ondřej Lukeš. Děkuji za pomoc všem co se podíleli na
-          projektu: Patriku Holbovi, Davidu Laušmanovi, prof. Bauerové a redakci
-          Peřinky.
-        </Typography>
-      </Container>
-      <OpeningHours />
       <Box mt={2} display="flex" justifyContent="center">
         <Button
           variant="contained"
@@ -57,8 +49,16 @@ export default function Home() {
           </Link>
         </Button>
       </Box>
+      <Container className="mx-auto text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
+        <Typography variant="body1">
+          Stránku vytvořil Ondřej Lukeš. Děkuji za pomoc všem co se podíleli na
+          projektu: Patriku Holbovi, Davidu Laušmanovi, prof. Bauerové a redakci
+          Peřinky.
+        </Typography>
+      </Container>
+      <OpeningHours />
 
-     <OtherProjectLinker />
+      <OtherProjectLinker />
     </Container>
   );
 }

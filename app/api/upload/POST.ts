@@ -35,7 +35,7 @@ const POST_BOOKS = async (json: any) => {
     const hasValidKeys = FirstBookKeys.every(
       (key) => bookHeaders.indexOf(key as keyof Book) >= 0
     );
-    console.log(hasValidKeys);
+    console.log('has valid keys?', hasValidKeys);
     if (!hasValidKeys) {
       return NextResponse.json(
         {

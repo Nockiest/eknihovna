@@ -12,8 +12,16 @@ export const PrimaryButton = styled(Button)(({ theme }) => ({
     backgroundColor: theme.palette.primary.dark,
   },
 }));
-
 export const SecondaryButton = styled(Button)(({ theme }) => ({
+  backgroundColor: theme.palette.secondary.light,
+  color: theme.palette.secondary.contrastText,
+  zIndex: 0,
+  '&:hover': {
+    backgroundColor: theme.palette.secondary.dark,
+  },
+}));
+
+export const DangerButton = styled(Button)(({ theme }) => ({
   backgroundColor: theme.palette.secondary.main,
   color: theme.palette.secondary.contrastText,
   zIndex: 0,
@@ -47,21 +55,13 @@ export const NavbarButton = styled(Button)(({ theme }) => ({
 }
 ));
 
-export const DangerButton = styled(Button)(({ theme }) => ({
-  backgroundColor: theme.palette.error.main,
-  color: theme.palette.error.contrastText,
-  zIndex: 0,
-  '&:hover': {
-    backgroundColor: theme.palette.error.dark,
-  },
-}));
 
 
 const ThemedButtons = () => {
   return (
     <div className="space-x-4 z-0">
       <PrimaryButton variant="contained">Primary Button</PrimaryButton>
-      <SecondaryButton variant="contained">Secondary Button</SecondaryButton>
+      <DangerButton variant="contained">Secondary Button</DangerButton>
       <NavbarButton variant="contained" className='MuiButton-containedPrimary' >Navbar</NavbarButton>
       {/*ading this makes the button look activve =>'MuiButton-containedPrimary' */}
     </div>

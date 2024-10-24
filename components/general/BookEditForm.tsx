@@ -1,4 +1,4 @@
-import { PrimaryButton } from "@/theme/buttons/Buttons";
+import { PrimaryButton,  SecondaryButton } from "@/theme/buttons/Buttons";
 import StyledInput from "@/theme/input/Input";
 import { Book } from "@/types/types";
 import { Box, Checkbox } from "@mui/material";
@@ -42,9 +42,9 @@ const BookEditForm = ({
             className="w-3/4"
           />
         </Box>
-        <PrimaryButton type="button" onClick={generateNewUUID} className="mb-4">
+        <SecondaryButton type="button" onClick={generateNewUUID} className="mb-4">
           Vygenerovat nové ID
-        </PrimaryButton>
+        </SecondaryButton>
         {[
           { label: "Název", name: "name", type: "text", value: book.name },
           { label: "Autor", name: "author", type: "text", value: book.author },

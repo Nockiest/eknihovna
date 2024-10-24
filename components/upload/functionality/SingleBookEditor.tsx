@@ -7,6 +7,7 @@ import { PrimaryButton } from "@/theme/buttons/Buttons";
 import BookEditForm from "@/components/general/BookEditForm";
 import { Box, Input, List, ListItemText, Typography } from "@mui/material";
 import { v4 as uuidv4 } from "uuid";
+import SortedGroupedSelect from "@/components/katalog/SortedSelect";
 
 const SingleBookEditor = () => {
   const [bookId, setBookId] = useState<string>("");
@@ -25,7 +26,7 @@ const SingleBookEditor = () => {
         defaultFilters, // defaultFilters or appropriate filter object
         1,
         10000000,
-        bookId.trim(),
+        bookId.trim()
       );
 
       response.length > 0 ? setBook(response[0]) : alert("Book not found");
@@ -37,7 +38,7 @@ const SingleBookEditor = () => {
     }
   };
 
-  // Handle the book data change
+    // this is dupliacted fix it immidiately!!!!!!
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     let newValue: string | string[] | boolean | number = value;
@@ -53,7 +54,7 @@ const SingleBookEditor = () => {
 
     if (!book) {
       // If book is null, initialize a new book object
-      const newBook: Book = {  ...emptyBook,id: uuidv4(), }
+      const newBook: Book = { ...emptyBook, id: uuidv4() };
       setBook(newBook);
     } else {
       // Update existing book object
@@ -87,21 +88,21 @@ const SingleBookEditor = () => {
   };
 
   // Initialize a new book with a new UUID and empty values
-  const createNewBook = () => {
-    const newBook: Book = {  ...emptyBook,id: uuidv4(), }
-    setBook(newBook);
-    setBookId(''); // Clear the book ID input field
-  };
 
+  const handleKeyPress = (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      fetchBook();
+    }
+  };
   return (
-    <Box className="mx-16 flex flex-row  gap-2 m-4 overflow-y-auto">
+    <Box className="mx-16 flex flex-row  gap-2 m-4 overflow-y-auto" onKeyUp={(e) => handleKeyPress(e as unknown as KeyboardEvent)  }>
       <Box>
         <Typography variant="h4">Upravit/Přidat jednu knihu</Typography>
 
-        <PrimaryButton onClick={createNewBook} disabled={loading}>
-          Vytvořit Novou Knihu
-        </PrimaryButton>
-        <Input
+
+
+    {/* <SortedGroupedSelect filterName={"name"} label={"jméno knihy v databázi"} handleChange={}/> */}
+        {/* <Input
           type="text"
           className="w-full my-2"
           placeholder="Nebo vepsat ID knihy v databázi"
@@ -109,22 +110,16 @@ const SingleBookEditor = () => {
           onChange={(e) => setBookId(e.target.value)}
         />
         {bookId && (
-          <PrimaryButton onClick={fetchBook} disabled={loading}>
-            Stáhnout knihu podle ID
+          <PrimaryButton
+            onClick={fetchBook}
+
+          >
+            Zobrazit knihu podle ID
           </PrimaryButton>
-        )}
+        )} */}
 
         {loading && <p>Načítání...</p>}
 
-        <Box>
-          <Typography variant="h6"> Návod vytvoření nové knihy </Typography>
-          <List>
-            <ListItemText primary="kliněte na vytvořit knihu" />
-            <ListItemText primary="vyplňte políčka podle údajů vaší knihy" />
-            <ListItemText primary="klikněte na nahrát knihu" />
-            <ListItemText primary="kniha by měla být přidána do databáze" />
-          </List>
-        </Box>
 
         <Box>
           <Typography variant="h6">Návod upravení existující knihy</Typography>

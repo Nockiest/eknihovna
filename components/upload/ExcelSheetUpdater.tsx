@@ -12,6 +12,7 @@ import BookFetcher from "./functionality/BookFetcher";
 import SingleBookDeleter from "./functionality/SingleBookDeleter";
 import CustomButtonGroup from "../general/styling/ButtonGroup";
 import { splited_emails } from "@/data/values";
+import SingleBookCreator from "./functionality/SingleBookCreator";
 export const revalidate = 0;
 
 const ExcelSheetUpdater = () => {
@@ -61,7 +62,10 @@ const ExcelSheetUpdater = () => {
       case 1:
         return <SingleBookEditor />;
       case 2:
+        return <SingleBookCreator />;
+      case 3:
         return <SingleBookDeleter />;
+
 
       default:
         return null;
@@ -74,7 +78,8 @@ const ExcelSheetUpdater = () => {
           buttons={[
             { text: "Hromadné nahrání", onClick: () => setActiveTab(0) },
             { text: "Editovat Knihu", onClick: () => setActiveTab(1) },
-            { text: "Smazat Knihu", onClick: () => setActiveTab(2) },
+            { text: "Vytvořit Knihu", onClick: () => setActiveTab(2) },
+            { text: "Smazat Knihu", onClick: () => setActiveTab(3) },
           ]}
           activeIndex={activeTab}
           setActiveIndex={setActiveTab}
