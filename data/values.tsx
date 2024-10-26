@@ -56,6 +56,7 @@ export const testBook:Book = {
   formaturita: true, // Replace with true or false depending on whether it's formal
   available: true, // Replace with true or false depending on availability
   rating: 5, // Replace with the actual rating
+  isbn: '9780140449136'
 };
 export const emptyBook: Book = {
   id: "1",
