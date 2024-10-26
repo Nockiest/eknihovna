@@ -3,6 +3,7 @@ import { emptyBook } from "@/data/values";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { Book } from "@/types/types";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
+import updateBookProperty from "@/utils/updateBookProperty";
 import { Box, List, ListItemText, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
@@ -12,8 +13,8 @@ const SingleBookCreator = () => {
   const uploadBook = async () => {
     try {
       console.log(book);
-      await postDataToUpload([book]);
-      alert("Kniha úspěšně aktualizována");
+      const response = await postDataToUpload([book]);
+      alert("Kniha úspěšně vytvořena,"+response.message );
     } catch (err) {
       console.error("Error updating book:", err);
       alert("Selhal jsem v aktualizování knihy:" + err);
@@ -21,32 +22,18 @@ const SingleBookCreator = () => {
     }
   };
   // this is dupliacted fix it immidiately!!!!!!
+
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    let newValue: string | string[] | boolean | number = value;
-
-    // Adjust value based on input type
-    if (type === "checkbox") {
-      newValue = checked;
-    } else if (name === "genres") {
-      newValue = value.split(",").map((v) => v.trim());
-    } else if (type === "number") {
-      newValue = value ? parseInt(value, 10) : -1; // Handling numeric input, default to -1 if empty
-    }
 
     if (!book) {
-      // If book is null, initialize a new book object
-      const newBook: Book = { ...emptyBook, id: uuidv4() };
+      const newBook: Book = updateBookProperty(name, value, type, checked, null);
       setBook(newBook);
     } else {
-      // Update existing book object
       setBook((prevBook) => {
-        if (!prevBook) throw new Error("kniha zatím nebyla vytvořena"); // Early return if prevBook is unexpectedly null
-        return {
-          ...prevBook,
-          [name]: newValue,
-          id: name === "id" ? String(newValue) : book.id ? book.id : uuidv4(), // Ensure id is always a string
-        };
+        if (!prevBook) throw new Error("kniha zatím nebyla vytvořena");
+        return updateBookProperty(name, value, type, checked, prevBook);
       });
     }
   };

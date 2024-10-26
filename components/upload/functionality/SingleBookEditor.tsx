@@ -7,7 +7,8 @@ import BookEditForm from "@/components/general/BookEditForm";
 import { Box, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { emptyBook } from "@/data/values";
-import {v4 as uuidv4} from 'uuidv4'
+import { v4 as uuidv4 } from "uuid";
+import updateBookProperty from "@/utils/updateBookProperty";
 const initialState = {
   idle: true,
   loading: false,
@@ -61,50 +62,34 @@ const SingleBookEditor = () => {
     }
   };
   const handleBookSelection = (selectedBookId: string) => {
-    const selectedBook:Book| undefined= matchingBooks.find(book => book.id === selectedBookId)
+    const selectedBook: Book | undefined = matchingBooks.find(
+      (book) => book.id === selectedBookId
+    );
     if (!selectedBook) {
-      console.error("Book not found")
-      return
+      console.error("Book not found");
+      return;
     }
     dispatch({ type: "SET_EDIT_BOOK", payload: selectedBook });
     console.log(selectedBook);
     setEditedBook(selectedBook);
   };
 
-    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
-    let newValue: string | string[] | boolean | number = value;
-
-    // Adjust value based on input type
-    if (type === "checkbox") {
-      newValue = checked;
-    } else if (name === "genres") {
-      newValue = value.split(",").map((v) => v.trim());
-    } else if (type === "number") {
-      newValue = value ? parseInt(value, 10) : -1; // Handling numeric input, default to -1 if empty
-    }
 
     if (!editedBook) {
-      // If book is null, initialize a new book object
-      const newBook: Book = { ...emptyBook, id: uuidv4() };
+      const newBook: Book = updateBookProperty(name, value, type, checked, null);
       setEditedBook(newBook);
     } else {
-      // Update existing book object
       setEditedBook((prevBook) => {
-        if (!prevBook) throw new Error("kniha zatím nebyla vytvořena"); // Early return if prevBook is unexpectedly null
-        return {
-          ...prevBook,
-          [name]: newValue,
-          id: name === "id" ? String(newValue) : editedBook.id ? editedBook.id : uuidv4(), // Ensure id is always a string
-        };
+        if (!prevBook) throw new Error("kniha zatím nebyla vytvořena");
+        return updateBookProperty(name, value, type, checked, prevBook);
       });
     }
   };
   // Update the book in the database
   const updateBook = async () => {
-    debugger;
     if (!editedBook) return;
-
 
     try {
       console.log(editedBook);
@@ -123,12 +108,12 @@ const SingleBookEditor = () => {
         onChange={(e) => setSearchTerm(e.target.value)}
       />
       <PrimaryButton onClick={handleSearch}>Search</PrimaryButton>
-      {state.loading && <div>Loading...</div>}
+      {state.loading && <Typography>Načítám...</Typography>}
       {matchingBooks.length > 0 && (
         <Select
-        sx ={{
-          border: 'black 2px solid'
-        }}
+          sx={{
+            border: "black 2px solid",
+          }}
           value={editedBook?.id || ""}
           onChange={(event) => {
             handleBookSelection(event.target.value as string);
@@ -147,17 +132,15 @@ const SingleBookEditor = () => {
       )}
 
       {editedBook && (
-          <Box>
-            <Typography variant="h4">
-                Upravit knihu
-            </Typography>
-            <BookEditForm
-              book={editedBook}
-              handleInputChange={handleInputChange}
-              updateBook={updateBook}
-            />
-          </Box>
-        )}
+        <Box>
+          <Typography variant="h4">Upravit knihu</Typography>
+          <BookEditForm
+            book={editedBook}
+            handleInputChange={handleInputChange}
+            updateBook={updateBook}
+          />
+        </Box>
+      )}
     </Box>
   );
 };
