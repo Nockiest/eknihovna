@@ -7,8 +7,7 @@ export const revalidate = 30;
 
 // GET request to fetch a single book by ID
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
-  console.log( params)
-    try {
+  try {
     const { id } = params;
 
     if (!id) {
