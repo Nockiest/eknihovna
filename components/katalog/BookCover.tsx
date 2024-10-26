@@ -6,12 +6,11 @@ import { useEffect, useState } from "react";
 import getBookCoverURL from "@/utils/getBookCover";
 import { useSearchContext } from "@/app/katalog/context";
 interface BookCoverProps {
-  width: string;
   isbn: string ;
   bookId: string;
 }
 
-const BookCover: React.FC<BookCoverProps> = ({ width, isbn, bookId }) => {
+const BookCover: React.FC<BookCoverProps> = ({   isbn, bookId }) => {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const { addToQueue, resolvedItems } = useSearchContext();
@@ -44,15 +43,15 @@ const BookCover: React.FC<BookCoverProps> = ({ width, isbn, bookId }) => {
       p={2}
       sx={{
         position: "relative",
-        width: width,
-        height: `auto`, // Calculate height to maintain 3:4 aspect ratio
+        width: '100px',
+        height: `50%`, // Calculate height to maintain 3:4 aspect ratio
         "& img": {
           objectFit: "cover",
           width: "100%",
           height: "100%",
         },
-        margin: "0 auto",
-        flexGrow: "1",
+        margin: "0 0",
+        // flexGrow: "1",
       }}
     >
       <Image
@@ -62,7 +61,7 @@ const BookCover: React.FC<BookCoverProps> = ({ width, isbn, bookId }) => {
       />
       {failedFetchingCover && (
         <Typography
-          variant="body1"
+          variant="body2"
           sx={{
             position: "absolute",
             // top: '50%',

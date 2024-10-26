@@ -132,7 +132,7 @@ const BookCatalog: React.FC = () => {
         </IconButton>
         <SortedGroupedSelect
           options={getFilteredOptions('name', filterValues, activeFilters)}
-          label={"název"}
+          label={"Vyhledat"}
           handleChange={(newVal) => {
             setCurrentSearchValue(newVal)
             handleActiveFilterChange("name", newVal)}}
@@ -168,11 +168,11 @@ const BookCatalog: React.FC = () => {
               <Grid
                 className="flex justify-center items-center flex-grow m-0 mx-auto h-auto"
                 item
-                xs={12}
-                sm={6}
-                md={4}
-                lg={3}
-                xl={2}
+                xs={6}
+                sm={4}
+                md={3}
+                lg={2}
+                xl={1}
                 key={index}
                 alignItems={"begin"}
               >

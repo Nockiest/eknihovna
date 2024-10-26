@@ -8,12 +8,14 @@ import StarRow from "./starRow/StarRow";
 import CategoryChip from "./CategoryChip";
 import LineWithCircle from "../general/styling/LineWithCircle";
 import {v4 as uuidv4} from 'uuid'
+import { useRouter } from "next/navigation";
 type BookPreviewProps = {
   book: Book;
 };
 const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
+  const router = useRouter()
   const {
-    id = uuidv4(),
+    id  ,
     bookCoverURL = "",
     available = false,
     author = "Autor neznámý",
@@ -26,7 +28,10 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={` h-[400px] mx-auto w-[260px] items-center  `}
+      className={` h-[280px] mx-auto px-0 w-[140px] items-center cursor-pointer `}
+      onClick={() => {
+        router.push(`/katalog/${id}`);
+      }}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: truthyValues.includes(available)
@@ -40,20 +45,21 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         sx={{ backgroundColor: "#ffffff" }}
         className=" flex flex-col items-center justify-around h-full"
       >
-        <BookCover width={"200px"} isbn={isbn} bookId={id} />
+        <BookCover  isbn={isbn} bookId={id} />
         <Box
 
           className=" flex grow-0 flex-col items-center justify-around w-full  "
         >
-          <Typography variant="h6" align="center" sx={{
+          <Typography variant="body2" align="center" sx={{
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
             width: "100%", // Set the width as needed
+            fontWeight: '900'
           }}>
             {name}
           </Typography>
-          <Typography variant="body1" align="center" sx={{
+          <Typography variant="body2" align="center" sx={{
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",

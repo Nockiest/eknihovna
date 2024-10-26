@@ -22,12 +22,7 @@ const useQueue = (delay: number, callback: (value: any) => Promise<any>) => {
     if (resolvedItems[item.id]) {
       return;
     }
-    // if (queue.length === 0) {
-    //   return;
-    // }
-    // const currentItem = queue[0]; // Get the first item in the queue
-
-    // console.log(currentItem, queue);
+    
     const [error, result] = await catchError(callback(item.value)); //await callback(currentItem.value); // Call the callback with the item's value
 
     if (result) {
