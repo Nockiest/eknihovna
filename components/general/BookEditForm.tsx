@@ -1,4 +1,4 @@
-import { PrimaryButton,  SecondaryButton } from "@/theme/buttons/Buttons";
+import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import StyledInput from "@/theme/input/Input";
 import { Book } from "@/types/types";
 import { Box, Checkbox } from "@mui/material";
@@ -16,7 +16,7 @@ const BookEditForm = ({
   submitBook,
 }: BookEditFormProps) => {
   const generateNewUUID = () => {
-    console.log("Generating new  id")
+    console.log("Generating new  id");
     const newUUID = uuidv4();
 
     // Create a synthetic event to update the UUID using handleInputChange
@@ -29,66 +29,93 @@ const BookEditForm = ({
 
     handleInputChange(event); // Use handleInputChange to set the new UUID
   };
-  return(
-      <form className="border-2 border-gray-300 p-4 rounded-lg">
-        <Box className="flex items-center mb-4">
-          <label className="w-1/4 text-right pr-4">ID:</label>
-          <input
-            type="text"
-            name="id"
-            value={book.id}
-            readOnly
-
+  return (
+    <form className="border-2 border-gray-300 p-4 rounded-lg">
+      <Box className="flex items-center mb-4">
+        <label className="w-1/4 text-right pr-4">ID:</label>
+        <input
+          type="text"
+          name="id"
+          value={book.id}
+          readOnly
+          className="w-3/4"
+        />
+      </Box>
+      <SecondaryButton type="button" onClick={generateNewUUID} className="mb-4">
+        Vygenerovat nové ID
+      </SecondaryButton>
+      {[
+        { label: "Název", name: "name", type: "text", value: book.name },
+        { label: "Autor", name: "author", type: "text", value: book.author },
+        {
+          label: "Kategorie",
+          name: "category",
+          type: "text",
+          value: book.category,
+        },
+        {
+          label: "Žánry (odělené čárkou)",
+          name: "genres",
+          type: "text",
+          value: book.genres ? book.genres.join(", ") : "",
+        },
+        {
+          label: "Signatura",
+          name: "signatura",
+          type: "text",
+          value: book.signatura,
+        },
+        {
+          label: "Způsob Získání",
+          name: "zpusob_ziskani",
+          type: "text",
+          value: book.zpusob_ziskani,
+        },
+        {
+          label: "isbn bez pomlček",
+          name: "isbn",
+          type: "string",
+          value: book.isbn,
+        },
+      ].map((field) => (
+        <div key={field.name} className="flex items-center mb-4">
+          <label className="w-1/4 text-right pr-4">{field.label}:</label>
+          <StyledInput
+            type={field.type}
+            name={field.name}
+            value={field.value || ""}
+            onChange={handleInputChange}
             className="w-3/4"
           />
-        </Box>
-        <SecondaryButton type="button" onClick={generateNewUUID} className="mb-4">
-          Vygenerovat nové ID
-        </SecondaryButton>
-        {[
-          { label: "Název", name: "name", type: "text", value: book.name },
-          { label: "Autor", name: "author", type: "text", value: book.author },
-          { label: "Kategorie", name: "category", type: "text", value: book.category },
-          { label: "Žánry (odělené čárkou)", name: "genres", type: "text", value: book.genres ? book.genres.join(", ") : "" },
-          { label: "Signatura", name: "signatura", type: "text", value: book.signatura },
-          { label: "Způsob Získání", name: "zpusob_ziskani", type: "text", value: book.zpusob_ziskani },
-          { label: "isbn", name: "isbn", type: "text", value: book.isbn },
-
-        ].map((field) => (
-          <div key={field.name} className="flex items-center mb-4">
-            <label className="w-1/4 text-right pr-4">{field.label}:</label>
-            <StyledInput
-              type={field.type}
-              name={field.name}
-              value={field.value || ""}
-              onChange={handleInputChange}
-              className="w-3/4"
-            />
-          </div>
-        ))}
-        <div className="flex items-center mb-4">
-          <label className="w-1/4 text-right pr-4">Maturitní:</label>
-          <Checkbox
-            name="formaturita"
-            checked={book.formaturita || false}
-            onChange={handleInputChange}
-            className="ml-4"
-          />
         </div>
-        <div className="flex items-center mb-4">
-          <label className="w-1/4 text-right pr-4">Dostupná:</label>
-          <Checkbox
-            name="available"
-            checked={book.available || false}
-            onChange={handleInputChange}
-            className="ml-4"
-          />
-        </div>
-        <PrimaryButton type="button" onClick={() => submitBook()} className="mt-4">
-          Nahrát knihu
-        </PrimaryButton>
-      </form>
-    )
-  };
+      ))}
+      <div className="flex items-center mb-4">
+        <label className="w-1/4 text-right pr-4">Maturitní:</label>
+        <Checkbox
+          name="formaturita"
+          checked={book.formaturita || false}
+          onChange={handleInputChange}
+          className="ml-4"
+        />
+      </div>
+      <div className="flex items-center mb-4">
+        <label className="w-1/4 text-right pr-4">Dostupná:</label>
+        <Checkbox
+          name="available"
+          checked={book.available || false}
+          onChange={handleInputChange}
+          className="ml-4"
+        />
+      </div>
+      <PrimaryButton
+        type="button"
+        onClick={() => submitBook()}
+        className="mt-4"
+      >
+        Nahrát knihu
+      </PrimaryButton>
+    </form>
+  );
+};
 
 export default BookEditForm;

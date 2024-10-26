@@ -6,7 +6,7 @@ import {
   upsertPrismaBook,
 } from "@/lib/prisma";
 import { Book } from "@/types/types";
-import {  NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";
 
 export const maxDuration = 60; // This function can run for a maximum of 60 seconds
@@ -35,7 +35,7 @@ const POST_BOOKS = async (json: any) => {
     const hasValidKeys = FirstBookKeys.every(
       (key) => bookHeaders.indexOf(key as keyof Book) >= 0
     );
-    console.log('has valid keys?', hasValidKeys);
+    console.log("has valid keys?", hasValidKeys);
     if (!hasValidKeys) {
       return NextResponse.json(
         {
@@ -109,7 +109,10 @@ const POST_BOOKS = async (json: any) => {
             item.rating >= 0
               ? Number(item.rating)
               : null,
-          isbn: typeof item.isbn === "string" ? String(item.isbn.trim()) : null,
+          isbn:
+            typeof item.isbn === "number" || typeof item.isbn === "string"
+              ? String(item.isbn.trim())
+              : null,
         };
       });
 
@@ -136,7 +139,10 @@ const POST_BOOKS = async (json: any) => {
     return NextResponse.json(
       {
         success: true,
-        message: `Data úspěšně nahrána, počet knih: ${totalBooks}. ${rejectedRows.length > 0 && 'Tyto knihy se bohužel nepodařilo nahrát' + rejectedRows.join(', ')} `,
+        message: `Data úspěšně nahrána, počet knih: ${totalBooks}. ${
+          rejectedRows.length > 0 &&
+          "Tyto knihy se bohužel nepodařilo nahrát" + rejectedRows.join(", ")
+        } `,
         headers: {
           ...noCacheHeaders,
         },
