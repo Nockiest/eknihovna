@@ -4,7 +4,7 @@ import { Book } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
 import BookEditForm from "@/components/general/BookEditForm";
-import { Box, MenuItem, Select, TextField, Typography } from "@mui/material";
+import { Box, List, ListItemText, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import SearchIcon from "@mui/icons-material/Search";
 import updateBookProperty from "@/utils/updateBookProperty";
@@ -82,7 +82,13 @@ const SingleBookEditor = () => {
     const { name, value, type, checked } = e.target;
 
     if (!editedBook) {
-      const newBook: Book = updateBookProperty(name, value, type, checked, null);
+      const newBook: Book = updateBookProperty(
+        name,
+        value,
+        type,
+        checked,
+        null
+      );
       setEditedBook(newBook);
     } else {
       setEditedBook((prevBook) => {
@@ -105,48 +111,66 @@ const SingleBookEditor = () => {
     }
   };
   return (
-    <Box className="flex flex-col gap-4 mx-auto">
-      <TextField
-        label="Vyhledat Podle Názvu"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <PrimaryButton onClick={handleSearch} disabled={searchTerm.length === 0}> <SearchIcon /> Vyhledat</PrimaryButton>
-      {state.loading && <Typography>Načítám...</Typography>}
-      {matchingBooks.length > 0 && (
-        <Select
-          sx={{
-            border: "black 2px solid",
-          }}
-          value={editedBook?.id || ""}
-          onChange={(event) => {
-            handleBookSelection(event.target.value as string);
-          }}
-          displayEmpty
+    <Box className="flex flex-row mx-auto align-center gap-4">
+      <Box className="flex flex-col gap-4 mx-auto">
+        <TextField
+          label="Vyhledat Podle Názvu"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+        />
+        <PrimaryButton
+          onClick={handleSearch}
+          disabled={searchTerm.length === 0}
         >
-          <MenuItem value="" disabled>
-            Vyberte knihu
-          </MenuItem>
-          {matchingBooks.map((book) => (
-            <MenuItem key={book.id} value={book.id}>
-              {book.name}
+          {" "}
+          <SearchIcon /> Vyhledat
+        </PrimaryButton>
+        {state.loading && <Typography>Načítám...</Typography>}
+        {matchingBooks.length > 0 && (
+          <Select
+            sx={{
+              border: "black 2px solid",
+            }}
+            value={editedBook?.id || ""}
+            onChange={(event) => {
+              handleBookSelection(event.target.value as string);
+            }}
+            displayEmpty
+          >
+            <MenuItem value="" disabled>
+              Vyberte knihu
             </MenuItem>
-          ))}
-        </Select>
-      )}
+            {matchingBooks.map((book) => (
+              <MenuItem key={book.id} value={book.id}>
+                {book.name}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
 
-      {editedBook && (
-        <Box>
-          <Typography variant="h4">Upravit knihu</Typography>
-          <BookEditForm
-            book={editedBook}
-            handleInputChange={handleInputChange}
-            submitBook={submitBook}
-          />
-        </Box>
-      )}
+        {editedBook && (
+          <Box>
+            <Typography variant="h4">Upravit knihu</Typography>
+            <BookEditForm
+              book={editedBook}
+              handleInputChange={handleInputChange}
+              submitBook={submitBook}
+            />
+          </Box>
+        )}
+      </Box>
+      <Box>
+        <Typography variant="h6"> Návod na upravení knihy </Typography>
+        <List>
+          <ListItemText primary="zadejte název knihy nebo její část" />
+          <ListItemText primary="počkejte, až se zobrazí další výběrové pole" />
+          <ListItemText primary="z nabídky vyberte knihu, kterou jste měli na mysli" />
+          <ListItemText primary="ve formuláři upravit knihu zadejte nové údaje" />
+          <ListItemText primary="nahrajte knihu, čímž přepíšete údaje knihy v databázi" />
+        </List>
+      </Box>
     </Box>
   );
 };
 
-export default SingleBookEditor
+export default SingleBookEditor;
