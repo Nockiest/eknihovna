@@ -31,7 +31,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
     >
       <Link href={button.URL}>{button.label}</Link>
     </NavbarButton>
-  );
+  );//
   return (
     <Paper
       elevation={3}
