@@ -20,6 +20,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     genres = [],
     formaturita = false,
     rating = -1,
+    isbn = "",
   }: Book = book;
 
   return (
@@ -38,12 +39,25 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         sx={{ backgroundColor: "#ffffff" }}
         className=" flex flex-col items-center justify-around h-full"
       >
-        <BookCover width={"200px"} isbn ={"9780140449136"} />
-        <Box className=" flex grow-0 flex-col items-center justify-around w-full  ">
-          <Typography variant="h6" align="center">
+        <BookCover width={"200px"} isbn={isbn} />
+        <Box
+
+          className=" flex grow-0 flex-col items-center justify-around w-full  "
+        >
+          <Typography variant="h6" align="center" sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            width: "100%", // Set the width as needed
+          }}>
             {name}
           </Typography>
-          <Typography variant="body1" align="center">
+          <Typography variant="body1" align="center" sx={{
+            overflow: "hidden",
+            textOverflow: "ellipsis",
+            whiteSpace: "nowrap",
+            width: "100%", // Set the width as needed
+          }}>
             {author ? author : "Neznámý autor"}
           </Typography>
           <LineWithCircle />
