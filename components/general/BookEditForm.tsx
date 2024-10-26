@@ -29,6 +29,7 @@ const BookEditForm = ({
 
     handleInputChange(event); // Use handleInputChange to set the new UUID
   };
+  //
   return (
     <form className="border-2 border-gray-300 p-4 rounded-lg">
       <Box className="flex items-center mb-4">
