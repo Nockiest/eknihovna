@@ -76,7 +76,6 @@ const BookCatalog: React.FC = () => {
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   const fetchBooks = async () => {
-
       const logic = async () => {
         dispatch({ type: "FETCH_INIT" });
 
@@ -113,7 +112,6 @@ const BookCatalog: React.FC = () => {
   };
   // should fetch only books based on page
   useEffect(() => {
-
     fetchBooks();
   }, [page, activeFilters]);
 
@@ -131,7 +129,6 @@ const BookCatalog: React.FC = () => {
           <SearchIcon />
         </IconButton>
         <SortedGroupedSelect
-          // filterName={"name"}
           options={getFilteredOptions('name', filterValues, activeFilters)}
           label={"název"}
           handleChange={(newVal) => handleActiveFilterChange("name", newVal)}

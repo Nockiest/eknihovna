@@ -25,7 +25,7 @@ export function buildPrismaFilter(activeFilters: Filters) {
   }
   // Handle the 'name' filter
   if (activeFilters.name) {
-    where.OR = [
+    where.AND = [
       {
         name: {
           startsWith: activeFilters.name,
