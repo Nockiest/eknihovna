@@ -7,7 +7,7 @@ import {
 } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { noCacheHeaders } from "@/data/values";
-export const revalidate = 0;
+export const revalidate = 30;
 export async function POST(req: NextRequest) {
   try {
     const { filters, page = 1, limit = 10    } = await req.json();

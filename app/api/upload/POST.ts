@@ -1,4 +1,4 @@
-import { bookHeaders, noCacheHeaders, truthyValues } from "@/data/values";
+import { bookHeaders, corsHeaders, noCacheHeaders, truthyValues } from "@/data/values";
 import {
   countPrismaBooks,
   craeteManyPrismaBooks,
@@ -24,6 +24,7 @@ const POST_BOOKS = async (json: any) => {
           error: "Špatný formát, očekával jsem tabulku knížek.",
           headers: {
             ...noCacheHeaders,
+            ...corsHeaders
           },
         },
         { status: 400 }
