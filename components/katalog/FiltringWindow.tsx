@@ -49,11 +49,13 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
 
         <Stack spacing={2} className="m-2 mt-8 center-flex flex-col mx-4">
           <SortedGroupedSelect
-            options={getFilteredOptions(
-              "category",
-              filterValues,
-              activeFilters
-            )}
+            // options={getFilteredOptions(
+            //   "category",
+            //   filterValues,
+            //   activeFilters
+            // )}
+            options={filterValues['category']}
+            // columnName={"category"}
             label={"kategorie"}
             handleChange={(newVal) =>
               handleActiveFilterChange("category", newVal)
@@ -64,7 +66,8 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={getFilteredOptions("genres", filterValues, activeFilters)}
+           options={filterValues['genres']}
+
             label={"žánry"}
             handleChange={(newVal) =>
               handleActiveFilterChange("genres", newVal)
@@ -75,7 +78,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Autor: {activeFilters.author || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={getFilteredOptions("author", filterValues, activeFilters)}
+           options={filterValues['author']}
             label={"autor"}
             handleChange={(newVal) =>
               handleActiveFilterChange("author", newVal)

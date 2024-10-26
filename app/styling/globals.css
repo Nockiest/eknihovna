@@ -1,11 +1,11 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-@import url("variables.css");
+ /* @import url("variables.css");
 @import url("tailwind.css");
-@import url("hamburger.css");
+@import url("hamburger.css"); */
 
-
+/*
 @layer utilities {
   .text-balance {
     text-wrap: balance;
@@ -14,7 +14,8 @@
 
 @import url("https://fonts.googleapis.com/css?family=Poppins:700|Poppins:400");
 
-body {
+
+  body {
   font-family: "Poppins";
   font-weight: 400;
 
@@ -26,7 +27,6 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
-
 h1,
 h2,
 h3,
@@ -38,7 +38,7 @@ h5 {
 
 html {
   font-size: 100%;
-} /* 16px */
+}    */
 
 /* h1 {
   font-size: 4.21rem; // 67.36px

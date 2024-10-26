@@ -71,38 +71,39 @@ const BookCatalog: React.FC = () => {
     handleActiveFilterChange,
   } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
-  const [currentSearchValue, setCurrentSearchValue] = useState<string | null>(null);
+  const [currentSearchValue, setCurrentSearchValue] = useState<string | null>(
+    null
+  );
   const searchParams = useSearchParams();
 
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   const fetchBooks = async () => {
+    const logic = async () => {
+      dispatch({ type: "FETCH_INIT" });
 
-      const logic = async () => {
-        dispatch({ type: "FETCH_INIT" });
+      // try {
+      const allPossibleBooks = await fetchFilteredBooks(activeFilters);
+      console.log("All filtered books:", allPossibleBooks.length);
 
-        // try {
-          const allPossibleBooks = await fetchFilteredBooks(activeFilters);
-          console.log("All filtered books:", allPossibleBooks.length);
-
-          // Calculate the current page's books using the offset
-          const startIndex = (page - 1) * 24;
-          const endIndex = startIndex + 24;
-          const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
-          console.log(
-            allPossibleBooks.length,
-            currentBooks.length,
-            startIndex,
-            endIndex
-          );
-          dispatch({
-            type: "FETCH_SUCCESS",
-            payload: {
-              books: currentBooks,
-              totalBooks: allPossibleBooks.length,
-            },
-          });
-      }
+      // Calculate the current page's books using the offset
+      const startIndex = (page - 1) * 24;
+      const endIndex = startIndex + 24;
+      const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
+      console.log(
+        allPossibleBooks.length,
+        currentBooks.length,
+        startIndex,
+        endIndex
+      );
+      dispatch({
+        type: "FETCH_SUCCESS",
+        payload: {
+          books: currentBooks,
+          totalBooks: allPossibleBooks.length,
+        },
+      });
+    };
     const [error, res] = await catchError(logic());
     if (error) {
       console.log(error?.message);
@@ -128,14 +129,17 @@ const BookCatalog: React.FC = () => {
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
         <IconButton>
-          <SearchIcon onClick={() => handleActiveFilterChange("name", currentSearchValue)}/>
+          <SearchIcon
+            onClick={() => handleActiveFilterChange("name", currentSearchValue)}
+          />
         </IconButton>
         <SortedGroupedSelect
-          options={getFilteredOptions('name', filterValues, activeFilters)}
+          options={filterValues["name"]}
           label={"Vyhledat"}
           handleChange={(newVal) => {
-            setCurrentSearchValue(newVal)
-            handleActiveFilterChange("name", newVal)}}
+            setCurrentSearchValue(newVal);
+            handleActiveFilterChange("name", newVal);
+          }}
           handleInputChange={(newVal) => setCurrentSearchValue(newVal)}
           // useUserInputedValue=
         />

@@ -12,18 +12,16 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
   isOpen,
   toggleNav,
 }) => {
-
-
   const renderButton = (button: NavButton, isActive: boolean) => (
     <li key={button.URL} className="nav__item mx-auto">
-              <Link
-                href={button.URL}
-                className="nav__link text-current hover:white text-5xl text-center no-underline font-bold"
-                onClick={toggleNav}
-              >
-                {button.label}
-              </Link>
-            </li>
+      <Link
+        href={button.URL}
+        className="nav__link text-current hover:white text-5xl text-center no-underline font-bold"
+        onClick={toggleNav}
+      >
+        {button.label}
+      </Link>
+    </li>
   );
   return (
     <Box
@@ -32,13 +30,20 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
       } sm:hidden`}
     >
       <ul className="nav__list absolute list-none flex flex-col   items-center top-0 left-0 h-screen w-screen z-100 bg-black text-white">
-      <NavbarMapper
-      navRoutes={ navRoutes.filter(nav => nav.URL !== '/upload')}
-      renderNavStyle={'flex flex-col h-screen justify-evenly'}
-      renderButton={renderButton}
-    />
+        <NavbarMapper
+          navRoutes={navRoutes.filter((nav) => nav.URL !== "/upload")}
+          renderNavStyle={"flex flex-col h-screen justify-evenly"}
+          renderButton={renderButton}
+        />
+      </ul>
+    </Box>
+  );
+};
 
-        {/* {navRoutes
+export default HamburgerNavList;
+
+{
+  /* {navRoutes
           .filter((route) => {
             if (route.URL === "/upload" && !isAdmin) {
               return false;
@@ -56,10 +61,5 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
                 {button.label}
               </Link>
             </li>
-        )} */}
-      </ul>
-    </Box>
-  );
-};
-
-export default HamburgerNavList;
+        )} */
+}

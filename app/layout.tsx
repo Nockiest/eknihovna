@@ -17,8 +17,7 @@ export const metadata: Metadata = {
   title: "G.O. eknihovna",
   description: "Školní knihovna Gymnázia Opatov",
 };
-const NoSSRHero = dynamic(() => import("@/components/hero/Hero"), {
-  ssr: false,
+const  SSRHero = dynamic(() => import("@/components/hero/Hero"), {
 });
 export default function RootLayout({
   children,

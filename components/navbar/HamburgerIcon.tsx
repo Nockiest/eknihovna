@@ -2,6 +2,7 @@
 import React from "react";
 import Button from "@mui/material/IconButton";
 import { styled } from "@mui/material/styles";
+import HamburgerMenu from "@/theme/hamburger";
 
 interface CustomHamburgerProps {
   onClick: () => void;
@@ -39,6 +40,7 @@ const CustomHamburger: React.FC<CustomHamburgerProps> = ({
       onClick={onClick}
       aria-label={ariaLabel}
     >
+       {/* <HamburgerMenu className={"hamburger z-2  mt-6 mr-6 block relative my-4 mx-2       h-1.5 rounded-full transition-transform duration-250 ease-in-out   "}/> */}
       <HamburgerSpan className="hamburger z-2  mt-6 mr-6 block relative my-4 mx-2       h-1.5 rounded-full transition-transform duration-250 ease-in-out   ">
       </HamburgerSpan>
     </CustomIconButton>
