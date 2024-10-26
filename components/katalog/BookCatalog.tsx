@@ -15,6 +15,7 @@ import { FiltringWindow } from "./FiltringWindow";
 import SortedGroupedSelect from "./SortedSelect";
 import SearchIcon from "@mui/icons-material/Search";
 import getFilteredOptions from "@/utils/getFilteredOptions";
+import catchError from "@/utils/catchError";
 type State = {
   status: "loading" | "loadedBooks" | "error";
   shownBooks: Book[];
@@ -75,40 +76,44 @@ const BookCatalog: React.FC = () => {
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   const fetchBooks = async () => {
-    dispatch({ type: "FETCH_INIT" });
 
-    try {
-      const allPossibleBooks = await fetchFilteredBooks(activeFilters);
-      console.log("All filtered books:", allPossibleBooks.length);
+      const logic = async () => {
+        dispatch({ type: "FETCH_INIT" });
 
-      // Calculate the current page's books using the offset
-      const startIndex = (page - 1) * 24;
-      const endIndex = startIndex + 24;
-      const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
-      console.log(
-        allPossibleBooks.length,
-        currentBooks.length,
-        startIndex,
-        endIndex
-      );
-      // Dispatch the result to the state
-      dispatch({
-        type: "FETCH_SUCCESS",
-        payload: {
-          books: currentBooks,
-          totalBooks: allPossibleBooks.length,
-        },
-      });
-    } catch (err: any) {
-      console.log(err?.message);
+        // try {
+          const allPossibleBooks = await fetchFilteredBooks(activeFilters);
+          console.log("All filtered books:", allPossibleBooks.length);
+
+          // Calculate the current page's books using the offset
+          const startIndex = (page - 1) * 24;
+          const endIndex = startIndex + 24;
+          const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
+          console.log(
+            allPossibleBooks.length,
+            currentBooks.length,
+            startIndex,
+            endIndex
+          );
+          dispatch({
+            type: "FETCH_SUCCESS",
+            payload: {
+              books: currentBooks,
+              totalBooks: allPossibleBooks.length,
+            },
+          });
+      }
+    const [error, res] = await catchError(logic());
+    if (error) {
+      console.log(error?.message);
       dispatch({
         type: "FETCH_FAILURE",
-        errorMessage: err?.message || "Unknown error occurred",
+        errorMessage: error?.message || "Unknown error occurred",
       });
     }
   };
   // should fetch only books based on page
   useEffect(() => {
+
     fetchBooks();
   }, [page, activeFilters]);
 

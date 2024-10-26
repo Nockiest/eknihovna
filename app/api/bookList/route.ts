@@ -13,30 +13,6 @@ export async function POST(req: NextRequest) {
     const { filters, page = 1, limit = 10    } = await req.json();
     console.log(filters, page,  );
 
-    // if (id) {
-    //   try {
-    //     const book = await findUniquePrismaBooks(id); // await prisma.knihy.findUnique({
-
-    //     if (!book) {
-    //       return NextResponse.json(
-    //         { error: "book not found " },
-    //         { status: 400 }
-    //       );
-    //     }
-
-    //     return NextResponse.json([book], {
-    //       headers: {
-    //         ...noCacheHeaders,
-    //       },
-    //     });
-    //   } catch (error) {
-    //     console.error("Error fetching book by ID:", error);
-    //     return NextResponse.json(
-    //       { error: "Internal Server Error" },
-    //       { status: 500 }
-    //     );
-    //   }
-    // }
 
     if (!filters) {
       return NextResponse.json(
@@ -73,3 +49,29 @@ export async function POST(req: NextRequest) {
     context.prisma.$disconnect();
   }
 }
+
+
+    // if (id) {
+    //   try {
+    //     const book = await findUniquePrismaBooks(id); // await prisma.knihy.findUnique({
+
+    //     if (!book) {
+    //       return NextResponse.json(
+    //         { error: "book not found " },
+    //         { status: 400 }
+    //       );
+    //     }
+
+    //     return NextResponse.json([book], {
+    //       headers: {
+    //         ...noCacheHeaders,
+    //       },
+    //     });
+    //   } catch (error) {
+    //     console.error("Error fetching book by ID:", error);
+    //     return NextResponse.json(
+    //       { error: "Internal Server Error" },
+    //       { status: 500 }
+    //     );
+    //   }
+    // }
