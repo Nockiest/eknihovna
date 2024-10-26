@@ -8,12 +8,12 @@ import { v4 as uuidv4 } from "uuid"; // Import the uuid function
 type BookEditFormProps = {
   book: Book;
   handleInputChange: (e: React.ChangeEvent<HTMLInputElement>) => void; // Ensure proper typing of the event
-  updateBook: () => void;
+  submitBook: () => void;
 };
 const BookEditForm = ({
   book,
   handleInputChange,
-  updateBook,
+  submitBook,
 }: BookEditFormProps) => {
   const generateNewUUID = () => {
     console.log("Generating new  id")
@@ -84,7 +84,7 @@ const BookEditForm = ({
             className="ml-4"
           />
         </div>
-        <PrimaryButton type="button" onClick={() => updateBook()} className="mt-4">
+        <PrimaryButton type="button" onClick={() => submitBook()} className="mt-4">
           Nahrát knihu
         </PrimaryButton>
       </form>

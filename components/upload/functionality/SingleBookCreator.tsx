@@ -10,7 +10,7 @@ import { v4 as uuidv4 } from "uuid";
 const SingleBookCreator = () => {
   const [book, setBook] = useState<Book>({ ...emptyBook, id: uuidv4() }  );
   const [loading, setLoading] = useState<boolean>(false);
-  const uploadBook = async () => {
+  const submitBook = async () => {
     try {
       console.log(book);
       const response = await postDataToUpload([book]);
@@ -21,8 +21,6 @@ const SingleBookCreator = () => {
     } finally {
     }
   };
-  // this is dupliacted fix it immidiately!!!!!!
-
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
@@ -39,7 +37,7 @@ const SingleBookCreator = () => {
   };
   const handleKeyPress = (event: KeyboardEvent) => {
     if (event.key === "Enter") {
-      uploadBook();
+      submitBook();
     }
   };
   const createNewBook = () => {
@@ -56,7 +54,7 @@ const SingleBookCreator = () => {
         <BookEditForm
           book={book}
           handleInputChange={handleInputChange}
-          updateBook={uploadBook}
+          submitBook={submitBook}
         />
         <Typography variant="h6"> Návod vytvoření nové knihy </Typography>
         <List>
