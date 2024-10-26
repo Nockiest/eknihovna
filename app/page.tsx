@@ -8,8 +8,9 @@ import OtherProjectLinker from "@/components/general/OtherProjectLinker";
 
 export default function Home() {
   return (
-    <Container maxWidth={"lg"}>
-      <Typography variant="body1">
+    <Container maxWidth={"lg"} className="flex flex-col gap-2">
+     <Container >
+     <Typography variant="body1">
         Vítejte na domovské stránce knihovny Gymnázia Opatov, kde se můžete
         seznámit s bohatým fondem naší školní knihovny a získat důležité
         informace.
@@ -37,7 +38,8 @@ export default function Home() {
         navštívit naši knihovnu a objevte, co všechno pro vás máme připraveného.
         Těšíme se na vaši návštěvu!
       </Typography>
-      <br />
+     </Container>
+
       <Box mt={2} display="flex" justifyContent="center">
         <Button
           variant="contained"
@@ -49,7 +51,7 @@ export default function Home() {
           </Link>
         </Button>
       </Box>
-      <Container className="mx-auto text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
+      <Container className="mx-auto mt-2 text-secondary-950  bg-primary-600 p-4 border border-gray-300 rounded-md mb-4">
         <Typography variant="body1">
           Stránku vytvořil Ondřej Lukeš. Děkuji za pomoc všem co se podíleli na
           projektu: Patriku Holbovi, Davidu Laušmanovi, prof. Bauerové a redakci
