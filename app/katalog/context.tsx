@@ -1,4 +1,4 @@
-import { Book, Filters, FiltringValues } from "@/types/types";
+import { Book, Filters, FiltringValues, QueueItem } from "@/types/types";
 import { useContext, createContext } from "react";
 
 type QueryContextType = {
@@ -14,6 +14,8 @@ type QueryContextType = {
     filterName: keyof Filters,
     value: string | boolean | null
   ) => void;
+  addToQueue: (item: QueueItem) => void
+  resolvedItems: { [id: string]: any }; // Fixed syntax: Use an object type
 };
 
 // Create the context

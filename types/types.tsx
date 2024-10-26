@@ -42,6 +42,10 @@ export  type Filters= {
     name: string[] ;
   };
 
+ export  interface QueueItem {
+    value: string;
+    id: string;
+  }
 // export type UploadJsonData = {
 //   headers: string[];
 //   rows: any[];

@@ -8,7 +8,13 @@ import ErrorReporter from "@/utils/Announcer";
 import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 import CreditMe from "@/components/general/CreditMe";
 import { usePathname, useRouter,useSearchParams } from "next/navigation";
-
+import getBookCoverURL from "@/utils/getBookCover";
+import useQueue from "@/utils/hooks/useQueue";
+// Define the type for the queue items
+interface RequestQueueItem {
+  isbn: string;
+  id: string;
+}
 // provides contex for the while page
 const KatalogPage = () => {
   const [isOpenSearcher, setOpenSearcher] = useState<boolean>(false);
@@ -106,6 +112,14 @@ const KatalogPage = () => {
     changePage(1)
   };
 
+  // const makeExtraction = async (item: QueueItem) {
+  //   const bookURL = await getBookCoverURL(item )
+  // }
+
+ const  {queue, resolvedItems, addToQueue } = useQueue(100, getBookCoverURL)
+
+
+
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
   const pathname = usePathname();
@@ -131,7 +145,9 @@ const KatalogPage = () => {
         setErrorMessage,
         filterValues, // possible filter values
         setFiltersValues,
-        handleActiveFilterChange
+        handleActiveFilterChange,
+        addToQueue,
+        resolvedItems
       }}
     >
       <Box className="w-full px-3 md:px-12">

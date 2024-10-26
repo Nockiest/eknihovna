@@ -7,12 +7,13 @@ import BookCover from "./BookCover";
 import StarRow from "./starRow/StarRow";
 import CategoryChip from "./CategoryChip";
 import LineWithCircle from "../general/styling/LineWithCircle";
-
+import {v4 as uuidv4} from 'uuid'
 type BookPreviewProps = {
   book: Book;
 };
 const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   const {
+    id = uuidv4(),
     bookCoverURL = "",
     available = false,
     author = "Autor neznámý",
@@ -20,7 +21,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     genres = [],
     formaturita = false,
     rating = -1,
-    isbn = "",
+    isbn = 'x'  ,
   }: Book = book;
 
   return (
@@ -39,7 +40,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         sx={{ backgroundColor: "#ffffff" }}
         className=" flex flex-col items-center justify-around h-full"
       >
-        <BookCover width={"200px"} isbn={isbn} />
+        <BookCover width={"200px"} isbn={isbn} bookId={id} />
         <Box
 
           className=" flex grow-0 flex-col items-center justify-around w-full  "
