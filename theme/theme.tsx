@@ -285,6 +285,13 @@ const theme = createTheme({
         // }
       },
     },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          padding: '0px', // Set the padding for the root element of Paper
+        },
+      },
+    },
     MuiInputBase: {
       styleOverrides: {
         // input: {

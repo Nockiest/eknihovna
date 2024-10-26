@@ -18,7 +18,6 @@ import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
 import getFilteredOptions from "@/utils/getFilteredOptions";
 
-
 type SearcherProps = {};
 export const FiltringWindow: React.FC<SearcherProps> = () => {
   const {
@@ -28,10 +27,6 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     handleActiveFilterChange,
     filterValues,
   } = useSearchContext();
-
-
-
-
 
   return (
     <Slide
@@ -53,31 +48,38 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         <FilterLister />
 
         <Stack spacing={2} className="m-2 mt-8 center-flex flex-col mx-4">
-
-
           <SortedGroupedSelect
-          options={ getFilteredOptions('category',filterValues,activeFilters)}
+            options={getFilteredOptions(
+              "category",
+              filterValues,
+              activeFilters
+            )}
             label={"kategorie"}
-            handleChange={(newVal) => handleActiveFilterChange("category", newVal)}
-
+            handleChange={(newVal) =>
+              handleActiveFilterChange("category", newVal)
+            }
           />
 
           {/* <InputLabel shrink>
             Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={ getFilteredOptions('genres',filterValues,activeFilters)}
+            options={getFilteredOptions("genres", filterValues, activeFilters)}
             label={"žánry"}
-            handleChange={(newVal) => handleActiveFilterChange("genres", newVal)}
+            handleChange={(newVal) =>
+              handleActiveFilterChange("genres", newVal)
+            }
           />
 
           {/* <InputLabel shrink>
             Autor: {activeFilters.author || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-            options={ getFilteredOptions('author',filterValues,activeFilters)}
+            options={getFilteredOptions("author", filterValues, activeFilters)}
             label={"autor"}
-            handleChange={(newVal) => handleActiveFilterChange("author", newVal)}
+            handleChange={(newVal) =>
+              handleActiveFilterChange("author", newVal)
+            }
           />
         </Stack>
 

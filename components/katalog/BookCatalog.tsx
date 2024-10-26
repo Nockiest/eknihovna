@@ -166,7 +166,7 @@ const BookCatalog: React.FC = () => {
           >
             {shownBooks.map((book: Book, index: any) => (
               <Grid
-                className="flex justify-center items-center flex-grow m-0 mx-auto h-auto"
+                className="  relative  w-full h-auto"
                 item
                 xs={6}
                 sm={4}

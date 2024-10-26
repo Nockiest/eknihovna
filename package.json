@@ -2,7 +2,7 @@
   "name": "knihovna",
   "version": "0.1.0",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "cross-env PORT=3001 next start",
     "lint": "next lint",

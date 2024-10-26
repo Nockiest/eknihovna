@@ -112,13 +112,7 @@ const KatalogPage = () => {
     changePage(1)
   };
 
-  // const makeExtraction = async (item: QueueItem) {
-  //   const bookURL = await getBookCoverURL(item )
-  // }
-
  const  {queue, resolvedItems, addToQueue } = useQueue(100, getBookCoverURL)
-
-
 
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
