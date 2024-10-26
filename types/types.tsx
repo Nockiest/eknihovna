@@ -13,7 +13,7 @@ export type Book = {
     bookCoverURL?: string
     zpusob_ziskani?: string
     signatura?:string
-    isbn?: string  
+    isbn?: string
 }
 
 export type NavButton = {
@@ -30,8 +30,9 @@ export  type Filters= {
   genres?: string[];
   formaturita?: boolean|null;
   id?: string|null;
-  // rating: number;
   available?: boolean|null;
+  // rating: number;
+
 };
 
   export type FiltringValues = {
