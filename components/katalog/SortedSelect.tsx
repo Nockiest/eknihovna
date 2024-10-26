@@ -1,7 +1,4 @@
 "use client";
-import { useSearchContext } from "@/app/katalog/context";
-import {   useUploadContext } from "@/app/upload/context";
-import { FiltringValues } from "@/types/types";
 import { Autocomplete, TextField } from "@mui/material";
 import React, { useState } from "react";
 
@@ -9,14 +6,14 @@ interface SortedGroupedSelectProps {
   options:string[]
   label: string;
   handleChange: (value: string | null) => void;
-  context?: 'katalog'|  'upload'
+  handleInputChange?:(value: string | null) => void;
 }
 
 const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   options,
   label,
   handleChange,
-  context = "katalog", // Default to using the default context
+  handleInputChange,
 }) => {
   const sortedOptions = options
     ?.filter((item): item is string => {
@@ -25,6 +22,7 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     .sort((a, b) => a.localeCompare(b));
 
   const [currentValue, setCurrentValue] = useState<string | null>(null);
+
 
   return (
     <Autocomplete
@@ -45,6 +43,7 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       }}
       onInputChange={(e, newInputValue) => {
         setCurrentValue(newInputValue);
+        handleInputChange && handleInputChange(newInputValue)
       }}
     />
   );

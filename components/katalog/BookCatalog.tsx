@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useReducer } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { Box, Button, Grid, IconButton, Stack } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
@@ -71,11 +71,13 @@ const BookCatalog: React.FC = () => {
     handleActiveFilterChange,
   } = useSearchContext();
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [currentSearchValue, setCurrentSearchValue] = useState<string | null>(null);
   const searchParams = useSearchParams();
 
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   const fetchBooks = async () => {
+
       const logic = async () => {
         dispatch({ type: "FETCH_INIT" });
 
@@ -126,12 +128,16 @@ const BookCatalog: React.FC = () => {
           onClick={() => setOpenSearcher(!isOpenSearcher)}
         />
         <IconButton>
-          <SearchIcon />
+          <SearchIcon onClick={() => handleActiveFilterChange("name", currentSearchValue)}/>
         </IconButton>
         <SortedGroupedSelect
           options={getFilteredOptions('name', filterValues, activeFilters)}
           label={"název"}
-          handleChange={(newVal) => handleActiveFilterChange("name", newVal)}
+          handleChange={(newVal) => {
+            setCurrentSearchValue(newVal)
+            handleActiveFilterChange("name", newVal)}}
+          handleInputChange={(newVal) => setCurrentSearchValue(newVal)}
+          // useUserInputedValue=
         />
       </Box>
       <FiltringWindow />

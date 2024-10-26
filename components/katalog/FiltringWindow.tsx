@@ -53,17 +53,10 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         <FilterLister />
 
         <Stack spacing={2} className="m-2 mt-8 center-flex flex-col mx-4">
-          {/* <InputLabel shrink>Název: {activeFilters.name || "None"}</InputLabel> */}
-          {/* <SortedGroupedSelect
-            filterName={ "name" }
-            label={"název"}
-            handleChange={(newVal) => handleActiveFilterChange("name", newVal)}
-          /> */}
+
 
           <SortedGroupedSelect
           options={ getFilteredOptions('category',filterValues,activeFilters)}
-          // getFilteredOptions={getFilteredOptions}
-            // filterName={ "category" }
             label={"kategorie"}
             handleChange={(newVal) => handleActiveFilterChange("category", newVal)}
 
@@ -74,8 +67,6 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           </InputLabel> */}
           <SortedGroupedSelect
             options={ getFilteredOptions('genres',filterValues,activeFilters)}
-          // getFilteredOptions={getFilteredOptions}
-            // filterName={ "genres" }
             label={"žánry"}
             handleChange={(newVal) => handleActiveFilterChange("genres", newVal)}
           />
@@ -85,16 +76,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           </InputLabel> */}
           <SortedGroupedSelect
             options={ getFilteredOptions('author',filterValues,activeFilters)}
-            // getFilteredOptions={getFilteredOptions}
-            // filterName={ "author" }
             label={"autor"}
             handleChange={(newVal) => handleActiveFilterChange("author", newVal)}
           />
-          {/* <MultipleSelect
-           options={getFilteredOptions("author")}
-           label={"autor"}
-           handleChange={(newVal) => {return}}
-           /> */}
         </Stack>
 
         <FormControlLabel
