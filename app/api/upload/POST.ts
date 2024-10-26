@@ -111,7 +111,7 @@ const POST_BOOKS = async (json: any) => {
               : null,
           isbn:
             typeof item.isbn === "number" || typeof item.isbn === "string"
-              ? String(item.isbn.trim())
+              ? String(item.isbn)
               : null,
         };
       });
