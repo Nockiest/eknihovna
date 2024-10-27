@@ -1,5 +1,5 @@
 "use client";
-import { Autocomplete, TextField, CircularProgress } from "@mui/material";
+import { Autocomplete, TextField, CircularProgress, Button, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 
 interface SortedGroupedSelectProps {
@@ -18,6 +18,7 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   const [currentValue, setCurrentValue] = useState<string | null>(null);
   const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
   const [loading, setLoading] = useState(false);
+  const [displayAllOptions, setDisplayAllOptions] = useState(false); // State to track if all options should be displayed
 
   // Debounce function to limit the rate of search
   const debounce = (func: Function, delay: number) => {
@@ -53,44 +54,55 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   }, [currentValue, options]); // Adding options to dependencies
 
   return (
-    <Autocomplete
-      disablePortal
-      id="combo-box-demo"
-      options={filteredOptions.slice(0,50)}
-      value={currentValue}
-      sx={{
-        minWidth: 300,
-        width: "full",
-        flexGrow: 1,
-        overflowY: "auto",
-      }}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label={label}
-          sx={{ color: "black" }}
-          InputProps={{
-            ...params.InputProps,
-            endAdornment: (
-              <>
-                {loading ? <CircularProgress color="inherit" size={20} /> : null}
-                {params.InputProps.endAdornment}
-              </>
-            ),
-          }}
-        />
+    <Box className='w-full'>
+      <Autocomplete
+        disablePortal
+        id="combo-box-demo"
+        options={displayAllOptions ? filteredOptions : filteredOptions.slice(0, 50)}
+        value={currentValue}
+        sx={{
+          minWidth: 300,
+          width: "full",
+          flexGrow: 1,
+          overflowY: "auto",
+        }}
+        renderInput={(params) => (
+          <TextField
+            {...params}
+            label={label}
+            sx={{ color: "black" }}
+            InputProps={{
+              ...params.InputProps,
+              endAdornment: (
+                <>
+                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {params.InputProps.endAdornment}
+                </>
+              ),
+            }}
+          />
+        )}
+        onChange={(e, newVal) => {
+          handleChange(newVal); // Update the selected value
+          setCurrentValue(newVal); // Set the input value
+        }}
+        onInputChange={(e, newInputValue) => {
+          setCurrentValue(newInputValue);
+          handleInputChange && handleInputChange(newInputValue);
+        }}
+        noOptionsText="Žádné možnosti"
+        isOptionEqualToValue={(option, value) => option.includes(value)} // Custom equality check
+      />
+      {filteredOptions.length > 50 && !displayAllOptions && (
+        <Button
+          variant="outlined"
+          onClick={() => setDisplayAllOptions(true)} // Show all options when clicked
+          sx={{ marginTop: 2 }}
+        >
+          Zobrazit všechny možnosti
+        </Button>
       )}
-      onChange={(e, newVal) => {
-        handleChange(newVal);
-        setCurrentValue(newVal);
-      }}
-      onInputChange={(e, newInputValue) => {
-        setCurrentValue(newInputValue);
-        handleInputChange && handleInputChange(newInputValue);
-      }}
-      noOptionsText="Žádné možnosti"
-      isOptionEqualToValue={(option, value) => option.includes(value)} // Custom equality check
-    />
+    </Box>
   );
 };
 
