@@ -125,7 +125,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
     </Slide>
   );
 };
-
+//
 // const [debouncedFilters, setDebouncedFilters] =
 //   useState<Filters>(activeFilters);
 // const debouncedActiveFilters = useDebounce(debouncedFilters, 500); // Adjust the delay as needed
@@ -134,3 +134,4 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
 //   changePage(1)
 //   setActiveFilters(debouncedActiveFilters);
 // }, [debouncedActiveFilters]);
+//
