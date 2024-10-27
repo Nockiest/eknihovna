@@ -55,7 +55,7 @@ const POST_BOOKS = async (json: any) => {
       );
     }
     const rejectedRows: string[] = [];
-  let upsertedBooks = []
+  let uploadedBooks = []
 
     // Process valid data
     const validData = books
@@ -123,11 +123,13 @@ const POST_BOOKS = async (json: any) => {
       await deleteAllPrismaBooks();
       console.log("Delete all books");
       await craeteManyPrismaBooks(validData as Book[]);
+
+
     } else {
       for (const book of validData) {
         console.log(validData.indexOf(book));
         const upsertedBook = await upsertPrismaBook(book as Book);
-        upsertedBooks.push(upsertedBook );
+        uploadedBooks.push(upsertedBook );
       }
     }
 
@@ -145,7 +147,7 @@ const POST_BOOKS = async (json: any) => {
         message: `Data úspěšně nahrána, počet knih: ${totalBooks}. ${
           rejectedRows.length > 0 &&
           "Tyto knihy se bohužel nepodařilo nahrát" + rejectedRows.join(", ")
-        }, ${upsertedBooks.length > 0 && `první nahraní knia ${JSON.stringify(upsertedBooks[0])  }`} `,
+        }, ${uploadedBooks.length > 0 && `první nahraní knia ${JSON.stringify(uploadedBooks[0])  }`} `,
         headers: {
           ...noCacheHeaders,
         },

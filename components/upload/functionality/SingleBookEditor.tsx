@@ -4,7 +4,15 @@ import { Book } from "@/types/types";
 import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
 import BookEditForm from "@/components/general/BookEditForm";
-import { Box, List, ListItemText, MenuItem, Select, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  List,
+  ListItemText,
+  MenuItem,
+  Select,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import SearchIcon from "@mui/icons-material/Search";
 import updateBookProperty from "@/utils/updateBookProperty";
@@ -104,9 +112,9 @@ const SingleBookEditor = () => {
     try {
       console.log(editedBook);
       const res = await postDataToUpload([editedBook]);
-      debugger
+      debugger;
       console.log(res);
-      alert("Kniha úspěšně aktualizována"+ res.data.message);
+      alert("Kniha úspěšně aktualizována" + res.data.message);
     } catch (err) {
       console.error("Error updating book:", err);
       alert("Selhal jsem v aktualizování knihy:" + err);
@@ -138,6 +146,9 @@ const SingleBookEditor = () => {
               handleBookSelection(event.target.value as string);
             }}
             displayEmpty
+            // Ensure you are not using ref inappropriately here
+            // If needed, you can use the ref like this:
+            // ref={yourRef}
           >
             <MenuItem value="" disabled>
               Vyberte knihu
