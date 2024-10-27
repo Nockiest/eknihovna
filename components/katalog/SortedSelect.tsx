@@ -56,7 +56,7 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     <Autocomplete
       disablePortal
       id="combo-box-demo"
-      options={filteredOptions}
+      options={filteredOptions.slice(0,50)}
       value={currentValue}
       sx={{
         minWidth: 300,
