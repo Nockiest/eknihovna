@@ -19,5 +19,4 @@ model knihy {
   available      Boolean?
   rating         Int?
   isbn            String? @db.VarChar(13)
-  bookURL         String?
 }
