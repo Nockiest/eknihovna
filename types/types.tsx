@@ -10,7 +10,6 @@ export type Book = {
     rating?: number
     available?: boolean
     formaturita?: boolean
-    bookURL?: string
     zpusob_ziskani?: string
     signatura?:string
     isbn?:string

@@ -14,7 +14,6 @@ import Announcer from "@/utils/Announcer";
 import { FiltringWindow } from "./FiltringWindow";
 import SortedGroupedSelect from "./SortedSelect";
 import SearchIcon from "@mui/icons-material/Search";
-import getFilteredOptions from "@/utils/getFilteredOptions";
 import catchError from "@/utils/catchError";
 type State = {
   status: "loading" | "loadedBooks" | "error";
@@ -75,7 +74,7 @@ const BookCatalog: React.FC = () => {
     null
   );
   const searchParams = useSearchParams();
-
+  const itemsPerPage = 64
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   const fetchBooks = async () => {
@@ -87,8 +86,8 @@ const BookCatalog: React.FC = () => {
       console.log("All filtered books:", allPossibleBooks.length);
 
       // Calculate the current page's books using the offset
-      const startIndex = (page - 1) * 24;
-      const endIndex = startIndex + 24;
+      const startIndex = (page - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
       const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
       console.log(
         allPossibleBooks.length,
@@ -141,7 +140,6 @@ const BookCatalog: React.FC = () => {
             handleActiveFilterChange("name", newVal);
           }}
           handleInputChange={(newVal) => setCurrentSearchValue(newVal)}
-          // useUserInputedValue=
         />
       </Box>
       <FiltringWindow />
@@ -153,7 +151,7 @@ const BookCatalog: React.FC = () => {
       )}
 
       {status === "loadedBooks" && shownBooks.length > 0 && (
-        <Stack className="w-full mx-auto">
+        <Stack className="w-full   mx-auto">
           <Grid
             container
             spacing={4}
@@ -165,12 +163,12 @@ const BookCatalog: React.FC = () => {
               display: "flex",
               alignItems: "center",
               margin: "1rem auto",
-              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+              gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
             }}
           >
             {shownBooks.map((book: Book, index: any) => (
               <Grid
-                className="  relative  w-full h-auto"
+                className="relative h-[120px]  w-full "
                 item
                 xs={6}
                 sm={4}

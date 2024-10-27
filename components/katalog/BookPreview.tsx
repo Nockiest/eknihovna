@@ -1,13 +1,10 @@
 import { truthyValues } from "@/data/values";
 import theme from "@/theme/theme";
 import { Book } from "@/types/types";
-import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
+import { Box, Paper, Typography,  } from "@mui/material";
 import Filter from "./CategoryChip";
-import BookCover from "./BookCover";
-import StarRow from "./starRow/StarRow";
 import CategoryChip from "./CategoryChip";
 import LineWithCircle from "../general/styling/LineWithCircle";
-import { v4 as uuidv4 } from "uuid";
 import { useRouter } from "next/navigation";
 type BookPreviewProps = {
   book: Book;
@@ -16,7 +13,6 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   const router = useRouter();
   const {
     id,
-    bookCoverURL = "",
     available = false,
     author = "Autor neznámý",
     name = "Neznámé jméno",
@@ -28,10 +24,12 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`h-[280px]  pl-0 pt-0 p-0   w-[140px] items-center cursor-pointer `}
+    className={`h-[90%] absolute top-0 left-1/2 transform -translate-x-1/2 pl-0 pt-0 p-0 w-[140px] items-center cursor-pointer`}
+
       onClick={() => {
         router.push(`/katalog/${id}`);
       }}
+
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: truthyValues.includes(available)
@@ -47,7 +45,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         sx={{ backgroundColor: "#ffffff" }}
         className=" flex flex-col items-center justify-around h-full"
       >
-        <BookCover isbn={isbn} bookId={id} />
+        {/* <BookCover isbn={isbn} bookId={id} /> */}
         <Box className=" flex grow-0 flex-col items-center justify-around w-full  ">
           <Typography
             variant="body2"
@@ -86,6 +84,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           </Box>
           {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
           {/* <StarRow rating={rating} /> */}
+          {formaturita && <Typography variant="body2">Maturitní</Typography>}
           {!available && <Typography variant="body1">Nedostupná</Typography>}
         </Box>
       </Box>

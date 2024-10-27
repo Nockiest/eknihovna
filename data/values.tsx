@@ -57,7 +57,6 @@ export const testBook: Book = {
   available: true, // Replace with true or false depending on availability
   rating: 5, // Replace with the actual rating
   isbn: "9780140449136",
-  bookURL: "",
 };
 export const emptyBook: Book = {
   id: "1",
@@ -93,7 +92,6 @@ export const bookHeaders: Array<keyof Book> = [
   "available",
   "rating",
   "isbn",
-  "bookURL",
 ];
 
 export var splited_emails =
