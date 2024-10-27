@@ -4,7 +4,7 @@ import { Box, Typography, IconButton } from "@mui/material";
 import Link from "next/link";
 import BugReport from "@mui/icons-material/BugReport";
 import CloseIcon from "@mui/icons-material/Close";
-import { DangerButton, SecondaryButton } from "@/theme/buttons/Buttons";
+import { DangerButton } from "@/theme/buttons/Buttons";
 
 const BugReportSection = () => {
   const [visible, setVisible] = useState(true);
@@ -14,7 +14,11 @@ const BugReportSection = () => {
   return (
     <Box
       mt={2}
-      className="center-flex flex-col px-6 py-8 w-full bg-secondary-800"
+      className="mx-auto px-6 py-8 w-full bg-secondary-800"
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      justifyContent="center"
       position="relative"
     >
       <IconButton
@@ -24,21 +28,22 @@ const BugReportSection = () => {
       >
         <CloseIcon />
       </IconButton>
-      <Typography align="center" variant="body2">
+      <Typography align="center" variant="body2" gutterBottom>
         Aplikace je stále ve vývoji. Možné nápady a nalezené chyby můžeš
         zaznamenat na tomto linku.
       </Typography>
-      <br />
-      <Link
-        href="https://forms.gle/uU2rXgcin7aDjazk8"
-        passHref
-        className="center-flex w-32"
-      >
-        <DangerButton className="" variant="outlined" color="secondary">
-          Nahlásit problém <BugReport />
+      <Link href="https://forms.gle/uU2rXgcin7aDjazk8" passHref>
+        <DangerButton
+          className="mx-auto"
+          variant="outlined"
+          color="secondary"
+          style={{ marginTop: "16px", display: "flex", alignItems: "center" }}
+        >
+          Nahlásit problém <BugReport style={{ marginLeft: "8px" }} />
         </DangerButton>
       </Link>
     </Box>
   );
 };
+
 export default BugReportSection;

@@ -22,8 +22,8 @@ const useQueue = (delay: number, callback: (value: any) => Promise<any>) => {
     if (resolvedItems[item.id]) {
       return;
     }
-    
-    const [error, result] = await catchError(callback(item.value)); //await callback(currentItem.value); // Call the callback with the item's value
+
+    const [error, result] = [null, 'i have commented out the callback'] // await catchError(callback(item.value)); //await callback(currentItem.value); // Call the callback with the item's value
 
     if (result) {
       // Update resolved items using the item's id as the key

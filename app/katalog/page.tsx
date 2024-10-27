@@ -112,7 +112,7 @@ const KatalogPage = () => {
     changePage(1)
   };
 
- const  {queue, resolvedItems, addToQueue } = useQueue(100, getBookCoverURL)
+ const  {queue, resolvedItems, addToQueue } = useQueue(500, getBookCoverURL)
 
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;

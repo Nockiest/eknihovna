@@ -45,7 +45,7 @@ export const shownBooksBySize: Record<Breakpoint, number> = {
   xl: 36,
 };
 
-export const testBook:Book = {
+export const testBook: Book = {
   id: "x", // Replace with your actual unique ID or a UUID generator
   name: "Book Name", // Replace with the actual book name
   author: "Author Name", // Replace with the actual author name
@@ -56,7 +56,8 @@ export const testBook:Book = {
   formaturita: true, // Replace with true or false depending on whether it's formal
   available: true, // Replace with true or false depending on availability
   rating: 5, // Replace with the actual rating
-  isbn: '9780140449136'
+  isbn: "9780140449136",
+  bookURL: "",
 };
 export const emptyBook: Book = {
   id: "1",
@@ -69,7 +70,7 @@ export const emptyBook: Book = {
   formaturita: false,
   available: false,
   rating: -1,
-  isbn: '1'
+  isbn: "1",
 };
 
 export const navRoutes: NavButton[] = [
@@ -91,7 +92,9 @@ export const bookHeaders: Array<keyof Book> = [
   "formaturita",
   "available",
   "rating",
-  'isbn'
+  "isbn",
+  "bookURL",
 ];
 
-export var splited_emails = process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");
+export var splited_emails =
+  process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");
