@@ -31,23 +31,25 @@ const NavBar: React.FC<NavListProps> = ({}) => {
     >
       <Link href={button.URL}>{button.label}</Link>
     </NavbarButton>
-  );//
+  ); //
   return (
     <Paper
       elevation={3}
       className="p-2 h-full w-full z-10 mx-0 flex flex-col justify-center   items-center "
     >
       <Box className="z-3">
-        <IconButton
-          className="absolute top-2 right-2 p-2 rounded  bg-gray-200 bg-opacity-80 text-secondary-500 transition-colors duration-300"
-          onClick={() => setIsHamburgerOpen(!isHamburgerOpen)}
-          aria-label="Toggle navigation" // Using proper case for accessibility
-          size="large" // Set the size of the button
-          sx={{ fontSize: 64 }}
-        >
-           <MenuIcon fontSize="inherit" /> {/* Change the icon size */}
-          {/* Inherit the font size from IconButton */}
-        </IconButton>
+        {size && ["xs", "sm"].indexOf(size) > -1 && (
+          <IconButton
+            className="absolute top-2 right-2 p-2 rounded  bg-gray-200 bg-opacity-80 text-secondary-500 transition-colors duration-300"
+            onClick={() => setIsHamburgerOpen(!isHamburgerOpen)}
+            aria-label="Toggle navigation" // Using proper case for accessibility
+            size="large" // Set the size of the button
+            sx={{ fontSize: 64 }}
+          >
+            <MenuIcon fontSize="inherit" /> {/* Change the icon size */}
+            {/* Inherit the font size from IconButton */}
+          </IconButton>
+        )}
 
         <HamburgerNavList
           isOpen={isHamburgerOpen}

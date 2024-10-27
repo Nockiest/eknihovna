@@ -32,9 +32,9 @@ const Pagination: React.FC<PaginationProps> = ({
   const [offset, setOffset] = useState<number>(5);
   useEffect(() => {
     if (breakPoint && ["xs", "sm"].indexOf(breakPoint) >= 0) {
-      setOffset(2);
-    } else {
       setOffset(5);
+    } else {
+      setOffset(10);
     }
   }, [breakPoint]);
 
