@@ -65,14 +65,14 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           {/* <InputLabel shrink>
             Žánry: {activeFilters.genres?.join(",") || "None"}
           </InputLabel> */}
-          <SortedGroupedSelect
+          {/* <SortedGroupedSelect
            options={filterValues['genres']}
 
             label={"žánry"}
             handleChange={(newVal) =>
               handleActiveFilterChange("genres", newVal)
             }
-          />
+          /> */}
 
           {/* <InputLabel shrink>
             Autor: {activeFilters.author || "None"}
