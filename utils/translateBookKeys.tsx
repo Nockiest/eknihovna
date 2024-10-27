@@ -10,7 +10,6 @@ export function translateBookKey(bookKey: keyof Book ): string {
         rating: 'hodnocení',
         available: 'dostupná',
         formaturita: 'maturitní',
-        bookCoverURL: 'URL_obálky',
         zpusob_ziskani: 'zpusob_ziskani',
         signatura: 'signatura',
         isbn: 'isbn',
