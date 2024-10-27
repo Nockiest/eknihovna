@@ -1,7 +1,7 @@
 import theme from "@/theme/theme";
 import { Chip, IconButton, Typography } from "@mui/material";
 import Image from "next/image";
-
+import CloseIcon from '@mui/icons-material/Close';
 interface FilterProps {
   text: string;
   onRemove?: () => void;
@@ -20,12 +20,7 @@ backgroundColor: theme.palette.mode === "dark" ? "#424242" : "#e0e0e0", // Dark 
       deleteIcon={
         onRemove && (
           <IconButton onClick={onRemove} size="small">
-            <Image
-              src="/icon/cross.svg"
-              alt="cross icon"
-              height={16}
-              width={16}
-            />
+          <CloseIcon />
           </IconButton>
         )
       }
