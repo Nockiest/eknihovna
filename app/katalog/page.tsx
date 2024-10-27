@@ -112,7 +112,7 @@ const KatalogPage = () => {
     changePage(1)
   };
 
- const  {queue, resolvedItems, addToQueue } = useQueue(500, getBookCoverURL)
+//  const  {queue, resolvedItems, addToQueue } = useQueue(500, getBookCoverURL)
 
   const searchParams = useSearchParams();
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
@@ -140,8 +140,8 @@ const KatalogPage = () => {
         filterValues, // possible filter values
         setFiltersValues,
         handleActiveFilterChange,
-        addToQueue,
-        resolvedItems
+        // addToQueue,
+        // resolvedItems
       }}
     >
       <Box className="w-full px-3 md:px-12">

@@ -13,21 +13,21 @@ interface BookCoverProps {
 const BookCover: React.FC<BookCoverProps> = ({   isbn, bookId }) => {
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const { addToQueue, resolvedItems } = useSearchContext();
-  useEffect(() => {
-    if (parseInt(isbn)) {
-      addToQueue({ value: isbn, id: bookId });
-    }
-  }, [isbn]);
+  // const { addToQueue, resolvedItems } = useSearchContext();
+  // useEffect(() => {
+  //   if (parseInt(isbn)) {
+  //     addToQueue({ value: isbn, id: bookId });
+  //   }
+  // }, [isbn]);
 
-  useEffect(() => {
-    if (resolvedItems?.[bookId]) {
-    console.log('newResolved items', resolvedItems,resolvedItems?.[bookId]);
+  // useEffect(() => {
+  //   if (resolvedItems?.[bookId]) {
+  //   console.log('newResolved items', resolvedItems,resolvedItems?.[bookId]);
 
-      setCoverUrl(resolvedItems[bookId] );
-      setError(null);
-    }
-  }, [resolvedItems]);
+  //     setCoverUrl(resolvedItems[bookId] );
+  //     setError(null);
+  //   }
+  // }, [resolvedItems]);
 
   //   if (error) {
   //   return <p>{error}</p>; // Zobrazení chybové zprávy
