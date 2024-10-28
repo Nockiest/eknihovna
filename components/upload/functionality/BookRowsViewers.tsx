@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import {
-  DataGrid,
-  GridCellParams,
-  GridRowModel,
-} from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridRowModel } from "@mui/x-data-grid";
 import { useUploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
+import UpdatedBooksList from "./UpdatedBookList";
 
 const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context
@@ -16,9 +13,9 @@ const BookGrid = () => {
 
   const handleCellClick = (params: GridCellParams) => {
     const cellData = params.value;
-    navigator.clipboard.writeText(cellData as string).then(
-      (err) => console.error("Could not copy text: ", err)
-    );
+    navigator.clipboard
+      .writeText(cellData as string)
+      .then((err) => console.error("Could not copy text: ", err));
   };
 
   // Define columns for the DataGrid
@@ -29,7 +26,12 @@ const BookGrid = () => {
     { field: "category", headerName: "Kategorie", width: 150, editable: true },
     { field: "isbn", headerName: "ISBN", width: 150, editable: true },
     { field: "available", headerName: "Dostupná", width: 150, editable: true },
-    { field: "formaturita", headerName: "Maturitní", width: 150, editable: true },
+    {
+      field: "formaturita",
+      headerName: "Maturitní",
+      width: 150,
+      editable: true,
+    },
   ];
 
   const filteredRows = books.filter((book) =>
@@ -44,14 +46,14 @@ const BookGrid = () => {
 
     // Update the main books state
     setBooks((prevBooks) =>
-      prevBooks.map((book) =>
-        book.id === updatedBook.id ? updatedBook : book
-      )
+      prevBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
     );
 
     // Update the updatedBooks state
     setUpdatedBooks((prevUpdatedBooks) => {
-      const existingIndex = prevUpdatedBooks.findIndex((book) => book.id === updatedBook.id);
+      const existingIndex = prevUpdatedBooks.findIndex(
+        (book) => book.id === updatedBook.id
+      );
 
       if (existingIndex > -1) {
         // If the book already exists in updatedBooks, replace it
@@ -67,9 +69,8 @@ const BookGrid = () => {
     return updatedBook; // Return the updated row to reflect changes in the grid
   };
 
-
   return (
-    <Box className="mx-auto">
+    <Box className="mx-auto overflow-y-auto">
       <Typography variant="h4" gutterBottom>
         Prohlížeč knih
       </Typography>
@@ -85,24 +86,29 @@ const BookGrid = () => {
         <DataGrid
           rows={filteredRows}
           columns={columns}
-        //   autoPageSize
+          //   autoPageSize
           onCellClick={handleCellClick}
           processRowUpdate={processRowUpdate}
           editMode="cell"
           ignoreDiacritics
         />
       </Box>
-      {updatedBooks.map((updated) => (
-        <p key={updated.id}>{updated.name} {updated.author}</p>
-      ))}
-        <Button
+      <UpdatedBooksList updatedBooks={updatedBooks} />
+      {/* {updatedBooks.map((updated) => (
+        <p key={updated.id}>
+          {updated.name} {updated.author}
+        </p>
+      ))} */}
+      <Button
         variant="contained"
         color="primary"
-        onClick={() => {postDataToUpload(updatedBooks)}}
+        onClick={() => {
+          postDataToUpload(updatedBooks);
+        }}
         sx={{ mt: 2 }}
         disabled={updatedBooks.length === 0} // Disable if no books are updated
       >
-        Submit Updated Books
+        Potvrdit změny
       </Button>
     </Box>
   );
