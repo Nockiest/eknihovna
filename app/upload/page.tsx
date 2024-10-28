@@ -29,11 +29,9 @@ export default   function Page() {
 
     // } >
     <Box className="w-full">
-        <QueryClientProvider client={queryClient}>
       <AuthProvider >
         <ExcelSheetUpdater />
       </AuthProvider>
-      </QueryClientProvider>
     </Box>
     //  </ UploadContext.Provider  >
   );

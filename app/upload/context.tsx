@@ -3,8 +3,9 @@ import { useContext, createContext } from "react";
 
 type UploadContextType = {
 
-  setActiveFilters:  React.Dispatch<React.SetStateAction<FiltringValues>>
-  activeFilters: FiltringValues
+  // setActiveFilters:  React.Dispatch<React.SetStateAction<FiltringValues>>
+  // activeFilters: FiltringValues
+  books: Book[]
 //   filterValues: FiltringValues
 };
 

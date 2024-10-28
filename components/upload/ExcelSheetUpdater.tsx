@@ -3,7 +3,7 @@ import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { Box,  Paper, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "../general/ReroutToAUth";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SingleBookEditor from "./functionality/SingleBookEditor";
 import Uploader from "./functionality/Uploader";
 import BookDeleter from "./functionality/BookDeleter";
@@ -14,11 +14,24 @@ import CustomButtonGroup from "../general/styling/ButtonGroup";
 import { splited_emails } from "@/data/values";
 import SingleBookCreator from "./functionality/SingleBookCreator";
 import BookGrid from "./functionality/BookRowsViewers";
+import { UploadContext } from "@/app/upload/context";
+import { Book } from "@/types/types";
+import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
 export const revalidate = 0;
 
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [activeTab, setActiveTab] = useState(1); // Výchozí tab je první
+  const [books, setBooks] = useState<Book[]>([
+  ]);
+  useEffect(() => {
+    const fetching = async () => {
+        const b:Book[] = await fetchFilteredBooks()
+        console.log("Fetched books:", b.length);
+        setBooks(b)
+    }
+fetching()
+  },[])
 
   if (!session) {
     return (
@@ -75,7 +88,9 @@ const ExcelSheetUpdater = () => {
     }
   };
   return (
-    <Box className="flex flex-col h-auto gap-4 z-0 select-none px-12 items-center justify-center">
+   <UploadContext.Provider value={{books}} >
+
+   <Box className="flex flex-col h-auto gap-4 z-0 select-none px-12 items-center justify-center">
       <Paper className="flex flex-col  h-auto gap-16 w-full">
         <CustomButtonGroup
           buttons={[
@@ -106,6 +121,8 @@ const ExcelSheetUpdater = () => {
         <Typography>Odhlásit se</Typography>
       </PrimaryButton>
     </Box>
+   </UploadContext.Provider>
+
   );
 };
 
