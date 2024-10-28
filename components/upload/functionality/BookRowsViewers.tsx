@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography } from "@mui/material";
 import {
   DataGrid,
   GridCellParams,
@@ -7,6 +7,7 @@ import {
 } from "@mui/x-data-grid";
 import { useUploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
+import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
 
 const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context
@@ -38,27 +39,34 @@ const BookGrid = () => {
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     const { id, ...updatedFields } = newRow;
 
+    // Ensure the newRow contains all properties of the Book type
+    const updatedBook: Book = { ...oldRow, ...updatedFields } as Book;
+
     // Update the main books state
     setBooks((prevBooks) =>
       prevBooks.map((book) =>
-        book.id === id ? { ...book, ...updatedFields } : book
+        book.id === updatedBook.id ? updatedBook : book
       )
     );
 
     // Update the updatedBooks state
     setUpdatedBooks((prevUpdatedBooks) => {
-      const existingIndex = prevUpdatedBooks.findIndex((book) => book.id === id);
+      const existingIndex = prevUpdatedBooks.findIndex((book) => book.id === updatedBook.id);
 
       if (existingIndex > -1) {
+        // If the book already exists in updatedBooks, replace it
         const updatedList = [...prevUpdatedBooks];
-        updatedList[existingIndex] = { ...updatedList[existingIndex], ...updatedFields };
+        updatedList[existingIndex] = updatedBook;
         return updatedList;
       } else {
-        return [...prevUpdatedBooks, { id, ...updatedFields }];
+        // If not, add the updated book to updatedBooks
+        return [...prevUpdatedBooks, updatedBook];
       }
     });
-    return newRow; // Return the updated row to reflect changes in the grid
+
+    return updatedBook; // Return the updated row to reflect changes in the grid
   };
+
 
   return (
     <Box className="mx-auto">
@@ -87,6 +95,15 @@ const BookGrid = () => {
       {updatedBooks.map((updated) => (
         <p key={updated.id}>{updated.name} {updated.author}</p>
       ))}
+        <Button
+        variant="contained"
+        color="primary"
+        onClick={() => {postDataToUpload(updatedBooks)}}
+        sx={{ mt: 2 }}
+        disabled={updatedBooks.length === 0} // Disable if no books are updated
+      >
+        Submit Updated Books
+      </Button>
     </Box>
   );
 };
