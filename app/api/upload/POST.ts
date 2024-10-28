@@ -121,8 +121,8 @@ const POST_BOOKS = async (json: any) => {
             typeof item.isbn === "number"
               ? item.isbn
               : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
-              ? parseInt(item.isbn, 10)
-              : 'null',
+              ?  item.isbn
+              : '',
         };
       });
     if (removePreviousData) {
