@@ -184,7 +184,7 @@ const BookCatalog: React.FC = () => {
           </Grid>
           <PaginationLinker
             totalEntries={BooksInFilterNum}
-            itemsPerPage={24}
+            itemsPerPage={itemsPerPage}
             folderName="katalog"
           />
         </Stack>

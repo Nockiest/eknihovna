@@ -2,6 +2,7 @@
 import { Autocomplete, TextField, CircularProgress, Button, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import InfoIcon from "@mui/icons-material/Info"; // Icon to signify examples
+import getRandomOptions from "@/utils/extractRandomFromArray";
 
 interface SortedGroupedSelectProps {
   options: string[];
@@ -20,16 +21,11 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
   const [loading, setLoading] = useState(false);
 
-  const getRandomOptions = () => {
-    const shuffled = [...options].sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, 10);
-  };
-
   useEffect(() => {
     if (currentValue) {
       filterOptions(currentValue);
     } else if (options.length > 50) {
-      setFilteredOptions(getRandomOptions());
+      setFilteredOptions(getRandomOptions(options));
     } else {
       setFilteredOptions(options);
     }

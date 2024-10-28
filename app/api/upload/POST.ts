@@ -1,4 +1,9 @@
-import { bookHeaders, corsHeaders, noCacheHeaders, truthyValues } from "@/data/values";
+import {
+  bookHeaders,
+  corsHeaders,
+  noCacheHeaders,
+  truthyValues,
+} from "@/data/values";
 import {
   countPrismaBooks,
   craeteManyPrismaBooks,
@@ -24,7 +29,7 @@ const POST_BOOKS = async (json: any) => {
           error: "Špatný formát, očekával jsem tabulku knížek.",
           headers: {
             ...noCacheHeaders,
-            ...corsHeaders
+            ...corsHeaders,
           },
         },
         { status: 400 }
@@ -55,7 +60,7 @@ const POST_BOOKS = async (json: any) => {
       );
     }
     const rejectedRows: string[] = [];
-  let uploadedBooks = []
+    let uploadedBooks = [];
 
     // Process valid data
     const validData = books
@@ -113,8 +118,10 @@ const POST_BOOKS = async (json: any) => {
               ? Number(item.rating)
               : null,
           isbn:
-            typeof item.isbn === "number" || typeof item.isbn === "string"
-              ? String(item.isbn)
+            typeof item.isbn === "number"
+              ? item.isbn
+              : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
+              ? parseInt(item.isbn, 10)
               : null,
         };
       });
@@ -123,13 +130,11 @@ const POST_BOOKS = async (json: any) => {
       await deleteAllPrismaBooks();
       console.log("Delete all books");
       await craeteManyPrismaBooks(validData as Book[]);
-
-
     } else {
       for (const book of validData) {
         console.log(validData.indexOf(book));
         const upsertedBook = await upsertPrismaBook(book as Book);
-        uploadedBooks.push(upsertedBook );
+        uploadedBooks.push(upsertedBook);
       }
     }
 
@@ -147,7 +152,10 @@ const POST_BOOKS = async (json: any) => {
         message: `Data úspěšně nahrána, počet knih: ${totalBooks}. ${
           rejectedRows.length > 0 &&
           "Tyto knihy se bohužel nepodařilo nahrát" + rejectedRows.join(", ")
-        }, ${uploadedBooks.length > 0 && `první nahraná kniha ${JSON.stringify(uploadedBooks[0])  }`} `,
+        }, ${
+          uploadedBooks.length > 0 &&
+          `první nahraná kniha ${JSON.stringify(uploadedBooks[0])}`
+        } `,
         headers: {
           ...noCacheHeaders,
         },
