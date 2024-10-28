@@ -122,7 +122,7 @@ const POST_BOOKS = async (json: any) => {
               ? item.isbn
               : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
               ? parseInt(item.isbn, 10)
-              : null,
+              : 'null',
         };
       });
     if (removePreviousData) {
