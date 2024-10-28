@@ -37,8 +37,8 @@
     "next-connect": "^1.0.0",
     "node-mocks-http": "^1.16.0",
     "npm": "^10.9.0",
-    "react": "19.0.0-rc-02c0e824-20241028",
-    "react-dom": "19.0.0-rc-02c0e824-20241028",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-responsive": "^10.0.0",
     "uuid": "^10.0.0",
     "uuidv4": "^6.2.13",
@@ -84,5 +84,4 @@
     "ts-node": "^10.9.2",
     "typescript": "^5"
   }
-
 }
