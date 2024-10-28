@@ -77,7 +77,7 @@ export const navRoutes: NavButton[] = [
   { URL: "/katalog", label: "Katalog" },
   { URL: "/news", label: "Zprávy" },
   { URL: "/info", label: "Informace" },
-  { URL: "/upload", label: "API" },
+  { URL: "/upload", label: "Admin" },
 ];
 
 export const bookHeaders: Array<keyof Book> = [

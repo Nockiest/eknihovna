@@ -25,7 +25,7 @@ const OtherProjectLinker = () => {
             </Typography>
             <Box className="w-32 mx-auto">
               <PrimaryButton>
-                <Link href="https://www.copisem.cz/">Co píšem</Link>
+                <Link href="https://www.copisem.cz/">Co Píšem</Link>
               </PrimaryButton>
             </Box>
           </Box>
