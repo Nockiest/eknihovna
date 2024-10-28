@@ -40,11 +40,29 @@ const BookGrid = () => {
   const handleEditCellChange = (params: GridCellEditStopParams) => {
     // Update the books state with the new value
     console.log(params.id)
-    const newBooks = books.map((book) =>
-      book.id === params.id ? { ...book, [params.field]: params.value } : book
-    );
+    const newBook = books.map((book) => {
+        if (book.id === params.id) {
+          return { ...book, [params.field]: params.value };
+        }
+      });
+    // const newBooks = books.map((book) => {
+    //     if (book.id === params.id) {
+    //       console.log(`Updating book with id: ${book.id}`);
+    //       console.log(`Field being updated: ${params.field}`);
+    //       console.log(`Old value: ${book[params.field as keyof Book]}`);
+    //       console.log(`New value: ${params.value}`);
 
-    setBooks(newBooks); // Update the main books state
+    //       return { ...book, [params.field]: params.value };
+    //     } else {
+    //     //   console.log(`No change for book with id: ${book.id}`);
+    //     }
+    //     return book;
+    //   });
+
+    // console.log(newBooks.find((book) => book.id === params.id))
+    setBooks(prev=> {
+        prev.id === newBook.id
+    }); // Update the main books state
 
     // Update the updatedBooks state
     setUpdatedBooks((prev) => {
@@ -90,7 +108,8 @@ const BookGrid = () => {
           columns={columns}
           autoPageSize
         //   onCellClick={handleCellClick} // Only copy clicked cell's value
-          onCellEditStop={handleEditCellChange}
+        //@ts-ignore
+          onCellEditCommit={handleEditCellChange}
           editMode={'cell'}
           ignoreDiacritics
 
