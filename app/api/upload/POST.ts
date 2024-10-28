@@ -150,11 +150,11 @@ const POST_BOOKS = async (json: any) => {
       {
         success: true,
         message: `Data úspěšně nahrána, počet knih: ${totalBooks}. ${
-          rejectedRows.length > 0 &&
-          "Tyto knihy se bohužel nepodařilo nahrát" + rejectedRows.join(", ")
+          rejectedRows.length > 0?
+          "Tyto knihy se bohužel nepodařilo nahrát" + rejectedRows.join(", "):''
         }, ${
-          uploadedBooks.length > 0 &&
-          `první nahraná kniha ${JSON.stringify(uploadedBooks[0])}`
+          uploadedBooks.length > 0 ?
+          `první nahraná kniha ${JSON.stringify(uploadedBooks[0])}`:''
         } `,
         headers: {
           ...noCacheHeaders,

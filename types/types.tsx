@@ -3,7 +3,7 @@ import { DeepMockProxy } from "jest-mock-extended"
 
 export type Book = {
     id: string
-    name?: string
+    name: string
     author?: string
     category: string
     genres?:string[]

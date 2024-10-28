@@ -7,6 +7,7 @@ import Head from "next/head";
 import BugReportSection from "@/components/sections/BugReport";
 import Footer from "@/components/footer/Footer";
 import Hero from "@/components/hero/Hero";
+// import ReactQueryProvider from "@/utils/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#413330" />
       </Head>
       <body className={inter.className}>
+        {/* <ReactQueryProvider   > */}
         <ThemeProvider theme={theme}>
           <Hero />
           <main className="flex min-h-screen flex-col items-center justify-between pt-12">
@@ -48,6 +50,7 @@ export default function RootLayout({
           <BugReportSection />
           <Footer />
         </ThemeProvider>
+        {/* </ReactQueryProvider   > */}
       </body>
     </html>
   );

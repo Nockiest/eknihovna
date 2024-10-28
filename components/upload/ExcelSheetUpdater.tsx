@@ -13,6 +13,7 @@ import SingleBookDeleter from "./functionality/SingleBookDeleter";
 import CustomButtonGroup from "../general/styling/ButtonGroup";
 import { splited_emails } from "@/data/values";
 import SingleBookCreator from "./functionality/SingleBookCreator";
+import BookGrid from "./functionality/BookRowsViewers";
 export const revalidate = 0;
 
 const ExcelSheetUpdater = () => {
@@ -65,6 +66,8 @@ const ExcelSheetUpdater = () => {
         return <SingleBookCreator />;
       case 3:
         return <SingleBookDeleter />;
+      case 4:
+        return <BookGrid />;
 
 
       default:
@@ -80,6 +83,7 @@ const ExcelSheetUpdater = () => {
             { text: "Editovat Knihu", onClick: () => setActiveTab(1) },
             { text: "Vytvořit Knihu", onClick: () => setActiveTab(2) },
             { text: "Smazat Knihu", onClick: () => setActiveTab(3) },
+            { text: "Prohlédnout knihy", onClick: () => setActiveTab(4) },
           ]}
           activeIndex={activeTab}
           setActiveIndex={setActiveTab}
