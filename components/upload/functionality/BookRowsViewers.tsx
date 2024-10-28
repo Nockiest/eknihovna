@@ -85,7 +85,7 @@ const BookGrid = () => {
         <DataGrid
           rows={filteredRows}
           columns={columns}
-          autoPageSize
+        //   autoPageSize
           onCellClick={handleCellClick}
           processRowUpdate={processRowUpdate}
           editMode="cell"
