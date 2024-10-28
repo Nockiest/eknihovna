@@ -4,6 +4,7 @@ import { useContext, createContext } from "react";
 
 type UploadContextType = {
   books: Book[]
+  setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
 };
 
 // Create the context

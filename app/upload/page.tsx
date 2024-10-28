@@ -28,7 +28,7 @@ export default function Page() {
 
     <Box className="w-full">
       <AuthProvider>
-        <UploadContext.Provider value={{ books }}>
+        <UploadContext.Provider value={{ books ,setBooks}}>
           <ExcelSheetUpdater />
         </UploadContext.Provider>
       </AuthProvider>
