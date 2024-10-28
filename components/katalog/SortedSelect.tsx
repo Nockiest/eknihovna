@@ -1,6 +1,7 @@
 "use client";
 import { Autocomplete, TextField, CircularProgress, Button, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
+import InfoIcon from "@mui/icons-material/Info"; // Icon to signify examples
 
 interface SortedGroupedSelectProps {
   options: string[];
@@ -18,47 +19,67 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   const [currentValue, setCurrentValue] = useState<string | null>(null);
   const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
   const [loading, setLoading] = useState(false);
-  const [displayAllOptions, setDisplayAllOptions] = useState(false); // State to track if all options should be displayed
 
-  // Debounce function to limit the rate of search
-  const debounce = (func: Function, delay: number) => {
-    let timeoutId: NodeJS.Timeout;
-    return (...args: any[]) => {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func(...args);
-      }, delay);
-    };
+  const getRandomOptions = () => {
+    const shuffled = [...options].sort(() => 0.5 - Math.random());
+    return shuffled.slice(0, 10);
   };
 
-  // Function to filter options based on input
+  useEffect(() => {
+    if (currentValue) {
+      filterOptions(currentValue);
+    } else if (options.length > 50) {
+      setFilteredOptions(getRandomOptions());
+    } else {
+      setFilteredOptions(options);
+    }
+  }, [currentValue, options]);
+
   const filterOptions = (inputValue: string) => {
     setLoading(true);
-    const lowercasedInput = inputValue.toLowerCase();
+
+    // Helper function to remove diacritics
+    const normalizeString = (str: string) =>
+      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+
+    const normalizedInput = normalizeString(inputValue);
+
     const newFilteredOptions = options.filter((option) =>
-      option.toLowerCase().includes(lowercasedInput)
+      normalizeString(option).includes(normalizedInput)
     );
+
     setFilteredOptions(newFilteredOptions);
     setLoading(false);
   };
 
-  // Using debounce to optimize the filtering function
-  const debouncedFilterOptions = debounce(filterOptions, 300);
 
-  useEffect(() => {
-    if (currentValue) {
-      debouncedFilterOptions(currentValue);
-    } else {
-      setFilteredOptions(options); // Reset to original options if input is empty
-    }
-  }, [currentValue, options]); // Adding options to dependencies
+  // Render option with highlighted matching substring
+  const renderHighlightedOption = (option: string, query: string | null) => {
+    if (!query) return option;
+
+    const matchIndex = option.toLowerCase().indexOf(query.toLowerCase());
+    if (matchIndex === -1) return option;
+
+    const beforeMatch = option.slice(0, matchIndex);
+    const matchText = option.slice(matchIndex, matchIndex + query.length);
+    const afterMatch = option.slice(matchIndex + query.length);
+
+    return (
+      <>
+        <span style={{ whiteSpace: "pre-wrap" }}>{beforeMatch}</span>
+        <strong style={{ whiteSpace: "pre-wrap" }}>{matchText}</strong>
+        <span style={{ whiteSpace: "pre-wrap" }}>{afterMatch}</span>
+      </>
+    );
+  };
+
 
   return (
-    <Box className='w-full'>
+    <Box className="w-full">
       <Autocomplete
         disablePortal
         id="combo-box-demo"
-        options={displayAllOptions ? filteredOptions : filteredOptions.slice(0, 50)}
+        options={filteredOptions}
         value={currentValue}
         sx={{
           minWidth: 300,
@@ -82,28 +103,30 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
             }}
           />
         )}
+        renderOption={(props, option) => {
+          const { key, ...restProps } = props;
+          return (
+            <li key={option} {...restProps}>
+              {options.length > 50 && !currentValue && <InfoIcon sx={{ marginRight: 1 }} />}
+              {renderHighlightedOption(option, currentValue)}
+            </li>
+          );
+        }}
         onChange={(e, newVal) => {
-          handleChange(newVal); // Update the selected value
-          setCurrentValue(newVal); // Set the input value
+          handleChange(newVal);
+          setCurrentValue(newVal);
         }}
         onInputChange={(e, newInputValue) => {
           setCurrentValue(newInputValue);
           handleInputChange && handleInputChange(newInputValue);
         }}
         noOptionsText="Žádné možnosti"
-        isOptionEqualToValue={(option, value) => option.includes(value)} // Custom equality check
+        isOptionEqualToValue={(option, value) => option.includes(value)}
       />
-      {filteredOptions.length > 50 && !displayAllOptions && (
-        <Button
-          variant="outlined"
-          onClick={() => setDisplayAllOptions(true)} // Show all options when clicked
-          sx={{ marginTop: 2 }}
-        >
-          Zobrazit všechny možnosti
-        </Button>
-      )}
     </Box>
   );
 };
+
+
 
 export default SortedGroupedSelect;
