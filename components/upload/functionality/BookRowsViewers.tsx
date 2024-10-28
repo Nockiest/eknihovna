@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import { DataGrid, GridCellParams } from "@mui/x-data-grid";
 import { useUploadContext } from "@/app/upload/context";
+import { Book } from "@/types/types";
 
 const BookGrid = () => {
   const { books } = useUploadContext(); // Get books from the context
@@ -23,12 +24,14 @@ const BookGrid = () => {
   };
 
   // Define columns for the DataGrid
-  const columns = [
+  const columns: {field: keyof Book, headerName:any, width:number}[] = [
     { field: "id", headerName: "ID", width: 200 },
     { field: "name", headerName: "Name", width: 200 },
-    { field: "autor", headerName: "Autor", width: 200 },
-    { field: "kategorie", headerName: "kategorie", width: 150 },
+    { field: "author", headerName: "Autor", width: 200 },
+    { field: "category", headerName: "kategorie", width: 150 },
     { field: "isbn", headerName: "ISBN", width: 150 },
+    { field: "available", headerName: "Dostupná", width: 150 },
+    { field: "formaturita", headerName: "Maturitní", width: 150 },
   ];
 
   // Filter books based on the search term

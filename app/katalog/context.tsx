@@ -14,8 +14,6 @@ type QueryContextType = {
     filterName: keyof Filters,
     value: string | boolean | null
   ) => void;
-  // addToQueue: (item: QueueItem) => void
-  // resolvedItems: { [id: string]: any }; // Fixed syntax: Use an object type
 };
 
 // Create the context

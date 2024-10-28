@@ -16,22 +16,13 @@ import SingleBookCreator from "./functionality/SingleBookCreator";
 import BookGrid from "./functionality/BookRowsViewers";
 import { UploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
-import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
+import   fetchFilteredBooks   from "@/utils/apiConections/fetchFilteredBooks";
 export const revalidate = 0;
 
 const ExcelSheetUpdater = () => {
   const { data: session, status } = useSession({ required: true });
   const [activeTab, setActiveTab] = useState(1); // Výchozí tab je první
-  const [books, setBooks] = useState<Book[]>([
-  ]);
-  useEffect(() => {
-    const fetching = async () => {
-        const b:Book[] = await fetchFilteredBooks()
-        console.log("Fetched books:", b.length);
-        setBooks(b)
-    }
-fetching()
-  },[])
+
 
   if (!session) {
     return (
@@ -88,7 +79,6 @@ fetching()
     }
   };
   return (
-   <UploadContext.Provider value={{books}} >
 
    <Box className="flex flex-col h-auto gap-4 z-0 select-none px-12 items-center justify-center">
       <Paper className="flex flex-col  h-auto gap-16 w-full">
@@ -121,7 +111,7 @@ fetching()
         <Typography>Odhlásit se</Typography>
       </PrimaryButton>
     </Box>
-   </UploadContext.Provider>
+
 
   );
 };

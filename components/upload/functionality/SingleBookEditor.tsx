@@ -1,7 +1,7 @@
 "use client";
 import React, { useReducer, useState } from "react";
 import { Book } from "@/types/types";
-import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
+import   fetchFilteredBooks   from "@/utils/apiConections/fetchFilteredBooks";
 import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
 import BookEditForm from "@/components/general/BookEditForm";
 import {
@@ -51,21 +51,19 @@ const reducer = (state: State, action: Action): State => {
   }
 };
 
-
-
 const SingleBookEditor = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
   const [searchTerm, setSearchTerm] = useState("");
   const [matchingBooks, setMatchingBooks] = useState<Book[]>([]);
   const [editedBook, setEditedBook] = useState<Book | null>(null);
-  const [bookId, setBookId] = useState("");  // New state for book ID input
 
-  // Fetches books by name
+  // fetchess books, the admin could edit
   const handleSearch = async () => {
     try {
       dispatch({ type: "SET_LOADING", payload: true });
       const response = await fetchFilteredBooks({ name: searchTerm });
       setMatchingBooks(response);
+      console.log(response);
     } catch (error) {
       console.error("Error fetching books:", error);
     } finally {
@@ -73,69 +71,58 @@ const SingleBookEditor = () => {
     }
   };
 
-  // Fetches a book by ID as soon as an ID is entered
-  const handleFetchById = async () => {
-    if (!bookId) return;
-
-    try {
-      dispatch({ type: "SET_LOADING", payload: true });
-      const book = await fetchFilteredBooks( {...defaultFilters, id:bookId},1,  1);
-      setEditedBook(book[0]);
-    } catch (error) {
-      console.error("Error fetching book by ID:", error);
-    } finally {
-      dispatch({ type: "SET_LOADING", payload: false });
-    }
-  };
-
-  // Selects book from matching books
+  // selects the book from matching books that wiill be edited
   const handleBookSelection = (selectedBookId: string) => {
-    const selectedBook = matchingBooks.find((book) => book.id === selectedBookId);
+    const selectedBook: Book | undefined = matchingBooks.find(
+      (book) => book.id === selectedBookId
+    );
     if (!selectedBook) {
       console.error("Book not found");
       return;
     }
     dispatch({ type: "SET_EDIT_BOOK", payload: selectedBook });
+    console.log(selectedBook);
     setEditedBook(selectedBook);
   };
 
-  // Updates the edited book properties
+  // updates the edited book
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
 
     if (!editedBook) {
-      const newBook: Book = updateBookProperty(name, value, type, checked, null);
+      const newBook: Book = updateBookProperty(
+        name,
+        value,
+        type,
+        checked,
+        null
+      );
       setEditedBook(newBook);
     } else {
       setEditedBook((prevBook) => {
-        if (!prevBook) throw new Error("No book to update");
+        if (!prevBook) throw new Error("kniha zatím nebyla vytvořena");
         return updateBookProperty(name, value, type, checked, prevBook);
       });
     }
   };
-
-  // Submits the edited book to the database
+  // Update the book in the database
   const submitBook = async () => {
     if (!editedBook) return;
 
     try {
+      console.log(editedBook);
       const res = await postDataToUpload([editedBook]);
-      alert("Book successfully updated: " + res.data.message);
+      debugger;
+      console.log(res);
+      alert("Kniha úspěšně aktualizována" + res.data.message);
     } catch (err) {
       console.error("Error updating book:", err);
-      alert("Failed to update book: " + err);
+      alert("Selhal jsem v aktualizování knihy:" + err);
     }
   };
-
   return (
     <Box className="flex flex-row mx-auto align-center gap-4">
       <Box className="flex flex-col gap-4 mx-auto">
-        <TextField
-          label="Vyhledat Podle ID"
-          value={bookId}
-          onChange={(e) => setBookId(e.target.value)}
-          onBlur={handleFetchById}  // Trigger fetch on blur
-        />
         <TextField
           label="Vyhledat Podle Názvu"
           value={searchTerm}
@@ -145,9 +132,9 @@ const SingleBookEditor = () => {
           onClick={handleSearch}
           disabled={searchTerm.length === 0}
         >
+          {" "}
           <SearchIcon /> Vyhledat
         </PrimaryButton>
-
         {state.loading && <Typography>Načítám...</Typography>}
         {matchingBooks.length > 0 && (
           <Select
@@ -159,6 +146,9 @@ const SingleBookEditor = () => {
               handleBookSelection(event.target.value as string);
             }}
             displayEmpty
+            // Ensure you are not using ref inappropriately here
+            // If needed, you can use the ref like this:
+            // ref={yourRef}
           >
             <MenuItem value="" disabled>
               Vyberte knihu
@@ -183,13 +173,13 @@ const SingleBookEditor = () => {
         )}
       </Box>
       <Box>
-        <Typography variant="h6">Návod na upravení knihy</Typography>
+        <Typography variant="h6"> Návod na upravení knihy </Typography>
         <List>
-          <ListItemText primary="Zadejte ID nebo název knihy" />
-          <ListItemText primary="Počkejte na zobrazení výběrového pole" />
-          <ListItemText primary="Vyberte knihu, kterou chcete upravit" />
-          <ListItemText primary="Upravte údaje v části 'Upravit knihu'" />
-          <ListItemText primary="Nahrajte změny do databáze" />
+          <ListItemText primary="zadejte název knihy nebo její část" />
+          <ListItemText primary="počkejte, až se zobrazí další výběrové pole" />
+          <ListItemText primary="z nabídky vyberte knihu, kterou jste měli na mysli" />
+          <ListItemText primary="ve formuláři upravit knihu zadejte nové údaje" />
+          <ListItemText primary="nahrajte knihu, čímž přepíšete údaje knihy v databázi" />
         </List>
       </Box>
     </Box>

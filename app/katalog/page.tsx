@@ -8,8 +8,6 @@ import ErrorReporter from "@/utils/Announcer";
 import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
 import CreditMe from "@/components/general/CreditMe";
 import { usePathname, useRouter,useSearchParams } from "next/navigation";
-import getBookCoverURL from "@/utils/getBookCover";
-import useQueue from "@/utils/hooks/useQueue";
 // Define the type for the queue items
 interface RequestQueueItem {
   isbn: string;

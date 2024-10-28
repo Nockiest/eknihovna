@@ -6,7 +6,7 @@ import BookPreview from "./BookPreview";
 import PaginationLinker from "../general/PaginationLinker";
 import { useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
-import { fetchFilteredBooks } from "@/utils/apiConections/fetchFilteredBooks";
+import  fetchFilteredBooks   from "@/utils/apiConections/fetchFilteredBooks";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
 import LoadingComponent from "../general/LoadingComponent";

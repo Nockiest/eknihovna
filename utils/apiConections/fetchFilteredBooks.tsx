@@ -2,7 +2,7 @@ import axios from "axios";
 import { Book, Filters } from "@/types/types";
 import { defaultFilters } from "@/data/values";
 
-export const fetchFilteredBooks = async (
+ const fetchFilteredBooks = async (
   filters: Filters = defaultFilters,
   page: number = 1,
   limit: number = 10000000
@@ -20,6 +20,7 @@ export const fetchFilteredBooks = async (
     throw new Error(`Problem with fetching data: ${error.message}`);
   }
 };
+export default fetchFilteredBooks
 
 // export const fetchFilteredBooks = async (
 //   activeFilters: Filters = defaultFilters,
