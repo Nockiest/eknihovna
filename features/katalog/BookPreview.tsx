@@ -34,7 +34,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           : 0,
         color: theme.palette.text.primary,
         padding: "0",
-        margin: 0, // Explicitly set margin to zero
+        margin: 0, // Explicitly set margin to zerox
         width: '160px',
       }}
     >
