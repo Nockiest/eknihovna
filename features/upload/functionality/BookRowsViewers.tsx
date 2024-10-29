@@ -4,7 +4,7 @@ import { DataGrid, GridCellParams, GridRowModel } from "@mui/x-data-grid";
 import { useUploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
 import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
-import UpdatedBooksList from "./UpdatedBookList";
+import UpdatedBooksList from "../../../components/UpdatedBookList";
 
 const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context

@@ -4,7 +4,7 @@ import "./styling/globals.css";
 import theme from "@/theme/theme";
 import { ThemeProvider } from "@mui/material";
 import Head from "next/head";
-import BugReportSection from "@/components/sections/BugReport";
+import BugReportSection from "@/features/sections/BugReport";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 // import ReactQueryProvider from "@/utils/Providers";

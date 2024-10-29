@@ -164,21 +164,7 @@ const BookCatalog: React.FC = () => {
             }}
           >
             {shownBooks.map((book: Book, index: any) => (
-              // <Box
-              //   key={index}
-              //   className="relative "
-              //   sx={{
-              //     height: "120px",
-              //     width: "140px",
-              //     display: "flex",
-              //     justifyContent: "center",
-              //     alignItems: "center",
-              //     p: 1,
-              //     borderRadius: 1,
-              //   }}
-              // >
                 <BookPreview book={book} />
-              // </Box>
             ))}
           </Box>
           <PaginationLinker

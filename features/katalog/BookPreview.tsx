@@ -35,7 +35,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         color: theme.palette.text.primary,
         padding: "0",
         margin: 0, // Explicitly set margin to zerox
-        width: '160px',
+        width: "160px",
       }}
     >
       <Box
@@ -50,14 +50,17 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
             align="center"
             sx={{
               overflow: "hidden",
+              display: "-webkit-box", // Required for Webkit browsers
+              WebkitBoxOrient: "vertical", // Vertical orientation for line-clamp
+              WebkitLineClamp: 2, // Limits to 2 lines
               textOverflow: "ellipsis",
-              whiteSpace: "nowrap",
-              width: "100%", // Set the width as needed
               fontWeight: "900",
+              width: "100%", // Ensure it doesn’t exceed parent width
             }}
           >
             {name}
           </Typography>
+
           <Typography
             variant="body2"
             align="center"

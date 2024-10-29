@@ -1,4 +1,4 @@
-import ExcelSheetUpdater from "@/components/upload/ExcelSheetUpdater";
+import ExcelSheetUpdater from "@/features/upload/ExcelSheetUpdater";
 import { Box } from "@mui/material";
 import AuthProvider from "@/components/AuthProvider";
 import type { Metadata } from "next";
