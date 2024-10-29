@@ -2,7 +2,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { noCacheHeaders } from "@/data/values";
-import { findUniquePrismaBooks, context } from "@/features/serverCode/prisma/prisma";
+import { findUniquePrismaBooks, context } from "@/lib/prisma";
 import { errorResponse } from "@/features/serverCode/errorResponse";
 
 export const revalidate = 30;

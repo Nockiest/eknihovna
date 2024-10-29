@@ -9,7 +9,7 @@ import {
   craeteManyPrismaBooks,
   deleteAllPrismaBooks,
   upsertPrismaBook,
-} from "@/features/serverCode/prisma/prisma";
+} from "@/lib/prisma";
 import { Book } from "@/types/types";
 import { NextResponse } from "next/server";
 import { v4 as uuidv4 } from "uuid";

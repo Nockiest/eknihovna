@@ -1,10 +1,10 @@
 // import prisma from "@/lib/prisma";
-import { buildPrismaFilter } from "@/features/serverCode/prisma/buildPrismaFilter";
+import { buildPrismaFilter } from "@/lib/prisma/buildPrismaFilter";
 import {
   context,
   findUniquePrismaBooks,
   loadPrismaBookPage,
-} from "@/features/serverCode/prisma/prisma";
+} from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { noCacheHeaders } from "@/data/values";
 export const revalidate = 30;

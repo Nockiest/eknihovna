@@ -1,4 +1,4 @@
-import { context, findManyPrismaBooks } from '@/features/serverCode/prisma/prisma';
+import { context, findManyPrismaBooks } from '@/lib/prisma';
 import * as xlsx from 'xlsx';
 import { NextResponse } from 'next/server';
 import { noCacheHeaders } from '@/data/values';
