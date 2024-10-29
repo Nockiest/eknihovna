@@ -39,7 +39,7 @@ const BugReportSection = () => {
           color="secondary"
           style={{ marginTop: "16px", display: "flex", alignItems: "center" }}
         >
-          Nahlásit problém <BugReport style={{ marginLeft: "8px" }} />
+          Navrhnout vylepšení/Nahlásit problém <BugReport style={{ marginLeft: "8px" }} />
         </DangerButton>
       </Link>
     </Box>

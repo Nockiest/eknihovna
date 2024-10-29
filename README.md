@@ -16,14 +16,42 @@ pnpm dev
 # or
 bun dev
 ```
-##Techstack
+##  Architecture
 Frontend: React, NextJs
 Backend: NextjsAPI, Prisma
+Styling: Tailwind, MUI library
 Database: PSQL
-Important libraries: MUI components, axios, xlsx
+Authentication: NextAUth
 
-## Purpouse of project
+## Purpose of project
 The goal is to increase the utilization of our school library. Many students do not even know what books are available. Gettting important information like this from the library requires physical contact with a school librarian, who is not always present to consult. The app solves this problem by providing an up to date information, which even a non-tech savvy school employee can easily maintain.
+
+## Target Audience
+The app is intended to be used by the students of Grammar School Opatov
+
+## Features
+Find availability of books in library
+FInd books you can use for your maturita exams
+Find general information about the school library
+Easy updating of the book state through the admin page
+
+## Code structure
+/components - general components that could be used independently throughout the app
+/features - specific funcionality dependent on some other code
+/app/api - contains the backend of the app
+/app - contains the individual components
+/utils - provides code that coudl be used in other projects
+
+
+## Env variables
+NEXTAUTH_SECRET - for auth
+GOOGLE_CLIENT_ID - for auth
+GOOGLE_CLIENT_SECRET - for auth
+GITHUB_ID - for auth
+GITHUB_SECRET - for auth
+DATABASE_URL - for database connection
+NEXT_PUBLIC_WHITE_LIST_EMAILS - emails that have acess to the admin page seperated by ":"
+NEXT_PUBLIC_APP_API_URL - url of the backend/api to make calls to
 
 ## how to run
 
