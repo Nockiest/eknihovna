@@ -1,9 +1,9 @@
 "use client";
 import React, { useReducer, useState } from "react";
 import { Book } from "@/types/types";
-import   fetchFilteredBooks   from "@/utils/apiConections/fetchFilteredBooks";
-import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
-import BookEditForm from "@/components/general/BookEditForm";
+import   fetchFilteredBooks   from "@/features/apiCalls/fetchFilteredBooks";
+import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
+import BookEditForm from "@/components/BookEditForm";
 import {
   Box,
   List,
@@ -15,7 +15,7 @@ import {
 } from "@mui/material";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import SearchIcon from "@mui/icons-material/Search";
-import updateBookProperty from "@/utils/updateBookProperty";
+import updateBookProperty from "@/components/pureCode/updateBookProperty";
 const initialState = {
   idle: true,
   loading: false,

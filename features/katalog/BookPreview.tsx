@@ -2,9 +2,8 @@ import { truthyValues } from "@/data/values";
 import theme from "@/theme/theme";
 import { Book } from "@/types/types";
 import { Box, Paper, Typography } from "@mui/material";
-import Filter from "./CategoryChip";
-import CategoryChip from "./CategoryChip";
-import LineWithCircle from "../general/styling/LineWithCircle";
+import CategoryChip from "../../components/CategoryChip";
+import LineWithCircle from "../../components/styling/LineWithCircle";
 import { useRouter } from "next/navigation";
 type BookPreviewProps = {
   book: Book;
@@ -24,7 +23,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`h-[90%] absolute top-0 left-1/2 transform -translate-x-1/2 pl-0 pt-0 p-0 w-[140px] items-center cursor-pointer`}
+      className={`h-32   items-center cursor-pointer`}
       onClick={() => {
         router.push(`/katalog/${id}`);
       }}
@@ -34,8 +33,9 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           ? `2px solid ${theme.palette.primary.main}`
           : 0,
         color: theme.palette.text.primary,
-        padding: "0 0 0 0",
+        padding: "0",
         margin: 0, // Explicitly set margin to zero
+        width: '160px',
       }}
     >
       <Box

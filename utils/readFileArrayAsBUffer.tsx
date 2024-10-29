@@ -1,3 +1,9 @@
+/**
+ * Asynchronously reads the contents of a File as an ArrayBuffer.
+ *
+ * @param file - The File to read.
+ * @returns A Promise that resolves with the ArrayBuffer containing the file's data.
+ */
 const readFileAsArrayBuffer = (file: File): Promise<ArrayBuffer> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();

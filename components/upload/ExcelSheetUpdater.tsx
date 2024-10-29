@@ -2,7 +2,7 @@
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { Box,  Paper, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
-import ReroutToAUth from "../general/ReroutToAUth";
+import ReroutToAUth from "../ReroutToAUth";
 import { useEffect, useState } from "react";
 import SingleBookEditor from "./functionality/SingleBookEditor";
 import Uploader from "./functionality/Uploader";
@@ -10,13 +10,13 @@ import BookDeleter from "./functionality/BookDeleter";
 import BookCountLogger from "./functionality/BookCountLogger";
 import BookFetcher from "./functionality/BookFetcher";
 import SingleBookDeleter from "./functionality/SingleBookDeleter";
-import CustomButtonGroup from "../general/styling/ButtonGroup";
+import CustomButtonGroup from "../styling/ButtonGroup";
 import { splited_emails } from "@/data/values";
 import SingleBookCreator from "./functionality/SingleBookCreator";
 import BookGrid from "./functionality/BookRowsViewers";
 import { UploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
-import   fetchFilteredBooks   from "@/utils/apiConections/fetchFilteredBooks";
+import   fetchFilteredBooks   from "@/features/apiCalls/fetchFilteredBooks";
 export const revalidate = 0;
 
 const ExcelSheetUpdater = () => {

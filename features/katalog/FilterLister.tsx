@@ -2,7 +2,7 @@
 import { checkIfIgnoredValue } from "@/types/typeChecks";
 import { Filters, FiltringValues } from "@/types/types";
 import { translateBookKey } from "@/utils/translateBookKeys";
-import CategoryChip from "./CategoryChip";
+import CategoryChip from "../../components/CategoryChip";
 import { Box, Typography } from "@mui/material";
 import { useSearchContext } from "@/app/katalog/context";
 import { useEffect } from "react";

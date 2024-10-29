@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import catchError from "../catchError";
+import catchError from "../../utils/catchError";
 import useInterval from "./useInterval";
 
 type QueueItem = {

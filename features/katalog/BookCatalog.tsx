@@ -3,16 +3,16 @@ import React, { useEffect, useReducer, useState } from "react";
 import { Box, Button, Grid, IconButton, Stack } from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
-import PaginationLinker from "../general/PaginationLinker";
+import PaginationLinker from "../../components/PaginationLinker";
 import { useSearchParams } from "next/navigation";
 import { useSearchContext } from "@/app/katalog/context";
-import  fetchFilteredBooks   from "@/utils/apiConections/fetchFilteredBooks";
+import fetchFilteredBooks from "@/features/apiCalls/fetchFilteredBooks";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
-import LoadingComponent from "../general/LoadingComponent";
-import Announcer from "@/utils/Announcer";
+import LoadingComponent from "../../components/LoadingComponent";
+import Announcer from "@/components/Announcer";
 import { FiltringWindow } from "./FiltringWindow";
-import SortedGroupedSelect from "./SortedSelect";
+import SortedGroupedSelect from "../../components/SortedSelect";
 import SearchIcon from "@mui/icons-material/Search";
 import catchError from "@/utils/catchError";
 type State = {
@@ -74,7 +74,7 @@ const BookCatalog: React.FC = () => {
     null
   );
   const searchParams = useSearchParams();
-  const itemsPerPage = 64
+  const itemsPerPage = 64;
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
   const fetchBooks = async () => {
@@ -152,36 +152,35 @@ const BookCatalog: React.FC = () => {
 
       {status === "loadedBooks" && shownBooks.length > 0 && (
         <Stack className="w-full   mx-auto">
-          <Grid
-            container
-            spacing={4}
-            columns={12}
-            alignItems="stretch"
+          <Box
+            className="w-full mx-auto"
             sx={{
-              justifyContent: "center",
-              width: "100%",
               display: "flex",
-              alignItems: "center",
-              margin: "1rem auto",
-              gridTemplateColumns: "repeat(auto-fill, minmax(140px, 1fr))",
+              flexWrap: "wrap",
+              justifyContent: "center",
+              gap: 2, // Controls spacing between items
+              width: "100%",
+              mt: 3,
             }}
           >
             {shownBooks.map((book: Book, index: any) => (
-              <Grid
-                className="relative h-[120px]  w-full "
-                item
-                xs={6}
-                sm={4}
-                md={3}
-                lg={2}
-                xl={1}
-                key={index}
-                alignItems={"begin"}
-              >
+              // <Box
+              //   key={index}
+              //   className="relative "
+              //   sx={{
+              //     height: "120px",
+              //     width: "140px",
+              //     display: "flex",
+              //     justifyContent: "center",
+              //     alignItems: "center",
+              //     p: 1,
+              //     borderRadius: 1,
+              //   }}
+              // >
                 <BookPreview book={book} />
-              </Grid>
+              // </Box>
             ))}
-          </Grid>
+          </Box>
           <PaginationLinker
             totalEntries={BooksInFilterNum}
             itemsPerPage={itemsPerPage}

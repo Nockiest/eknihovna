@@ -4,7 +4,7 @@ import { Box, Checkbox, List, ListItemText, Typography } from "@mui/material";
 import React, { useState } from "react";
 import readFileAsArrayBuffer from "@/utils/readFileArrayAsBUffer";
 import convertExcelToJson from "@/utils/convertExcelToJson";
-import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
+import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
 const Uploader = () => {
   const [jsonResult, setJsonResult] = useState<any[]>([]);
   const [overwriteData, setOverwriteData] = useState(false);

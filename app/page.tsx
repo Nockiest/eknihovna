@@ -1,10 +1,10 @@
 "use client";
-import OpeningHours from "@/components/general/OpeningHours";
+import OpeningHours from "@/components/OpeningHours";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
-import OtherProjectLinker from "@/components/general/OtherProjectLinker";
+import OtherProjectLinker from "@/components/OtherProjectLinker";
 
 export default function Home() {
   return (

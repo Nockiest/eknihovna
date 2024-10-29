@@ -13,7 +13,7 @@ import {
 import theme from "@/theme/theme";
 import { Filters, FiltringValues } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
-import SortedGroupedSelect from "./SortedSelect";
+import SortedGroupedSelect from "../../components/SortedSelect";
 import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
 import getFilteredOptions from "@/utils/getFilteredOptions";

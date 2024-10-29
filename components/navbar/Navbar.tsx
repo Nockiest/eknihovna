@@ -12,7 +12,7 @@ import {
 import HamburgerNavList from "./Hamburger";
 import { navRoutes } from "@/data/values";
 import { HeaderContext, useHeaderContext } from "./headerConntext";
-import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
+import useCurrentBreakpoint from "@/features/hooks/useCustomBreakpoint";
 import Image from "next/image";
 import NavbarMapper from "./NavbarMaper";
 import { NavButton } from "@/types/types";

@@ -1,5 +1,5 @@
 import { Container } from '@mui/material';
-import Message from '@/components/general/Message';
+import Message from '@/components/Message';
 import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: "Novinky v G.O. knihovně",

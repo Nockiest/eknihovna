@@ -1,9 +1,9 @@
-import BookEditForm from "@/components/general/BookEditForm";
+import BookEditForm from "@/components/BookEditForm";
 import { emptyBook } from "@/data/values";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { Book } from "@/types/types";
-import { postDataToUpload } from "@/utils/apiConections/postDataToUpload";
-import updateBookProperty from "@/utils/updateBookProperty";
+import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
+import updateBookProperty from "@/components/pureCode/updateBookProperty";
 import { Box, List, ListItemText, Typography } from "@mui/material";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";

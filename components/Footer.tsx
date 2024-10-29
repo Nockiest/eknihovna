@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { navRoutes } from "@/data/values";
 import { Box } from "@mui/material";
-import NavbarMapper from "../navbar/NavbarMaper";
+import NavbarMapper from "./navbar/NavbarMaper";
 import { NavButton } from "@/types/types";
 const Footer = () => {
   const renderButton = (button: NavButton, isActive: boolean) => (

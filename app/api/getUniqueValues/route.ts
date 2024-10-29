@@ -1,5 +1,5 @@
 import { corsHeaders, falsyValues, noCacheHeaders } from "@/data/values";
-import { context, findManyPrismaUniquePrismaBooksColumn } from "@/lib/prisma";
+import { context, findManyPrismaUniquePrismaBooksColumn } from "@/features/serverCode/prisma/prisma";
 import { NextRequest, NextResponse } from "next/server";
 export const revalidate = 120;
 export type UniqueBookValue = {

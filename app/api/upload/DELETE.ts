@@ -1,4 +1,4 @@
-import { context, deleteAllPrismaBooks, deletePrismaBook } from "@/lib/prisma";
+import { context, deleteAllPrismaBooks, deletePrismaBook } from "@/features/serverCode/prisma/prisma";
 import { Book } from "@/types/types";
 import { NextRequest, NextResponse } from "next/server";
 

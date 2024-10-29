@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Box } from "@mui/material";
 import PaginationLink from "./PaginationLink";
-import useCurrentBreakpoint from "@/utils/useCustomBreakpoint";
+import useCurrentBreakpoint from "@/features/hooks/useCustomBreakpoint";
 
 interface PaginationProps {
   totalEntries: number;

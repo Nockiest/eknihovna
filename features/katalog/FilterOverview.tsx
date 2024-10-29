@@ -2,7 +2,7 @@ import { useSearchContext } from "@/app/katalog/context";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
 import { Box } from "@mui/material";
 import React from "react";
-import CategoryChip from "./CategoryChip";
+import CategoryChip from "../../components/CategoryChip";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import { isStringedBool } from "@/types/typeChecks";
 import { Filters } from "@/types/types";

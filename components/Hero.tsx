@@ -2,8 +2,8 @@
 import { Box } from "@mui/material";
 import Image from "next/image";
 import { useState } from "react";
-import { HeaderContext } from "../navbar/headerConntext";
-import NavBar from "../navbar/Navbar";
+import { HeaderContext } from "./navbar/headerConntext";
+import NavBar from "./navbar/Navbar";
 
 const Hero = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);

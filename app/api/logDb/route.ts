@@ -1,5 +1,5 @@
 import { noCacheHeaders } from "@/data/values";
-import {   countPrismaBooks } from "@/lib/prisma";
+import {   countPrismaBooks } from "@/features/serverCode/prisma/prisma";
 import { NextResponse } from "next/server";
 export const revalidate = 0;
 export async function GET() {

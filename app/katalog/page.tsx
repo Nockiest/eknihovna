@@ -1,12 +1,12 @@
 "use client";
-import BookCatalog from "@/components/katalog/BookCatalog";
+import BookCatalog from "@/features/katalog/BookCatalog";
 import { Box, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Filters, FiltringValues } from "@/types/types";
 import { SearchContext } from "./context";
-import ErrorReporter from "@/utils/Announcer";
-import fetchUniqueValues from "@/utils/apiConections/fetchUniqueValues";
-import CreditMe from "@/components/general/CreditMe";
+import ErrorReporter from "@/components/Announcer";
+import fetchUniqueValues from "@/features/apiCalls/fetchUniqueValues";
+import CreditMe from "@/components/CreditMe";
 import { usePathname, useRouter,useSearchParams } from "next/navigation";
 // Define the type for the queue items
 interface RequestQueueItem {
