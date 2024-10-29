@@ -13,8 +13,15 @@ const BookGrid = () => {
 
   const handleCellClick = (params: GridCellParams) => {
     const cellData = params.value;
+    const field = params.field;
+
     navigator.clipboard
       .writeText(cellData as string)
+      .then(() => {
+        if (field === "id") {
+          alert("id zkopopírováno: "+ cellData);
+        }
+      })
       .then((err) => console.error("Could not copy text: ", err));
   };
 
@@ -25,13 +32,20 @@ const BookGrid = () => {
     { field: "author", headerName: "Autor", width: 200, editable: true },
     { field: "category", headerName: "Kategorie", width: 150, editable: true },
     { field: "isbn", headerName: "ISBN", width: 150, editable: true },
-    { field: "available", headerName: "Dostupná", width: 150, editable: true },
     {
       field: "formaturita",
       headerName: "Maturitní",
-      width: 150,
+      width: 100,
       editable: true,
     },
+    { field: "available", headerName: "Dostupná", width: 100, editable: true },
+    {
+      field: "zpusob_ziskani",
+      headerName: "Zpus. Získ.",
+      width: 100,
+      editable: true,
+    },
+    { field: "signatura", headerName: "Signatura", width: 100, editable: true },
   ];
 
   const filteredRows = books.filter((book) =>
