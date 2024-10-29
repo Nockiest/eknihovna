@@ -1,5 +1,5 @@
 // import prisma from "@/lib/prisma";
-import { buildPrismaFilter } from "@/lib/prisma/buildPrismaFilter";
+import { buildPrismaFilter } from "@/features/serverCode/buildPrismaFilter";
 import {
   context,
   findUniquePrismaBooks,
