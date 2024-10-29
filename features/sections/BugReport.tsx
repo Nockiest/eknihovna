@@ -29,7 +29,7 @@ const BugReportSection = () => {
         <CloseIcon />
       </IconButton>
       <Typography align="center" variant="body2" gutterBottom>
-        Aplikace je stále ve vývoji. Možné nápady a nalezené chyby můžeš
+        Budeme rádi za tvůj feedback. Možné nápady a případné chyby můžeš
         zaznamenat na tomto linku.
       </Typography>
       <Link href="https://forms.gle/uU2rXgcin7aDjazk8" passHref>
