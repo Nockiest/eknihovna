@@ -108,16 +108,13 @@ const BookGrid = () => {
         />
       </Box>
       <UpdatedBooksList updatedBooks={updatedBooks} />
-      {/* {updatedBooks.map((updated) => (
-        <p key={updated.id}>
-          {updated.name} {updated.author}
-        </p>
-      ))} */}
+
       <Button
         variant="contained"
         color="primary"
         onClick={() => {
           postDataToUpload(updatedBooks);
+          setUpdatedBooks([]); // Clear the updatedBooks state after successful upload
         }}
         sx={{ mt: 2 }}
         disabled={updatedBooks.length === 0} // Disable if no books are updated
