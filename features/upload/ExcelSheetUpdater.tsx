@@ -4,7 +4,7 @@ import { Box,  Paper, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "../../components/ReroutToAUth";
 import { useEffect, useState } from "react";
-import SingleBookEditor from "./functionality/SingleBookEditor";
+import SingleBookEditor from "../../deprecated/SingleBookEditor";
 import Uploader from "./functionality/Uploader";
 import BookDeleter from "../apiCalls/BookDeleter";
 import BookCountLogger from "../apiCalls/BookCountLogger";
@@ -19,6 +19,7 @@ import { Book } from "@/types/types";
 import   fetchFilteredBooks   from "@/features/apiCalls/fetchFilteredBooks";
 export const revalidate = 0;
 
+// TODO: refactor to split auth and render functionality
 const ExcelSheetUpdater = () => {
   const [books, setBooks] = useState<Book[]>([]);
   useEffect(() => {
@@ -74,12 +75,10 @@ const ExcelSheetUpdater = () => {
       case 0:
         return <Uploader />;
       case 1:
-        return <SingleBookEditor />;
-      case 2:
         return <SingleBookCreator />;
-      case 3:
+      case 2:
         return <SingleBookDeleter />;
-      case 4:
+      case 3:
         return <BookGrid />;
 
 
@@ -94,10 +93,9 @@ const ExcelSheetUpdater = () => {
         <CustomButtonGroup
           buttons={[
             { text: "Hromadné nahrání", onClick: () => setActiveTab(0) },
-            { text: "Editovat Knihu", onClick: () => setActiveTab(1) },
-            { text: "Vytvořit Knihu", onClick: () => setActiveTab(2) },
-            { text: "Smazat Knihu", onClick: () => setActiveTab(3) },
-            { text: "Prohlédnout knihy", onClick: () => setActiveTab(4) },
+            { text: "Vytvořit Knihu", onClick: () => setActiveTab(1) },
+            { text: "Smazat Knihu", onClick: () => setActiveTab(2) },
+            { text: "Prohlédnout knihy", onClick: () => setActiveTab(3) },
           ]}
           activeIndex={activeTab}
           setActiveIndex={setActiveTab}
