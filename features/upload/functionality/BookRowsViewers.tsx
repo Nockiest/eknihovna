@@ -11,7 +11,7 @@ const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context
   const [updatedBooks, setUpdatedBooks] = useState<Book[]>([]);
   const [filterText, setFilterText] = useState("");
-  const originalBooks = [...books]; // Keep a copy of the original books
+  const [originalBooks, setOriginalBooks] =  useState(books)  // Keep a copy of the original books
 
   // Clipboard paste handler for editable cells
   const handleCellPaste = async (params: GridCellParams) => {
@@ -84,8 +84,8 @@ const BookGrid = () => {
 
   // Reset changes when clicking "Zrušit změny"
   const handleCancelChanges = () => {
-    setBooks(originalBooks);
-    setUpdatedBooks([]);
+    setBooks(originalBooks); // Restore the original books to context
+    setUpdatedBooks([]); // Clear updatedBooks state
   };
 
   return (
@@ -116,7 +116,8 @@ const BookGrid = () => {
         color="primary"
         onClick={() => {
           postDataToUpload(updatedBooks);
-          setUpdatedBooks([]);
+          setOriginalBooks(books)
+          setUpdatedBooks([]); // Clear updatedBooks after confirming changes
         }}
         sx={{ mt: 2, mr: 2 }}
         disabled={updatedBooks.length === 0}
