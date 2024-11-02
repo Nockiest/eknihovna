@@ -28,7 +28,7 @@ const BugReportSection = () => {
       >
         <CloseIcon />
       </IconButton>
-      <Typography align="center" variant="body2" gutterBottom>
+      <Typography align="center" variant="body1" gutterBottom>
         Budeme rádi za tvůj feedback. Možné nápady a případné chyby můžeš
         zaznamenat na tomto linku.
       </Typography>

@@ -37,7 +37,7 @@ const theme = createTheme(
 
   typography: {
     h1: {
-      fontSize: "2.4rem",
+      fontSize: "1.6rem",
       "@media (min-width:600px)": {
         fontSize: "2.8rem",
       },
@@ -46,7 +46,7 @@ const theme = createTheme(
       },
     },
     h2: {
-      fontSize: "2rem",
+      fontSize: "1.4rem",
       "@media (min-width:600px)": {
         fontSize: "2.4rem",
       },
@@ -55,7 +55,7 @@ const theme = createTheme(
       },
     },
     h3: {
-      fontSize: "1.75rem",
+      fontSize: "1.3rem",
       "@media (min-width:600px)": {
         fontSize: "2rem",
       },
@@ -64,7 +64,7 @@ const theme = createTheme(
       },
     },
     h4: {
-      fontSize: "1.5rem",
+      fontSize: "1.2rem",
       "@media (min-width:600px)": {
         fontSize: "1.75rem",
       },
@@ -73,7 +73,7 @@ const theme = createTheme(
       },
     },
     h5: {
-      fontSize: "1.25rem",
+      fontSize: "1.1rem",
       "@media (min-width:600px)": {
         fontSize: "1.5rem",
       },
@@ -91,12 +91,21 @@ const theme = createTheme(
       },
     },
     body1: {
-      fontSize: "1rem",
+      fontSize: "0.9rem",
       "@media (min-width:600px)": {
         fontSize: "1.1rem",
       },
       [createTheme().breakpoints.up("md")]: {
         fontSize: "1.2rem",
+      },
+    },
+    body2: {
+      fontSize: "0.8rem",
+      "@media (min-width:600px)": {
+        fontSize: "1rem",
+      },
+      [createTheme().breakpoints.up("md")]: {
+        fontSize: "1.1rem",
       },
     },
   },

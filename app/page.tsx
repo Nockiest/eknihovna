@@ -5,10 +5,24 @@ import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 import OtherProjectLinker from "@/components/OtherProjectLinker";
+import useCurrentBreakpoint from "@/features/hooks/useCustomBreakpoint";
 
 export default function Home() {
+  const size = useCurrentBreakpoint();
   return (
     <Container maxWidth={"lg"} className="flex flex-col gap-2">
+      {(size === "xs" || size === "sm")  &&
+
+        <Typography
+          variant="h1"
+          className="  text-center  "
+          align="center"
+        >
+          ŠKOLNÍ KNIHOVNA G.O.
+        </Typography>
+         }
+
+
      <Container >
      <Typography variant="body1">
         Vítejte na domovské stránce knihovny Gymnázia Opatov, kde se můžete

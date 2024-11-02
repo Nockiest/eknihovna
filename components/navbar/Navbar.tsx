@@ -3,11 +3,9 @@ import Link from "next/link";
 import { NavbarButton } from "@/theme/buttons/Buttons";
 import {
   Box,
-  Button,
   IconButton,
   Paper,
   Typography,
-  useMediaQuery,
 } from "@mui/material";
 import HamburgerNavList from "./Hamburger";
 import { navRoutes } from "@/data/values";
@@ -59,6 +57,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
         />
       </Box>
       {size === "xs" || size === "sm" ? (
+
         <Image src="/img/loga/bookLogo.png" width={64} height={64} alt="logo" />
       ) : (
         <Typography
@@ -66,7 +65,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
           className="sm:mb-4 text-center  "
           align="center"
         >
-          ŠKOLNÍ KNIHOVNA
+          ŠKOLNÍ KNIHOVNA G.O.
         </Typography>
       )}
 
