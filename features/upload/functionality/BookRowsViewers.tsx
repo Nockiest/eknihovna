@@ -7,7 +7,6 @@ import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
 import UpdatedBooksList from "../../../components/UpdatedBookList";
 import { DangerButton } from "@/theme/buttons/Buttons";
 
-
 const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context
   const [updatedBooks, setUpdatedBooks] = useState<Book[]>([]);
@@ -46,27 +45,34 @@ const BookGrid = () => {
     book.name.toLowerCase().includes(filterText.trim().toLowerCase())
   );
 
-
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     const { id, ...updatedFields } = newRow;
     const updatedBook: Book = { ...oldRow, ...updatedFields } as Book;
 
-    setBooks((prevBooks) =>
-      prevBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
+    // Check for actual changes between the new and old rows
+    const hasChanges = Object.keys(updatedFields).some((key) =>
+      updatedFields[key] !== oldRow[key]
     );
 
-    setUpdatedBooks((prevUpdatedBooks) => {
-      const existingIndex = prevUpdatedBooks.findIndex(
-        (book) => book.id === updatedBook.id
+    if (hasChanges) {
+      setBooks((prevBooks) =>
+        prevBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
       );
-      if (existingIndex > -1) {
-        const updatedList = [...prevUpdatedBooks];
-        updatedList[existingIndex] = updatedBook;
-        return updatedList;
-      } else {
-        return [...prevUpdatedBooks, updatedBook];
-      }
-    });
+
+      setUpdatedBooks((prevUpdatedBooks) => {
+        const existingIndex = prevUpdatedBooks.findIndex(
+          (book) => book.id === updatedBook.id
+        );
+        if (existingIndex > -1) {
+          const updatedList = [...prevUpdatedBooks];
+          updatedList[existingIndex] = updatedBook;
+          return updatedList;
+        } else {
+          return [...prevUpdatedBooks, updatedBook];
+        }
+      });
+    }
+
     return updatedBook;
   };
 
