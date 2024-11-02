@@ -43,8 +43,9 @@ const BookGrid = () => {
   ];
 
   const filteredRows = books.filter((book) =>
-    book.name.toLowerCase().includes(filterText.toLowerCase())
+    book.name.toLowerCase().includes(filterText.trim().toLowerCase())
   );
+
 
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     const { id, ...updatedFields } = newRow;
