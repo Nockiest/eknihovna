@@ -5,11 +5,14 @@ import { useUploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
 import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
 import UpdatedBooksList from "../../../components/UpdatedBookList";
+import { DangerButton } from "@/theme/buttons/Buttons";
+
 
 const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context
   const [updatedBooks, setUpdatedBooks] = useState<Book[]>([]);
   const [filterText, setFilterText] = useState("");
+  const originalBooks = [...books]; // Keep a copy of the original books
 
   // Clipboard paste handler for editable cells
   const handleCellPaste = async (params: GridCellParams) => {
@@ -33,19 +36,9 @@ const BookGrid = () => {
     { field: "author", headerName: "Autor", width: 200, editable: true },
     { field: "category", headerName: "Kategorie", width: 150, editable: true },
     { field: "isbn", headerName: "ISBN", width: 150, editable: true },
-    {
-      field: "formaturita",
-      headerName: "Maturitní",
-      width: 100,
-      editable: true,
-    },
+    { field: "formaturita", headerName: "Maturitní", width: 100, editable: true },
     { field: "available", headerName: "Dostupná", width: 100, editable: true },
-    {
-      field: "zpusob_ziskani",
-      headerName: "Zpus. Získ.",
-      width: 100,
-      editable: true,
-    },
+    { field: "zpusob_ziskani", headerName: "Zpus. Získ.", width: 100, editable: true },
     { field: "signatura", headerName: "Signatura", width: 100, editable: true },
   ];
 
@@ -55,7 +48,6 @@ const BookGrid = () => {
 
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     const { id, ...updatedFields } = newRow;
-
     const updatedBook: Book = { ...oldRow, ...updatedFields } as Book;
 
     setBooks((prevBooks) =>
@@ -66,7 +58,6 @@ const BookGrid = () => {
       const existingIndex = prevUpdatedBooks.findIndex(
         (book) => book.id === updatedBook.id
       );
-
       if (existingIndex > -1) {
         const updatedList = [...prevUpdatedBooks];
         updatedList[existingIndex] = updatedBook;
@@ -75,7 +66,6 @@ const BookGrid = () => {
         return [...prevUpdatedBooks, updatedBook];
       }
     });
-
     return updatedBook;
   };
 
@@ -83,6 +73,12 @@ const BookGrid = () => {
     if (params.reason === 'cellFocusOut' && params.value !== params.row[params.field]) {
       handleCellPaste(params);
     }
+  };
+
+  // Reset changes when clicking "Zrušit změny"
+  const handleCancelChanges = () => {
+    setBooks(originalBooks);
+    setUpdatedBooks([]);
   };
 
   return (
@@ -108,8 +104,6 @@ const BookGrid = () => {
           ignoreDiacritics
         />
       </Box>
-      <UpdatedBooksList updatedBooks={updatedBooks} />
-
       <Button
         variant="contained"
         color="primary"
@@ -117,11 +111,21 @@ const BookGrid = () => {
           postDataToUpload(updatedBooks);
           setUpdatedBooks([]);
         }}
-        sx={{ mt: 2 }}
+        sx={{ mt: 2, mr: 2 }}
         disabled={updatedBooks.length === 0}
       >
         Potvrdit změny
       </Button>
+      <DangerButton
+        variant="contained"
+        color="error" // Danger button
+        onClick={handleCancelChanges}
+        sx={{ mt: 2 }}
+        disabled={updatedBooks.length === 0}
+      >
+        Zrušit změny
+      </DangerButton>
+      <UpdatedBooksList updatedBooks={updatedBooks} />
     </Box>
   );
 };
