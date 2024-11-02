@@ -5,7 +5,7 @@ import { Book } from "@/types/types"; // Ensure to import the Book type
 const UpdatedBooksList = ({ updatedBooks }: { updatedBooks: Book[] }) => (
   <Box sx={{ mt: 3, p: 2, border: "1px solid #ddd", borderRadius: 2 }}>
     <Typography variant="h6" gutterBottom>
-      Updated Books
+      Aktualizované knihy
     </Typography>
     {updatedBooks.map((updated, index) => (
       <Box
@@ -16,18 +16,19 @@ const UpdatedBooksList = ({ updatedBooks }: { updatedBooks: Book[] }) => (
           mb: 1,
         }}
       >
-        <Box className='flex flex-wrap gap-2'    >
+        <Box className="border border-black border-1 flex flex-wrap gap-2 ">
           {Object.entries(updated).map(([key, value]) => {
-            const displayValue = `${value?.toString()?.slice(0, 15)}` // Shortened display with ellipsis
+            const displayValue = `${value?.toString()?.slice(0, 15)}`; // Shortened display with ellipsis
 
             return (
-              <Box className='border-black h-auto'>
+              <Box
+                key={key}
+                className=" h-auto p-2"
+              >
                 <Typography variant="body2">
                   <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong>{" "}
                   {displayValue}
                 </Typography>
-
-
               </Box>
             );
           })}
