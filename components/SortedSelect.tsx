@@ -29,12 +29,15 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       filterOptions(currentValue);
     } else {
       // Filter out predefined suggestions from the options before selecting random options
-      const availableOptions = predefinedSuggestions? options.filter(
-        (option) => !predefinedSuggestions.includes(option)
-      ): options
+      const availableOptions = predefinedSuggestions
+        ? options.filter((option) => !predefinedSuggestions.includes(option))
+        : options;
 
       // Get 5 random options from the filtered list or all 10 if there are no predefined suggestions
-      const randomOptions = getRandomArrayElements(shuffleArray(availableOptions)).slice(0, predefinedSuggestions ? 5 : 10);
+      const randomOptions = getRandomArrayElements(shuffleArray(availableOptions)).slice(
+        0,
+        predefinedSuggestions ? 5 : 10
+      );
 
       // Combine predefined suggestions with random options if predefined suggestions are provided
       const combinedOptions = predefinedSuggestions
@@ -45,7 +48,6 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     }
   }, [currentValue, options, predefinedSuggestions]);
 
-
   const filterOptions = (inputValue: string) => {
     setLoading(true);
 
@@ -54,7 +56,6 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
     const normalizedInput = normalizeString(inputValue);
-    debugger
     const newFilteredOptions = options
       .filter((option) => normalizeString(option).includes(normalizedInput))
       .slice(0, 10); // Limit to top 10 results
@@ -94,9 +95,11 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
           minWidth: 300,
           width: "full",
           flexGrow: 1,
-          "& .MuiAutocomplete-listbox": {
-            maxHeight: 250, // Set maximum height to avoid overflow
-            overflow: "auto",
+        }}
+        ListboxProps={{
+          style: {
+            maxHeight: filteredOptions.length ? `${filteredOptions.length * 48}px` : "auto", // Adjust height dynamically
+            overflow: "hidden", // Prevent scrollbar from showing
           },
         }}
         renderInput={(params) => (

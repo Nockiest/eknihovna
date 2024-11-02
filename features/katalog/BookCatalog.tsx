@@ -136,7 +136,7 @@ const BookCatalog: React.FC = () => {
         <SortedGroupedSelect
           predefinedSuggestions={suggestedBooks}
           options={filterValues["name"]}
-          label={"Vyhledat"}
+          label={"Název..."}
           handleChange={(newVal) => {
             setCurrentSearchValue(newVal);
             handleActiveFilterChange("name", newVal);
