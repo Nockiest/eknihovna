@@ -6,7 +6,7 @@ import Link from "next/link";
 import CreditMe from "@/components/CreditMe";
 export const metadata: Metadata = {
   title: "Informace o G.O. knihovně",
-  description: "Vše o výpujčce a kontakt na knihovnu",
+  description: "Vše o výpůjčce a kontakt na knihovnu",
 };
 const page = () => {
   return (
@@ -14,7 +14,7 @@ const page = () => {
       <Box className="px-12 lg:px-24">
       <Typography variant="h1" className="mb-2">
         {" "}
-        Vše ohledně vypujčení knížky{" "}
+        Vše ohledně vypůjčení knížky{" "}
       </Typography>
       <List>
         <ListItem>
@@ -28,7 +28,7 @@ const page = () => {
         <ListItem>
           Knihu jsou zcela zdarma a nepotřebujete žádnout průkazku
         </ListItem>
-        <ListItem>Knihu jsou pujčovány na lístkový systém</ListItem>
+        <ListItem>Knihu jsou půjčovány na lístkový systém</ListItem>
         <ListItem>
           Knihovna je otevřena v průběhu celého školního roku{" "}
         </ListItem>
@@ -77,7 +77,7 @@ const page = () => {
       </Box>
       <Box className="w-full my-8 flex flex-col flex-center">
         <PrimaryButton className="mx-auto">
-          <Link href="/katalog">Pujčit si knihu</Link>
+          <Link href="/katalog">Půjčit si knihu</Link>
         </PrimaryButton>
       </Box>
       <CreditMe />
