@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
-import { DataGrid, GridCellParams, GridRowModel } from "@mui/x-data-grid";
+import { DataGrid, GridCellParams, GridRowModel, GridEventListener } from "@mui/x-data-grid";
 import { useUploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
 import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
@@ -11,18 +11,19 @@ const BookGrid = () => {
   const [updatedBooks, setUpdatedBooks] = useState<Book[]>([]);
   const [filterText, setFilterText] = useState("");
 
-  const handleCellClick = (params: GridCellParams) => {
-    const cellData = params.value;
-    const field = params.field;
-
-    navigator.clipboard
-      .writeText(cellData as string)
-      .then(() => {
-        if (field === "id") {
-          alert("id zkopopírováno: "+ cellData);
-        }
-      })
-      .then((err) => console.error("Could not copy text: ", err));
+  // Clipboard paste handler for editable cells
+  const handleCellPaste = async (params: GridCellParams) => {
+    try {
+      const clipboardText = await navigator.clipboard.readText();
+      if (params.isEditable) {
+        processRowUpdate(
+          { ...params.row, [params.field]: clipboardText },
+          params.row
+        );
+      }
+    } catch (err) {
+      console.error("Error reading clipboard text:", err);
+    }
   };
 
   // Define columns for the DataGrid
@@ -55,32 +56,33 @@ const BookGrid = () => {
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     const { id, ...updatedFields } = newRow;
 
-    // Ensure the newRow contains all properties of the Book type
     const updatedBook: Book = { ...oldRow, ...updatedFields } as Book;
 
-    // Update the main books state
     setBooks((prevBooks) =>
       prevBooks.map((book) => (book.id === updatedBook.id ? updatedBook : book))
     );
 
-    // Update the updatedBooks state
     setUpdatedBooks((prevUpdatedBooks) => {
       const existingIndex = prevUpdatedBooks.findIndex(
         (book) => book.id === updatedBook.id
       );
 
       if (existingIndex > -1) {
-        // If the book already exists in updatedBooks, replace it
         const updatedList = [...prevUpdatedBooks];
         updatedList[existingIndex] = updatedBook;
         return updatedList;
       } else {
-        // If not, add the updated book to updatedBooks
         return [...prevUpdatedBooks, updatedBook];
       }
     });
 
-    return updatedBook; // Return the updated row to reflect changes in the grid
+    return updatedBook;
+  };
+
+  const handleCellEditStop: GridEventListener<'cellEditStop'> = (params) => {
+    if (params.reason === 'cellFocusOut' && params.value !== params.row[params.field]) {
+      handleCellPaste(params);
+    }
   };
 
   return (
@@ -100,8 +102,7 @@ const BookGrid = () => {
         <DataGrid
           rows={filteredRows}
           columns={columns}
-          //   autoPageSize
-          onCellClick={handleCellClick}
+          onCellEditStop={handleCellEditStop}  // Use cell edit stop to trigger paste
           processRowUpdate={processRowUpdate}
           editMode="cell"
           ignoreDiacritics
@@ -114,10 +115,10 @@ const BookGrid = () => {
         color="primary"
         onClick={() => {
           postDataToUpload(updatedBooks);
-          setUpdatedBooks([]); // Clear the updatedBooks state after successful upload
+          setUpdatedBooks([]);
         }}
         sx={{ mt: 2 }}
-        disabled={updatedBooks.length === 0} // Disable if no books are updated
+        disabled={updatedBooks.length === 0}
       >
         Potvrdit změny
       </Button>
@@ -126,4 +127,3 @@ const BookGrid = () => {
 };
 
 export default BookGrid;
-//
