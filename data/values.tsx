@@ -93,6 +93,21 @@ export const bookHeaders: Array<keyof Book> = [
   "rating",
   "isbn",
 ];
+// nem2li by b7t stejnn0 jako random options
+export const suggestedBooks = [
+  "1984",
+  "Zločin a trest",
+  "Máj",
+  "Krysař",
+  "Robinson Crusoe",
+  "Umění milovat",
+  "Den trifidů",
+  "Kulička",
+  "Robin Hood",
+  "Tři sestry",
+  "Forrest Gump",
+  "Božská komedie",
+];
 
 export var splited_emails =
   process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");

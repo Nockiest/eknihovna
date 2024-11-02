@@ -1,11 +1,13 @@
 "use client";
-import { Autocomplete, TextField, CircularProgress, Button, Box } from "@mui/material";
+import { Autocomplete, TextField, CircularProgress, Box } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import InfoIcon from "@mui/icons-material/Info"; // Icon to signify examples
-import getRandomOptions from "@/utils/extractRandomFromArray";
+
+import { getRandomArrayElements, shuffleArray } from "@/utils/arrayUtils";
 
 interface SortedGroupedSelectProps {
   options: string[];
+  predefinedSuggestions?: string[]; // New prop for predefined suggestions
   label: string;
   handleChange: (value: string | null) => void;
   handleInputChange?: (value: string | null) => void;
@@ -13,23 +15,36 @@ interface SortedGroupedSelectProps {
 
 const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   options,
+  predefinedSuggestions,
   label,
   handleChange,
   handleInputChange,
 }) => {
   const [currentValue, setCurrentValue] = useState<string | null>(null);
-  const [filteredOptions, setFilteredOptions] = useState<string[]>(options);
+  const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (currentValue) {
       filterOptions(currentValue);
-    } else if (options.length > 50) {
-      setFilteredOptions(getRandomOptions(options));
     } else {
-      setFilteredOptions(options);
+      // Filter out predefined suggestions from the options before selecting random options
+      const availableOptions = predefinedSuggestions? options.filter(
+        (option) => !predefinedSuggestions.includes(option)
+      ): options
+
+      // Get 5 random options from the filtered list or all 10 if there are no predefined suggestions
+      const randomOptions = getRandomArrayElements(shuffleArray(availableOptions)).slice(0, predefinedSuggestions ? 5 : 10);
+
+      // Combine predefined suggestions with random options if predefined suggestions are provided
+      const combinedOptions = predefinedSuggestions
+        ? [...shuffleArray(predefinedSuggestions).slice(0, 5), ...randomOptions]
+        : randomOptions;
+
+      setFilteredOptions(shuffleArray(combinedOptions));
     }
-  }, [currentValue, options]);
+  }, [currentValue, options, predefinedSuggestions]);
+
 
   const filterOptions = (inputValue: string) => {
     setLoading(true);
@@ -39,15 +54,14 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 
     const normalizedInput = normalizeString(inputValue);
-
-    const newFilteredOptions = options.filter((option) =>
-      normalizeString(option).includes(normalizedInput)
-    );
+    debugger
+    const newFilteredOptions = options
+      .filter((option) => normalizeString(option).includes(normalizedInput))
+      .slice(0, 10); // Limit to top 10 results
 
     setFilteredOptions(newFilteredOptions);
     setLoading(false);
   };
-
 
   // Render option with highlighted matching substring
   const renderHighlightedOption = (option: string, query: string | null) => {
@@ -69,7 +83,6 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     );
   };
 
-
   return (
     <Box className="w-full">
       <Autocomplete
@@ -81,7 +94,10 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
           minWidth: 300,
           width: "full",
           flexGrow: 1,
-          overflowY: "auto",
+          "& .MuiAutocomplete-listbox": {
+            maxHeight: 250, // Set maximum height to avoid overflow
+            overflow: "auto",
+          },
         }}
         renderInput={(params) => (
           <TextField
@@ -122,7 +138,5 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     </Box>
   );
 };
-
-
 
 export default SortedGroupedSelect;

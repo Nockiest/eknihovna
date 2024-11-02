@@ -15,6 +15,7 @@ import { FiltringWindow } from "./FiltringWindow";
 import SortedGroupedSelect from "../../components/SortedSelect";
 import SearchIcon from "@mui/icons-material/Search";
 import catchError from "@/utils/catchError";
+import { suggestedBooks } from "@/data/values";
 type State = {
   status: "loading" | "loadedBooks" | "error";
   shownBooks: Book[];
@@ -133,6 +134,7 @@ const BookCatalog: React.FC = () => {
           />
         </IconButton>
         <SortedGroupedSelect
+          predefinedSuggestions={suggestedBooks}
           options={filterValues["name"]}
           label={"Vyhledat"}
           handleChange={(newVal) => {
@@ -164,7 +166,7 @@ const BookCatalog: React.FC = () => {
             }}
           >
             {shownBooks.map((book: Book, index: any) => (
-                <BookPreview book={book} />
+                <BookPreview book={book} key={index } />
             ))}
           </Box>
           <PaginationLinker
