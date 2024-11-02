@@ -30,7 +30,9 @@ export const rootPalette = {
   },
 };
 
-const theme = createTheme({
+const theme = createTheme(
+
+  {
   spacing: 8,
 
   typography: {

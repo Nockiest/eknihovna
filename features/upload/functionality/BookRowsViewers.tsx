@@ -6,7 +6,7 @@ import { Book } from "@/types/types";
 import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
 import UpdatedBooksList from "../../../components/UpdatedBookList";
 import { DangerButton } from "@/theme/buttons/Buttons";
-
+import { csCZ } from '@mui/x-data-grid/locales';
 const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context
   const [updatedBooks, setUpdatedBooks] = useState<Book[]>([]);
@@ -103,6 +103,7 @@ const BookGrid = () => {
       />
       <Box mt={2} sx={{ height: 400 }}>
         <DataGrid
+        localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
           rows={filteredRows}
           columns={columns}
           onCellEditStop={handleCellEditStop}  // Use cell edit stop to trigger paste
