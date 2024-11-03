@@ -28,19 +28,17 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     if (currentValue) {
       filterOptions(currentValue);
     } else if (options.length == 0) {
-      return
-    }
-    else {
+      return;
+    } else {
       // Filter out predefined suggestions from the options before selecting random options
       const availableOptions = predefinedSuggestions
         ? options.filter((option) => !predefinedSuggestions.includes(option))
         : options;
 
       // Get 5 random options from the filtered list or all 10 if there are no predefined suggestions
-      const randomOptions = getRandomArrayElements(shuffleArray(availableOptions)).slice(
-        0,
-        predefinedSuggestions ? 5 : 10
-      );
+      const randomOptions = getRandomArrayElements(
+        shuffleArray(availableOptions)
+      ).slice(0, predefinedSuggestions ? 5 : 10);
 
       // Combine predefined suggestions with random options if predefined suggestions are provided
       const combinedOptions = predefinedSuggestions
@@ -56,7 +54,10 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
 
     // Helper function to remove diacritics
     const normalizeString = (str: string) =>
-      str.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+      str
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
 
     const normalizedInput = normalizeString(inputValue);
     const newFilteredOptions = options
@@ -101,7 +102,9 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
         }}
         ListboxProps={{
           style: {
-            maxHeight: filteredOptions.length ? `${filteredOptions.length * 48}px` : "auto", // Adjust height dynamically
+            maxHeight: filteredOptions.length
+              ? `${filteredOptions.length * 48}px`
+              : "auto", // Adjust height dynamically
             overflow: "hidden", // Prevent scrollbar from showing
           },
         }}
@@ -114,7 +117,9 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
               ...params.InputProps,
               endAdornment: (
                 <>
-                  {loading ? <CircularProgress color="inherit" size={20} /> : null}
+                  {loading ? (
+                    <CircularProgress color="inherit" size={20} />
+                  ) : null}
                   {params.InputProps.endAdornment}
                 </>
               ),
@@ -125,7 +130,9 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
           const { key, ...restProps } = props;
           return (
             <li key={option} {...restProps}>
-              {options.length > 50 && !currentValue && <InfoIcon sx={{ marginRight: 1 }} />}
+              {options.length > 50 && !currentValue && (
+                <InfoIcon sx={{ marginRight: 1 }} />
+              )}
               {renderHighlightedOption(option, currentValue)}
             </li>
           );

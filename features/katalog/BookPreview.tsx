@@ -23,7 +23,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
 
   return (
     <Paper
-      className={`h-32   items-center cursor-pointer`}
+      className={`min-h-32   items-center cursor-pointer`}
       onClick={() => {
         router.push(`/katalog/${id}`);
       }}
@@ -41,7 +41,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
       <Box
         p={2}
         sx={{ backgroundColor: "#ffffff" }}
-        className=" flex flex-col items-center justify-around h-full select-none"
+        className=" flex flex-col items-center justify-start h-full select-none"
       >
         {/* <BookCover isbn={isbn} bookId={id} /> */}
         <Box className=" flex grow-0 flex-col items-center justify-around w-full  ">
