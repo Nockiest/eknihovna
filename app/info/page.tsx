@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Box, List, ListItem, Typography } from "@mui/material";
 import Link from "next/link";
 import CreditMe from "@/components/CreditMe";
+import OpeningHours from "@/components/OpeningHours";
 export const metadata: Metadata = {
   title: "Informace o G.O. knihovně",
   description: "Vše o výpůjčce a kontakt na knihovnu",
@@ -12,9 +13,9 @@ const page = () => {
   return (
     <Box justifyContent={"center"} className="w-full">
       <Box className="px-12 lg:px-24">
-      <Typography variant="h1" className="mb-2">
-        {" "}
-        Vše ohledně vypůjčení knížky{" "}
+      <Typography variant="h3" className="mb-2">
+
+        Vše ohledně vypůjčení knížky
       </Typography>
       <List>
         <ListItem>
@@ -28,9 +29,9 @@ const page = () => {
         <ListItem>
           Knihu jsou zcela zdarma a nepotřebujete žádnout průkazku
         </ListItem>
-        <ListItem>Knihu jsou půjčovány na lístkový systém</ListItem>
+        <ListItem>Knihu jsou (zatím) půjčovány na lístkový systém</ListItem>
         <ListItem>
-          Knihovna je otevřena v průběhu celého školního roku{" "}
+          Knihovna je otevřena v průběhu celého školního roku
         </ListItem>
         <ListItem>
           na konci školního roku by měly být všechny knihy vráceny
@@ -39,13 +40,11 @@ const page = () => {
           Pokud student knihu ztratí, je jeho povinností nahradit knihu
           zakoupením stejného titulu
         </ListItem>
-        <ListItem>
-          I vy se můžete podílet na rozšíření knihovního katalogu darováním
-          vlastní knihy :-)
-        </ListItem>
-      </List>
 
+      </List>
+      <OpeningHours />
       </Box>
+
 
       <Box
         className="m-auto bg-primary-800"
