@@ -3,7 +3,7 @@ import React from 'react'
 
 const CreditMe = () => {
   return (
-    <Container>
+    <Container className='w-auto'>
         <Typography variant="body1">Aplikaci vytvořil Ondřej Lukeš</Typography>
     </Container>
   )
