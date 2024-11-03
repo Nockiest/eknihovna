@@ -27,7 +27,10 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   useEffect(() => {
     if (currentValue) {
       filterOptions(currentValue);
-    } else {
+    } else if (options.length == 0) {
+      return
+    }
+    else {
       // Filter out predefined suggestions from the options before selecting random options
       const availableOptions = predefinedSuggestions
         ? options.filter((option) => !predefinedSuggestions.includes(option))
