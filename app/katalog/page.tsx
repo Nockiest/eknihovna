@@ -113,7 +113,6 @@ const KatalogPage = () => {
 //  const  {queue, resolvedItems, addToQueue } = useQueue(500, getBookCoverURL)
 
   const searchParams = useSearchParams();
-  const page = parseInt(searchParams.get("page") || "1", 10) || 1;
   const pathname = usePathname();
   const router = useRouter();
   const changePage = (newPage: number) => {

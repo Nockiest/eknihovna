@@ -4,7 +4,6 @@ import { Box,  Paper, Typography } from "@mui/material";
 import { signOut, useSession } from "next-auth/react";
 import ReroutToAUth from "../../components/ReroutToAUth";
 import { useEffect, useState } from "react";
-import SingleBookEditor from "../../deprecated/SingleBookEditor";
 import Uploader from "./functionality/Uploader";
 import BookDeleter from "../apiCalls/BookDeleter";
 import BookCountLogger from "../apiCalls/BookCountLogger";
@@ -17,6 +16,7 @@ import BookGrid from "./functionality/BookRowsViewers";
 import { UploadContext } from "@/app/upload/context";
 import { Book } from "@/types/types";
 import   fetchFilteredBooks   from "@/features/apiCalls/fetchFilteredBooks";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 export const revalidate = 0;
 
 // TODO: refactor to split auth and render functionality
@@ -31,8 +31,17 @@ const ExcelSheetUpdater = () => {
     fetching();
   }, []);
   const { data: session, status } = useSession({ required: true });
-  const [activeTab, setActiveTab] = useState(1); // Výchozí tab je první
 
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const [activeTab, setActiveTab] = useState( parseInt(searchParams.get("tab") || "0", 10) || 1); // Výchozí tab je první
+
+  const changeTabInURL = (newPage: number) => {
+    const currentQuery = new URLSearchParams(searchParams.toString());
+    currentQuery.set("tab", newPage.toString());
+    router.push(`${pathname}?${currentQuery.toString()}`);
+  };
 
   if (!session) {
     return (
@@ -92,10 +101,10 @@ const ExcelSheetUpdater = () => {
       <Paper className="flex flex-col  h-auto gap-16 w-full">
         <CustomButtonGroup
           buttons={[
-            { text: "Hromadné nahrání", onClick: () => setActiveTab(0) },
-            { text: "Vytvořit Knihu", onClick: () => setActiveTab(1) },
-            { text: "Smazat Knihu", onClick: () => setActiveTab(2) },
-            { text: "Prohlédnout knihy", onClick: () => setActiveTab(3) },
+            { text: "Hromadné nahrání", onClick: () => changeTabInURL(0) },
+            { text: "Vytvořit Knihu", onClick: () => changeTabInURL(1) },
+            { text: "Smazat Knihu", onClick: () => changeTabInURL(2) },
+            { text: "Prohlédnout knihy", onClick: () => changeTabInURL(3) },
           ]}
           activeIndex={activeTab}
           setActiveIndex={setActiveTab}
