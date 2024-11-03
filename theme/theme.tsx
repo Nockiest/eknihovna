@@ -42,43 +42,43 @@ const theme = createTheme(
         fontSize: "2.8rem",
       },
       [createTheme().breakpoints.up("md")]: {
-        fontSize: "3.6rem",
+        fontSize: "1.8rem",
       },
     },
     h2: {
       fontSize: "1.4rem",
       "@media (min-width:600px)": {
-        fontSize: "2.4rem",
+        fontSize: "1.8rem",
       },
       [createTheme().breakpoints.up("md")]: {
-        fontSize: "3rem",
+        fontSize: "2rem",
       },
     },
     h3: {
       fontSize: "1.3rem",
       "@media (min-width:600px)": {
-        fontSize: "2rem",
+        fontSize: "1.6rem",
       },
       [createTheme().breakpoints.up("md")]: {
-        fontSize: "2.5rem",
+        fontSize: "1.5rem",
       },
     },
     h4: {
       fontSize: "1.2rem",
       "@media (min-width:600px)": {
-        fontSize: "1.75rem",
+        fontSize: "1.4rem",
       },
       [createTheme().breakpoints.up("md")]: {
-        fontSize: "2rem",
+        fontSize: "1.3rem",
       },
     },
     h5: {
       fontSize: "1.1rem",
       "@media (min-width:600px)": {
-        fontSize: "1.5rem",
+        fontSize: "1.3rem",
       },
       [createTheme().breakpoints.up("md")]: {
-        fontSize: "1.75rem",
+        fontSize: "1.4rem",
       },
     },
     h6: {
@@ -87,7 +87,7 @@ const theme = createTheme(
         fontSize: "1.25rem",
       },
       [createTheme().breakpoints.up("md")]: {
-        fontSize: "1.5rem",
+        fontSize: "1.25rem",
       },
     },
     body1: {
