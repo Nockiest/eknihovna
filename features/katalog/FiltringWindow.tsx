@@ -1,23 +1,21 @@
 "use client";
-import React, { useEffect, useState } from "react";
 import {
   Slide,
   Paper,
   Checkbox,
   FormControlLabel,
-  InputLabel,
   IconButton,
   Box,
   Stack,
+  Typography,
 } from "@mui/material";
 import theme from "@/theme/theme";
-import { Filters, FiltringValues } from "@/types/types";
 import { useSearchContext } from "@/app/katalog/context";
 import SortedGroupedSelect from "../../components/SortedSelect";
 import Close from "@mui/icons-material/Close";
 import FilterLister from "./FilterLister";
-import getFilteredOptions from "@/utils/getFilteredOptions";
-
+import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
+import SearchIcon from "@mui/icons-material/Search";
 type SearcherProps = {};
 export const FiltringWindow: React.FC<SearcherProps> = () => {
   const {
@@ -36,7 +34,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
       mountOnEnter
       unmountOnExit
     >
-      <Paper className={"relative"} elevation={3}>
+      <Paper className={"relative pl-4"} elevation={3}>
         <IconButton
           className="absolute top-0 overflow-y-auto right-0 m-2"
           onClick={() => {
@@ -49,13 +47,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
 
         <Stack spacing={2} className="m-2 mt-8 center-flex flex-col mx-4">
           <SortedGroupedSelect
-            // options={getFilteredOptions(
-            //   "category",
-            //   filterValues,
-            //   activeFilters
-            // )}
-            options={filterValues['category']}
-            // columnName={"category"}
+            options={filterValues["category"]}
             label={"kategorie"}
             handleChange={(newVal) =>
               handleActiveFilterChange("category", newVal)
@@ -78,7 +70,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             Autor: {activeFilters.author || "None"}
           </InputLabel> */}
           <SortedGroupedSelect
-           options={filterValues['author']}
+            options={filterValues["author"]}
             label={"autor"}
             handleChange={(newVal) =>
               handleActiveFilterChange("author", newVal)
@@ -87,6 +79,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         </Stack>
 
         <FormControlLabel
+        className="ml-4"
           control={
             <Checkbox
               checked={Boolean(activeFilters.available)}
@@ -103,8 +96,9 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             },
           }}
         />
-
+        <br />
         <FormControlLabel
+            className="ml-4"
           control={
             <Checkbox
               checked={Boolean(activeFilters.formaturita)}
@@ -121,6 +115,23 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
             },
           }}
         />
+        <br />
+        <Box className='w-full flex justify-center'>
+        <SecondaryButton
+          className="mt-9 p-2 "
+          onClick={() => {
+            setOpenSearcher(!isOpenSearcher);
+          }}
+        >
+            <IconButton>
+          <SearchIcon
+
+          />
+        </IconButton>{' '}
+          <Typography variant='h6' >Prohlédnout Knihy</Typography>
+        </SecondaryButton>
+        </Box>
+
       </Paper>
     </Slide>
   );
