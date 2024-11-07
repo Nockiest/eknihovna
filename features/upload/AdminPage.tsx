@@ -61,7 +61,7 @@ const AdminPage = () => {
               { text: "Hromadné nahrání", onClick: () => changeTabInURL(0) },
               { text: "Vytvořit Knihu", onClick: () => changeTabInURL(1) },
               { text: "Smazat Knihu", onClick: () => changeTabInURL(2) },
-              { text: "Prohlédnout knihy", onClick: () => changeTabInURL(3) },
+              { text: "Prohlédnout/Editovat knihy", onClick: () => changeTabInURL(3) },
             ]}
             activeIndex={activeTab}
             setActiveIndex={setActiveTab}
