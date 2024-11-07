@@ -69,7 +69,7 @@ export const emptyBook: Book = {
   formaturita: false,
   available: false,
   rating: -1,
-  isbn: "1",
+  isbn: "",
 };
 
 export const navRoutes: NavButton[] = [

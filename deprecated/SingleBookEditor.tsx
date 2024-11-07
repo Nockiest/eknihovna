@@ -114,6 +114,7 @@ const SingleBookEditor = () => {
       const res = await postDataToUpload([editedBook]);
       debugger;
       console.log(res);
+      
       alert("Kniha úspěšně aktualizována" + res.data.message);
     } catch (err) {
       console.error("Error updating book:", err);

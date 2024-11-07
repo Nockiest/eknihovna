@@ -2,7 +2,6 @@
 import { buildPrismaFilter } from "@/features/serverCode/buildPrismaFilter";
 import {
   context,
-  findUniquePrismaBooks,
   loadPrismaBookPage,
 } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
@@ -16,14 +15,14 @@ export async function POST(req: NextRequest) {
 
     if (!filters) {
       return NextResponse.json(
-        { error: "Server didn't receive filters" },
+        { error: "Server neobdržel filtry" },
         { status: 400 }
       );
     }
 
     if (page <= 0) {
       return NextResponse.json(
-        { error: "Page number was set to 0 or less " },
+        { error: "Číslo stránky nastaveno na0 neo méně " },
         { status: 400 }
       );
     }

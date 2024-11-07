@@ -14,6 +14,7 @@ const SingleBookCreator = () => {
     try {
       console.log(book);
       const response = await postDataToUpload([book]);
+      setBook({...emptyBook,id: uuidv4()})
       alert("Kniha úspěšně vytvořena," + response.message);
     } catch (err) {
       console.error("Error updating book:", err);
