@@ -65,7 +65,7 @@ const BookDetailPage = () => {
           <Typography variant="body1" sx={{ mb: 1 }}>
             <strong>Kategorie:</strong> {book.category || "N/A"}
           </Typography>  <br/>
-          <Box sx={{ mb: 1 }}>
+          {/* <Box sx={{ mb: 1 }}>
             <Typography variant="body1">
               <strong>Žánr:</strong>{" "}
               {book.genres && book.genres.length > 0 ? (
@@ -88,7 +88,7 @@ const BookDetailPage = () => {
                 "N/A"
               )}
             </Typography>
-          </Box>
+          </Box> */}
           <Typography variant="body1" sx={{ mb: 1 }}>
             <strong>ISBN:</strong> {book.isbn || "N/A"}
           </Typography>
@@ -99,5 +99,3 @@ const BookDetailPage = () => {
 };
 
 export default BookDetailPage;
-
-
