@@ -33,41 +33,50 @@ export function getSimilarity (result: string , query : string) {
 // checks whether the word is misspelled
 // note that to show results passed through this function in the front end you
 // should add to the check in the querylist table for the index of query
-export function levenshteinDistance(word1: string, word2: string) {
-    const m = word1.length;
-    const n = word2.length;
+export function levenshteinDistance(
+  word1: string,
+  word2: string,
+  limitDifference?: number
+): number {
+  const m = word1.length;
+  const n = word2.length;
 
-    // Create a 2D matrix to store the distances
-    const dp = Array(m + 1)
-      .fill(null)
-      .map(() => Array(n + 1).fill(0));
+  // Create a 2D matrix to store the distances
+  const dp = Array(m + 1)
+    .fill(null)
+    .map(() => Array(n + 1).fill(0));
 
-    // Initialize the first row and column of the matrix
-    for (let i = 0; i <= m; i++) {
-      dp[i][0] = i;
-    }
-    for (let j = 0; j <= n; j++) {
-      dp[0][j] = j;
-    }
+  // Initialize the first row and column of the matrix
+  for (let i = 0; i <= m; i++) {
+    dp[i][0] = i;
+  }
+  for (let j = 0; j <= n; j++) {
+    dp[0][j] = j;
+  }
 
-    // Calculate the distances
-    for (let i = 1; i <= m; i++) {
-      for (let j = 1; j <= n; j++) {
-        if (word1[i - 1] === word2[j - 1]) {
-          dp[i][j] = dp[i - 1][j - 1];
-        } else {
-          dp[i][j] = Math.min(
-            dp[i - 1][j] + 1, // Deletion
-            dp[i][j - 1] + 1, // Insertion
-            dp[i - 1][j - 1] + 1 // Substitution
-          );
-        }
+  // Calculate the distances
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      if (word1[i - 1] === word2[j - 1]) {
+        dp[i][j] = dp[i - 1][j - 1];
+      } else {
+        dp[i][j] = Math.min(
+          dp[i - 1][j] + 1, // Deletion
+          dp[i][j - 1] + 1, // Insertion
+          dp[i - 1][j - 1] + 1 // Substitution
+        );
+      }
+
+      // Check if the current distance exceeds the limitDifference
+      if (limitDifference !== undefined && dp[i][j] > limitDifference) {
+        return limitDifference + 1;
       }
     }
-
-    // Return the distance between the two words
-    return dp[m][n];
   }
+
+  // Return the distance between the two words
+  return dp[m][n];
+}
   //sanitizedResults.filter((result:Book) => {
     //   return (
     //     // checkSearchRelevant(result.keyword, query as string) ||

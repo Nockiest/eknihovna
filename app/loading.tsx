@@ -13,8 +13,8 @@ const LoadingPage = () => {
   }, []);
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <h1 style={{ fontSize: '24px' }}>Loading{dots}</h1>
+    <div className='relative' style={{ display: 'flex', justifyContent: 'start', alignItems: 'start', height: '100vh' }}>
+      <h1 className='absolute top-16 left-1/2 -translate-x-1' style={{ fontSize: '24px' }}>Loading{dots}</h1>
     </div>
   );
 };

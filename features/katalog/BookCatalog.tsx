@@ -16,6 +16,7 @@ import SortedGroupedSelect from "../../components/SortedSelect";
 import SearchIcon from "@mui/icons-material/Search";
 import catchError from "@/utils/catchError";
 import { suggestedBooks } from "@/data/values";
+import LoadingPage from "@/app/loading";
 type State = {
   status: "loading" | "loadedBooks" | "error";
   shownBooks: Book[];
@@ -146,7 +147,9 @@ const BookCatalog: React.FC = () => {
       </Box>
       <FiltringWindow />
 
-      {status === "loading" && <LoadingComponent />}
+      {status === "loading" && (
+          <LoadingPage />
+      )}
 
       {status === "error" && (
         <Announcer message={errorMessage} type={"error"} />
@@ -166,7 +169,7 @@ const BookCatalog: React.FC = () => {
             }}
           >
             {shownBooks.map((book: Book, index: any) => (
-                <BookPreview book={book} key={index } />
+              <BookPreview book={book} key={index} />
             ))}
           </Box>
           <PaginationLinker

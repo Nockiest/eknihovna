@@ -84,7 +84,14 @@ const BookGrid = () => {
   const filteredRows = books.filter((book) =>
     book.name.toLowerCase().includes(filterText.trim().toLowerCase())
   );
+  // const filteredRows = books.filter((book) => {
+  //   const bookNameWords = book.name.toLowerCase().split(/\s+/); // Split book name into words
+  //   const query = filterText.trim().toLowerCase();
 
+  //   return bookNameWords.some((word) =>
+  //     word.includes(query) || levenshteinDistance(word, query,3) < 3
+  //   );
+  // });
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     const { id, ...updatedFields } = newRow;
     const updatedBook: Book = { ...oldRow, ...updatedFields } as Book;
@@ -114,7 +121,6 @@ const BookGrid = () => {
         }
       });
     }
-
     return updatedBook;
   };
 
