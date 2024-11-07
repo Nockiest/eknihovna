@@ -4,7 +4,7 @@ import React from "react";
 
 const BauerovaLink = () => {
   return (
-    <Box
+  <Box
       className=" bg-primary-800"
       sx={{
         display: "flex",

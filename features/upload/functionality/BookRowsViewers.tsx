@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, Checkbox, TextField, Typography } from "@mui/material";
 import {
   DataGrid,
   GridCellParams,
@@ -45,8 +45,33 @@ const BookGrid = () => {
       headerName: "Maturitní",
       width: 100,
       editable: true,
+      renderCell: (params: GridCellParams) => (
+        <Checkbox
+          checked={params.value as boolean}
+          onChange={(event) => {
+            const newValue = event.target.checked;
+            const updatedRow = { ...params.row, formaturita: newValue };
+            processRowUpdate(updatedRow, params.row);
+          }}
+        />
+      ),
     },
-    { field: "available", headerName: "Dostupná", width: 100, editable: true },
+    {
+      field: "available",
+      headerName: "Dostupná",
+      width: 100,
+      editable: true,
+      renderCell: (params: GridCellParams) => (
+        <Checkbox
+          checked={params.value as boolean}
+          onChange={(event) => {
+            const newValue = event.target.checked;
+            const updatedRow = { ...params.row, available: newValue };
+            processRowUpdate(updatedRow, params.row);
+          }}
+        />
+      ),
+    },
     {
       field: "zpusob_ziskani",
       headerName: "Zpus. Získ.",
@@ -113,25 +138,6 @@ const BookGrid = () => {
       <Typography variant="h4" gutterBottom>
         Prohlížeč knih
       </Typography>
-      <TextField
-        label="Filtrovat podle jména"
-        variant="outlined"
-        fullWidth
-        value={filterText}
-        onChange={(e) => setFilterText(e.target.value)}
-        sx={{ mb: 2 }}
-      />
-      <Box mt={2} sx={{ height: 400 }}>
-        <DataGrid
-          localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
-          rows={filteredRows}
-          columns={columns}
-          onCellEditStop={handleCellEditStop} // Use cell edit stop to trigger paste
-          processRowUpdate={processRowUpdate}
-          editMode="cell"
-          ignoreDiacritics
-        />
-      </Box>
       <Button
         variant="contained"
         color="primary"
@@ -154,6 +160,26 @@ const BookGrid = () => {
       >
         Zrušit změny
       </DangerButton>
+      <TextField
+        label="Filtrovat podle jména"
+        variant="outlined"
+        fullWidth
+        value={filterText}
+        onChange={(e) => setFilterText(e.target.value)}
+        sx={{ mb: 2 }}
+      />
+      <Box mt={2} sx={{ height: 400 }}>
+        <DataGrid
+          localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
+          rows={filteredRows}
+          columns={columns}
+          onCellEditStop={handleCellEditStop} // Use cell edit stop to trigger paste
+          processRowUpdate={processRowUpdate}
+          editMode="cell"
+          ignoreDiacritics
+        />
+      </Box>
+
       <UpdatedBooksList updatedBooks={updatedBooks} />
     </Box>
   );

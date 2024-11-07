@@ -243,7 +243,7 @@ const theme = createTheme(
           },
           "&.Mui-checked": {
             // outline: `2px solid ${rootPalette.primary.dark}`,
-            color: rootPalette.primary.dark, // Tick color when checked
+            textColor: '#ffffff', //rootPalette.primary.dark, // Tick color when checked
             backgroundColor: rootPalette.primary.light, // Background color when checked
             "& .MuiSvgIcon-root": {
               fill: rootPalette.primary.dark, // Tick color when checked
