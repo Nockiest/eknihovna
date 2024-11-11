@@ -80,11 +80,11 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     const afterMatch = option.slice(matchIndex + query.length);
 
     return (
-      <>
+      <Box classname="flex flex-row text-nowrap text-ellipsis">
         <span style={{ whiteSpace: "pre-wrap" }}>{beforeMatch}</span>
         <strong style={{ whiteSpace: "pre-wrap" }}>{matchText}</strong>
         <span style={{ whiteSpace: "pre-wrap" }}>{afterMatch}</span>
-      </>
+      </Box>
     );
   };
 
@@ -129,7 +129,15 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
         renderOption={(props, option) => {
           const { key, ...restProps } = props;
           return (
-            <li key={option} {...restProps}>
+            <li
+              key={option}
+              {...restProps}
+              style={{
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+              
+              }}
+            >
               {options.length > 50 && !currentValue && (
                 <InfoIcon sx={{ marginRight: 1 }} />
               )}
