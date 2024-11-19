@@ -9,7 +9,6 @@ import { useSearchContext } from "@/app/katalog/context";
 import fetchFilteredBooks from "@/features/apiCalls/fetchFilteredBooks";
 import SearcherOpenerFab from "./SearcheOpenerFab";
 import FilterLister from "./FilterLister";
-import LoadingComponent from "../../components/LoadingComponent";
 import Announcer from "@/components/Announcer";
 import { FiltringWindow } from "./FiltringWindow";
 import SortedGroupedSelect from "../../components/SortedSelect";
