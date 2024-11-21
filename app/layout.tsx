@@ -42,7 +42,6 @@ export default function RootLayout({
             `,
         }}
       />
-
       <Head>
         {/* Primary Favicon */}
         <link rel="icon" type="image/x-icon" href="/icon/GO.ico" />
