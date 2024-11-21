@@ -12,7 +12,7 @@ import Hero from "@/components/Hero";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "G.O. eknihovna",
+  title: "GO eknihovna",
   description: "Školní knihovna Gymnázia Opatov",
 };
 

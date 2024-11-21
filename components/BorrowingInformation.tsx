@@ -11,7 +11,7 @@ export default function BorrowingInformation() {
           Najdete u nás přes 3000 knížek od maturitní četby až po odbornou
           literaturu
         </ListItem>
-        <ListItem>Knížky jsou dostupné pro každého studenta G.O</ListItem>
+        <ListItem>Knížky jsou dostupné pro každého studenta GO</ListItem>
         <ListItem>
           Knihu si zpravidla můžete půjčit na 1 měsíc (po domluvě i déle 🙂)
         </ListItem>

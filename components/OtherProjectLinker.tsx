@@ -5,7 +5,7 @@ import Link from "next/link";
 const OtherProjectLinker = () => {
     return (
       <Container className="bg-primary-800 mx-auto px-2 py-4 rounded-md">
-        <Typography variant="h6" className="mx-auto text-center"> <u>Další zajímavé projekty na G.O.</u></Typography>
+        <Typography variant="h6" className="mx-auto text-center"> <u>Další zajímavé projekty na GO</u></Typography>
         <Box className='mx-auto'>
           <Box className="flex flex-col w-full align-center m-2 justify-center mx-auto">
             <Typography variant="body1" className="text-center mx-auto">

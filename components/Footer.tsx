@@ -28,8 +28,8 @@ const Footer = () => {
       </Box>
       <Container className="w-16  p-0 my-auto h-16 flex justify-center align-center items-center">
           <Image
-            src="/img/g.o.logo.png"
-            alt="G.O. logo"
+            src="/img/GOlogo.png"
+            alt="GO logo"
             width={48}
             height={48}
           />

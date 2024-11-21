@@ -7,7 +7,7 @@ import AdminPage from "@/features/upload/AdminPage";
 
 export const revalidate = 0;
 export const metadata: Metadata = {
-  title: "G.O. eknihovna",
+  title: "GO eknihovna",
   description: "Nahrání dat",
 };
 // this should remain server rendered due to the auth contenxt

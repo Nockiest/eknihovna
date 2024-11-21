@@ -65,7 +65,7 @@ const NavBar: React.FC<NavListProps> = ({}) => {
           className="sm:mb-4 text-center  "
           align="center"
         >
-          ŠKOLNÍ KNIHOVNA G.O.
+          ŠKOLNÍ KNIHOVNA GO
         </Typography>
       )}
 

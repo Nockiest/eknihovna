@@ -7,7 +7,7 @@ import CreditMe from "@/components/CreditMe";
 import BauerovaLink from "@/components/BauerovaLink";
 import BorrowingInformation from "@/components/BorrowingInformation";
 export const metadata: Metadata = {
-  title: "Informace o G.O. knihovně",
+  title: "Informace o GO knihovně",
   description: "Vše o výpůjčce a kontakt na knihovnu",
 };
 const page = () => {
