@@ -1,16 +1,16 @@
-// // import prisma from "@/lib/prisma";
-// // import {
-// //   context,
-// // } from "@/lib/prisma";
-// import { defaultFilters } from "@/data/values";
+// import prisma from "@/lib/prisma";
+// import {
+//   context,
+// } from "@/lib/prisma";
+import { defaultFilters } from "@/data/values";
+import { buildPrismaFilter } from "@/features/serverCode/buildPrismaFilter";
+import { context } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
+// import { defaultFilters, noCacheHeaders } from "@/data/values";
+// import storeIsbnBookData from "@/features/serverCode/storeISBNdata";
 // import { buildPrismaFilter } from "@/features/serverCode/buildPrismaFilter";
-// import { context } from "@/lib/prisma";
-// import { NextRequest, NextResponse } from "next/server";
-// // import { defaultFilters, noCacheHeaders } from "@/data/values";
-// // import storeIsbnBookData from "@/features/serverCode/storeISBNdata";
-// // import { buildPrismaFilter } from "@/features/serverCode/buildPrismaFilter";
 // export const revalidate = 30;
-// export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest) {
 //     try {
 //       // Parse the request body to get filters if needed
 //       const { filters } = await req.json();
@@ -55,4 +55,4 @@
 //       // Disconnect the Prisma client
 //       context.prisma.$disconnect();
 //     }
-//   }
+  }
