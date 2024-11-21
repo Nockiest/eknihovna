@@ -75,16 +75,20 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
     const matchIndex = option.toLowerCase().indexOf(query.toLowerCase());
     if (matchIndex === -1) return option;
 
-    const beforeMatch = option.slice(0, matchIndex);
     const matchText = option.slice(matchIndex, matchIndex + query.length);
-    const afterMatch = option.slice(matchIndex + query.length);
 
+    const parts = option.split(new RegExp(`(${matchText})`, "gi")); // Split text into matched and unmatched parts
+    console.log(parts)
     return (
-      <Box className={"flex flex-row items-center text-elipsis"}>
-        <span style={{ whiteSpace: "nowrap" }}>{beforeMatch}</span>
-        <strong style={{ whiteSpace: "nowrap" }}>{matchText}</strong>
-        <span style={{ whiteSpace: "nowrap" }}>{afterMatch}</span>
-      </Box>
+      <span>
+        {parts.map((part, index) =>
+          part.toLowerCase() === matchText.toLowerCase() ? (
+            <strong key={index}>{part}</strong> // Bold matching parts
+          ) : (
+            <span key={index}>{part}</span> // Regular text for non-matching parts
+          )
+        )}
+      </span>
     );
   };
 
