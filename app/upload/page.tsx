@@ -18,7 +18,6 @@ export default async function Page() {
         <AdminPageAuthenticator>
           <AdminPage />
         </AdminPageAuthenticator>
-        {/* <ExcelSheetUpdater /> */}
       </AuthProvider>
     </Box>
   );
