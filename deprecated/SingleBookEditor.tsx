@@ -114,7 +114,7 @@ const SingleBookEditor = () => {
       const res = await postDataToUpload([editedBook]);
       debugger;
       console.log(res);
-      
+
       alert("Kniha úspěšně aktualizována" + res.data.message);
     } catch (err) {
       console.error("Error updating book:", err);
@@ -134,7 +134,7 @@ const SingleBookEditor = () => {
           disabled={searchTerm.length === 0}
         >
           {" "}
-          <SearchIcon /> Vyhledat
+          <SearchIcon /> Vyhledat Knihu
         </PrimaryButton>
         {state.loading && <Typography>Načítám...</Typography>}
         {matchingBooks.length > 0 && (
