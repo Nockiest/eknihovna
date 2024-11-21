@@ -42,6 +42,7 @@ export default function RootLayout({
         {/* Optional: Manifest File */}
         <link rel="manifest" href="/icon/GO-manifest.json" />
 
+        <meta name="google-site-verification" content="hjQ9ZFX153H0STRp1SFSLiakzbOMsi_S6s4jPvNKKJA" />
         {/* Optional: Theme Color */}
         <meta name="theme-color" content="#413330" />
       </Head>
