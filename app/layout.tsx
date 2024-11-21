@@ -14,6 +14,11 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "GO eknihovna",
   description: "Školní knihovna Gymnázia Opatov",
+  applicationName: 'GO eknihovna',
+  keywords: ['knihovna', 'eknihovna', 'gymnázium', "opatov", "GO"],
+  creator: "Ondřej Lukeš",
+  publisher: "Ondřej Lukeš",
+  icons: "/img/loga/bookLogo.png"
 };
 
 export default function RootLayout({
