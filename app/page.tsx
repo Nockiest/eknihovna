@@ -14,6 +14,8 @@ export const metadata: Metadata = {
 };
 export default function Home() {
   return (
+    <>
+    <meta name="google-site-verification" content="hjQ9ZFX153H0STRp1SFSLiakzbOMsi_S6s4jPvNKKJA" />
     <Container maxWidth={"lg"} className="flex flex-col gap-2">
 
       <GOMobileheader />
@@ -71,5 +73,7 @@ export default function Home() {
 
       <OtherProjectLinker />
     </Container>
+    </>
+
   );
 }
