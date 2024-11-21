@@ -1,8 +1,10 @@
+"use client"
 import Link from "next/link";
 import { navRoutes } from "@/data/values";
 import { Box } from "@mui/material";
 import NavbarMapper from "./NavbarMaper";
 import { NavButton } from "@/types/types";
+import { useEffect } from "react";
 interface HamburgerNavListProps {
   isOpen: boolean;
   toggleNav: () => void;
@@ -23,6 +25,19 @@ const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
       </Link>
     </li>
   );
+  useEffect(() => {
+    const handlePopState = () => {
+      if (isOpen) {
+        toggleNav();
+      }
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+    };
+  }, [isOpen, toggleNav]);
   return (
     <Box
       className={`fixed bg-[var(--text-color)] text-white top-0 bottom-0 left-0 right-0 z-100 transform transition-transform duration-250 ease-[cubic-bezier(0.5,0,0.5,1)]  ${
