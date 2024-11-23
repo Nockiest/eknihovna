@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/react"
 import React from "react";
 import GOMobileheader from "@/components/GOMobileheader";
 import { Metadata } from "next";
-import { GoogleAnalytics } from "nextjs-google-analytics";
+// import { GoogleAnalytics } from "nextjs-google-analytics";
 export const metadata: Metadata = {
   title: "Novinky v GO eknihovně",
   description: "GO eknihovna hlavní stránka",
@@ -17,7 +17,7 @@ export default function Home() {
     <>
     {/* <meta name="google-site-verification" content="hjQ9ZFX153H0STRp1SFSLiakzbOMsi_S6s4jPvNKKJA" /> */}
     <Analytics />
-    <GoogleAnalytics trackPageViews />
+    {/* <GoogleAnalytics trackPageViews /> */}
 
     <Container maxWidth={"lg"} className="flex flex-col gap-2">
 
