@@ -14,9 +14,14 @@ const BookFetcher = (   )=> {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/downloadExcel`, {
         responseType: "arraybuffer",
       });
+      const currentDate = new Date();
+      const formattedDate = `${String(currentDate.getDate()).padStart(2, '0')}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getFullYear()}`;
+
+      // Set the file name with the formatted date
+      const fileName = `${formattedDate}-knihyGO.xlsx`;
       const data = new Uint8Array(response.data);
       const workbook = xlsx.read(data, { type: "array" });
-      xlsx.writeFile(workbook, "data_from_server.xlsx");
+      xlsx.writeFile(workbook, fileName);
       alert("Data byla úspěšně stažena");
     } catch (error: any) {
       console.error("Chyba při získávání dat ze serveru:", error.message);
