@@ -1,5 +1,3 @@
-import { PrismaClient } from "@prisma/client"
-import { DeepMockProxy } from "jest-mock-extended"
 
 export type Book = {
     id: string
@@ -13,6 +11,8 @@ export type Book = {
     zpusob_ziskani?: string
     signatura?:string
     isbn?:string
+    createdat?: Date
+    updatedat?: Date
 }
 
 export type NavButton = {

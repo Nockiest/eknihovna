@@ -19,4 +19,6 @@ model knihy {
   available      Boolean?
   rating         Int?
   isbn           String?  @db.VarChar(13)
+  createdat DateTime @default(now())
+  updatedat DateTime @updatedAt // Automatically updates on changes
 }

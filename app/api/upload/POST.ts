@@ -38,10 +38,10 @@ const POST_BOOKS = async (json: any) => {
 
     // Validate keys against expected bookHeaders
     const FirstBookKeys = Object.keys(books[0]) as Array<keyof Book>;
-    const hasValidKeys = FirstBookKeys.every(
-      (key) => bookHeaders.indexOf(key as keyof Book) >= 0
-    );
-    console.log("has valid keys?", hasValidKeys);
+    const invalidKeys = FirstBookKeys.filter((key) => bookHeaders.indexOf(key as keyof Book) < 0);
+console.log("Invalid Keys:", invalidKeys);
+const hasValidKeys = invalidKeys.length === 0;
+    console.log("has valid keys?", hasValidKeys,invalidKeys);
     if (!hasValidKeys) {
       return NextResponse.json(
         {
@@ -63,7 +63,7 @@ const POST_BOOKS = async (json: any) => {
     let uploadedBooks = [];
 
     // Process valid data
-    const validData = books
+    const validData  = books
       .filter((item) => {
         if (!item.name || !item.id) {
           rejectedRows.push(item.name || "Unnamed");
@@ -119,10 +119,12 @@ const POST_BOOKS = async (json: any) => {
               : null,
           isbn:
             typeof item.isbn === "number"
-              ? item.isbn
+              ? String(item.isbn)
               : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
-              ?  item.isbn
+              ?  String(item.isbn)
               : '',
+          createdat:new Date(),
+          updatedat:new Date()
         };
       });
     if (removePreviousData) {
