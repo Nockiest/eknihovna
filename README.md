@@ -79,3 +79,12 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
 In order for this version to work properly, it is necessary to start up the server side, which will be added into its own branch promptly
+
+adding new db column
+
+add in development db ALTER TABLE table_name ADD COLUMN column_name data_type [default_value]
+rewrite prisma schema
+######download backup of db in production
+npx prisma migrate dev --name add_age_column
+add it in production db ALTER TABLE table_name ADD COLUMN column_name data_type [default_value]
+update testBook,emptyBook,bookHeaders in /data/value.tsx
