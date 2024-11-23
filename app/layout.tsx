@@ -51,7 +51,7 @@ export default function RootLayout({
         <link rel="icon" type="image/png" sizes="32x32" href="/icon/GO.ico" />
 
         {/* Optional: Apple Touch Icon */}
-        <link rel="apple-touch-icon" sizes="180x180" href="/icon/GO.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icon/bookLogo.ico" />
 
         {/* Optional: Manifest File */}
         <link rel="manifest" href="/icon/GO-manifest.json" />
