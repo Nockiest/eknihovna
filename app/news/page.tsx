@@ -1,6 +1,7 @@
 import { Container } from '@mui/material';
 import Message from '@/components/Message';
 import { Metadata } from 'next';
+import { Analytics } from '@vercel/analytics/react';
 export const metadata: Metadata = {
   title: "Novinky v GO knihovně",
   description: "Seznam novinek",
@@ -16,6 +17,7 @@ const NewsPage: React.FC = () => {
   ]
   return (
     <Container maxWidth="sm">
+        <Analytics />
       {messages.map((msg, index) => (
         <Message key={index} message={msg.message} date={msg.date} />
       ))}

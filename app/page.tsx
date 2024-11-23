@@ -1,10 +1,9 @@
-// "use client";
 import OpeningHours from "@/components/OpeningHours";
 import { Container, Typography, Button, Box } from "@mui/material";
 import Link from "next/link";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import OtherProjectLinker from "@/components/OtherProjectLinker";
-import useCurrentBreakpoint from "@/features/hooks/useCustomBreakpoint";
+import { Analytics } from "@vercel/analytics/react"
 import React from "react";
 import GOMobileheader from "@/components/GOMobileheader";
 import { Metadata } from "next";
@@ -15,7 +14,8 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <>
-    <meta name="google-site-verification" content="hjQ9ZFX153H0STRp1SFSLiakzbOMsi_S6s4jPvNKKJA" />
+    {/* <meta name="google-site-verification" content="hjQ9ZFX153H0STRp1SFSLiakzbOMsi_S6s4jPvNKKJA" /> */}
+    <Analytics />
     <Container maxWidth={"lg"} className="flex flex-col gap-2">
 
       <GOMobileheader />

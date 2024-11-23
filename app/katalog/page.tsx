@@ -1,4 +1,5 @@
 import CatalogPageContents from "@/components/CatalogPageContents";
+import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Katalog v GO knihovny",
@@ -6,8 +7,12 @@ export const metadata: Metadata = {
 };
 // provides contex for the while page
 const KatalogPage = () => {
-
-  return <CatalogPageContents />
+  return (
+    <>
+      <Analytics />
+      <CatalogPageContents />
+    </>
+  );
 };
 
 export default KatalogPage;

@@ -6,6 +6,7 @@ import Link from "next/link";
 import CreditMe from "@/components/CreditMe";
 import BauerovaLink from "@/components/BauerovaLink";
 import BorrowingInformation from "@/components/BorrowingInformation";
+import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   title: "Informace o GO knihovně",
   description: "Vše o výpůjčce a kontakt na knihovnu",
@@ -13,6 +14,7 @@ export const metadata: Metadata = {
 const page = () => {
   return (
     <Box justifyContent={"center"} className="w-auto">
+     <Analytics />
       {BorrowingInformation()}
 
 

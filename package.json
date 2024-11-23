@@ -25,6 +25,7 @@
     "@prisma/client": "^5.21.1",
     "@prisma/debug": "^5.20.0",
     "@types/qs": "^6.9.16",
+    "@vercel/analytics": "^1.4.1",
     "axios": "^1.7.2",
     "busboy": "^1.6.0",
     "cors": "^2.8.5",
