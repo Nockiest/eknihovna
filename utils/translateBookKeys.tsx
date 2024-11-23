@@ -13,8 +13,8 @@ export function translateBookKey(bookKey: keyof Book ): string {
         zpusob_ziskani: 'zpusob_ziskani',
         signatura: 'signatura',
         isbn: 'isbn',
-        createdAt: 'datum vytvoření',
-        updatedAt: 'datum aktualizace',
+        createdat: 'datum vytvoření',
+        updatedat: 'datum aktualizace',
     };
     return translationDict[bookKey]
 }
