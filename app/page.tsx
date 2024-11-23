@@ -7,7 +7,7 @@ import { Analytics } from "@vercel/analytics/react"
 import React from "react";
 import GOMobileheader from "@/components/GOMobileheader";
 import { Metadata } from "next";
-// import { GoogleAnalytics } from "nextjs-google-analytics";
+// import { GoogleAnalytics } from "nextjs-google-analytics"; xx
 export const metadata: Metadata = {
   title: "Novinky v GO eknihovně",
   description: "GO eknihovna hlavní stránka",
