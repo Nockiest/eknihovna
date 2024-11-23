@@ -1,14 +1,13 @@
-
-import { Book,  } from "@/types/types";
+import { Book } from "@/types/types";
 import { useContext, createContext } from "react";
 
 type UploadContextType = {
-  books: Book[]
+  books: Book[];
   setBooks: React.Dispatch<React.SetStateAction<Book[]>>;
 };
 
 // Create the context
-export   const UploadContext = createContext<UploadContextType | undefined>(
+export const UploadContext = createContext<UploadContextType | undefined>(
   undefined
 );
 
@@ -17,7 +16,7 @@ export const useUploadContext = () => {
   const context = useContext(UploadContext);
 
   if (!context) {
-    console.trace("No search context")
+    console.trace("No search context");
     throw new Error(
       "useUploadContext must be used within a useUploadContextProvider"
     );

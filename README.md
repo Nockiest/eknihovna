@@ -83,9 +83,9 @@ In order for this version to work properly, it is necessary to start up the serv
 adding new db column
 
 close developmnet server
+######download backup of db in production
 add in development db ALTER TABLE table_name ADD COLUMN column_name data_type [default_value]
 rewrite prisma schema
-######download backup of db in production
-npx prisma migrate dev --name add_age_column
+npx prisma migrate dev --name new_name
 add it in production db ALTER TABLE table_name ADD COLUMN column_name data_type [default_value]
-update testBook,emptyBook,bookHeaders in /data/value.tsx AND trnaslatebook keys fce
+update testBook,emptyBook,bookHeaders in /data/value.tsx AND trnaslatebook keys vars

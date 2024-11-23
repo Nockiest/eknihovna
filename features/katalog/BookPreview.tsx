@@ -5,6 +5,7 @@ import { Box, Paper, Typography } from "@mui/material";
 import CategoryChip from "../../components/CategoryChip";
 import LineWithCircle from "../../components/styling/LineWithCircle";
 import { useRouter } from "next/navigation";
+import { differenceInMonths } from "date-fns";
 type BookPreviewProps = {
   book: Book;
 };
@@ -19,11 +20,17 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     formaturita = false,
     rating = -1,
     isbn = "x",
+    createdat,
   }: Book = book;
+
+  const isNew =
+    createdat &&
+    differenceInMonths(new Date(), new Date(createdat)) <= 1 &&
+    new Date(createdat) > new Date("2024-11-24");
 
   return (
     <Paper
-      className={`min-h-32 items-center cursor-pointer`}
+      className={`min-h-32 items-center cursor-pointer relative`}
       onClick={() => {
         router.push(`/katalog/${id}`);
       }}
@@ -34,28 +41,45 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           : 0,
         color: theme.palette.text.primary,
         padding: "0",
-        margin: 0, // Explicitly set margin to zerox
+        margin: 0,
         width: "160px",
       }}
     >
+      {isNew && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: -10,
+            left: 0,
+            backgroundColor: theme.palette.secondary.main,
+            color: "#fff",
+            padding: "4px 8px",
+            opacity: 0.9,
+            // transform: "rotate(-45deg)",
+            // transformOrigin: "-10% 0",
+            zIndex: 1,
+          }}
+        >
+          Nová
+        </Box>
+      )}
       <Box
         p={2}
         sx={{ backgroundColor: "#ffffff" }}
-        className=" flex flex-col items-center justify-around h-full select-none"
+        className="flex flex-col items-center justify-around h-full select-none"
       >
-        {/* <BookCover isbn={isbn} bookId={id} /> */}
-        <Box className=" flex grow-0 flex-col items-center justify-around w-full  ">
+        <Box className="flex grow-0 flex-col items-center justify-around w-full">
           <Typography
             variant="body2"
             align="center"
             sx={{
               overflow: "hidden",
-              display: "-webkit-box", // Required for Webkit browsers
-              WebkitBoxOrient: "vertical", // Vertical orientation for line-clamp
-              WebkitLineClamp: 2, // Limits to 2 lines
+              display: "-webkit-box",
+              WebkitBoxOrient: "vertical",
+              WebkitLineClamp: 2,
               textOverflow: "ellipsis",
               fontWeight: "900",
-              width: "100%", // Ensure it doesn’t exceed parent width
+              width: "100%",
             }}
           >
             {name}
@@ -68,7 +92,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
               overflow: "hidden",
               textOverflow: "ellipsis",
               whiteSpace: "nowrap",
-              width: "100%", // Set the width as needed
+              width: "100%",
             }}
           >
             {author ? author : "Neznámý autor"}
@@ -83,8 +107,6 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
               </Box>
             )}
           </Box>
-          {/* <Typography variant="body2">Hodnocení Studentů</Typography> */}
-          {/* <StarRow rating={rating} /> */}
           {formaturita && <Typography variant="body2">Maturitní</Typography>}
           {!available && <Typography variant="body1">Nedostupná</Typography>}
         </Box>
@@ -92,4 +114,5 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
     </Paper>
   );
 };
+
 export default BookPreview;

@@ -1,4 +1,4 @@
-import { Book, Filters, FiltringValues, QueueItem } from "@/types/types";
+import {   Filters, FiltringValues,   } from "@/types/types";
 import { useContext, createContext } from "react";
 
 type QueryContextType = {
