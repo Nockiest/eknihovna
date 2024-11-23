@@ -62,6 +62,8 @@ export default function RootLayout({
         />
         {/* Optional: Theme Color */}
         <meta name="theme-color" content="#413330" />
+        <title>Školní eknihovna GO</title>
+        <meta name="description" content="Vyberte si z 3000 kvalitních titulů!" />
       </Head>
       <body className={inter.className}>
       <noscript>

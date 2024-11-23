@@ -36,6 +36,7 @@
     "next": "^15.0.2-canary.7",
     "next-auth": "^4.24.7",
     "next-connect": "^1.0.0",
+    "nextjs-google-analytics": "^2.3.7",
     "node-mocks-http": "^1.16.0",
     "npm": "^10.9.0",
     "react": "^18.2.0",
