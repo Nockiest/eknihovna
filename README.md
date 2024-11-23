@@ -87,4 +87,4 @@ rewrite prisma schema
 ######download backup of db in production
 npx prisma migrate dev --name add_age_column
 add it in production db ALTER TABLE table_name ADD COLUMN column_name data_type [default_value]
-update testBook,emptyBook,bookHeaders in /data/value.tsx
+update testBook,emptyBook,bookHeaders in /data/value.tsx AND trnaslatebook keys fce

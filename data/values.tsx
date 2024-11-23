@@ -57,6 +57,7 @@ export const testBook: Book = {
   available: true, // Replace with true or false depending on availability
   rating: 5, // Replace with the actual rating
   isbn: "9780140449136",
+
 };
 export const emptyBook: Book = {
   id: "1",
@@ -92,6 +93,8 @@ export const bookHeaders: Array<keyof Book> = [
   "available",
   "rating",
   "isbn",
+  'createdat',
+   'updatedat'
 ];
 // nem2li by b7t stejnn0 jako random options
 export const suggestedBooks = [
