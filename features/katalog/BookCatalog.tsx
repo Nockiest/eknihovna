@@ -1,6 +1,13 @@
 "use client";
 import React, { useEffect, useReducer, useState } from "react";
-import { Box, Button, Grid, IconButton, Stack } from "@mui/material";
+import {
+  Box,
+  Button,
+  Grid,
+  IconButton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { Book, Filters } from "@/types/types";
 import BookPreview from "./BookPreview";
 import PaginationLinker from "../../components/PaginationLinker";
@@ -124,10 +131,16 @@ const BookCatalog: React.FC = () => {
     <Box className="w-full">
       <FilterLister />
       <Box className="flex flex-row flex-wrap w-full p-4 bg-primary-950 gap-4">
-        <SearcherOpenerFab
-          css={"z-0 mb-2"}
-          onClick={() => setOpenSearcher(!isOpenSearcher)}
-        />
+        <Box className="flex flex-col align-center justify-center">
+          <SearcherOpenerFab
+            css={"z-0 mb-2"}
+            onClick={() => setOpenSearcher(!isOpenSearcher)}
+          />
+          <Typography className="text-center" variant="body2">
+            Filtry
+          </Typography>
+        </Box>
+
         <IconButton>
           <SearchIcon
             onClick={() => handleActiveFilterChange("name", currentSearchValue)}
@@ -146,9 +159,7 @@ const BookCatalog: React.FC = () => {
       </Box>
       <FiltringWindow />
 
-      {status === "loading" && (
-          <LoadingPage />
-      )}
+      {status === "loading" && <LoadingPage />}
 
       {status === "error" && (
         <Announcer message={errorMessage} type={"error"} />

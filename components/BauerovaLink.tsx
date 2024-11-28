@@ -4,7 +4,7 @@ import React from "react";
 
 const BauerovaLink = () => {
   return (
-  <Box
+    <Box
       className=" bg-primary-800"
       sx={{
         display: "flex",
@@ -17,17 +17,15 @@ const BauerovaLink = () => {
       }}
     >
       <Typography variant="body1" textAlign="center" className="text-center">
-        Pokud se chcete dozvědět více nebo potřebujete poradit, stačí nám
-        napsat na email:
+        Pokud se chcete dozvědět více nebo potřebujete poradit, stačí nám napsat
+        na email:
         <br />
-
-          <Link
-            href="mailto:bauerova@gopat.cz"
-            style={{ color: "light-blue", textDecoration: "none" }}
-          >
-             <b>bauerova@gopat.cz </b>
-          </Link>
-
+        <Link
+          href="mailto:bauerova@gopat.cz"
+          style={{ color: "light-blue", textDecoration: "none" }}
+        >
+          <b>bauerova@gopat.cz </b>
+        </Link>
       </Typography>
     </Box>
   );
