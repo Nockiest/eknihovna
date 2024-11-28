@@ -16,8 +16,6 @@ const page = () => {
     <Box justifyContent={"center"} className="w-auto">
      <Analytics />
       {BorrowingInformation()}
-
-
       <BauerovaLink />
       <Box className="w-full my-8 flex flex-col flex-center">
         <PrimaryButton className="mx-auto">

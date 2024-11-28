@@ -35,15 +35,15 @@ const BookGrid = () => {
 
   // Define columns for the DataGrid
   const columns = [
-    { field: "id", headerName: "ID", width: 200, editable: false },
-    { field: "name", headerName: "Name", width: 200, editable: true },
+    { field: "id", headerName: "ID", width: 100, editable: false },
+    { field: "name", headerName: "Name", width: 150, editable: true },
     { field: "author", headerName: "Autor", width: 200, editable: true },
-    { field: "category", headerName: "Kategorie", width: 150, editable: true },
+    { field: "category", headerName: "Kategorie", width: 100, editable: true },
     { field: "isbn", headerName: "ISBN", width: 150, editable: true },
     {
       field: "formaturita",
       headerName: "Maturitní",
-      width: 100,
+      width: 95,
       editable: true,
       renderCell: (params: GridCellParams) => (
         <Checkbox
@@ -59,7 +59,7 @@ const BookGrid = () => {
     {
       field: "available",
       headerName: "Dostupná",
-      width: 100,
+      width: 95,
       editable: true,
       renderCell: (params: GridCellParams) => (
         <Checkbox
@@ -84,14 +84,7 @@ const BookGrid = () => {
   const filteredRows = books.filter((book) =>
     book.name.toLowerCase().includes(filterText.trim().toLowerCase())
   );
-  // const filteredRows = books.filter((book) => {
-  //   const bookNameWords = book.name.toLowerCase().split(/\s+/); // Split book name into words
-  //   const query = filterText.trim().toLowerCase();
 
-  //   return bookNameWords.some((word) =>
-  //     word.includes(query) || levenshteinDistance(word, query,3) < 3
-  //   );
-  // });
   const processRowUpdate = (newRow: GridRowModel, oldRow: GridRowModel) => {
     const { id, ...updatedFields } = newRow;
     const updatedBook: Book = { ...oldRow, ...updatedFields } as Book;
@@ -140,7 +133,7 @@ const BookGrid = () => {
   };
 
   return (
-    <Box className="mx-auto overflow-y-auto">
+    <Box className="mx-auto  p-2 ">
       <Typography variant="h4" gutterBottom>
         Prohlížeč knih
       </Typography>
@@ -176,6 +169,7 @@ const BookGrid = () => {
       />
       <Box mt={2} sx={{ height: 400 }}>
         <DataGrid
+        className="overflow-x-auto"
           localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
           rows={filteredRows}
           columns={columns}

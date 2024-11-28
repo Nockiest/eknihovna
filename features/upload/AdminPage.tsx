@@ -68,7 +68,7 @@ const AdminPage = () => {
             activeButtonStyles="text-gray-400"
             inactiveOpacity="0.5"
           />
-          <Box className="flex w-full h-screen bg-white shadow-lg rounded-lg overflow-hidden">
+          <Box className="flex w-full  bg-white shadow-lg rounded-lg overflow-hidden">
             {renderContent()}
           </Box>
           <Box className="mb-4 ml-8">
