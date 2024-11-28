@@ -44,7 +44,7 @@ const BookGrid = () => {
         });
     }
   };
-  // Define columns for the DataGrid
+  // Define columns for the DataGridx
   const columns = [
     { field: "id", headerName: "ID", width: 100, editable: false },
     { field: "name", headerName: "Name", width: 150, editable: true },
