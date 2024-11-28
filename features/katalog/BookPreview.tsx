@@ -54,9 +54,6 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
             backgroundColor: theme.palette.secondary.main,
             color: "#fff",
             padding: "4px 8px",
-            opacity: 0.9,
-            // transform: "rotate(-45deg)",
-            // transformOrigin: "-10% 0",
             zIndex: 1,
           }}
         >
@@ -108,7 +105,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
             )}
           </Box>
           {formaturita && <Typography variant="body2">Maturitní</Typography>}
-          {!available && <Typography variant="body1">Nedostupná</Typography>}
+          {!available && <Typography variant="body1">Vypůjčená</Typography>}
         </Box>
       </Box>
     </Paper>
