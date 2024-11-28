@@ -68,7 +68,7 @@ export const emptyBook: Book = {
   signatura: "",
   zpusob_ziskani: "",
   formaturita: false,
-  available: false,
+  available: true,
   rating: -1,
   isbn: "",
 };
