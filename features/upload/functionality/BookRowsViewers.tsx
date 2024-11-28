@@ -35,7 +35,7 @@ const BookGrid = () => {
 
   // Define columns for the DataGrid
   const columns = [
-    { field: "id", headerName: "ID", width: 100, editable: false },
+    { field: "id", headerName: "ID", width: 100, editable: true },
     { field: "name", headerName: "Name", width: 150, editable: true },
     { field: "author", headerName: "Autor", width: 200, editable: true },
     { field: "category", headerName: "Kategorie", width: 100, editable: true },
@@ -145,7 +145,7 @@ const BookGrid = () => {
           setOriginalBooks(books);
           setUpdatedBooks([]); // Clear updatedBooks after confirming changes
         }}
-        sx={{ mt: 2, mr: 2 }}
+        sx={{  margin:'2px' }}
         disabled={updatedBooks.length === 0}
       >
         Potvrdit změny
@@ -154,7 +154,7 @@ const BookGrid = () => {
         variant="contained"
         color="error" // Danger button
         onClick={handleCancelChanges}
-        sx={{ mt: 2 }}
+        sx={{  margin:'2px' }}
         disabled={updatedBooks.length === 0}
       >
         Zrušit změny
