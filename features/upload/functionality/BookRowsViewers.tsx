@@ -32,10 +32,21 @@ const BookGrid = () => {
       console.error("Error reading clipboard text:", err);
     }
   };
-
+  const handleCellClick = (params: GridCellParams) => {
+    if (params.field === "id") {
+      navigator.clipboard
+        .writeText(params.value as string)
+        .then(() => {
+          console.log(`Copied ID: ${params.value}`);
+        })
+        .catch((err) => {
+          console.error("Failed to copy ID:", err);
+        });
+    }
+  };
   // Define columns for the DataGrid
   const columns = [
-    { field: "id", headerName: "ID", width: 100, editable: true },
+    { field: "id", headerName: "ID", width: 100, editable: false },
     { field: "name", headerName: "Name", width: 150, editable: true },
     { field: "author", headerName: "Autor", width: 200, editable: true },
     { field: "category", headerName: "Kategorie", width: 100, editable: true },
@@ -145,7 +156,7 @@ const BookGrid = () => {
           setOriginalBooks(books);
           setUpdatedBooks([]); // Clear updatedBooks after confirming changes
         }}
-        sx={{  margin:'2px' }}
+        sx={{ margin: "2px" }}
         disabled={updatedBooks.length === 0}
       >
         Potvrdit změny
@@ -154,7 +165,7 @@ const BookGrid = () => {
         variant="contained"
         color="error" // Danger button
         onClick={handleCancelChanges}
-        sx={{  margin:'2px' }}
+        sx={{ margin: "2px" }}
         disabled={updatedBooks.length === 0}
       >
         Zrušit změny
@@ -169,11 +180,11 @@ const BookGrid = () => {
       />
       <Box mt={2} sx={{ height: 400 }}>
         <DataGrid
-        className="overflow-x-auto"
           localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
           rows={filteredRows}
           columns={columns}
           onCellEditStop={handleCellEditStop} // Use cell edit stop to trigger paste
+          onCellClick={handleCellClick} // Add cell click handler
           processRowUpdate={processRowUpdate}
           editMode="cell"
           ignoreDiacritics
