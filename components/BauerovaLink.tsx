@@ -17,7 +17,7 @@ const BauerovaLink = () => {
       }}
     >
       <Typography variant="body1" textAlign="center" className="text-center">
-        Pokud se chcete dozvědět více, nebo potřebujete poradit, stačí nám
+        Pokud se chcete dozvědět více nebo potřebujete poradit, stačí nám
         napsat na email:
         <br />
 
