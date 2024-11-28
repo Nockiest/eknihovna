@@ -17,6 +17,7 @@ const CatalogPageContents = ()  => {
       formaturita: false,
       available: false,
       name: null,
+      new: false
     });
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [filterValues, setFiltersValues] = useState<FiltringValues>({
@@ -131,8 +132,6 @@ const CatalogPageContents = ()  => {
           filterValues, // possible filter values
           setFiltersValues,
           handleActiveFilterChange,
-          // addToQueue,
-          // resolvedItems
         }}
       >
         <Box className="w-full px-3 md:px-12">

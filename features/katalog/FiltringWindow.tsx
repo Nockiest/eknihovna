@@ -79,7 +79,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         </Stack>
 
         <FormControlLabel
-        className="ml-4"
+          className="ml-4"
           control={
             <Checkbox
               checked={Boolean(activeFilters.available)}
@@ -98,7 +98,7 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
         />
         <br />
         <FormControlLabel
-            className="ml-4"
+          className="ml-4"
           control={
             <Checkbox
               checked={Boolean(activeFilters.formaturita)}
@@ -116,22 +116,38 @@ export const FiltringWindow: React.FC<SearcherProps> = () => {
           }}
         />
         <br />
-        <Box className='w-full flex justify-center'>
-        <SecondaryButton
-          className="mt-9 p-2 "
-          onClick={() => {
-            setOpenSearcher(!isOpenSearcher);
+        <FormControlLabel
+          className="ml-4"
+          control={
+            <Checkbox
+              checked={Boolean(activeFilters.new)}
+              onChange={(e) =>
+                handleActiveFilterChange("new", e.target.checked)
+              }
+            />
+          }
+          label="Nová"
+          sx={{
+            color: theme.palette.primary.main,
+            "&.Mui-checked": {
+              color: theme.palette.secondary.main,
+            },
           }}
-        >
+        />
+        <br />
+        <Box className="w-full flex justify-center">
+          <SecondaryButton
+            className="mt-9 p-2 "
+            onClick={() => {
+              setOpenSearcher(!isOpenSearcher);
+            }}
+          >
             <IconButton>
-          <SearchIcon
-
-          />
-        </IconButton>{' '}
-          <Typography variant='h6' >Prohlédnout Knihy</Typography>
-        </SecondaryButton>
+              <SearchIcon />
+            </IconButton>{" "}
+            <Typography variant="h6">Prohlédnout Knihy</Typography>
+          </SecondaryButton>
         </Box>
-
       </Paper>
     </Slide>
   );

@@ -1,7 +1,7 @@
 import { Book } from "@/types/types"
 
-export function translateBookKey(bookKey: keyof Book ): string {
-    const translationDict: Record<keyof Book, string> = {
+export function translateBookKey(bookKey: keyof Book|"new" ): string {
+    const translationDict: Record<keyof Book | "new", string> = {
         id: 'id',
         name: 'název',
         author: 'autor',
@@ -15,6 +15,7 @@ export function translateBookKey(bookKey: keyof Book ): string {
         isbn: 'isbn',
         createdat: 'datum vytvoření',
         updatedat: 'datum aktualizace',
+        new: "nová"
     };
     return translationDict[bookKey]
 }

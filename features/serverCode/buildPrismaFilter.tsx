@@ -1,6 +1,6 @@
-
 import { falsyValues } from "@/data/values";
 import { Filters } from "@/types/types";
+import { subMonths } from "date-fns"; // For calculating the date one month ago
 
 export function buildPrismaFilter(activeFilters: Filters) {
   const where: any = {}; // Use a more specific type if available
@@ -12,14 +12,14 @@ export function buildPrismaFilter(activeFilters: Filters) {
       where.OR = activeFilters.author.map((author) => ({
         author: {
           contains: author,
-          mode: 'insensitive',
+          mode: "insensitive",
         },
       }));
     } else {
       // If 'author' is a single string
       where.author = {
         contains: activeFilters.author,
-        mode: 'insensitive',
+        mode: "insensitive",
       };
     }
   }
@@ -29,13 +29,13 @@ export function buildPrismaFilter(activeFilters: Filters) {
       {
         name: {
           startsWith: activeFilters.name,
-          mode: 'insensitive', // Case-insensitive search
+          mode: "insensitive", // Case-insensitive search
         },
       },
       {
         name: {
           contains: activeFilters.name,
-          mode: 'insensitive', // Case-insensitive search
+          mode: "insensitive", // Case-insensitive search
         },
       },
     ];
@@ -50,7 +50,7 @@ export function buildPrismaFilter(activeFilters: Filters) {
         ...activeFilters.category.map((category) => ({
           category: {
             contains: category,
-            mode: 'insensitive',
+            mode: "insensitive",
           },
         })),
       ];
@@ -58,7 +58,7 @@ export function buildPrismaFilter(activeFilters: Filters) {
       // If 'category' is a single string
       where.category = {
         contains: activeFilters.category,
-        mode: 'insensitive',
+        mode: "insensitive",
       };
     }
   }
@@ -71,11 +71,11 @@ export function buildPrismaFilter(activeFilters: Filters) {
   }
 
   // // Handle the 'available' filter
-  if ( falsyValues.indexOf( activeFilters.available ) <  0) {
+  if (falsyValues.indexOf(activeFilters.available) < 0) {
     where.available = activeFilters.available;
   }
 
-  if ( falsyValues.indexOf( activeFilters.formaturita )< 0) {
+  if (falsyValues.indexOf(activeFilters.formaturita) < 0) {
     where.formaturita = activeFilters.formaturita;
   }
 
@@ -84,7 +84,21 @@ export function buildPrismaFilter(activeFilters: Filters) {
       equals: activeFilters.id,
     };
   }
+  // Handle the 'new' filter
+  console.log("is new?", activeFilters.new);
 
+if (activeFilters.new) {
+    console.log(activeFilters.new);
+    const oneMonthAgo = subMonths(new Date(), 1); // Get the date one month ago
+    const specificDate = new Date(2024, 10, 24); // November 24, 2024 (Note: months are 0-indexed)
+    const now = new Date(); // Get the current date
+    const startDate = now < specificDate ? oneMonthAgo : specificDate;
+
+    where.createdat = {
+      gte: startDate, // Use one month ago if now is younger than November 24, 2024, otherwise use specificDate
+      lt: now, // Less than the current date
+    };
+}
   // Return the constructed 'where' clause
   return where;
 }

@@ -1,19 +1,15 @@
-'use client'
+"use client";
 import { checkIfIgnoredValue } from "@/types/typeChecks";
-import { Filters, FiltringValues } from "@/types/types";
+import { Filters } from "@/types/types";
 import { translateBookKey } from "@/utils/translateBookKeys";
 import CategoryChip from "../../components/CategoryChip";
 import { Box, Typography } from "@mui/material";
 import { useSearchContext } from "@/app/katalog/context";
-import { useEffect } from "react";
 
-type FilterListerProps = {
-};
+type FilterListerProps = {};
 
-const FilterLister: React.FC<FilterListerProps> =   ({
-
-}) => {
-  const { activeFilters, setActiveFilters,   } = useSearchContext();
+const FilterLister: React.FC<FilterListerProps> = ({}) => {
+  const { activeFilters, setActiveFilters } = useSearchContext();
 
   const filterKeys = Object.keys(activeFilters) as (keyof Filters)[];
 
@@ -41,11 +37,12 @@ const FilterLister: React.FC<FilterListerProps> =   ({
       }
     });
   };
+  
   return (
     <Box className="m-2">
       {filterKeys.map((key) => {
-        if (key === "name"){
-          return
+        if (key === "name") {
+          return;
         }
         const value = activeFilters[key];
 

@@ -29,7 +29,7 @@ export async function POST(req: NextRequest) {
 
     //     // Build the Prisma filter query
     const where = buildPrismaFilter(filters);
-
+    // console.log(where);
     //     // Fetch data using Prisma
     const books = await loadPrismaBookPage(where, page, limit);
 

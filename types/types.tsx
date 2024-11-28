@@ -30,6 +30,7 @@ export  type Filters= {
   formaturita?: boolean|null;
   id?: string|null;
   available?: boolean|null;
+  new?: false
   // rating: number;
 
 };
