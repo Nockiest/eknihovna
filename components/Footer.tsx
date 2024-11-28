@@ -17,18 +17,17 @@ const Footer = () => {
     </Link>
   );
   return (
-    <footer className="bg-gray-800 align-center text-white py-4 flex flex-row justify-around">
-      <Box className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between">
-        <Box className="flex flex-wrap  flex-col md:flex-row  space-x-4">
+    <footer className="bg-gray-800 w-full align-center text-white py-4 flex flex-row justify-around">
+      <Box className="flex container mx-auto px-4 flex  space-x-4  md:flex-row items-center justify-between">
           <NavbarMapper
             navRoutes={navRoutes}
             renderButton={renderButton}
             renderNavStyle="flex flex-wrap"
           />
-        </Box>
+          {/* <ShareButton /> */}
+
       </Box>
       <Container className="w-16  p-0 my-auto h-16 flex justify-center align-center items-center">
-          <ShareButton />
 
           <Image
             src="/img/GOlogo.png"
