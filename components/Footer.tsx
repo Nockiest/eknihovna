@@ -5,6 +5,7 @@ import { Box, Container } from "@mui/material";
 import NavbarMapper from "./navbar/NavbarMaper";
 import { NavButton } from "@/types/types";
 import Image from "next/image";
+import ShareButton from "./ShareBtn";
 const Footer = () => {
   const renderButton = (button: NavButton, isActive: boolean) => (
     <Link
@@ -27,6 +28,8 @@ const Footer = () => {
         </Box>
       </Box>
       <Container className="w-16  p-0 my-auto h-16 flex justify-center align-center items-center">
+          <ShareButton />
+
           <Image
             src="/img/GOlogo.png"
             alt="GO logo"
