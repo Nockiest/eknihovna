@@ -3,7 +3,7 @@ import Message from '@/components/Message';
 import { Metadata } from 'next';
 import { Analytics } from '@vercel/analytics/react';
 export const metadata: Metadata = {
-  title: "Novinky v GO knihovně",
+  title: "Novinky v GO eknihovně",
   description: "Seznam novinek",
 };
 

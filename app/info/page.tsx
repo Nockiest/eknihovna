@@ -8,7 +8,7 @@ import BauerovaLink from "@/components/BauerovaLink";
 import BorrowingInformation from "@/components/BorrowingInformation";
 import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
-  title: "Informace o GO knihovně",
+  title: "Informace o GO eknihovně",
   description: "Vše o výpůjčce a kontakt na knihovnu",
 };
 const page = () => {

@@ -9,7 +9,7 @@ import GOMobileheader from "@/components/GOMobileheader";
 import { Metadata } from "next";
 // import { GoogleAnalytics } from "nextjs-google-analytics"; xx
 export const metadata: Metadata = {
-  title: "Novinky v GO eknihovně",
+  title: "GO eknihovna",
   description: "GO eknihovna hlavní stránka",
 };
 export default function Home() {
