@@ -5,6 +5,11 @@ import { Analytics } from '@vercel/analytics/react';
 export const metadata: Metadata = {
   title: "Novinky v GO eknihovně",
   description: "Seznam novinek",
+  applicationName: "GO eknihovna",
+  keywords: ["knihovna", "eknihovna", "gymnázium", "opatov", "GO"],
+  creator: "Ondřej Lukeš",
+  publisher: "Ondřej Lukeš",
+  icons: "/icon/bookLogo.ico",
 };
 
 type Message = {

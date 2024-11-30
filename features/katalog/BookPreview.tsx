@@ -49,7 +49,7 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
         <Box
           sx={{
             position: "absolute",
-            top: -10,
+            top: -15,
             left: 0,
             backgroundColor: theme.palette.secondary.main,
             color: "#fff",

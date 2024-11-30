@@ -10,6 +10,11 @@ import { Analytics } from "@vercel/analytics/react";
 export const metadata: Metadata = {
   title: "Informace o GO eknihovně",
   description: "Vše o výpůjčce a kontakt na knihovnu",
+  applicationName: "GO eknihovna",
+  keywords: ["knihovna", "eknihovna", "gymnázium", "opatov", "GO"],
+  creator: "Ondřej Lukeš",
+  publisher: "Ondřej Lukeš",
+  icons: "/icon/bookLogo.ico",
 };
 const page = () => {
   return (

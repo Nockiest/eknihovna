@@ -11,6 +11,11 @@ import { Metadata } from "next";
 export const metadata: Metadata = {
   title: "GO eknihovna",
   description: "GO eknihovna hlavní stránka",
+  applicationName: "GO eknihovna",
+  keywords: ["knihovna", "eknihovna", "gymnázium", "opatov", "GO"],
+  creator: "Ondřej Lukeš",
+  publisher: "Ondřej Lukeš",
+  icons: "/icon/bookLogo.ico",
 };
 export default function Home() {
   return (
