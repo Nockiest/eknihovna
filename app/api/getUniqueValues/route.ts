@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
     ["name", "author", "category", "genres"].indexOf(columnName) === -1
   ) {
     return NextResponse.json({
-      error: `${columnName} Tato hodnota není validní pro získání knihy`,
+      error: `${columnName} Tato hodnota, kterou chcete filtrovat, není validní pro získání knihy`,
     });
   }
 

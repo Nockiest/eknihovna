@@ -19,6 +19,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Error fetching data or creating response:", error);
-    return NextResponse.json({ error: "Problém na straně serveru" });
+    return NextResponse.json({ error: "Server má momentálně problém získat data" });
   }
 }

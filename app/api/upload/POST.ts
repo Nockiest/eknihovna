@@ -38,10 +38,12 @@ const POST_BOOKS = async (json: any) => {
 
     // Validate keys against expected bookHeaders
     const FirstBookKeys = Object.keys(books[0]) as Array<keyof Book>;
-    const invalidKeys = FirstBookKeys.filter((key) => bookHeaders.indexOf(key as keyof Book) < 0);
-console.log("Invalid Keys:", invalidKeys);
-const hasValidKeys = invalidKeys.length === 0;
-    console.log("has valid keys?", hasValidKeys,invalidKeys);
+    const invalidKeys = FirstBookKeys.filter(
+      (key) => bookHeaders.indexOf(key as keyof Book) < 0
+    );
+    console.log("Invalid Keys:", invalidKeys);
+    const hasValidKeys = invalidKeys.length === 0;
+    console.log("has valid keys?", hasValidKeys, invalidKeys);
     if (!hasValidKeys) {
       return NextResponse.json(
         {
@@ -63,7 +65,7 @@ const hasValidKeys = invalidKeys.length === 0;
     let uploadedBooks = [];
 
     // Process valid data
-    const validData  = books
+    const validData = books
       .filter((item) => {
         if (!item.name || !item.id) {
           rejectedRows.push(item.name || "Unnamed");
@@ -121,10 +123,10 @@ const hasValidKeys = invalidKeys.length === 0;
             typeof item.isbn === "number"
               ? String(item.isbn)
               : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
-              ?  String(item.isbn)
-              : '',
-          createdat: item.createdat|| new Date(),
-          updatedat: new Date()
+              ? String(item.isbn)
+              : "",
+          createdat: item.createdat || new Date(),
+          updatedat: new Date(),
         };
       });
     if (removePreviousData) {
@@ -153,12 +155,17 @@ const hasValidKeys = invalidKeys.length === 0;
         success: true,
         message: `Data úspěšně nahrána, počet knih: ${totalBooks}.
         ${
-          rejectedRows.length > 0?
-          "Tyto knihy se bohužel nepodařilo nahrát" + rejectedRows.join(", "):''
+          rejectedRows.length > 0
+            ? "Tyto knihy se bohužel nepodařilo nahrát" +
+              rejectedRows.join(", ")
+            : ""
         }, ${
-          uploadedBooks.length > 0 ?
-          `název první nahrané knihy ${JSON.stringify(uploadedBooks[0].name)}`:''
-        } `,
+          uploadedBooks.length > 0
+            ? `název první nahrané knihy ${JSON.stringify(
+                uploadedBooks[0].name
+              )}`
+            : ""
+        } `.replace(/\n/g, ''),
         headers: {
           ...noCacheHeaders,
         },
@@ -170,7 +177,7 @@ const hasValidKeys = invalidKeys.length === 0;
     return NextResponse.json(
       {
         success: false,
-        message: "Selhal jsem při nahrání dat: " + error,
+        message: "Selhal jsem při nahrání dat, popis erroru: " + error,
         headers: {
           ...noCacheHeaders,
         },

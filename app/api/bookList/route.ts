@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     if (page <= 0) {
       return NextResponse.json(
-        { error: "Číslo stránky nastaveno na0 neo méně " },
+        { error: "Číslo stránky nastaveno na 0 nebo méně " },
         { status: 400 }
       );
     }
