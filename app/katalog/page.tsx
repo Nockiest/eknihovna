@@ -21,3 +21,26 @@ const KatalogPage = () => {
 };
 
 export default KatalogPage;
+
+// Server-Side Logic
+// export async function getServerSideProps(context) {
+//   const { res } = context;
+
+//   // Prefetch or fetch data for the target page
+//   const prefetchData = await fetch('https://eknihvona.vercel.app').then((res) =>
+//     res.json()
+//   );
+
+//   // Example: Redirect directly to the target page (uncomment if needed)
+//   // if (shouldRedirect) {
+//   //   res.writeHead(302, { Location: '/target-page' });
+//   //   res.end();
+//   //   return { props: {} };
+//   // }
+
+//   return {
+//     props: {
+//       prefetchData,
+//     },
+//   };
+// }

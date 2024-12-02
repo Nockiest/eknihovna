@@ -123,8 +123,8 @@ const hasValidKeys = invalidKeys.length === 0;
               : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
               ?  String(item.isbn)
               : '',
-          createdat:new Date(),
-          updatedat:new Date()
+          createdat: item.createdat|| new Date(),
+          updatedat: new Date()
         };
       });
     if (removePreviousData) {
