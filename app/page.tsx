@@ -12,7 +12,7 @@ export const metadata: Metadata = {
   title: "GO eknihovna",
   description: "GO eknihovna hlavní stránka",
   applicationName: "GO eknihovna",
-  keywords: ["knihovna", "eknihovna", "gymnázium", "opatov", "GO"],
+  keywords: ["knihovna", "eknihovna","gymnázium opatov", "gymnázium", "opatov", "GO"],
   creator: "Ondřej Lukeš",
   publisher: "Ondřej Lukeš",
   icons: "/icon/bookLogo.ico",
