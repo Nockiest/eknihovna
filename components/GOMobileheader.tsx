@@ -9,7 +9,7 @@ const GOMobileheader = () => {
     <>
       {(size === "xs" || size === "sm") && (
         <Typography variant="h1" className="  text-center  " align="center">
-          ŠKOLNÍ KNIHOVNA GO
+          ŠKOLNÍ EKNIHOVNA GO
         </Typography>
       )}
     </>

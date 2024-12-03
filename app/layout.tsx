@@ -54,7 +54,6 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="180x180" href="/icon/bookLogo.ico" />
 
         {/* Optional: Manifest File */}
-        <link rel="manifest" href="/icon/GO-manifest.json" />
         <link rel="icon" href="/icon/bookLogo.ico" />
         <meta
           name="google-site-verification"
