@@ -29,7 +29,7 @@ export default function Home() {
 
         <Container>
           <Typography variant="body1">
-            Vítejte na domovské stránce knihovny Gymnázia Opatov, kde se můžete
+            Vítejte na domovské stránce eknihovny Gymnázia Opatov, kde se můžete
             seznámit s bohatým fondem naší školní knihovny a získat důležité
             informace.
           </Typography>
