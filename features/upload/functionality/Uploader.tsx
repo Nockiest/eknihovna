@@ -26,7 +26,7 @@ const Uploader = () => {
     console.log(jsonResult);
     const response = await postDataToUpload(jsonResult, overwriteData);
     console.log(response);
-    if (response.data.success === true) {
+    if (response.data.success) {
       alert(response.data.message);
     } else {
       const errorData = response.data; // Access data directly from the response

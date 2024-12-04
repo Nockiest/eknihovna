@@ -19,7 +19,7 @@ export const postDataToUpload = async (
         },
       }
     );
-    alert(`${JSON.stringify(response.data.message)}`);
+    // alert(`${JSON.stringify(response.data.message)}`);
     return response;
   } catch (error: any) {
     console.error("Error making POST request:", error);

@@ -7,6 +7,7 @@ import { Analytics } from "@vercel/analytics/react";
 import React from "react";
 import GOMobileheader from "@/components/GOMobileheader";
 import { Metadata } from "next";
+import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 // import { GoogleAnalytics } from "nextjs-google-analytics"; xx
 export const metadata: Metadata = {
   title: "GO eknihovna",
@@ -78,7 +79,11 @@ export default function Home() {
           </Typography>
         </Container>
         <OpeningHours />
-
+        <Box mt={2} display="flex" justifyContent="center">
+        <SecondaryButton >
+          <Link href={'/info'}>Zjisti víc o školní knihovně</Link>
+        </SecondaryButton>
+        </Box>
         <OtherProjectLinker />
       </Container>
     </>

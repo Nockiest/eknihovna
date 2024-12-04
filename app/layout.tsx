@@ -8,7 +8,6 @@ import BugReportSection from "@/features/sections/BugReport";
 import Footer from "@/components/Footer";
 import Hero from "@/components/Hero";
 import Script from "next/script";
-// import ReactQueryProvider from "@/utils/Providers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -81,7 +80,6 @@ export default function RootLayout({
           <BugReportSection />
           <Footer />
         </ThemeProvider>
-        {/* </ReactQueryProvider   > */}
       </body>
     </html>
   );
