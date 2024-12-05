@@ -37,6 +37,7 @@ const BookGrid = () => {
       navigator.clipboard
         .writeText(params.value as string)
         .then(() => {
+          alert(`zkopírovali jste ID: ${params.value}`);
           console.log(`Copied ID: ${params.value}`);
         })
         .catch((err) => {
@@ -46,7 +47,9 @@ const BookGrid = () => {
   };
   // Define columns for the DataGridx
   const columns = [
-    { field: "id", headerName: "ID", width: 100, editable: false },
+    { field: "id", headerName: "ID", width: 100, editable: false,renderCell: (params: GridCellParams) => (
+      <span style={{ cursor: 'pointer' }}>{params.value as string}</span>
+    ), },
     { field: "name", headerName: "Name", width: 150, editable: true },
     { field: "author", headerName: "Autor", width: 200, editable: true },
     { field: "category", headerName: "Kategorie", width: 100, editable: true },
