@@ -94,8 +94,6 @@ const BookCatalog: React.FC = () => {
   const fetchBooks = async () => {
     const logic = async () => {
       dispatch({ type: "FETCH_INIT" });
-
-      // try {
       const allPossibleBooks = await fetchFilteredBooks(activeFilters);
       console.log("All filtered books:", allPossibleBooks.length);
 

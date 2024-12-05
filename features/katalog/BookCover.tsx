@@ -83,40 +83,4 @@ const BookCover: React.FC<BookCoverProps> = ({   isbn, bookId }) => {
 };
 
 export default BookCover;
-
-// const BookCover = ({ isbn }: { isbn: string }) => {
-//   const [coverUrl, setCoverUrl] = useState<string | null>(null);
-//   const [error, setError] = useState<string | null>(null);
-
-//   useEffect(() => {
-//     const fetchCover = async () => {
-//       try {
-//         const url = await getBookCoverURL(isbn);
-//         setCoverUrl(url);
-//       } catch (err) {
-//         setError((err as Error).message);
-//       }
-//     };
-
-//     fetchCover();
-//   }, [isbn]);
-
-//   if (error) {
-//     return <p>{error}</p>; // Zobrazení chybové zprávy
-//   }
-
-//   if (!coverUrl) {
-//     return <p>Načítání obálky knihy...</p>; // Zpráva, dokud se obrázek načítá
-//   }
-
-//   return (
-//     <Image
-//       src={coverUrl}
-//       alt="Obrázek knihy"
-//       width={200}
-//       height={300}
-//     />
-//   );
-// };
-
-// export default BookCover;
+ 
