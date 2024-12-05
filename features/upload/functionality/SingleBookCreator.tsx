@@ -7,6 +7,7 @@ import updateBookProperty from "@/components/pureCode/updateBookProperty";
 import { Box, List, ListItemText, Typography } from "@mui/material";
 import React, { useState, useTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
+import catchError from "@/utils/catchError";
 const SingleBookCreator = () => {
   const [book, setBook] = useState<Book>({ ...emptyBook, id: uuidv4() });
   const [loading, startLoading] = useTransition()
@@ -14,9 +15,15 @@ const SingleBookCreator = () => {
     try {
       console.log(book);
       startLoading( async () => {
-        const response = await postDataToUpload([book]);
-        setBook({...emptyBook,id: uuidv4()})
-        alert(response.message);
+        try{
+          const [error, response] = await catchError(postDataToUpload([book]))
+          // const response = await postDataToUpload([book]);
+          setBook({...emptyBook,id: uuidv4()})
+          alert(response.message);
+        } catch (err) {
+          alert(err);
+        }
+
       })
 
     } catch (err) {
