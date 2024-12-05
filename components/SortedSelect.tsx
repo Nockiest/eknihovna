@@ -1,6 +1,6 @@
 "use client";
 import { Autocomplete, TextField, CircularProgress, Box } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import InfoIcon from "@mui/icons-material/Info"; // Icon to signify examples
 
 import { getRandomArrayElements, shuffleArray } from "@/utils/arrayUtils";
@@ -22,11 +22,11 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
 }) => {
   const [currentValue, setCurrentValue] = useState<string | null>(null);
   const [filteredOptions, setFilteredOptions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, startLoading] = useTransition( );
 
   useEffect(() => {
     if (currentValue) {
-      filterOptions(currentValue);
+      startLoading( () => {filterOptions(currentValue) })
     } else if (options.length == 0) {
       return;
     } else {
@@ -50,9 +50,6 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
   }, [currentValue, options, predefinedSuggestions]);
 
   const filterOptions = (inputValue: string) => {
-    setLoading(true);
-
-    // Helper function to remove diacritics
     const normalizeString = (str: string) =>
       str
         .normalize("NFD")
@@ -65,7 +62,6 @@ const SortedGroupedSelect: React.FC<SortedGroupedSelectProps> = ({
       .slice(0, 10); // Limit to top 10 results
 
     setFilteredOptions(newFilteredOptions);
-    setLoading(false);
   };
 
   // Render option with highlighted matching substring

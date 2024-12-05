@@ -5,17 +5,20 @@ import { Book } from "@/types/types";
 import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
 import updateBookProperty from "@/components/pureCode/updateBookProperty";
 import { Box, List, ListItemText, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
 const SingleBookCreator = () => {
   const [book, setBook] = useState<Book>({ ...emptyBook, id: uuidv4() });
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, startLoading] = useTransition()
   const submitBook = async () => {
     try {
       console.log(book);
-      const response = await postDataToUpload([book]);
-      setBook({...emptyBook,id: uuidv4()})
-      alert("Kniha úspěšně vytvořena," + response.message);
+      startLoading( async () => {
+        const response = await postDataToUpload([book]);
+        setBook({...emptyBook,id: uuidv4()})
+        alert(response.message);
+      })
+
     } catch (err) {
       console.error("Error updating book:", err);
       alert("Selhal jsem v aktualizování knihy:" + err);

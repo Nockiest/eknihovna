@@ -19,10 +19,25 @@ export const postDataToUpload = async (
         },
       }
     );
-    // alert(`${JSON.stringify(response.data.message)}`);
     return response;
   } catch (error: any) {
-    console.error("Error making POST request:", error);
-    throw new Error(`Failed to post data: ${error.message}`);
+    if (axios.isAxiosError(error)) {
+      if (error.response) {
+        // Handle specific status codes
+        if (error.response.status >= 400 && error.response.status < 500) {
+          console.error("Client error:", error.response.data.message);
+          alert(`Chyba na straně klienta: ${error.response.data.message}`);
+        } else if (error.response.status >= 500) {
+          console.error("Server error:", error.response.data.message);
+          alert(`Chyba na straně serveru: ${error.response.data.message}`);
+        }
+      } else {
+        console.error("No response received:", error.message);
+        alert(`Žádná odpověď nebyla přijata: ${error.message}`);
+      }
+    } else {
+      console.error("An unexpected error occurred:", error);
+      alert(`Došlo k neočekávané chybě: ${error}`);
+    }
   }
 };

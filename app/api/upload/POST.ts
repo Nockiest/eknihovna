@@ -26,6 +26,7 @@ const POST_BOOKS = async (json: any) => {
       return NextResponse.json(
         {
           success: false,
+          message: "Špatný formát, očekával jsem tabulku knížek.",
           error: "Špatný formát, očekával jsem tabulku knížek.",
           headers: {
             ...noCacheHeaders,
@@ -143,11 +144,26 @@ const POST_BOOKS = async (json: any) => {
     }
 
     console.log(
-      validData[0],
-      books[0],
-      truthyValues.indexOf(books[0].formaturita),
-      truthyValues.indexOf(books[0].available)
+      "první validní kniha" + validData[0],
+      "první přijatá kniha" + books[0],
+      "formaturita truthy?" + truthyValues.indexOf(books[0].formaturita),
+      "available truthy?" + truthyValues.indexOf(books[0].available)
     );
+    if (validData.length === 0) {
+      return NextResponse.json(
+        {
+          success: false,
+          message:
+            "ani jedna kniha poslaná na server nebyla přijata. zkontrolujte, jestli měly knihy správně vyplněné hodnoty",
+          error:
+            "ani jedna kniha poslaná na server nebyla přijata. zkontrolujte, jestli měly knihy správně vyplněné hodnoty",
+          headers: {
+            ...noCacheHeaders,
+          },
+        },
+        { status: 400 }
+      );
+    }
     const totalBooks = await countPrismaBooks();
 
     return NextResponse.json(
@@ -165,7 +181,7 @@ const POST_BOOKS = async (json: any) => {
                 uploadedBooks[0].name
               )}`
             : ""
-        } `.replace(/\n/g, ''),
+        } `.replace(/\n/g, ""),
         headers: {
           ...noCacheHeaders,
         },
@@ -178,6 +194,7 @@ const POST_BOOKS = async (json: any) => {
       {
         success: false,
         message: "Selhal jsem při nahrání dat, popis erroru: " + error,
+        error: "Selhal jsem při nahrání dat, popis erroru: " + error,
         headers: {
           ...noCacheHeaders,
         },
