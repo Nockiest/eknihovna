@@ -1,5 +1,11 @@
 "use client";
-import React, { useEffect, useReducer, useState } from "react";
+import React, {
+  useEffect,
+  useLayoutEffect,
+  useReducer,
+  useState,
+  useTransition,
+} from "react";
 import {
   Box,
   Button,
@@ -122,11 +128,11 @@ const BookCatalog: React.FC = () => {
   };
   // should fetch only books based on page
   useEffect(() => {
-    fetchBooks();
+    setLoadingTransition(fetchBooks);
   }, [page, activeFilters]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
-
+  const [loading, setLoadingTransition] = useTransition();
   return (
     <Box className="w-full">
       <FilterLister />
@@ -159,7 +165,7 @@ const BookCatalog: React.FC = () => {
       </Box>
       <FiltringWindow />
 
-      {status === "loading" && <LoadingPage />}
+      {loading && <LoadingPage />}
 
       {status === "error" && (
         <Announcer message={errorMessage} type={"error"} />
