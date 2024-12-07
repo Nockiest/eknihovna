@@ -8,21 +8,21 @@ import { Box, List, ListItemText, Typography } from "@mui/material";
 import React, { useState, useTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
 import catchError from "@/utils/catchError";
+import { useUploadContext } from "@/app/upload/context";
+import { previousDay } from "date-fns";
 const SingleBookCreator = () => {
+  const {books, setBooks} = useUploadContext();
   const [book, setBook] = useState<Book>({ ...emptyBook, id: uuidv4() });
   const [loading, startLoading] = useTransition()
   const submitBook = async () => {
     try {
       console.log(book);
       startLoading( async () => {
-        try{
           const [error, response] = await catchError(postDataToUpload([book]))
-          // const response = await postDataToUpload([book]);
+          setBooks( prev => [...prev, book])
           setBook({...emptyBook,id: uuidv4()})
-          alert(response.message);
-        } catch (err) {
-          alert(err);
-        }
+
+          alert(error? error: response.message);
 
       })
 

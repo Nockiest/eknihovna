@@ -1,3 +1,4 @@
+import { UploadContext } from "@/app/upload/context";
 import {
   bookHeaders,
   corsHeaders,
@@ -66,70 +67,72 @@ const POST_BOOKS = async (json: any) => {
     let uploadedBooks = [];
 
     // Process valid data
-    const validData = books
-      .filter((item) => {
-        if (!item.name || !item.id) {
-          rejectedRows.push(item.name || "Unnamed");
-        }
-        return item.name;
-      }) // Ensure important fields like name are not empty
-      .map((item) => {
-        return {
-          id: item.id || uuidv4(), // Generate ID if not present
-          name:
-            typeof item.name === "string" || typeof item.name == "number"
-              ? String(item.name).trim().substring(0, 255)
-              : "",
-          author:
-            typeof item.author === "string"
-              ? item.author.trim().substring(0, 255)
-              : "",
-          category:
-            typeof item.category === "string"
-              ? item.category
-                  .trim()
-                  .substring(0, 50)
-                  .toLowerCase()
-                  .replace(/^\w/, (c: string) => c.toUpperCase())
-              : "",
-          signatura:
-            typeof item.signatura === "string"
-              ? item.signatura
-                  .trim()
-                  .substring(0, 50)
-                  .toLowerCase()
-                  .replace(/^\w/, (c: string) => c.toUpperCase())
-              : "",
-          zpusob_ziskani:
-            typeof item.zpusob_ziskani === "string"
-              ? item.zpusob_ziskani.trim().substring(0, 100)
-              : "",
-          genres: Array.isArray(item.genres)
-            ? item.genres
-                .map((v: any) =>
-                  typeof v === "string" ? v.trim().substring(0, 50) : ""
-                )
-                .filter(Boolean)
-            : [],
-          formaturita:
-            truthyValues.indexOf(item.formaturita) >= 0 ? true : false,
-          available: truthyValues.indexOf(item.available) >= 0 ? true : false,
-          rating:
-            item.rating !== null &&
-            !isNaN(Number(item.rating)) &&
-            item.rating >= 0
-              ? Number(item.rating)
-              : null,
-          isbn:
-            typeof item.isbn === "number"
-              ? String(item.isbn)
-              : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
-              ? String(item.isbn)
-              : "",
-          createdat: item.createdat || new Date(),
-          updatedat: new Date(),
-        };
-      });
+    const validData = books.map(sanitizeBook);
+    console.log(validData)
+    // const validData = books
+    //   .filter((item) => {
+    //     if (!item.name || !item.id) {
+    //       rejectedRows.push(item.name || "Unnamed");
+    //     }
+    //     return item.name;
+    //   }) // Ensure important fields like name are not empty
+    //   .map((item) => {
+    //     return {
+    //       id: item.id || uuidv4(), // Generate ID if not present
+    //       name:
+    //         typeof item.name === "string" || typeof item.name == "number"
+    //           ? String(item.name).trim().substring(0, 255)
+    //           : "",
+    //       author:
+    //         typeof item.author === "string"
+    //           ? item.author.trim().substring(0, 255)
+    //           : "",
+    //       category:
+    //         typeof item.category === "string"
+    //           ? item.category
+    //               .trim()
+    //               .substring(0, 50)
+    //               .toLowerCase()
+    //               .replace(/^\w/, (c: string) => c.toUpperCase())
+    //           : "",
+    //       signatura:
+    //         typeof item.signatura === "string"
+    //           ? item.signatura
+    //               .trim()
+    //               .substring(0, 50)
+    //               .toLowerCase()
+    //               .replace(/^\w/, (c: string) => c.toUpperCase())
+    //           : "",
+    //       zpusob_ziskani:
+    //         typeof item.zpusob_ziskani === "string"
+    //           ? item.zpusob_ziskani.trim().substring(0, 100)
+    //           : "",
+    //       genres: Array.isArray(item.genres)
+    //         ? item.genres
+    //             .map((v: any) =>
+    //               typeof v === "string" ? v.trim().substring(0, 50) : ""
+    //             )
+    //             .filter(Boolean)
+    //         : [],
+    //       formaturita:
+    //         truthyValues.indexOf(item.formaturita) >= 0 ? true : false,
+    //       available: truthyValues.indexOf(item.available) >= 0 ? true : false,
+    //       rating:
+    //         item.rating !== null &&
+    //         !isNaN(Number(item.rating)) &&
+    //         item.rating >= 0
+    //           ? Number(item.rating)
+    //           : null,
+    //       isbn:
+    //         typeof item.isbn === "number"
+    //           ? String(item.isbn)
+    //           : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
+    //           ? String(item.isbn)
+    //           : "",
+    //       createdat: item.createdat || new Date(),
+    //       updatedat: new Date(),
+    //     };
+    //   });
     if (removePreviousData) {
       // Delete all previous books
       await deleteAllPrismaBooks();
@@ -147,7 +150,8 @@ const POST_BOOKS = async (json: any) => {
       "první validní kniha" + validData[0],
       "první přijatá kniha" + books[0],
       "formaturita truthy?" + truthyValues.indexOf(books[0].formaturita),
-      "available truthy?" + truthyValues.indexOf(books[0].available)
+      "available truthy?" + truthyValues.indexOf(books[0].available),
+      uploadedBooks[0].name
     );
     if (validData.length === 0) {
       return NextResponse.json(
@@ -205,3 +209,62 @@ const POST_BOOKS = async (json: any) => {
 };
 
 export default POST_BOOKS;
+
+function sanitizeBook(item: Book) {
+  return {
+    id: item.id || uuidv4(), // Generate ID if not present
+    name:
+      typeof item.name === "string" || typeof item.name == "number"
+        ? String(item.name).trim().substring(0, 255)
+        : "",
+    author:
+      typeof item.author === "string"
+        ? item.author.trim().substring(0, 255)
+        : "",
+    category:
+      typeof item.category === "string"
+        ? item.category
+            .trim()
+            .substring(0, 50)
+            .toLowerCase()
+            .replace(/^\w/, (c: string) => c.toUpperCase())
+        : "",
+    signatura:
+      typeof item.signatura === "string"
+        ? item.signatura
+            .trim()
+            .substring(0, 50)
+            .toLowerCase()
+            .replace(/^\w/, (c: string) => c.toUpperCase())
+        : "",
+    zpusob_ziskani:
+      typeof item.zpusob_ziskani === "string"
+        ? item.zpusob_ziskani.trim().substring(0, 100)
+        : "",
+    genres: Array.isArray(item.genres)
+      ? item.genres
+          .map((v: any) =>
+            typeof v === "string" ? v.trim().substring(0, 50) : ""
+          )
+          .filter(Boolean)
+      : [],
+    formaturita: truthyValues.indexOf(item.formaturita) >= 0 ? true : false,
+    available: truthyValues.indexOf(item.available) >= 0 ? true : false,
+    rating:
+      item.rating !== null &&
+      !isNaN(Number(item.rating)) &&
+      item.rating >= 0
+        ? Number(item.rating)
+        : null,
+    isbn:
+      typeof item.isbn === "number"
+        ? String(item.isbn)
+        : typeof item.isbn === "string" && /^\d+$/.test(item.isbn) // Checks for only digits in the string
+        ? String(item.isbn)
+        : "",
+    createdat: item.createdat || new Date(),
+    updatedat: new Date(),
+  };
+}
+
+// Usage example
