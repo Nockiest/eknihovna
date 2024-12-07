@@ -13,9 +13,12 @@ import BookDeleter from "../apiCalls/BookDeleter";
 import BookCountLogger from "../apiCalls/BookCountLogger";
 import { Book } from "@/types/types";
 import fetchFilteredBooks from "../apiCalls/fetchFilteredBooks";
+import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const AdminPage = () => {
   const [books, setBooks] = useState<Book[]>([]);
+  const { data: session } = useSession({ required: true });
   useEffect(() => {
     const fetching = async () => {
       const b: Book[] = await fetchFilteredBooks();
@@ -51,6 +54,32 @@ const AdminPage = () => {
         return null;
     }
   };
+  useEffect(() => {
+    const checkBackupDate = async () => {
+      try {
+        // Fetch the most recent backup by admin
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_APP_API_URL}/checkBackup`, {
+          params: { adminname: session?.user?.email }, // Pass the admin's email to the backend
+        });
+        if (response.data && response.data.backupat) {
+          const backupDate = new Date(response.data.backupat);
+          const currentDate = new Date();
+          const oneMonthAgo = new Date(currentDate.setMonth(currentDate.getMonth() - 1));
+
+          // If the backup is older than 1 month, show an alert
+          if (backupDate < oneMonthAgo) {
+            alert(
+              "Dlouho jste nezálohovali databázi, doporučujeme si stáhnout výpis knih pomocí tlačítka 'stáhnout data ze serveru', které se nalézá ve spodní části stránky."
+            );
+          }
+        }
+      } catch (error) {
+        console.error("Error checking the backup:", error);
+      }
+    };
+
+    checkBackupDate();
+  }, [ ]); // Dependency array ensures the effect runs once when session is available
 
   return (
     <UploadContext.Provider value={{ books, setBooks }}>
