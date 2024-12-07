@@ -1,8 +1,9 @@
+import { useUploadContext } from '@/app/upload/context';
 import { DangerButton } from '@/theme/buttons/Buttons'
 import axios from 'axios';
 
 const BookDeleter = ( ) => {
-
+  const {books,setBooks} = useUploadContext()
   const deleteData = async () => {
     const userConfirmed = window.confirm("Opravdu chcete smazat všechny knihy?");
     if (!userConfirmed) {
@@ -10,7 +11,7 @@ const BookDeleter = ( ) => {
     }
 
     try {
-       
+
       const response = await axios.delete(`${process.env.NEXT_PUBLIC_APP_API_URL}/upload`,
         {
           data: { id:-1 }, // Include the ID in the request body if your API expects it this way
@@ -29,3 +30,4 @@ const BookDeleter = ( ) => {
 }
 
 export default BookDeleter;
+  

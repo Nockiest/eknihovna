@@ -9,23 +9,20 @@ import React, { useState, useTransition } from "react";
 import { v4 as uuidv4 } from "uuid";
 import catchError from "@/utils/catchError";
 import { useUploadContext } from "@/app/upload/context";
-import { previousDay } from "date-fns";
 const SingleBookCreator = () => {
-  const {books, setBooks} = useUploadContext();
+  const { setBooks } = useUploadContext();
   const [book, setBook] = useState<Book>({ ...emptyBook, id: uuidv4() });
-  const [loading, startLoading] = useTransition()
+  const [loading, startLoading] = useTransition();
   const submitBook = async () => {
     try {
       console.log(book);
-      startLoading( async () => {
-          const [error, response] = await catchError(postDataToUpload([book]))
-          setBooks( prev => [...prev, book])
-          setBook({...emptyBook,id: uuidv4()})
+      startLoading(async () => {
+        const [error, response] = await catchError(postDataToUpload([book]));
+        setBooks((prev) => [...prev, book]);
+        setBook({ ...emptyBook, id: uuidv4() });
 
-          alert(error? error: response.message);
-
-      })
-
+        alert(error ? error : response.message);
+      });
     } catch (err) {
       console.error("Error updating book:", err);
       alert("Selhal jsem v aktualizování knihy:" + err);

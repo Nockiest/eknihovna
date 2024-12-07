@@ -32,5 +32,6 @@ export const postDataToUpload = async (
       alert(`Došlo k neočekávané chybě: ${error}`);
     }
   }
+  console.log('odpověd', response)
   return response;
 };
