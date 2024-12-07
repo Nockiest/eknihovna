@@ -1,6 +1,4 @@
-// pages/api/[your-endpoint].js
 
-import { NextApiRequest, NextApiResponse } from "next";
 import { NextRequest, NextResponse } from "next/server";
 
   var splited_TRUSTED_DOMAINS =

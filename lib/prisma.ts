@@ -14,7 +14,22 @@ export const context: Context = globalForPrisma || {
 //   globalForPrisma.prisma = context.prisma;
 // }
 
-// add prisma functions wiht ctx here?
+// add prisma functions wiht ctx here
+
+export const upsertPrismaBackup = async (backup: { id: string; adminname?: string }, ctx: Context = context) => {
+  return await ctx.prisma.backups.upsert({
+    where: { id: backup.id },
+    update: backup, // Update if the ID already exists
+    create: backup, // Create if the ID doesn't exist
+  });
+};
+export const getNewestBackupByAdmin = async (adminname: string, ctx: Context = context) => {
+  return await ctx.prisma.backups.findFirst({
+    where: { adminname },
+    orderBy: { backupat: 'desc' }, // Order by the most recent backup
+  });
+};
+
 
 export const upsertPrismaBook = async (book: Book, ctx: Context = context) => {
   const res = await ctx.prisma.knihy.upsert({

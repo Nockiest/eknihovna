@@ -22,3 +22,10 @@ model knihy {
   createdat DateTime @default(now())
   updatedat DateTime @updatedAt // Automatically updates on changes
 }
+
+model backups {
+  id         String   @id @db.VarChar(255)
+  adminname       String? @db.VarChar(255)
+  backupat   DateTime @default(now())
+}
+

@@ -72,7 +72,7 @@ const AdminPage = () => {
             {renderContent()}
           </Box>
           <Box className="mb-4 ml-8">
-            <BookFetcher />
+            <BookFetcher   />
             <BookDeleter />
             <BookCountLogger />
           </Box>
