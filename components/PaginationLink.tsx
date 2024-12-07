@@ -17,7 +17,7 @@ const PaginationLink : React.FC<PaginationLinkProps> = ({
     <Link
       key={pageNumber}
       href={`/${folderName}?page=${pageNumber}`}
-      className={`px-2 py-1 rounded mt-2 ${
+      className={`px-3 py-1 rounded mt-2 ${
         pageNumber === currentPage
           ? "bg-primary-400 text-text-950"
           : "bg-secondary-900 text-text-100"
