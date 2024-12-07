@@ -51,13 +51,13 @@ const BookGrid = () => {
       <span style={{ cursor: 'pointer' }}>{params.value as string}</span>
     ), },
     { field: "name", headerName: "Name", width: 150, editable: true },
-    { field: "author", headerName: "Autor", width: 200, editable: true },
-    { field: "category", headerName: "Kategorie", width: 100, editable: true },
-    { field: "isbn", headerName: "ISBN", width: 150, editable: true },
+    { field: "author", headerName: "Autor", width: 150, editable: true },
+    { field: "category", headerName: "Kategorie", width: 85, editable: true },
+    { field: "isbn", headerName: "ISBN", width: 120, editable: true },
     {
       field: "formaturita",
       headerName: "Maturitní",
-      width: 95,
+      width: 85,
       editable: true,
       renderCell: (params: GridCellParams) => (
         <Checkbox
@@ -73,7 +73,7 @@ const BookGrid = () => {
     {
       field: "available",
       headerName: "Dostupná",
-      width: 95,
+      width: 85,
       editable: true,
       renderCell: (params: GridCellParams) => (
         <Checkbox
@@ -92,7 +92,7 @@ const BookGrid = () => {
       width: 100,
       editable: true,
     },
-    { field: "signatura", headerName: "Signatura", width: 100, editable: true },
+    { field: "signatura", headerName: "Signatura", width: 90, editable: true },
   ];
 
   const filteredRows = books.filter((book) =>
@@ -181,18 +181,26 @@ const BookGrid = () => {
         onChange={(e) => setFilterText(e.target.value)}
         sx={{ mb: 2 }}
       />
-      <Box mt={2} sx={{ height: 400 }}>
-        <DataGrid
-          localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
-          rows={filteredRows}
-          columns={columns}
-          onCellEditStop={handleCellEditStop} // Use cell edit stop to trigger paste
-          onCellClick={handleCellClick} // Add cell click handler
-          processRowUpdate={processRowUpdate}
-          editMode="cell"
-          ignoreDiacritics
-        />
-      </Box>
+     <Box mt={2} sx={{ height: 400 }}>
+  <DataGrid
+    localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
+    rows={filteredRows}
+    columns={columns}
+    onCellEditStop={handleCellEditStop} // Use cell edit stop to trigger paste
+    onCellClick={handleCellClick} // Add cell click handler
+    processRowUpdate={processRowUpdate}
+    editMode="cell"
+    ignoreDiacritics
+    sx={{
+      '& .MuiDataGrid-cell': {
+        fontSize: '0.8rem', // Adjust the font size as needed
+      },
+      '& .MuiDataGrid-columnHeaders': {
+        fontSize: '0.8rem', // Adjust the font size for headers as well
+      },
+    }}
+  />
+</Box>
 
       <UpdatedBooksList updatedBooks={updatedBooks} />
     </Box>
