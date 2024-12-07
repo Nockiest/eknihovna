@@ -85,6 +85,8 @@ const SingleBookDeleter: React.FC<BookDeletionProps> = () => {
         }
       );
       setBooks((prev) => prev.filter((book) => book.id !== id));
+      setBookName(null)
+      setBookId('')
       // Set response message from the server
       alert(response.data.message);
     } catch (error: any) {
