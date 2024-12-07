@@ -19,9 +19,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'No data found in the table.' });
     }
 
-    // Convert Prisma query result to JSON
-    const jsonData = data.map((item: any) => JSON.parse(JSON.stringify(item)));
-
+   // Convert Prisma query result to JSON and omit 'updatedat' column
+   const jsonData = data.map((item: any) => {
+    const { updatedat, ...rest } = JSON.parse(JSON.stringify(item));
+    return rest;
+  });
     // Format the rows (e.g., arrays as comma-separated, booleans as "ano"/"ne")
     jsonData.forEach((row: any) => {
       Object.keys(row).forEach((key) => {
