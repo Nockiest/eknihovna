@@ -20,8 +20,8 @@ const SingleBookCreator = () => {
         const [error, response] = await catchError(postDataToUpload([book]));
         setBooks((prev) => [...prev, book]);
         setBook({ ...emptyBook, id: uuidv4() });
-
-        alert(error ? error : response.message);
+        console.log(error, response)
+        alert(error ? error : response.data.message);
       });
     } catch (err) {
       console.error("Error updating book:", err);

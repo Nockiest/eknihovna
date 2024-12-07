@@ -84,9 +84,7 @@ const SingleBookDeleter: React.FC<BookDeletionProps> = () => {
           data: { id }, // Include the ID in the request body if your API expects it this way
         }
       );
-      // if (!response.error) {
       setBooks((prev) => prev.filter((book) => book.id !== id));
-      // }
       // Set response message from the server
       alert(response.data.message);
     } catch (error: any) {
