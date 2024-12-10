@@ -9,19 +9,19 @@ export default function BorrowingInformation() {
       </Typography>
       <List>
         <ListItem>
-          Najdete u nás přes 3000 knížek od maturitní četby až po odbornou
+          Najdete u nás přes 3000 knížek od maturitní četby až po odbornou
           literaturu.
         </ListItem>
         <ListItem>Knížky jsou dostupné pro každého studenta GO.</ListItem>
         <ListItem>
-          Knihy si zpravidla můžete půjčit na 1 měsíc (po domluvě i déle 🙂).
+          Knihy si zpravidla můžete půjčit na 1 měsíc (po domluvě i déle 🙂).
         </ListItem>
         <ListItem>
-          Knihy jsou zcela zdarma a nepotřebujete žádnout průkazku.
+          Knihy jsou zcela zdarma a nepotřebujete žádnout průkazku.
         </ListItem>
         <ListItem>Knihy jsou (zatím) půjčovány na lístkový systém.</ListItem>
         <ListItem>
-          Knihovna je otevřena v průběhu celého školního roku.
+          Knihovna je otevřena v průběhu celého školního roku.
         </ListItem>
         <ListItem>
           Na konci školního roku by měly být všechny knihy vráceny.
