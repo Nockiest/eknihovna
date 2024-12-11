@@ -32,7 +32,7 @@ const BugReportSection = () => {
         Budeme rádi za tvůj feedback. Možné nápady a případné chyby můžeš
         zaznamenat na tomto linku.
       </Typography>
-      <Link href="https://forms.gle/uU2rXgcin7aDjazk8" passHref>
+      <Link href="https://forms.gle/BQZssFVD7ik7apqe9" passHref>
         <DangerButton
           className="mx-auto"
           variant="outlined"
