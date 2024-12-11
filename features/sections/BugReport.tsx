@@ -32,16 +32,23 @@ const BugReportSection = () => {
         Budeme rádi za tvůj feedback. Možné nápady a případné chyby můžeš
         zaznamenat na tomto linku.
       </Typography>
-      <Link href="https://forms.gle/BQZssFVD7ik7apqe9" passHref>
-        <DangerButton
-          className="mx-auto"
-          variant="outlined"
-          color="secondary"
-          style={{ marginTop: "16px", display: "flex", alignItems: "center" }}
-        >
-          Navrhnout vylepšení/Nahlásit problém <BugReport style={{ marginLeft: "8px" }} />
-        </DangerButton>
-      </Link>
+      <Link
+  href="https://forms.gle/BQZssFVD7ik7apqe9"
+  passHref
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  <DangerButton
+    className="mx-auto"
+    variant="outlined"
+    color="secondary"
+    style={{ marginTop: "16px", display: "flex", alignItems: "center" }}
+  >
+    Navrhnout vylepšení/Nahlásit problém
+    <BugReport style={{ marginLeft: "8px" }} />
+  </DangerButton>
+</Link>
+
     </Box>
   );
 };
