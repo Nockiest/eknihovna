@@ -12,6 +12,7 @@ import { postDataToUpload } from "@/features/apiCalls/postDataToUpload";
 import UpdatedBooksList from "../../../components/UpdatedBookList";
 import { DangerButton } from "@/theme/buttons/Buttons";
 import { csCZ } from "@mui/x-data-grid/locales";
+import catchError from "@/utils/catchError";
 const BookGrid = () => {
   const { books, setBooks } = useUploadContext(); // Get books from the context
   const [updatedBooks, setUpdatedBooks] = useState<Book[]>([]);
@@ -46,9 +47,15 @@ const BookGrid = () => {
   };
   // Define columns for the DataGridx
   const columns = [
-    { field: "id", headerName: "ID", width: 100, editable: false,renderCell: (params: GridCellParams) => (
-      <span style={{ cursor: 'pointer' }}>{params.value as string}</span>
-    ), },
+    {
+      field: "id",
+      headerName: "ID",
+      width: 100,
+      editable: false,
+      renderCell: (params: GridCellParams) => (
+        <span style={{ cursor: "pointer" }}>{params.value as string}</span>
+      ),
+    },
     { field: "name", headerName: "Name", width: 150, editable: true },
     { field: "author", headerName: "Autor", width: 150, editable: true },
     { field: "category", headerName: "Kategorie", width: 85, editable: true },
@@ -153,8 +160,10 @@ const BookGrid = () => {
       <Button
         variant="contained"
         color="primary"
-        onClick={() => {
-          postDataToUpload(updatedBooks);
+        onClick={async () => {
+          const [error, response] = await catchError(postDataToUpload(updatedBooks));
+          console.log(response)
+          alert(error ? error : response.data.message);
           setOriginalBooks(books);
           setUpdatedBooks([]); // Clear updatedBooks after confirming changes
         }}
@@ -180,26 +189,26 @@ const BookGrid = () => {
         onChange={(e) => setFilterText(e.target.value)}
         sx={{ mb: 2 }}
       />
-     <Box mt={2} sx={{ height: 400 }}>
-  <DataGrid
-    localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
-    rows={filteredRows}
-    columns={columns}
-    onCellEditStop={handleCellEditStop} // Use cell edit stop to trigger paste
-    onCellClick={handleCellClick} // Add cell click handler
-    processRowUpdate={processRowUpdate}
-    editMode="cell"
-    ignoreDiacritics
-    sx={{
-      '& .MuiDataGrid-cell': {
-        fontSize: '0.8rem', // Adjust the font size as needed
-      },
-      '& .MuiDataGrid-columnHeaders': {
-        fontSize: '0.8rem', // Adjust the font size for headers as well
-      },
-    }}
-  />
-</Box>
+      <Box mt={2} sx={{ height: 400 }}>
+        <DataGrid
+          localeText={csCZ.components.MuiDataGrid.defaultProps.localeText}
+          rows={filteredRows}
+          columns={columns}
+          onCellEditStop={handleCellEditStop} // Use cell edit stop to trigger paste
+          onCellClick={handleCellClick} // Add cell click handler
+          processRowUpdate={processRowUpdate}
+          editMode="cell"
+          ignoreDiacritics
+          sx={{
+            "& .MuiDataGrid-cell": {
+              fontSize: "0.8rem", // Adjust the font size as needed
+            },
+            "& .MuiDataGrid-columnHeaders": {
+              fontSize: "0.8rem", // Adjust the font size for headers as well
+            },
+          }}
+        />
+      </Box>
 
       <UpdatedBooksList updatedBooks={updatedBooks} />
     </Box>
