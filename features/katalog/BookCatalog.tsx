@@ -176,7 +176,7 @@ const BookCatalog: React.FC = () => {
               display: "flex",
               flexWrap: "wrap",
               justifyContent: "center",
-              gap: 2, // Controls spacing between items
+              gap: 2, 
               width: "100%",
               mt: 3,
             }}

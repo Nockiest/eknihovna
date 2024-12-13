@@ -37,6 +37,7 @@
     "npm": "^10.9.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-qr-barcode-scanner": "^2.0.0",
     "react-responsive": "^10.0.0",
     "uuid": "^10.0.0",
     "xlsx": "^0.18.5"

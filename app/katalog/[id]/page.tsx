@@ -3,7 +3,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Box, Typography, Paper, Divider } from "@mui/material";
 import { Book } from "@/types/types";
-import { PrimaryButton } from "@/theme/buttons/Buttons";
+import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
 
 const BookDetailPage = () => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
@@ -20,7 +20,12 @@ const BookDetailPage = () => {
     }
   }, [id]);
 
-  if (!book) return <Typography variant="h6" sx={{ color: "gray" }}>Načítání...</Typography>;
+  if (!book)
+    return (
+      <Typography variant="h6" sx={{ color: "gray" }}>
+        Načítání...
+      </Typography>
+    );
 
   return (
     <Box
@@ -33,13 +38,13 @@ const BookDetailPage = () => {
         minHeight: "100vh",
       }}
     >
-      <PrimaryButton
+      <SecondaryButton
         variant="contained"
         onClick={() => router.back()}
         sx={{ mb: 3 }}
       >
         Zpátky do katalogu
-      </PrimaryButton>
+      </SecondaryButton>
 
       <Paper
         elevation={3}
@@ -52,7 +57,10 @@ const BookDetailPage = () => {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 600, mb: 2, textAlign: "center" }}>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 600, mb: 2, textAlign: "center" }}
+        >
           {book.name || "N/A"}
         </Typography>
 
@@ -61,10 +69,12 @@ const BookDetailPage = () => {
         <Box>
           <Typography variant="body1" sx={{ mb: 1 }}>
             <strong>Autor:</strong> {book.author || "N/A"}
-          </Typography> <br/>
+          </Typography>{" "}
+          <br />
           <Typography variant="body1" sx={{ mb: 1 }}>
             <strong>Kategorie:</strong> {book.category || "N/A"}
-          </Typography>  <br/>
+          </Typography>{" "}
+          <br />
           {/* <Box sx={{ mb: 1 }}>
             <Typography variant="body1">
               <strong>Žánr:</strong>{" "}
@@ -94,6 +104,13 @@ const BookDetailPage = () => {
           </Typography>
         </Box>
       </Paper>
+      <PrimaryButton
+        variant="contained"
+        onClick={() => router.push(`/katalog/${id}/checkout`)}
+          className="mt-3"
+>
+        Pujčit si knihu
+      </PrimaryButton>
     </Box>
   );
 };
