@@ -1,6 +1,6 @@
 "use client"
 import React, { Component, useState } from 'react'
-import Scanner from './Scanner'
+import Scanner from './QuaggaScanner'
 import ArrowBack from '@mui/icons-material/ArrowBack'
 import Link from 'next/link'
 import { Fab, Paper, TextareaAutosize } from '@mui/material'
