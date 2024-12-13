@@ -8,6 +8,7 @@ import React from "react";
 import GOMobileheader from "@/components/GOMobileheader";
 import { Metadata } from "next";
 import { PrimaryButton, SecondaryButton } from "@/theme/buttons/Buttons";
+import MaturitaBookListLink from "@/components/MaturitaBookListLink";
 // import { GoogleAnalytics } from "nextjs-google-analytics"; xx
 export const metadata: Metadata = {
   title: "GO eknihovna",
@@ -85,6 +86,8 @@ export default function Home() {
         </SecondaryButton>
         </Box>
         <OtherProjectLinker />
+        <MaturitaBookListLink />
+
       </Container>
     </>
   );
