@@ -126,11 +126,10 @@ const BookCatalog: React.FC = () => {
   };
   // should fetch only books based on page
   useEffect(() => {
-    setLoadingTransition(fetchBooks);
+    fetchBooks()
   }, [page, activeFilters]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
-  const [loading, setLoadingTransition] = useTransition();
   return (
     <Box className="w-full">
       <FilterLister />
@@ -163,7 +162,7 @@ const BookCatalog: React.FC = () => {
       </Box>
       <FiltringWindow />
 
-      {loading && <LoadingPage />}
+      {status === "loading" && <LoadingPage />}
 
       {status === "error" && (
         <Announcer message={errorMessage} type={"error"} />
