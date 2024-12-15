@@ -153,7 +153,7 @@ const BookGrid = () => {
   };
 
   return (
-    <Box className="mx-auto  p-2 ">
+    <Box className="mx-auto w-full p-2 ">
       <Typography variant="h4" gutterBottom>
         Prohlížeč knih
       </Typography>
