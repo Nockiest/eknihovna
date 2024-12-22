@@ -47,10 +47,10 @@ export default function RootLayout({
 
         {/* Optional: Additional Favicons for Different Sizes*/}
         <link rel="icon" type="image/png" sizes="16x16" href="/icon/bookLogo.ico" />
-        <link rel="icon" type="image/png" sizes="32x32" href="/icon/bookLogo.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/icon/bookLogo.png" />
 
         {/* Optional: Apple Touch Icon */}
-        <link rel="apple-touch-icon" sizes="180x180" href="/icon/bookLogo.ico" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icon/bookLogo.png" />
 
         {/* Optional: Manifest File */}
         <link rel="icon" href="/icon/bookLogo.ico" />
