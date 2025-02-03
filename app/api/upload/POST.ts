@@ -88,7 +88,6 @@ const POST_BOOKS = async (json: any) => {
       "první přijatá kniha" + books[0],
       "formaturita truthy?" + truthyValues.indexOf(books[0].formaturita),
       "available truthy?" + truthyValues.indexOf(books[0].available),
-      uploadedBooks[0].name
     );
     if (validData.length === 0) {
       return NextResponse.json(
