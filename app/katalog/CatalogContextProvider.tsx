@@ -44,7 +44,6 @@ const CatalogContextProvider: React.FC<{ children: React.ReactNode }> = ({ child
           fetchUniqueFilterCol('author'),
           fetchUniqueFilterCol('name'),
         ]);
-        console.log('restarted');
         const savedActiveFilters = Cookies.get('activeFilters');
         console.log('saved state:', savedActiveFilters);
         if (savedActiveFilters) {
@@ -59,7 +58,17 @@ const CatalogContextProvider: React.FC<{ children: React.ReactNode }> = ({ child
     update();
   }, []);
 
+  useEffect(() => {
+    const handleBeforeUnload = () => {
+      Cookies.remove('activeFilters');
+    };
 
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
 
   const handleActiveFilterChange = (filterName: keyof Filters, value: string | boolean | null) => {
     console.log(filterName, value);

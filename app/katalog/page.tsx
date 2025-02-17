@@ -14,13 +14,13 @@ export const metadata: Metadata = {
 // provides contex for the while page
 const KatalogPage = () => {
   return (
-    <>
+    <CatalogContextProvider>
+
       <Analytics />
       <CatalogPageContents />
-    </>
-    // <CatalogContextProvider>
+      </CatalogContextProvider>
 
-    // </CatalogContextProvider>
+
   );
 };
 

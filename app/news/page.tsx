@@ -30,6 +30,11 @@ const NewsPage: React.FC = () => {
         "Eknihovna je tu! Prozkoumej tisíce titulů našeho katalogu, informuj se o jejich aktuálním stavu a půjč si je ještě dnes! Případné návrhy a prosby směřujte buď přes tlačítko níže na stránce, nebo přímo na email ondluk.m@zaci.gopat.cz.",
       date: "2024-12-10",
     },
+    {
+      message:
+        "Odteď se zvolené filtry ukládají mezi stránkami, takže nemusíte znovu nastavovat nové při procházení katalogu.",
+      date: "2025-2-17",
+    },
   ];
   return (
     <Container maxWidth="sm">

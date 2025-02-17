@@ -1,0 +1,115 @@
+'use client'
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Box, Typography, Paper, Divider } from "@mui/material";
+import { Book } from "@/types/types";
+import { PrimaryButton } from "@/theme/buttons/Buttons";
+import { useSearchContext } from "../context";
+import Link from "next/link";
+
+const BookDetailPage = () => {
+  const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
+  const params = useParams();
+  const router = useRouter();
+
+  const id = params.id; // Get the dynamic part of the URL
+  const [book, setBook] = useState<Book | null>(null);
+  const { activeFilters } = useSearchContext();
+  useEffect(() => {
+    if (id) {
+      fetch(`${apiUrl}/bookList/${id}`)
+        .then((res) => res.json())
+        .then((data) => setBook(data));
+    }
+  }, [id]);
+
+  if (!book)
+    return (
+      <Typography variant="h6" sx={{ color: "gray" }}>
+        Načítání...
+      </Typography>
+    );
+
+  return (
+    <Box
+      padding={4}
+      display="flex"
+      flexDirection="column"
+      alignItems="center"
+      sx={{
+        backgroundColor: "#f9f9f9",
+        minHeight: "100vh",
+      }}
+    >
+      <PrimaryButton
+        variant="contained"
+        // onClick={() => router.back()}
+        sx={{ mb: 3 }}
+      >
+        <Link href={`/katalog`}>Zpátky do katalogu</Link>
+      </PrimaryButton>
+
+      <Paper
+        elevation={3}
+        sx={{
+          width: "100%",
+          maxWidth: 600,
+          padding: 4,
+          borderRadius: 3,
+          backgroundColor: "#ffffff",
+          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+        }}
+      >
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 600, mb: 2, textAlign: "center" }}
+        >
+          {book.name || "N/A"}
+        </Typography>
+
+        <Divider sx={{ my: 2 }} />
+
+        <Box>
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            <strong>Autor:</strong> {book.author || "N/A"}
+          </Typography>{" "}
+          <br />
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            <strong>Kategorie:</strong> {book.category || "N/A"}
+          </Typography>{" "}
+          <br />
+          <>{activeFilters.formaturita}</>
+          {/* <Box sx={{ mb: 1 }}>
+            <Typography variant="body1">
+              <strong>Žánr:</strong>{" "}
+              {book.genres && book.genres.length > 0 ? (
+                book.genres.map((genre, index) => (
+                  <Typography
+                    component="span"
+                    key={genre}
+                    variant="body2"
+                    sx={{
+                      color: "#1976d2",
+                      fontWeight: "medium",
+                    //   marginRight: index < book?.genres?.length - 1 ? 1 : 0,
+                    }}
+                  >
+                    {genre}
+                    {book.genres  &&  <p>index { book.genres.length - 1 && <>,</>}  </p>}
+                  </Typography>
+                ))
+              ) : (
+                "N/A"
+              )}
+            </Typography>
+          </Box> */}
+          <Typography variant="body1" sx={{ mb: 1 }}>
+            <strong>ISBN:</strong> {book.isbn || "N/A"}
+          </Typography>
+        </Box>
+      </Paper>
+    </Box>
+  );
+};
+
+export default BookDetailPage;
