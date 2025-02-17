@@ -6,6 +6,7 @@ import CategoryChip from "../../components/CategoryChip";
 import LineWithCircle from "../../components/styling/LineWithCircle";
 import { useRouter } from "next/navigation";
 import { differenceInMonths } from "date-fns";
+import Link from "next/link";
 type BookPreviewProps = {
   book: Book;
 };
@@ -31,9 +32,9 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
   return (
     <Paper
       className={`min-h-32 items-center cursor-pointer relative`}
-      onClick={() => {
-        router.push(`/katalog/${id}`);
-      }}
+      // onClick={() => {
+      //   router.push(`/katalog/${id}`);
+      // }}
       sx={{
         opacity: truthyValues.includes(available) ? "1" : "0.5",
         border: truthyValues.includes(available)
@@ -60,6 +61,8 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           Nová
         </Box>
       )}
+      <Link href={`/katalog/${id}`}>
+
       <Box
         p={2}
         sx={{ backgroundColor: "#ffffff" }}
@@ -108,6 +111,8 @@ const BookPreview: React.FC<BookPreviewProps> = ({ book }) => {
           {!available && <Typography variant="body1">Vypůjčená</Typography>}
         </Box>
       </Box>
+      </Link>
+
     </Paper>
   );
 };

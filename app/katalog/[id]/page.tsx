@@ -1,17 +1,20 @@
-"use client";
+'use client'
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { Box, Typography, Paper, Divider } from "@mui/material";
 import { Book } from "@/types/types";
 import { PrimaryButton } from "@/theme/buttons/Buttons";
+import { useSearchContext } from "../context";
+import Link from "next/link";
 
 const BookDetailPage = () => {
   const apiUrl = process.env.NEXT_PUBLIC_APP_API_URL;
   const params = useParams();
   const router = useRouter();
+
   const id = params.id; // Get the dynamic part of the URL
   const [book, setBook] = useState<Book | null>(null);
-
+  const { activeFilters } = useSearchContext();
   useEffect(() => {
     if (id) {
       fetch(`${apiUrl}/bookList/${id}`)
@@ -20,7 +23,12 @@ const BookDetailPage = () => {
     }
   }, [id]);
 
-  if (!book) return <Typography variant="h6" sx={{ color: "gray" }}>Načítání...</Typography>;
+  if (!book)
+    return (
+      <Typography variant="h6" sx={{ color: "gray" }}>
+        Načítání...
+      </Typography>
+    );
 
   return (
     <Box
@@ -35,10 +43,10 @@ const BookDetailPage = () => {
     >
       <PrimaryButton
         variant="contained"
-        onClick={() => router.back()}
+        // onClick={() => router.back()}
         sx={{ mb: 3 }}
       >
-        Zpátky do katalogu
+        <Link href={`/katalog`}>Zpátky do katalogu</Link>
       </PrimaryButton>
 
       <Paper
@@ -52,7 +60,10 @@ const BookDetailPage = () => {
           boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
         }}
       >
-        <Typography variant="h4" sx={{ fontWeight: 600, mb: 2, textAlign: "center" }}>
+        <Typography
+          variant="h4"
+          sx={{ fontWeight: 600, mb: 2, textAlign: "center" }}
+        >
           {book.name || "N/A"}
         </Typography>
 
@@ -61,10 +72,13 @@ const BookDetailPage = () => {
         <Box>
           <Typography variant="body1" sx={{ mb: 1 }}>
             <strong>Autor:</strong> {book.author || "N/A"}
-          </Typography> <br/>
+          </Typography>{" "}
+          <br />
           <Typography variant="body1" sx={{ mb: 1 }}>
             <strong>Kategorie:</strong> {book.category || "N/A"}
-          </Typography>  <br/>
+          </Typography>{" "}
+          <br />
+          <>{activeFilters.formaturita}</>
           {/* <Box sx={{ mb: 1 }}>
             <Typography variant="body1">
               <strong>Žánr:</strong>{" "}

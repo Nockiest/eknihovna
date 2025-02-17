@@ -91,43 +91,44 @@ const BookCatalog: React.FC = () => {
   const itemsPerPage = 64;
   const page = parseInt(searchParams.get("page") || "1", 10) || 1;
 
-  const fetchBooks = async () => {
-    const logic = async () => {
-      dispatch({ type: "FETCH_INIT" });
-      const allPossibleBooks = await fetchFilteredBooks(activeFilters);
-      console.log("All filtered books:", allPossibleBooks.length);
 
-      // Calculate the current page's books using the offset
-      const startIndex = (page - 1) * itemsPerPage;
-      const endIndex = startIndex + itemsPerPage;
-      const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
-      console.log(
-        allPossibleBooks.length,
-        currentBooks.length,
-        startIndex,
-        endIndex
-      );
-      dispatch({
-        type: "FETCH_SUCCESS",
-        payload: {
-          books: currentBooks,
-          totalBooks: allPossibleBooks.length,
-        },
-      });
-    };
-    const [error, res] = await catchError(logic());
-    if (error) {
-      console.log(error?.message);
-      dispatch({
-        type: "FETCH_FAILURE",
-        errorMessage: error?.message || "Unknown error occurred",
-      });
-    }
-  };
   // should fetch only books based on page
   useEffect(() => {
+    const fetchBooks = async () => {
+      const logic = async () => {
+        dispatch({ type: "FETCH_INIT" });
+        const allPossibleBooks = await fetchFilteredBooks(activeFilters);
+        console.log("All filtered books:", allPossibleBooks.length);
+
+        // Calculate the current page's books using the offset
+        const startIndex = (page - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const currentBooks = allPossibleBooks.slice(startIndex, endIndex);
+        console.log(
+          allPossibleBooks.length,
+          currentBooks.length,
+          startIndex,
+          endIndex
+        );
+        dispatch({
+          type: "FETCH_SUCCESS",
+          payload: {
+            books: currentBooks,
+            totalBooks: allPossibleBooks.length,
+          },
+        });
+      };
+      const [error ] = await catchError(logic());
+      if (error) {
+        console.log(error?.message);
+        dispatch({
+          type: "FETCH_FAILURE",
+          errorMessage: error?.message || "Unknown error occurred",
+        });
+      }
+    };
     fetchBooks()
-  }, [page, activeFilters]);
+  }, [page, activeFilters  ]);
 
   const { status, shownBooks, BooksInFilterNum, errorMessage } = state;
   return (

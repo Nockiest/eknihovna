@@ -12,8 +12,6 @@ export const falsyValues = [
   undefined,
   null,
 ];
-// export const knihyURL =
-//   process.env.NEXT_PUBLIC_APP_API_URL || "http://localhost:3002/api"; // Adjust URL as per your backend setup
 
 export const defaultFilters = {
   author: [],

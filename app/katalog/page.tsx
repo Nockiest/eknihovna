@@ -1,6 +1,7 @@
-import CatalogPageContents from "@/components/CatalogPageContents";
+import CatalogPageContents from "@/app/katalog/CatalogPageContents";
 import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
+import CatalogContextProvider from "./CatalogContextProvider";
 export const metadata: Metadata = {
   title: "Katalog v GO eknihovny",
   description: "Prohl0dn2te si katalog knih v GO knihovně",
@@ -17,6 +18,9 @@ const KatalogPage = () => {
       <Analytics />
       <CatalogPageContents />
     </>
+    // <CatalogContextProvider>
+
+    // </CatalogContextProvider>
   );
 };
 

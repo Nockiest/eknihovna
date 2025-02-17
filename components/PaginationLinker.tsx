@@ -48,7 +48,6 @@ const Pagination: React.FC<PaginationProps> = ({
     for (let i = page - offset; i <= page + offset; i++) {
        // add found pages to visible
       if (i >= 1 && i <= totalPages) {
-        console.log(i)
        pageNumbers.push(i);
       } else {
         unfoundPages += 1
@@ -64,7 +63,6 @@ const Pagination: React.FC<PaginationProps> = ({
       }
     } else if (page + offset < totalPages) {
       for (let i = page + offset +1; i < totalPages && unfoundPages>0; i++ ){
-        console.log(i)
         pageNumbers.push(i);
         unfoundPages--
       }
