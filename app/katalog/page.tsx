@@ -3,8 +3,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 import CatalogContextProvider from "./CatalogContextProvider";
 export const metadata: Metadata = {
-  title: "Katalog v GO eknihovny",
-  description: "Prohl0dn2te si katalog knih v GO knihovně",
+  title: "Katalog GO eknihovny",
+  description: "Prohlédněte si katalog knih v GO knihovně",
   applicationName: "GO eknihovna",
   keywords: ["knihovna", "eknihovna", "gymnázium", "opatov", "GO"],
   creator: "Ondřej Lukeš",
