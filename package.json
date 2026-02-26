@@ -30,7 +30,7 @@
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.5",
     "js-cookie": "^3.0.5",
-    "next": "^15.0.2-canary.7",
+    "next": "15.6.0-canary.60",
     "next-auth": "^4.24.7",
     "next-connect": "^1.0.0",
     "nextjs-google-analytics": "^2.3.7",
