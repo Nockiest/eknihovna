@@ -1,91 +1,124 @@
+# eKnihovna Project
 
-##App is available on this domain:## eknihovna.vercel.app
+Welcome to the eKnihovna project! This README is designed to help you get started with the project, even if you have never worked with it before. Follow the steps below to set up the project and understand its structure.
 
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+---
+
+## Table of Contents
+1. [Project Overview](#project-overview)
+2. [Technologies Used](#technologies-used)
+3. [Getting Started](#getting-started)
+4. [Project Structure](#project-structure)
+5. [Key Features](#key-features)
+6. [Contributing](#contributing)
+7. [Contact](#contact)
+
+---
+
+## Project Overview
+The eKnihovna project is a web-based application designed to manage and interact with a library of books. It includes features such as:
+- Book catalog management
+- User authentication
+- Book borrowing and returning
+- Data visualization and reporting
+
+This project is built using modern web development technologies and follows best practices for scalability and maintainability.
+
+---
+
+## Technologies Used
+- **Framework**: Next.js (React-based framework for server-side rendering and static site generation)
+- **Styling**: Tailwind CSS
+- **Database**: Prisma (ORM) with PostgreSQL
+- **API**: RESTful APIs for backend communication
+- **Other Tools**: TypeScript, PostCSS
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+Make sure you have the following installed on your system:
+- Node.js (v16 or higher)
+- npm or yarn (for package management)
+- PostgreSQL (for the database)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+### Installation
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Nockiest/eknihovna.git
+   cd eknihovna
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up the database:
+   - Create a `.env` file in the root directory and configure your database connection:
+     ```env
+     DATABASE_URL=postgresql://<username>:<password>@<host>:<port>/<database>
+     ```
+   - Run the Prisma migrations:
+     ```bash
+     npx prisma migrate dev
+     ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+   The application will be available at `http://localhost:3000`.
+
+---
+
+## Project Structure
+The project is organized as follows:
+
 ```
-##  Architecture
-Frontend: React, NextJs
-Backend: NextjsAPI, Prisma
-Styling: Tailwind, MUI library
-Database: PSQL
-Authentication: NextAUth
+.
+├── app/                # Next.js app directory
+│   ├── api/           # API routes
+│   ├── katalog/       # where the user scrolls boooks
+│   ├── info/          # Info about the library and web for users pages
+│   ├── upload/        # For Admin/library administrator
+│   └── styling/       # Global styles
+├── components/         # Reusable React components
+├── data/               # Static data and constants
+├── lib/                # Utility libraries (e.g., Prisma client)
+├── middleware/         # Middleware functions
+├── prisma/             # Prisma schema and migrations
+├── public/             # Static assets (images, icons, etc.)
+├── theme/              # Theme-related utilities
+├── types/              # TypeScript type definitions
+├── utils/              # Utility functions
+└── ...
+```
 
-## Purpose of project
-The goal is to increase the utilization of our school library. Many students do not even know what books are available. Gettting important information like this from the library requires physical contact with a school librarian, who is not always present to consult. The app solves this problem by providing an up to date information, which even a non-tech savvy school employee can easily maintain.
+---
 
-## Target Audience
-The app is intended to be used by the students of Grammar School Opatov
+## Key Features
+- **Book Catalog**: Browse and manage the library's book collection.
+- **User Authentication**: Secure login and session management.
+- **Data Import/Export**: Upload and download book data in Excel format.
+- **Customizable Themes**: Modify the app's appearance using the `theme/` directory.
 
-## Features
-Find availability of books in library
-FInd books you can use for your maturita exams
-Find general information about the school library
-Easy updating of the book state through the admin page
+---
 
-## Code structure
-/components - general components that could be used independently throughout the app
-/features - specific funcionality dependent on some other code
-/app/api - contains the backend of the app
-/app - contains the individual components
-/utils - provides code that coudl be used in other projects
+## Contributing
+We welcome contributions to the eKnihovna project! To contribute:
+1. Fork the repository.
+2. Create a new branch for your feature or bug fix.
+3. Submit a pull request with a detailed description of your changes.
 
+---
 
-## Env variables
-NEXTAUTH_SECRET - for auth
-GOOGLE_CLIENT_ID - for auth
-GOOGLE_CLIENT_SECRET - for auth
-GITHUB_ID - for auth
-GITHUB_SECRET - for auth
-DATABASE_URL - for database connection
-NEXT_PUBLIC_WHITE_LIST_EMAILS - emails that have acess to the admin page seperated by ":"
-NEXT_PUBLIC_APP_API_URL - url of the backend/api to make calls to
+## Contact
+If you have any questions or need help, feel free to reach out:
+- **Email**: ondralukes06@seznam.cz
+- **GitHub Issues**: Open an issue in the repository
 
-## how to run
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-set up your own psql db and connect to it
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
-
-In order for this version to work properly, it is necessary to start up the server side, which will be added into its own branch promptly
-
-adding new db column
-
-close developmnet server
-######download backup of db in production
-add in development db ALTER TABLE table_name ADD COLUMN column_name data_type [default_value]
-rewrite prisma schema
-npx prisma migrate dev --name new_name
-add it in production db ALTER TABLE table_name ADD COLUMN column_name data_type [default_value]
-update testBook,emptyBook,bookHeaders in /data/value.tsx AND trnaslatebook keys vars
+Thank you for contributing to the eKnihovna project!
