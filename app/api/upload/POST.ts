@@ -1,8 +1,7 @@
-import { UploadContext } from "@/app/upload/context";
 import sanitizeBook from "@/components/SanitizeBook";
 import {
   bookHeaders,
-  corsHeaders,
+  getCorsHeaders,
   noCacheHeaders,
   truthyValues,
 } from "@/data/values";
@@ -14,32 +13,22 @@ import {
 } from "@/lib/prisma";
 import { Book } from "@/types/types";
 import { NextResponse } from "next/server";
-import { v4 as uuidv4 } from "uuid";
 
-export const maxDuration = 60; // This function can run for a maximum of 60 seconds
-const POST_BOOKS = async (json: any) => {
+export const maxDuration = 60;
+const POST_BOOKS = async (json: any, origin: string | null = null) => {
+  const cors = getCorsHeaders(origin);
   try {
     const { removePreviousData, books } = json;
     console.log(books[0]);
     console.log(removePreviousData);
 
-    // Validate JSON format
     if (!books || !Array.isArray(books)) {
       return NextResponse.json(
-        {
-          success: false,
-          message: "Špatný formát, očekával jsem tabulku knížek.",
-          error: "Špatný formát, očekával jsem tabulku knížek.",
-          headers: {
-            ...noCacheHeaders,
-            ...corsHeaders,
-          },
-        },
-        { status: 400 }
+        { success: false, message: "Špatný formát, očekával jsem tabulku knížek.", error: "Špatný formát, očekával jsem tabulku knížek." },
+        { status: 400, headers: { ...noCacheHeaders, ...cors } }
       );
     }
 
-    // Validate keys against expected bookHeaders
     const FirstBookKeys = Object.keys(books[0]) as Array<keyof Book>;
     const invalidKeys = FirstBookKeys.filter(
       (key) => bookHeaders.indexOf(key as keyof Book) < 0
@@ -51,27 +40,18 @@ const POST_BOOKS = async (json: any) => {
       return NextResponse.json(
         {
           success: false,
-          error: `Tato Tabulka Má Špatné Názvy Hlaviček, očekávané názvy: ${bookHeaders.join(
-            ", "
-          )}`,
-          message: `Tato Tabulka Má Špatné Názvy Hlaviček, obdržené názvy: ${FirstBookKeys.join(
-            ", "
-          )}, očekávané názvy: ${bookHeaders.join(", ")}`,
-          headers: {
-            ...noCacheHeaders,
-          },
+          error: `Tato Tabulka Má Špatné Názvy Hlaviček, očekávané názvy: ${bookHeaders.join(", ")}`,
+          message: `Tato Tabulka Má Špatné Názvy Hlaviček, obdržené názvy: ${FirstBookKeys.join(", ")}, očekávané názvy: ${bookHeaders.join(", ")}`,
         },
-        { status: 400 }
+        { status: 400, headers: { ...noCacheHeaders, ...cors } }
       );
     }
     const rejectedRows: string[] = [];
     let uploadedBooks = [];
 
-    // Process valid data
     const validData = books.map(sanitizeBook);
-    console.log(validData)
+    console.log(validData);
     if (removePreviousData) {
-      // Delete all previous books
       await deleteAllPrismaBooks();
       console.log("Delete all books");
       await craeteManyPrismaBooks(validData as Book[]);
@@ -93,15 +73,10 @@ const POST_BOOKS = async (json: any) => {
       return NextResponse.json(
         {
           success: false,
-          message:
-            "ani jedna kniha poslaná na server nebyla přijata. zkontrolujte, jestli měly knihy správně vyplněné hodnoty",
-          error:
-            "ani jedna kniha poslaná na server nebyla přijata. zkontrolujte, jestli měly knihy správně vyplněné hodnoty",
-          headers: {
-            ...noCacheHeaders,
-          },
+          message: "ani jedna kniha poslaná na server nebyla přijata. zkontrolujte, jestli měly knihy správně vyplněné hodnoty",
+          error: "ani jedna kniha poslaná na server nebyla přijata. zkontrolujte, jestli měly knihy správně vyplněné hodnoty",
         },
-        { status: 400 }
+        { status: 400, headers: { ...noCacheHeaders, ...cors } }
       );
     }
     const totalBooks = await countPrismaBooks();
@@ -109,24 +84,9 @@ const POST_BOOKS = async (json: any) => {
     return NextResponse.json(
       {
         success: true,
-        message: `Data úspěšně nahrána, počet knih: ${totalBooks}.
-        ${
-          rejectedRows.length > 0
-            ? "Tyto knihy se bohužel nepodařilo nahrát" +
-              rejectedRows.join(", ")
-            : ""
-        }, ${
-          uploadedBooks.length > 0
-            ? `název první nahrané knihy ${JSON.stringify(
-                uploadedBooks[0].name
-              )}`
-            : ""
-        } `.replace(/\n/g, ""),
-        headers: {
-          ...noCacheHeaders,
-        },
+        message: `Data úspěšně nahrána, počet knih: ${totalBooks}. ${rejectedRows.length > 0 ? "Tyto knihy se bohužel nepodařilo nahrát" + rejectedRows.join(", ") : ""}, ${uploadedBooks.length > 0 ? `název první nahrané knihy ${JSON.stringify(uploadedBooks[0].name)}` : ""}`.replace(/\n/g, ""),
       },
-      { status: 200 }
+      { status: 200, headers: { ...noCacheHeaders, ...cors } }
     );
   } catch (error) {
     console.error("Error inserting or updating data:", error);
@@ -135,17 +95,10 @@ const POST_BOOKS = async (json: any) => {
         success: false,
         message: "Selhal jsem při nahrání dat, popis erroru: " + error,
         error: "Selhal jsem při nahrání dat, popis erroru: " + error,
-        headers: {
-          ...noCacheHeaders,
-        },
       },
-      { status: 500 }
+      { status: 500, headers: { ...noCacheHeaders, ...cors } }
     );
   }
 };
 
 export default POST_BOOKS;
-
-
-
-// Usage example

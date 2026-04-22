@@ -22,12 +22,18 @@ export const defaultFilters = {
   name: null,
 };
 
-// CORS headers configuration
-export const corsHeaders = {
-  "Access-Control-Allow-Origin": "http://localhost:3001",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
+const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS ?? "https://eknihovna.vercel.app").split(",");
+
+export function getCorsHeaders(origin: string | null): Record<string, string> {
+  const allowed = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    "Access-Control-Allow-Origin": allowed,
+    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Vary": "Origin",
+  };
+}
+
 
 export const noCacheHeaders = {
   "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
@@ -110,5 +116,4 @@ export const suggestedBooks = [
   "Božská komedie",
 ];
 
-export var splited_emails =
-  process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");
+export var splited_emails = process.env.NEXT_PUBLIC_WHITE_LIST_EMAILS?.split(":");
