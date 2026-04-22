@@ -1,22 +1,26 @@
-import { noCacheHeaders } from "@/data/values";
-import {   countPrismaBooks } from "@/lib/prisma";
-import { NextResponse } from "next/server";
+import { getCorsHeaders, noCacheHeaders } from "@/data/values";
+import { countPrismaBooks } from "@/lib/prisma";
+import { NextRequest, NextResponse } from "next/server";
 export const revalidate = 0;
-export async function GET() {
+
+export async function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: getCorsHeaders(req.headers.get("origin")) });
+}
+
+export async function GET(req: NextRequest) {
   try {
     const bookCount = await countPrismaBooks();
     console.log("počet knih:", bookCount);
-    // Convert Prisma query result to JSON and include the book count in the response
-    const jsonData = {
-      count: bookCount,
-    };
 
-    // Return the count and the data
-    return NextResponse.json(jsonData, {
-      headers: {
-        ...noCacheHeaders,
-      },
-    });
+    return NextResponse.json(
+      { count: bookCount },
+      {
+        headers: {
+          ...noCacheHeaders,
+          ...getCorsHeaders(req.headers.get("origin")),
+        },
+      }
+    );
   } catch (error) {
     console.error("Error fetching data or creating response:", error);
     return NextResponse.json({ error: "Server má momentálně problém získat data" });
