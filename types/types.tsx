@@ -20,6 +20,13 @@ export type NavButton = {
     label: string;
   }
 
+export type OpeningHour = {
+  id: string;
+  day: string;
+  open: string | null;
+  close: string | null;
+};
+
 export type StringedBool = "true" | "false";
 
 export  type Filters= {

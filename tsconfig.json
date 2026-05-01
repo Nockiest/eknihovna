@@ -14,7 +14,7 @@
     "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "incremental": true,
     "sourceMap": true,
     "downlevelIteration": true,
@@ -37,7 +37,8 @@
     ".next/types/**/*.ts",
     "__tests__/inprogress/TestColorCIrcles.test.jsx",
     "__tests__/Prismat.test.tsx",
-    "jest.config.ts"
+    "jest.config.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules"

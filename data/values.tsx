@@ -22,10 +22,18 @@ export const defaultFilters = {
   name: null,
 };
 
-const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS ?? "https://eknihovna.vercel.app").split(",");
+const ALLOWED_ORIGINS = (process.env.CORS_ALLOWED_ORIGINS ?? "https://eknihovna.vercel.app").split(",").map(o => o.trim());
+
+function originAllowed(origin: string): boolean {
+  return ALLOWED_ORIGINS.some(pattern =>
+    pattern.includes("*")
+      ? new RegExp("^" + pattern.replace(/\*/g, ".*") + "$").test(origin)
+      : origin === pattern
+  );
+}
 
 export function getCorsHeaders(origin: string | null): Record<string, string> {
-  const allowed = origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  const allowed = origin && originAllowed(origin) ? origin : ALLOWED_ORIGINS[0];
   return {
     "Access-Control-Allow-Origin": allowed,
     "Access-Control-Allow-Methods": "GET, POST, OPTIONS",

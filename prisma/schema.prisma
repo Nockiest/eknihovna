@@ -29,3 +29,10 @@ model backups {
   backupat   DateTime @default(now())
 }
 
+model opening_hours {
+  id    String  @id @db.VarChar(20)
+  day   String  @db.VarChar(50)
+  open  String? @db.VarChar(10)
+  close String? @db.VarChar(10)
+}
+

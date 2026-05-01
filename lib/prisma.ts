@@ -111,3 +111,25 @@ export const findManyPrismaBooks = async (ctx: Context = context) => {
 export const countPrismaBooks = async (ctx: Context = context) => {
   return await ctx.prisma.knihy.count();
 };
+
+const DAY_ORDER = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
+
+export const getOpeningHours = async (ctx: Context = context) => {
+  const hours = await ctx.prisma.opening_hours.findMany();
+  return hours.sort((a, b) => DAY_ORDER.indexOf(a.id) - DAY_ORDER.indexOf(b.id));
+};
+
+export const upsertOpeningHours = async (
+  hours: { id: string; day: string; open: string | null; close: string | null }[],
+  ctx: Context = context
+) => {
+  return await Promise.all(
+    hours.map((h) =>
+      ctx.prisma.opening_hours.upsert({
+        where: { id: h.id },
+        update: { open: h.open, close: h.close },
+        create: h,
+      })
+    )
+  );
+};

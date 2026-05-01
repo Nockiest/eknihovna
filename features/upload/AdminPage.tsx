@@ -6,6 +6,7 @@ import Uploader from "./functionality/Uploader";
 import SingleBookCreator from "./functionality/SingleBookCreator";
 import SingleBookDeleter from "./functionality/SingleBookDeleter";
 import BookGrid from "./functionality/BookRowsViewers";
+import OpeningHoursEditor from "./functionality/OpeningHoursEditor";
 import CustomButtonGroup from "../../components/styling/ButtonGroup";
 import { UploadContext } from "@/app/upload/context";
 import BookFetcher from "../apiCalls/BookFetcher";
@@ -50,6 +51,8 @@ const AdminPage = () => {
         return <SingleBookDeleter />;
       case 3:
         return <BookGrid />;
+      case 4:
+        return <OpeningHoursEditor />;
       default:
         return null;
     }
@@ -97,9 +100,11 @@ const AdminPage = () => {
               { text: "Smazat Knihu", onClick: () => changeTabInURL(2) },
               {
                 text: "Prohlédnout/Editovat knihy",
-                onClick:  () => {
-                    changeTabInURL(3);
-                },
+                onClick: () => changeTabInURL(3),
+              },
+              {
+                text: "Otevírací doba",
+                onClick: () => changeTabInURL(4),
               },
             ]}
             activeIndex={activeTab}
