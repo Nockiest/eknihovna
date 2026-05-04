@@ -10,6 +10,7 @@ interface HamburgerNavListProps {
   toggleNav: () => void;
 }
 
+
 const HamburgerNavList: React.FC<HamburgerNavListProps> = ({
   isOpen,
   toggleNav,
